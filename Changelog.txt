@@ -1,0 +1,2315 @@
+
+Die Grundidee des Balancing Stuff (kurz BS) ist es, sämtliche Gebäude und Einheiten dahingehend anzupassen, dass sie "gebalanced" sind, sprich keine Einheit und kein Gebäude mehr verboten werden muss, 
+um ein schönes und ausgewogenes Spielerlebnis zu bieten. Weiterhin sind eine Vielzahl von Ausbauten effektiver gestaltet worden sowie vorher fehlerhafte bzw. kaum sinnhafte Technologien wieder erwägungs-
+wert angepasst worden. 
+Der Anfang des Spiels wurde leicht limitiert, damit neuere und unerfahrenere Spieler bessere Chancen gegen erfahrene Spieler haben. Im späteren Spielverlauf wird eine gute Wirtschaft stärker belohnt
+als im "normalen" Spiel.
+Außerdem wurden neue Gebäude und Technologien hinzugefügt, die ein vielseitigeres Spielerlebnis garantieren sollen.
+Die Änderungen und Neuerungen sind im Nachfolgenden kurz beschrieben. Nicht gegebene Angaben sind unverändert. Alle Angaben ohne Gewähr!
+
+Änderungen im Balancing Stuff 						- 				"normales" Spiel:
+
+
+	Gebäude:
+	
+		Dorfzentrum:
+
+			Kosten:	Holz:		300							Holz:		300
+				Stein:		200							Stein:		200
+
+			benötigt:		-									-
+			
+			DZ Plätze:		70									75
+
+			Rüstung:		6									4
+	
+			HP:			1500									1000
+
+			Sichtweite:		4000									4000
+
+			Dieb Sprengfaktor:	25%									75%
+
+		Gemeindezentrum:
+		
+			Kosten:	Taler:		250							Taler:		150
+				Lehm:		300							Lehm:		100
+				Stein:		400							Stein:		300
+
+			benötigt: 		Bildung									Bildung
+
+			DZ Plätze:		90									100
+
+			Rüstung:		7									4
+
+			HP:			2000									1200
+
+			Sichtweite:		4400									4000
+		
+			Dieb Sprengfaktor:	20%									75%
+
+		Stadtzentrum:
+
+			Kosten:	Taler:		500							Taler:		200
+				Lehm:		500							Lehm:		150
+				Stein:		700							Stein:		400
+		
+			benötigt:		Architektur								Handelswesen
+
+			DZ Plätze:		140									125
+
+			Rüstung:		35									4
+
+			HP:			8000									1400
+
+			Sichtweite:		6000									4000
+
+			Dieb Sprengfaktor:	15%									75%
+		
+		Aussichtsturm:
+
+			Kosten:	Holz:		200							Holz:		200
+				Stein:		200							Stein:		200
+
+			benötigt:		Konstruktion								Konstruktion
+
+			Rüstung:		10									6
+			
+			HP:			500									1000
+
+			Sichtweite:		6000									3300
+
+			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
+
+		Ballistaturm:
+
+			Kosten:	Holz:		200							Holz:		200
+				Stein:		500							Stein:		300
+
+			benötigt:		Flaschenzug								Zahnrad
+
+			Rüstung:		1									6
+			
+			HP:			600									1200
+
+			Sichtweite:		3300									3300
+
+			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
+
+			Max.Range:		2400									2800
+		
+			Min.Range:		800									800
+		
+			DMG-Range:		420									500
+
+			DMG:			35									30
+
+		Kanonenturm:
+
+			Kosten:	Taler:		1500							
+				Stein:		1000							Stein:		200
+				Schwefel:	1000							Schwefel:	200			
+
+			benötigt:		Chemie									Metallurgie
+
+			Rüstung:		1									6
+				
+			HP:			700									1200
+
+			Sichtweite:		3300									3300
+
+			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
+
+			Max.Range:		2600									2800
+		
+			Min.Range:		800									800
+		
+			DMG-Range:		480									700
+
+			DMG:			48									40
+
+			Anmerkungen:		Diese Änderungen betreffen gleichermaßen die "dunklen" Versionen der Türme. Diese haben jedoch im Schnitt etwa 50% mehr HP.
+
+		Laboratorium:
+
+			Kosten:	Stein:		250							Stein:		250
+				Eisen:		100							Eisen:		100											Stein:		400
+		
+			benötigt:		Metallurgie								Metallurgie
+
+			Rüstung:		5									3
+
+			HP:			2200									1700
+
+			Sichtweite:		2000									2000
+
+			Veredlung/Tick:		5									4
+
+			Arbeiter:		6									6
+
+		Schießanlage:
+			
+			Rüstung:		6									4
+
+			HP:			3000									2000
+			
+			Sichtweite:		3000									3000
+	
+			Rekrutierungszeit[s]:	25									30
+
+		Garnison:
+			
+			Rüstung:		6									4
+
+			HP:			3000									2000
+			
+			Sichtweite:		3000									3000
+	
+			Rekrutierungszeit[s]:	25									30
+
+		Reiterei:
+			
+			Rüstung:		6									4
+
+			HP:			3000									2000
+			
+			Sichtweite:		3000									3000
+	
+			Rekrutierungszeit[s]:	15									20
+
+		Kanonenmanufaktur:
+			
+			Rüstung:		6									3
+
+			HP:			3000									2000
+			
+			Sichtweite:		3000									3000
+
+		Schatzkammer:
+
+			Rüstung:		9									5
+
+			HP:			3000									1700
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		3									2
+
+			Arbeiter:		6									6
+
+		Dario-Statue:
+
+			Kosten:	Taler:		600									200
+				Stein:		300									100
+
+			MotiEffekt:		12%									4%
+
+		Brunnen:
+
+			Kosten:	Taler:		600									200
+				Stein:		300									100
+
+			MotiEffekt:		12%									4%
+
+		Reiter:
+
+			Kosten:	Taler:		2000									400
+				Stein:		1000									200
+
+			MotiEffekt:		30%									6%
+
+		Kameraden:
+
+			Kosten:	Taler:		300									100
+				Lehm:		300									100
+
+			MotiEffekt:		6%									2%
+		
+		Obelisk:
+
+			Kosten:	Taler:		1500									300
+				Stein:		500									100
+
+			MotiEffekt:		25%									5%
+
+		Astrolabium:
+
+			Kosten:	Taler:		300									100
+				Eisen:		500									100
+
+			MotiEffekt:		8%									2%
+
+		Uhr:
+
+			Kosten:	Taler:		900									300
+				Holz:		300									100
+
+			MotiEffekt:		15%									5%
+
+		Zugbrunnen:
+
+			Kosten:	Taler:		900									300
+				Stein:		300									100
+
+			MotiEffekt:		15%									5%
+
+		Blumen:
+
+			Kosten:	Taler:		200									100
+				Holz:		400									100
+
+			MotiEffekt:		5%									2%
+
+		Teleskop:
+
+			Kosten:	Taler:		2000									400
+				Eisen:		1000									200
+
+			MotiEffekt:		30%									6%
+
+		Pavillon:
+
+			Kosten:	Taler:		2000									400
+				Stein:		1000									200
+
+			MotiEffekt:		30%									6%
+
+		Windrad:
+
+			Kosten:	Taler:		1000									200
+				Eisen:		500									100
+
+			MotiEffekt:		20%									4%
+
+		Grobschmiede:
+
+			Rüstung:		5									3
+
+			HP:			2200									1700
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		5									4
+
+			Arbeiter:		6									6
+	
+		Feinschmiede:
+			
+			Kosten:	Lehm:		500									150
+				Stein:		800									300
+
+			Rüstung:		5									3
+
+			HP:			2800									2200
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		6									4
+
+			Arbeiter:		8									6
+
+		Ziegelbrennerei:
+
+			Rüstung:		5									3
+
+			HP:			2200									1700
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		5									4
+
+			Arbeiter:		6									6
+
+		Lehmstollen:
+
+			Rüstung:		5									3
+
+			HP:			1200									1000
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		6									5
+
+			Arbeiter:		7									6
+
+		Lehmbergwerk:
+
+			Kosten:	Taler:		400									-
+				Holz:		500									250
+				Stein:		600									300
+
+			Rüstung:		5									3
+
+			HP:			2000									1400
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		8									6
+
+			Arbeiter:		9									7
+
+		Eisenstollen:
+
+			Rüstung:		4									3
+
+			HP:			1200									1000
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		6									5
+
+			Arbeiter:		7									6
+
+		Eisenbergwerk:
+
+			Kosten:	Taler:		400									-
+				Holz:		600									300
+				Lehm:		600									300
+
+			Rüstung:		5									3
+
+			HP:			2000									1400
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		8									6
+
+			Arbeiter:		9									7
+
+		Steinstollen:
+
+			Rüstung:		4									3
+
+			HP:			1200									1000
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		6									5
+
+			Arbeiter:		7									6
+
+		Steinbergwerk:
+
+			Kosten:	Taler:		400									-
+				Eisen:		400									200
+				Lehm:		400									200
+
+			Rüstung:		5									3
+
+			HP:			2000									1400
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		8									6
+
+			Arbeiter:		9									7
+
+		Schwefelstollen:
+
+			Rüstung:		4									3
+
+			HP:			1200									1000
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		6									5
+
+			Arbeiter:		7									6
+
+		Schwefelbergwerk:
+
+			Kosten:	Taler:		400									-
+				Stein:		600									200
+				Lehm:		400									200
+
+			Rüstung:		5									3
+
+			HP:			2000									1400
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		8									6
+
+			Arbeiter:		9									7
+
+		Mühle:
+
+			Rüstung:		4									3
+
+			HP:			1000									700
+
+			Sichweite:		3000									3000
+
+			Nahrungsplätze:		11									10
+
+			Arbeiter:		1									2
+
+		Gutshof:
+
+			Rüstung:		5									3
+
+			HP:			1700									1000
+
+			Sichweite:		3000									3000
+
+			Nahrungsplätze:		15									12
+
+			Arbeiter:		1									3
+
+		Büchsenmanufaktur:
+
+			Rüstung:		7									3
+
+			HP:			2500									1700
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		5									4
+
+			Arbeiter:		5									4
+
+		Zitadelle:
+
+			Rüstung:		60									5
+
+			HP:			9000									4100
+
+			Sichweite:		3000									3000
+
+			Max Leibis:		300									1000
+
+			Max Arbeiter (Alarm):	800									400
+
+			Dieb Sprengfaktor:	5%									10%	
+
+		Marktplatz:
+
+			Kosten:	Taler:		1000									-
+				Holz:		600									-
+				Stein:		750									200
+				Lehm:		400									100
+		
+			Rüstung:		5									3
+
+			HP:			2000									1700
+
+			Sichweite:		3000									3000
+
+			Arbeiter:		4									6
+
+		Kathedrale:
+		
+			Rüstung:		18									5
+
+			HP:			7000									4500
+				
+			Sichweite:		3000									3000
+
+			Dieb Sprengfaktor:	15%									75%
+
+		Mittleres Wohnhaus:
+
+			Rüstung:		3									3
+
+			HP:			900									700
+
+			Sichweite:		2000									2000
+
+			Schlafplätze:		10									9
+
+		Großes Wohnhaus:
+
+			Rüstung:		3									3
+
+			HP:			1500									1000
+
+			Sichweite:		2000									2000
+
+			Schlafplätze:		14									12
+
+		Sägemühle:
+			
+			Rüstung:		3									3
+
+			HP:			1500									1200
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		4									4
+
+			Arbeiter:		4									4
+
+		Sägewerk:
+
+			Kosten:	Lehm:		550									150
+				Stein:		600									100
+			
+			Rüstung:		6									3
+
+			HP:			2500									1700
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		6									4
+
+			Arbeiter:		9									6
+
+		Steinmetze:
+			
+			Rüstung:		5									3
+
+			HP:			2200									1700
+
+			Sichweite:		3000									3000
+
+			Veredlung/Tick:		5									4
+
+			Arbeiter:		6									6
+
+		Universität:
+			
+			Rüstung:		7									4
+
+			HP:			4000									3500
+
+			Sichweite:		3000									3000
+
+		
+		sämtliche Baukosten Stufe 1 sind unverändert!
+
+	Einheiten:
+
+		Leibeigener:
+
+			Rüstung:		0									0
+
+			HP:			100									200
+
+			Sichweite:		1500									2000
+
+			HPReg[1/s]:		8/6									-
+
+			Res.SuchRadius:		6500									4500
+
+			DMG:			1									5
+
+			RandomDMGBonus		0									2
+
+		Miliz:
+
+			Rüstung:		0									1
+
+			HP:			100									200
+
+			Sichweite:		1500									1500
+
+			HPReg[1/s]:		-									-
+
+			DMG:			5									10
+
+			RandomDMGBonus		1									3
+
+		Dario:
+
+			Rüstung:		11									3
+
+			HP:			1200									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		440									400
+
+			HPReg[1/s]:		14/2									8/2
+
+			DMG:			28									16
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		280									250
+
+			Falken-MinReichw.:	5000									4000
+
+			Falken-MaxReichw.	9000									8000
+
+			Falken-Sichtw.:		2200									1500
+
+			Falken-Lauftempo:	550									500
+
+			Beschützen-CD[s]:	90									120
+
+		Pilgrim:
+
+			Rüstung:		8									4
+
+			HP:			1000									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			24									22
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		250									250
+
+			Bombe legen-CD[s]:	25									60
+
+		Erec:
+
+			Rüstung:		4									4
+
+			HP:			800									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			18									16
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		250									250
+
+			Moral erhöhen-CD[s]:	210									120
+
+			Moral erhöhen DMG-Buff:	40%									100%
+
+			Moral erhöhen Dauer[s]:	30									60
+					
+			Rundumschlag-CD[s]:	140									120	
+				
+			Rundumschlag-DMG:	65									80
+
+			Rundumschlag Reichw.:	600									400
+
+		Ari:
+
+			Rüstung:		4									2
+
+			HP:			500									600
+
+			Sichweite:		3200									2200
+
+			Lauftempo:		360									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			18									16
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		3100									2700
+
+			Fehltreffer-Chance:	2									5
+
+			Banditen herbeir.-CD[s]:210									180
+
+			Banditen herbeir.Anz.	5									3
+
+			Banditen Sichtw.:	1400									1000
+		
+			Banditen Rüstung:	7									4
+
+			Banditen Lauftempo:	440									400
+
+			B. Schaden:		18									10
+
+			B. Reichweite:		290									250
+
+			B. Lebensdauer[s]:	90									60
+		
+		Helias:
+
+			Rüstung:		3									2
+
+			HP:			600									600
+
+			Sichweite:		2800									2800
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			16									16
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		250									250
+
+			Truppen bekehren-CD[s]:	180									60
+
+			Segnen-CD[s]:		180									120
+
+			Segnen Rüst.-Buff:	60%									40%
+
+			Segnen Dauer[s]:	30									60
+					
+		Drake:
+
+			Rüstung:		3									4
+
+			HP:			500									600
+
+			Sichweite:		2900									2800
+
+			Lauftempo:		360									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			23									28
+
+			RandomDMGBonus		2									2
+
+			Reichweite:		2800									2800
+
+			sicher zielen-CD[s]:	240									120
+
+			sicher zielen.-Buff:	50%									100%
+
+			sicher zielen Dauer[s]:	30									60
+
+			sicher zielen Reichw.:	1200									1500
+
+			Meisterschuss-CD[s]:	180									90
+
+			Meisterschuss-DMG:	70%									100%
+
+			Meisterschuss-Reichw.:	4000									5500
+
+		Yuki:
+
+			Rüstung:		6									3
+
+			HP:			800									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		440									400
+
+			HPReg[1/s]:		10/2									8/2
+
+			DMG:			22									20
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		250									250
+
+			Feuerw. d. Furcht-CD[s]:180									120
+
+			Fr.Feuerw.ArbeiterBuff:	200 Worktime								100 Worktime
+
+		Kala:
+
+			Rüstung:		6									5
+
+			HP:			600									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			22									20
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		240									200
+
+			Giftpfeile-CD[s]:	50									30
+
+			Giftpfeile DMG:		55									20	
+
+			Giftnebel-CD[s]:	110									110
+
+			Giftnebel DMG:		38									25	
+
+		Mary de Morfichet:
+
+			Rüstung:		3									3
+
+			HP:			600									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			19									16
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		250									250
+
+			Demoralisieren-CD[s]:	120									120
+
+			Demoralisieren DMG-Eff.	-70%									-50%	
+
+			Demoralisieren Dauer[s]	30									60
+
+		Kerberos:
+
+			Rüstung:		7									5
+
+			HP:			800									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			25									22
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		200									200
+
+			Angst einfl.-CD[s]:	120									120
+
+			Angst einfl. Rüs.-Eff.	-40%									-20%	
+
+			Angst einfl. Dauer[s]	30									60
+
+		Varg:
+
+			Rüstung:		5									4
+
+			HP:			600									600
+
+			Sichweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		8/2									8/2
+
+			DMG:			20									16
+
+			RandomDMGBonus		2									2
+
+			Reichweite:		200									200
+
+			Berserkerwut-CD[s]:	300									300
+
+			Berserkerwut DMG-Eff.	60%									100%	
+
+			Berserkerwut Rüs.-Eff.	-50%									-50%
+
+			Berserkerwut Heil-Eff.	50%									30%
+
+			Berserkerwut Dauer[s]	40									40
+
+			Wölfe rufen-CD[s]:	300									180
+
+			Wölfe rufen Anzahl:	6									2
+
+			Wölfe Rüstungsklasse:	Eisen									keine
+
+			Wölfe Rüstung:		2									0
+
+			Wölfe Lauftempo:	540									360
+
+			Wölfe Schaden:		17									14
+
+			Wölfe ATK-Tempo[1/s]:	0.91									0.67
+
+			Wölfe Sold:		-									20/Zahltag
+
+		Armbrustschütze*:
+
+			Kosten:	Taler:		250									250
+			(HM)	Eisen:		70									70
+				Holz:		70									-
+
+			Kosten:	Taler:		50									50
+			(Sold.)	Eisen:		40									40
+				Holz:		40									-	
+
+			Schaden:		14									12
+
+		Arbalestenschütze*:
+
+			Kosten:	Taler:		280									300
+			(HM)	Eisen:		80									80
+				Holz:		80									-
+
+			Kosten:	Taler:		60									60
+			(Sold.)	Eisen:		50									50
+				Holz:		50									-	
+
+			Schaden:		14									12
+
+			Sichtweite:		3100									2900
+
+			Rüstung:		5									3
+
+			Schaden:		17									14
+
+			Reichweite:		3000									2900
+
+			Soldaten:		12									8
+
+		LKav-Bogenschütze*:
+
+			Rüstungsklasse:		Eisen									keine
+
+			Rüstung:		2									0
+
+			HP:			300									150
+
+			Sichtweite:		2500									2300
+
+			eing. DZ-Pläte:		1									2
+
+			Lauftempo:		550									500
+
+			Schaden:		12									10
+
+			Reichweite:		2500									2300
+
+		LKav-Armbrustschütze*:
+
+			Kosten:	Taler:		350									250
+			(HM)	Eisen:		70									-
+				Holz:		90									70
+
+			Kosten:	Taler:		100									100
+			(Sold.)	Eisen:		40									40
+				Holz:		55									-	
+
+			Rüstungsklasse:		Eisen									keine
+
+			Rüstung:		5									1
+
+			HP:			300									150
+
+			Sichtweite:		2900									2700
+
+			eing. DZ-Pläte:		1									2
+
+			Lauftempo:		550									500
+
+			Schaden:		15									12
+
+			Angriffs-Tempo[1/s]:	0.48									0.4
+
+			Reichweite:		2900									2700
+
+			Soldaten:		6									3
+
+			* Die Fehltreffer-Chance aller Bogenschützen wurde stark reduziert.
+			
+		SKav-Kurzschwertkämpfer:
+
+			Kosten:	Taler:		300									350
+			(HM)	Eisen:		120									90
+
+			Kosten:	Taler:		150									120
+			(Sold.)	Eisen:		70									40
+
+		Skav-Streitaxtkämpfer:
+
+			Kosten:	Taler:		450									250
+			(HM)	Eisen:		160									80
+
+			Kosten:	Taler:		210									150
+			(Sold.)	Eisen:		90									50
+
+			Rüstung:		9									6
+
+			HP:			400									300
+
+			Reichweite:		260									200
+
+		Hellebardier:
+
+			Kosten:	Taler:		200									200
+			(HM)	Eisen:		50									-
+				Holz:		80									80
+
+			Kosten:	Taler:		60									60
+			(Sold.)	Eisen:		30									-
+				Holz:		50									50
+
+			Rüstung:		7									4
+
+			Lauftempo:		400									360
+
+			Schaden:		21									18
+
+			RandomDMG-Bonus:	4									2			
+
+			Reichweite:		390									300
+
+			Soldaten:		12									8
+
+		leichter Scharfschütze:
+
+			Kosten:	Taler:		250									200
+			(HM)	Schwefel:	90									70
+				Eisen:		30									-
+
+			Kosten:	Taler:		65									50
+			(Sold.)	Schwefel:	50									40
+				Eisen:		15									-
+
+			Rüstungsklasse:		keine									Leder
+
+			Rüstung:		0									1
+
+			HP:			120									150
+		
+			Sichtweite:		2400									2800
+
+			Lauftempo:		300									320
+
+			Schaden:		15									16		
+
+			Reichweite:		2300									2800
+
+			Soldaten:		3									4
+
+		schwerer Scharfschütze:
+
+			Kosten:	Taler:		350									300
+			(HM)	Schwefel:	120									80
+				Eisen:		60									-
+
+			Kosten:	Taler:		90									60
+			(Sold.)	Schwefel:	70									50
+				Eisen:		35									-
+
+			Rüstungsklasse:		keine									Leder
+
+			Rüstung:		0									2
+
+			HP:			110									150
+		
+			Sichtweite:		2600									3000
+
+			Lauftempo:		280									320
+
+			Schaden:		21									19
+
+			Schadensreichweite:	310									80		
+
+			Reichweite:		2350									3000
+
+			Soldaten:		6									8
+
+			Besonderheiten: schwere Scharfschützen treffen nun auch sich bewegende Einheiten!
+
+		Bastardschwertkämpfer:
+
+			Kosten:	Taler:		220									250
+			(HM)	Eisen:		120									80
+
+			Kosten:	Taler:		60									60
+			(Sold.)	Eisen:		80									50
+
+			Rüstung:		8									5
+
+			Lauftempo:		400									360		
+
+			Reichweite:		290									200
+
+			Soldaten:		12									8
+
+		Kundschafter:
+
+			Rüstung:		0									1
+
+			HP:			100									200
+
+			Lauftempo:		360									400	
+	
+			Schaden:		3									10	
+
+			RandomDMG-Bonus:	0									2	
+
+			Sichtweite Fernglas:	14000									10000
+
+			Fackeln CD:		120									150
+
+		Dieb:
+			
+			Kosten:	Taler:		350									300
+				Eisen:		30									30
+
+			Rüstungsklasse:		keine									Held
+
+			Rüstung:		0									1
+
+			HP:			50									200
+
+			Sichtweite:		1600									1800
+
+			Lauftempo:		360									400	
+	
+			Schaden:		2									5	
+
+			RandomDMG-Bonus:	1									8	
+
+			Zeit für erneute 
+			Unsichtbarkeit[s]:	30									15
+
+			Aufdeck-Reichweite:	600									300
+
+			Min.Warenklau:		300									100
+
+			Max.Warenklau:		800									200
+
+			Sabotage CD:		180									90
+
+			Zeit für Sprengsatz[s]	10									5
+
+		Bombarde:
+			
+			Kosten:	Taler:		350									150
+				Eisen:		250									50
+				Schwefel:	400									100
+
+			Rüstung:		0									2
+
+			HP:			150									190
+
+			Sichtweite:		1800									2400
+
+			Pläte im DZ:		3									5
+
+			Lauftempo:		270									240	
+	
+			Schaden:		40									30	
+
+			Schadensreichweite:	410									150
+
+			Angriffstempo:		1.11									0.29
+
+			Reichweite:		1700									2400
+
+		Bronzekanone
+
+			Kosten:	Taler:		500									200
+				Eisen:		650									50
+				Schwefel:	250									120
+
+			HP:			250									190
+
+			Sichtweite:		3100									2800
+
+			Pläte im DZ:		3									5
+
+			Lauftempo:		210									260	
+
+			Schadensklasse:		Belagerung	(gut gegen Gebäude)					Stich	(gut gegen Einheiten)
+	
+			Schaden:		82									40	
+
+			Schadensreichweite:	250									200
+
+			Reichweite:		3050									2800		
+
+		
+		Eisenkanone:
+			
+			Kosten:	Taler:		700									300
+				Eisen:		850									100
+				Schwefel:	250									150
+
+			Rüstung:		0									2
+
+			HP:			180									230
+
+			Sichtweite:		2000									2700
+
+			Pläte im DZ:		8									5
+
+			Lauftempo:		250									220	
+
+			Schadensklasse:		Stich	(gut gegen Einheiten)						Belagerung	(gut gegen Gebäude)
+	
+			Schaden:		65									65	
+
+			Schadensreichweite:	490									300
+
+			Angriffstempo:		1.54									2.00
+
+			Reichweite:		1900									2700
+
+		Belagerungskanone:
+			
+			Kosten:	Taler:		1000									300
+				Eisen:		300									200
+				Schwefel:	1000									200
+
+			HP:			300									230
+
+			Sichtweite:		3500									3300
+
+			Pläte im DZ:		12									5
+
+			Lauftempo:		100									180	
+	
+			Schaden:		132									75	
+
+			Schadensreichweite:	300									400
+
+			Reichweite:		3500									3300
+
+
+	Technologien:
+		
+		Stadtwache:
+		
+			Kosten:	Taler:		400									400
+				
+
+			Effekt:			erhöht die Sichtweite aller Gebäude					kein Effekt
+						um 500
+
+		Verbessertes Fahrgestell
+
+			Kosten: Holz:		200									200
+				Eisen:		200									200
+
+			Effekt:			erhöht die Bewegungsgeschwindigkeit aller Kanonen			kein Effekt
+						um 30									
+
+	Diverses:
+
+		Es wurde ein Fehler behoben, sodass Krieger des Nebelvolks nun ihre zugedachte Rüstungsklasse verwenden. Dadurch bekommen die jeweiligen Hauptmänner nicht mehr stets nur 1 Schaden. 
+		Da dies jedoch keine Abschwächung des Nebelvolks zur Folge haben soll, wurden ihre jeweiligen Werte dementsprechend angepasst. 
+
+		Es wurde ein Fehler behoben, durch den Kanonen die Rüstungsklasse des Ziels ignoriert und so falsche Schadenszahlen verursacht haben.
+
+		Es wurde ein Fehler behoben, durch den sämtliche Soldaten nicht ihre zugedachte Rüstungsklasse verwendet haben. Alle Soldaten verwenden nun dieselbe Rüstungklasse wie ihre jeweiligen Anführer.
+		
+		Die erhaltenen Ressourcen beim Abriss von Gebäuden wurde von 50% auf 30% herabgesetzt.
+
+		Die Sichtweite von Gebäuden im Bau wurde von 25% auf 15% herabgesetzt.
+
+		Die HP von Gebäuden im Bau wurde von 25% auf 15% herabgesetzt.
+
+		"niedrige Steuern" und "keine Steuern" generieren nun mehr Beliebtheit pro Zahltag.
+
+		Der zugefügte Schaden von "Alarm" wurde erhöht. Gleichzeitig wurde die maximal-Anzahl von Verteidigern in einigen Gebäuden erhöht.
+
+		Die Reichweite, in der Leibeigene neue Ressourcen entdecken, wenn die aktuell bewirtschaftete leer läuft, wurde erhöht.
+
+		Das Maximum an Leibeigenen pro Spieler wurde von 1000 auf 300 herabgesetzt.
+
+		Außerdem verändert wurden Schadens-/Rüstungsklassen-Beziehungen. Die genauen Veränderungen werden hier zwar nicht angegeben, allerdings kann grob zusammengefasst werden, dass Einheiten, die
+		im "normalen" Spiel stark gegen bestimmte andere Einheiten sind, nun noch stärker dagegen sind. Gleichzeitig wurden auch die Schwächen stärker hervorgehoben. So soll vermieden werden, dass
+		sich auf nur ein Truppentyp festgelegt wird und stattdessen eine Mischung vieler Truppen bevorzugt wird. Zusätzlich kann sich so jeder Spieler leichter einen taktischen Vorteil verschaffen,
+		indem er darauf achtet, welche Truppen sein Gegner bevorzugt rekrutiert und diese dann mit ihren Schwächen auskontert.
+		Weiterhin verändert wurden viele kleinere Dinge, die jedoch großen Einfluss auf das Spielgeschehen haben können. Auf diese wird hier jedoch nicht weiter eingegangen, da deren Wechselwirkungen
+		individuell sehr kompliziert werden können.
+
+Neuerungen im Balancing Stuff:
+
+	Gebäude:
+
+		Goldmine:
+			
+			Die Goldmine fördert Taler aus einem Golderzvorkommen.
+
+			Kosten: Lehm:		200
+				Holz:		150
+
+			benötigt:		-
+
+			Besonderheiten: wird wie eine "normale" Mine über dem entsprechenden Schacht platziert.
+
+		Silbermine:
+			
+			Die Silbermine fördert Silber aus einem Silberschacht.
+
+			Kosten: Lehm:		200
+				Holz:		150
+
+			benötigt:		-
+
+			Besonderheiten: wird wie eine "normale" Mine über dem entsprechenden Schacht platziert.
+	
+		Außenposten:
+			
+			Im Außenposten könnt ihr Leibeigene anheuern sowie Sonderabgaben verlangen. Erhöht außerdem euer Siedlungslimit um 30.
+			
+			Kosten: Steine: 	8000
+				Holz: 		8000
+				Lehm: 		8000
+
+			benötigt: 		Gesetzbücher
+
+			Besonderheiten:	neue Siedler können ananalog zu Dorfzentren von hier zu ihren Arbeitsplätzen laufen. 
+
+		Leuchtturm-Fundament:
+
+			Ruinen eines alten, längst verlassenen Leuchtturms. Diese Ruine kann als Fundament für einen Leuchtturm genutzt werden.
+	
+		Verfallener Leuchtturm:
+			
+			Später könnt ihr hier Verstärkungen anfordern. Besitzt zudem die höchste Sichtreichweite aller Gebäude.
+			
+			Kosten: Steine: 	2000
+				Holz: 		500
+				Lehm:		300
+			
+			benötigt: 		Fernglas, Architektur
+
+			Besonderheiten: kann nur auf einem Leuchtturm-Fundament platziert werden.
+
+		Söldnerturm:
+			
+			Im Söldnerturm könnt ihr Söldner aus fernen Landen anheuern.
+
+			Kosten: Steine: 	500
+				Holz:		500
+
+			benötigt: 		Taktiken
+
+		Gemüseplantage:
+
+			Die Gemüseplantage kümmert sich um die Versorgung eurer hungrigen Siedler. Erhöht außerdem euer Siedlungslimit um 1.
+			
+			Kosten: Steine:		700
+				Holz:		200
+				Lehm:		450
+			
+			benötigt: 		Fruchtfolge
+
+			Besonderheiten:	neue Siedler können ananalog zu Dorfzentren von hier zu ihren Arbeitsplätzen laufen. 
+
+		Silberschmelze:
+			
+			Die Silberschmelze veredelt Euer Silber. Später könnt ihr hier bessere Rüstungen und Waffen Eurer Soldaten erforschen.
+
+			Kosten: Silber: 	100
+				Steine:		550
+				Holz:		350
+				
+			benötigt: 		Metallurgie
+
+		Wettermaschine:
+			
+			Hier könnt ihr Technologien zum Erforschen und Manipulieren von Unwettern erforschen.
+			
+			Kosten: Steine: 	600
+				Schwefel:	600
+				Holz:		200
+
+			benötigt: 		Wettervorhersage, Chemie
+
+		Dom:
+			
+			Steht der Dom für 10 Minuten, hat Euer Team das Spiel gewonnen. Fällt er jedoch beim Bau oder während der 10 Minuten, hat Euer Team das Spiel verloren.
+
+			Kosten: Steine:		100000
+				Silber:		2000
+
+			benötigt: 		Alle Technologien in der Uni.
+
+		Schreckstatue:
+
+			Reduziert die Beliebtheit aller Feinde.
+
+			Kosten: Silber:		300
+				Steine:		500
+
+			benötigt:		Taktiken
+
+		Hängekäfig:
+
+			Reduziert die Beliebtheit aller Feinde.
+
+			Kosten: Silber:		250
+				Taler:		100
+				Holz:		600
+
+			benötigt:		Gesetzbücher
+
+		Drachenstatue:
+
+			Reduziert die Beliebtheit aller Feinde.
+
+			Kosten: Silber:		400
+				Schwefel:	100
+				Taler:		100
+				Steine:		200
+
+			benötigt:		Architektur
+
+		Vergifteter Brunnenschacht:
+
+			Reduziert die Beliebtheit aller Feinde.
+	
+			Kosten: Silber:		450
+				Steine:		300
+
+			benötigt:		Metallurgie
+
+		Kerberos Statue:
+
+			Reduziert die Beliebtheit aller Feinde.
+	
+			Kosten: Silber:		300
+				Taler:		300
+				Steine:		200
+
+			benötigt:		Kulturaustausch (Raubritter)
+
+		Statue des Peinigers:
+
+			Reduziert die Beliebtheit aller Feinde.
+	
+			Kosten: Silber:		800
+				Taler:		200
+				Steine:		900
+
+			benötigt:		Architektur
+
+		Statue des Bündnis:
+
+			Erhöht die Motivation aller Arbeiter.
+	
+			Kosten: Silber:		500
+				Steine:		1000
+
+			benötigt:		Schatzmeistergilden
+
+		Verfallener Siedlungsplatz:
+
+			Ähnlich eines neutralen Siedlungsplatzes, jedoch kann hier kein Dorfzentrum gegründet werden. 
+
+		Alte Dorfhalle:
+
+			Erhöht Euer Siedlungslimit um 50 Plätze. Alle nahen Arbeiter kommen aus der Dorfhalle.
+
+			Kosten:	Holz:		300
+				Steine:		200
+
+			benötigt:		mapspezifische Anforderungen
+
+			
+
+	Technologien:
+		
+		Steuereintreibung:
+
+			ermöglicht das Erheben von Sonderabgaben in Burgen und Außenposten.
+
+			Kosten: Taler:		100
+
+			benötigt: 		Festung
+
+			Forschungsgebäude:	Hochschule, Universität
+
+		Bankwesen
+
+			ermöglicht den Bau von Banken.
+			
+			Kosten: Taler:		500
+
+			benötigt: 		Steuereintreibung, Universität
+
+			Forschungsgebäude:	Universität
+
+		Gesetzbücher:
+
+			ermöglicht den Bau von Außenposten sowie den Ausbau von Banken zu Schatzkammern.
+
+			Kosten: Taler: 		300
+				Schwefel:	100
+
+			benötigt:		Bankwesen, Zitadelle
+
+			Forschungsgebäude:	Universität
+
+		Schatzmeistergilden:
+
+			ermöglicht den Ausbau von Schatzkammern zu Münzstätten.
+
+			Kosten: Taler:		700
+		
+			benötigt:		mindestens 20 Technologien in der Uni erforscht.
+
+			Forschungsgebäude:	Universität
+
+		Fruchtfolge:
+
+			ermöglicht den Bau von Gemüseplantagen.
+			
+			Kosten: Taler: 		400				
+				Holz:		200
+
+			benötigt: 		Gutshof
+
+			Forschungsgebäude:	Gutshof
+
+		Kulturaustausch (Banditen)
+
+			ermöglicht das Anheuern von Banditen und Banditen-Bogenschützen.
+		
+			Kosten: Taler:		600
+				Eisen:		400
+
+			benötigt:		-
+
+			Forschungsgebäude:	Söldnerturm
+
+		Kulturaustausch (Barbaren)
+
+			ermöglicht das Anheuern von Barbaren und Elitekriegern.
+		
+			Kosten: Taler:		600
+				Eisen:		400
+
+			benötigt:		-
+
+			Forschungsgebäude:	Söldnerturm
+
+		Kulturaustausch (Raubritter)
+
+			ermöglicht das Anheuern von Schwarzen Rittern.
+		
+			Kosten: Taler:		600
+				Eisen:		400
+
+			benötigt:		-
+
+			Forschungsgebäude:	Söldnerturm
+
+		Kulturaustausch (Nebelvolk)
+
+			ermöglicht das Anheuern von Bärenmenschen und Speerwerfern.
+		
+			Kosten: Taler:		600
+				Eisen:		400
+
+			benötigt:		-
+
+			Forschungsgebäude:	Söldnerturm
+
+		Unwettererforschung
+
+			ermöglicht den Wetterwechsel auf Unwetter
+		
+			Kosten: Taler:		400
+				Schwefel:	400
+
+			benötigt:		-
+
+			Forschungsgebäude:	Wettermaschine
+
+		Schweres Unwetter
+
+			mehr Blitzeinschläge beim Unwetter.
+		
+			Kosten: Taler:		500
+				Schwefel:	500
+
+			benötigt:		Unwettererforschung
+
+			Forschungsgebäude:	Wettermaschine
+
+		Zerstörerische Wetterphänomene
+		
+			erhöht den Schaden von Blitzeinschlägen an Gebäuden.
+
+			Kosten: Eisen:		400
+				Schwefel:	200
+
+			benötigt:		-
+
+			Forschungsgebäude:	Wettermaschine
+
+		Blitzschlag-Versicherung
+		
+			ihr erhaltet Taler in Höhe des Schadens, wenn eines Eurer Gebäude vom Blitz getroffen wird.
+
+			Kosten: Taler:		700
+
+			benötigt:		Zerstörerische Wetterphänomene
+
+			Forschungsgebäude:	Wettermaschine
+
+		Maß:
+		
+			Ihr erhaltet durch einen Handel einen gewissen Anteil an zusätzlichen Ressourcen.
+		
+			Kosten: Taler:		400
+				Holz:		150
+			
+			benötigt: 		-
+
+			Forschungsgebäude:	Schatzkammer
+
+		Münzprägung:
+
+			Ermöglicht den Ausbau von Marktplätzen zu Handelsposten
+
+			Kosten: Taler:		600
+				Eisen:		400
+
+			benötigt:		Maß
+
+			Forschungsgebäude:	Münzstätte	
+
+		Schuldscheine:
+
+			Erhöht die Zahltag-Frequenz.
+
+			Kosten:	Taler:		500
+
+			benötigt:		-
+
+			Forschungsgebäude:	Schatzkammer
+
+		Buchhaltung:
+			 
+			Verbessert die Veredlung von Banken, Schatzkammern und Münzstätten.
+
+			Kosten:	Taler:		700
+
+			benötigt:		Schuldscheine
+
+			Forschungsgebäude:	Münzstätte
+
+		Gehärteter Silberharnisch:
+
+			Verbessert die Rüstung von Bogenschützen, Lanzenträgern und leichter Kavallerie.
+
+			Kosten:	Silber:		550
+				Eisen:		350
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Damaszener-Plattenpanzer:
+
+			Verbessert die Rüstung von Schwertkämpfern.
+
+			Kosten:	Silber:		600
+				Eisen:		500
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Damaszener-Obsidianschwerter:
+
+			Verbessert den Schaden von Schwertkämpfern.
+
+			Kosten:	Silber:		750
+				Eisen:		750
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Silberkugeln:
+
+			Verbessert den Schaden von Scharfschützen.
+
+			Kosten:	Silber:		600
+				Eisen:		300
+				Schwefel:	250
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Silber-Stahlspitzen:
+
+			Verbessert den Schaden von Bogenschützen, Lanzenträgern und leichter Kavallerie.
+
+			Kosten:	Silber:		700
+				Eisen:		150
+				Holz:		300
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Unzerbrechliche Silberspeere:
+
+			Verbessert den Schaden von Lanzenträgern.
+
+			Kosten:	Silber:		550
+				Eisen:		250
+				Holz:		500
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Silbernitrat-Geschosse:
+
+			Verbessert den Schaden von Kanonen.
+
+			Kosten:	Silber:		2500
+				Eisen:		1500
+				Schwefel:	1250
+
+			benötigt:		-
+
+			Forschungsgebäude:	Silbergießerei
+
+		Blutrausch:
+
+			Verbessert den Schaden von Söldnern (ausgenommen Elitekrieger)
+
+			Kosten:	Silber:		200
+				Taler:		300
+
+			benötigt:		min. 2000 Kampfpunkte
+
+			Forschungsgebäude:	Silbergießerei
+
+		Verbesserte Studien:
+
+			Verringert die (aktive) Forschungsdauer
+
+			Kosten: Taler:		400
+
+			benötigt:		Universität
+
+			Forschungsgebäude:	Stadtzentrum
+
+		Verbesserte Ziegel:
+
+			Verringert die Bauzeit von Gebäuden (nicht Ausbau)
+
+			Kosten: Taler:		200
+				Lehm:		400
+				Holz:		100
+
+			benötigt:		-
+
+			Forschungsgebäude:	Ziegelbrennerei
+
+		Spitzhacke:
+
+			Erhöht die Menge, die Eure Gruben, Stollen und Bergwerke fördern.
+
+			Kosten:	Lehm:		800
+
+			benötigt:		-
+
+			Forschungsgebäude:	Lehmbergwerk
+
+		Weitsicht:
+	
+			Erhöht die Sichtreichweite von Leibeigenen.
+
+			Kosten:	Taler:		200
+				Eisen:		50
+				Schwefel:	50
+
+			benötigt:		-
+
+			Forschungsgebäude:	Alte Dorfhalle
+
+		Eifer:
+
+			Erhöht das Bewegegungstempo von Leibeigenen.
+
+			Kosten:	Taler:		350
+
+			benötigt:		Weitsicht
+
+			Forschungsgebäude:	Alte Dorfhalle
+
+
+		Ausbau zum Leuchtturm:
+
+			Baut den verfallenen Leuchtturm zum Leuchtturm aus, indem ihr ihn mit einem neuen Leuchtfeuer ausstattet.
+
+			Kosten:	Taler:		200
+				Holz:		500
+
+			benötigt:		-
+
+		Ausbau zum Golderzstollen:
+
+			Baut Eure Golderzmine zu einem Golderzstollen aus.
+
+			Kosten:	Lehm:		100
+				Holz:		100
+				Stein:		250
+
+			benötigt:		Zahnräder
+
+		Ausbau zum Golderzbergwerk:
+
+			Baut Euren Golderzstollen zu einem Golderzbergwerk aus.
+
+			Kosten:	Lehm:		100
+				Holz:		300
+				Stein:		650
+
+			benötigt:		Chemie
+
+		Ausbau zum Silberstollen:
+
+			Baut Eure Silbermine zu einem Silberstollen aus.
+
+			Kosten:	Holz:		50
+				Stein:		350
+
+			benötigt:		Zahnräder
+
+		Ausbau zum Silberbergwerk:
+
+			Baut Euren Silberstollen zu einem Silberbergwerk aus.
+
+			Kosten:	Taler:		400
+				Holz:		400
+				Stein:		800
+
+			benötigt:		Chemie
+
+		Ausbau zur Münzstätte:
+			
+			Baut Eure Schatzkammer zur Münzstätte aus.
+
+			Kosten:	Taler:		600
+				Stein:		800
+
+			benötigt:		Schatzmeistergilden
+
+		Ausbau zum Handelsposten:
+
+			Baut Euren Marktplatz zum Handelsposten aus.
+
+			Kosten:	Taler:		200
+				Holz:		150
+				Stein:		300
+				Lehm:		100
+
+			benötigt:		Münzprägung
+
+		Ausbau zur Silbergießerei:
+
+			Baut Eure Silberschmelze zur Silbergießerei aus.
+
+			Kosten:	Silber:		150
+				Lehm:		250
+				Holz:		300
+				Stein:		700
+
+			benötigt:		Chemie
+
+	Buttons:
+
+		Sonderabgaben:
+			
+			Erhebt 5 Taler pro Arbeiter in Eurer Siedlung. Dadurch sinkt Eure Motivation stark. 
+
+			Kosten:			-
+
+			benötigt:		Steuereintreibung
+
+			Gebäude:		Burg, Festung, Zitadelle, Außenposten
+
+			Abklingzeit:		240 Sekunden
+
+		Unwetter (Wetterwechsel):
+
+			Ändert das Wetter zum Unwetter. Merkmale des Unwetters sind: starker Regen, viele Blitze und schlechtere Sichtverhältnisse.
+
+			Kosten:			-
+
+			benötigt:		Unwettererforschung
+
+			Gebäude:		Wetterturm
+
+		Blitzableiter:
+
+			Der Blitzableiter macht Eure Siedlung kurzzeitig immun gegen Blitzeinschläge
+
+			Kosten:	Eisen:		600
+				Schwefel:	400
+
+			benötigt:		-
+
+			Gebäude:		Wettermaschine
+
+			Abklingzeit:		240 Sekunden		
+
+		Verstärkungen anfordern:
+			
+			Fordert Verstärkungstruppen an. Diese werden nach wenigen Minuten eintreffen.
+
+			Kosten: Eisen:		600
+				Schwefel:	400
+
+			benötigt:		-
+
+			Gebäude:		Leuchtturm
+
+			Abklingzeit:		300 Sekunden
+
+		Bandit anheuern:
+
+			Bildet ein Trupp Banditen aus.
+
+			Kosten:	Taler:		160
+			(HM)	Eisen:		85
+
+			Kosten:	Taler:		50
+			(Sol)	Eisen:		10
+
+			Max.Sol:		10
+
+			benötigt:		Kulteraustausch (Banditen)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		30 Sekunden
+
+		Banditen-Bogenschützen anheuern:
+
+			Bildet ein Trupp Banditen-Bogenschützen aus.
+
+			Kosten:	Taler:		250
+			(HM)	Holz:		80
+
+			Kosten:	Taler:		30
+			(Sol)	Holz:		30
+
+			Max.Sol:		10
+
+			benötigt:		Kulteraustausch (Banditen)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		10 Sekunden
+
+		Barbar anheuern:
+
+			Bildet ein Trupp Barbaren aus.
+
+			Kosten:	Taler:		160
+			(HM)	Holz:		20
+				Eisen:		55
+
+			Kosten:	Taler:		50
+			(Sol)	Holz:		10
+				Eisen:		20
+
+			Max.Sol:		10
+
+			benötigt:		Kulteraustausch (Barbaren)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		22 Sekunden
+			
+		Elitekrieger anheuern:
+
+			Bildet ein Trupp Elitekrieger aus.
+
+			Kosten:	Taler:		1000
+			(HM)	Silber:		80
+				Eisen:		320
+
+			Kosten:	Taler:		100
+			(Sol)	Eisen:		45
+
+			Max.Sol:		2
+
+			benötigt:		Kulteraustausch (Barbaren)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		180 Sekunden
+
+		Schwarzen Ritter anheuern:
+
+			Bildet ein Trupp Schwarze Ritter aus.
+
+			Kosten:	Taler:		250
+			(HM)	Eisen:		60
+
+			Kosten:	Taler:		100
+			(Sol)	Eisen:		45
+
+			Max.Sol:		4
+
+			benötigt:		Kulteraustausch (Raubritter)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		8 Sekunden
+
+		Bärenmenschen anheuern:
+
+			Bildet ein Trupp Bärenmenschen aus.
+
+			Kosten:	Taler:		150
+			(HM)	Eisen:		30
+
+			Kosten:	Taler:		50
+			(Sol)	Eisen:		10
+
+			Max.Sol:		16
+
+			benötigt:		Kulteraustausch (Nebelvolk)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		25 Sekunden
+
+		Speerwerfer anheuern:
+
+			Bildet ein Trupp Speerwerfer aus.
+
+			Kosten:	Taler:		150
+			(HM)	Holz:		60
+
+			Kosten:	Taler:		30
+			(Sol)	Holz:		30
+
+			Max.Sol:		16
+
+			benötigt:		Kulteraustausch (Nebelvolk)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		40 Sekunden
+		
+		Erweiterte Stats-Anzeige:
+
+			Zeigt Euch weitere Stats wie Angriffsreichweite, Sichtreichweite, Angriffstempo und Lauftempo an
+
+			Wo?:			Wenn Militäreinheiten selektiert
+
+			benötigt:		Taktiken
+	
+			umkehrbar:		Ja
+
+		Erweiterte Ressourcen-Anzeige:
+		
+			Zeigt Euch Eure Ressourcenverteilung als Roh/Veredelt an
+
+			Wo?:			Unterer Rand der Minimap
+
+			benötigt:		-
+
+			umkehrbar:		Ja
+
+		Massenentlassung:
+
+			Entlässt alle selektierten Einheiten (außer Helden)
+
+			Wo?:			Neben dem Entlassen-Button
+	
+			benötigt:		-
+
+		Wechsel zu RPG-/Draufsicht/normaler Sicht
+
+			Wechselt die Kamera zur RPG- bzw. Draufsicht bzw. zurück zur normalen Sicht
+			
+			Wo?:			Unterer Rand der Minimap
+
+			benötigt:		-
+
+			umkehrbar:		Ja
+
+	Weitere Features:
+
+		DZ-Handel-Bestrafung:
+
+			Tauscht ein Spieler DZ mit anderen Spielern in seinem Team, so wird nach einigen Sekunden Wartezeit der Spieler, der das DZ abgegeben hat, bestraft.
+			Diese hält so lange an, bis der ursprüngliche Spieler sich das DZ wiedergeholt hat, also an den Anfangszustand zurückgekehrt ist.
+			So soll das sogenannte DZ-Trading verhindert werden.
+
+		Blitze:
+
+			Regnet es, schlagen zufällig jede Sekunde auf der ganzen Karte Blitze ein. Die Menge der Blitze ist kartengrößen- und wetterabhängig. Schlägt ein Blitz nahe einer Einheit oder 
+			einem Gebäude ein nimmt die Einheit bzw. das Gebäude Schaden. Die Menge des Schadens berechnet sich aus einem Basiswert und einem Zufallswert. Gebäude nehmen generell immer mehr
+			Schaden als Einheiten. Spezielle Technologien können weitere Blitzeinschläge provozieren, ihren Schaden erhöhen oder diesen sogar kurzzeitig negieren.
+
+		Aktive Sicht:
+
+			Die passive Sicht ist im BS deaktiviert, d.h. Gebiete die ihr bereits einmal erkundet hattet, aber nun nicht mehr aktiv einseht, verschwinden wieder im Fog of War. 
+			Ihr seht also nur noch Bereiche, in deren Nähe Gebäude oder Einheiten stehen. Daher spielen Gebäude mit einer hohen Sichtreichweite wie z.B. Aussichtstürme eine 
+			wesentlich wichtigere Rolle als im "normalen" Spiel. So kann auch nicht mehr erkannt werden, wenn ein Gegner außerhalb der aktiven Sicht Minen oder DZ platziert (hat) 
+			oder Ressourcen abbaut.
+
+		Begrenzung von Inflation und Deflation:
+
+			Im Gegensatz zum "normalen" Spiel könnt ihr im BS die Preise einer Ressource nicht derart in den Keller treiben bzw. so sehr in die Höhe schießen, dass ihr lächerlich gute
+			Preise erzielt. Im BS ist Handel grundsätzlich erlaubt, da sowohl Inflation als auch Deflation stark limitiert sind. Hier könnt ihr gewöhnlichen Handel treiben, nicht aber
+			die Händler gnadenlos über´s Ohr hauen.
+
+		Silber
+
+			Silber ist eine weitere Ressource im BS. Ihr könnt Silber wie andere Ressourcen auch aus entsprechenden Schächten fördern und auch veredeln. Allerdings wird es nicht leicht
+			sein, an große Mengen dieser Ressource zu gelangen. Jede Ausgabe von Silber muss also wohlüberlegt sein. Silber kann für den Bau gewaltiger Gebäude wie dem Dom, für mächtige	
+			Technologien zum Verstärken Euer Truppen sowie zum Ausheben mächtiger Krieger verwendet werden.
+
+		Tag-Nacht-Zyklus
+
+			Es wurde ein Tag-Nacht-Zyklus eingebaut, um das Siedler-Ambiente noch realistischer zu gestalten. Dieser ist rein optischer Natur und hat keine weiteren Einflüsse auf das Spielgeschehen. 
+			Die Dauer eines Tages ist von Map zu Map unterschiedlich und kann auch je nach Map von Regen und Winter begleitet werden. Die aktuelle Tageszeit könnt Ihr an einer Mechanischen Uhr
+			einsehen.
+
+
+Maps:
+
+	Nicht alle neuen Entitäten des BS sind auch auf allen Maps verfügbar. Im Folgenden findet sich eine kurze Auflistung der Besonderheiten der Maps in Hinsicht auf diese Entitäten.
+	Bei mit * markierten Karten handelt es sich um Koop-Karten.
+
+
+		(1) Tutorial:
+
+			Silberschächte:		1
+			Goldschächte:		1
+			Leuchtturm-Fundamente:	1
+
+		(2) Dunkelforst:
+	
+			Silberschächte:		-
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	-
+
+		(2) Canyon*:
+
+			Silberschächte:		1
+			Goldschächte:		4
+			Leuchtturm-Fundamente:	1
+
+		(2) Aufstieg des Bösen - Kerberos dunkle Horden*:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	1
+
+		(3) Eingekesselt:
+
+			Silberschächte:		-
+			Goldschächte:		1
+			Leuchtturm-Fundamente:	-
+
+		(3) Hochland:
+
+			Silberschächte:		1
+			Goldschächte:		3
+			Leuchtturm-Fundamente:	-
+
+		(4) Aufstieg des Bösen - Kalas Giftnebel*:
+
+			Silberschächte:		1
+			Goldschächte:		1
+			Leuchtturm-Fundamente:	1
+
+		(4) Rotzzcana:
+
+			Silberschächte:		-
+			Goldschächte:		-
+			Leuchtturm-Fundamente:	-
+
+		(4) Tropensturm:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	4
+
+		(4) Kaloix:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	2
+
+		(4) Schneetage:
+
+			Silberschächte:		1
+			Goldschächte:		1
+			Leuchtturm-Fundamente:	2
+
+			Besonderheiten: 	Dom erst nach 60 Minuten baubar.
+
+		(5) Der große Aufstand*:
+
+			Silberschächte:		1
+			Goldschächte:		1
+			Leuchtturm-Fundamente:	1
+
+		(5) Predominance:
+
+			Silberschächte:		-
+			Goldschächte:		1
+			Leuchtturm-Fundamente:	-
+
+		(5) Feste Nuamyr:
+
+			Silberschächte:		1
+			Goldschächte:		4
+			Leuchtturm-Fundamente:	2
+
+		(6) Aufstieg des Bösen - Vargs Raubzug*:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	2
+
+		(6) Hochland:
+
+			Silberschächte:		1
+			Goldschächte:		6
+			Leuchtturm-Fundamente:	-
+
+		(6) Tropensturm:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	4
+
+		(7) Blutmoor:
+
+			Silberschächte:		-
+			Goldschächte:		3
+			Leuchtturm-Fundamente:	2
+
+		(8) Tropensturm:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	6
+
+		(8) Smaragdinseln:
+
+			Silberschächte:		1
+			Goldschächte:		2
+			Leuchtturm-Fundamente:	1
+
+		(10) Tropensturm:
+
+			Silberschächte:		1
+			Goldschächte:		4
+			Leuchtturm-Fundamente:	6
+
+		(12) Tropensturm:
+
+			Silberschächte:		1
+			Goldschächte:		8
+			Leuchtturm-Fundamente:	4
+
+		(12) Goldrausch:
+
+			Silberschächte:		2
+			Goldschächte:		16
+			Leuchtturm-Fundamente:	4
+
+			
+
+
+
