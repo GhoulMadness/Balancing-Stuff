@@ -1,5 +1,6 @@
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
+	Input.KeyBindDown(Keys.Tab, "NoTabAllowed()", 2)
 end
 
 -- needed for SWFire Mod

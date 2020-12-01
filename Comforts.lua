@@ -1254,9 +1254,19 @@ function GrievanceReasonTooHighTaxes()
 	--Stream.Start("Sounds\\VoicesMentor\\REASON_SettlerToHighTaxes", 100)
 end]]
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
+function NoTabAllowed()
+	Message("Tab ist aus technischen Gr\195\188nden auf dieser Map funktionslos!")
+end
+function HideGUI()
+	XGUIEng.ShowWidget("BackGround_BottomLeft",0)
+	XGUIEng.ShowWidget("MiniMapOverlay",0) 
+	XGUIEng.ShowWidget("MiniMap",0) 
+	XGUIEng.ShowWidget("ResourceView",0) 
+	XGUIEng.ShowWidget("MinimapButtons",0) 
+	XGUIEng.ShowWidget("Top",0) 
+	XGUIEng.ShowWidget("FindView",0) 
+	XGUIEng.ShowWidget("Normal",0)
+end
 function WinterTheme()
 	if Logic.GetWeatherState() == 3 then
 		local SoundChance = Logic.GetRandom(30)

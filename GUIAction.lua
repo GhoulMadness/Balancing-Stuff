@@ -1,4 +1,4 @@
--- 5 Diebe max. auf der Weihnachtsmap; der Dieb der in der Action erstellt werden soll, existiert noch nicht, daher 4 anstatt 5 in der GUIAction Abfrage!
+-- 4 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
 	GUIAction_BuyMilitaryUnitOrig = GUIAction_BuyMilitaryUnit
 end

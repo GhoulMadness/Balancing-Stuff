@@ -1,5 +1,13 @@
 gvPresent = gvPresent or {}
 --Geschenke-Funktionen initialisieren
+--Trigger IDs
+gvPresent.triggerIDTable = {
+							Theft = {}, 
+							Delivery = {}, 
+							Kill = {},
+							Created = {},
+							Victory = {}
+							}
 function gvPresent.Init()
 
 	if not gvPresent.Progress then
@@ -7,15 +15,15 @@ function gvPresent.Init()
 	end
 	for i = 1,2 do
 		gvPresent.Progress[i] = 3
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{i})
+		gvPresent.triggerIDTable.Theft[i] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{i})
 	end
 	XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreen"),1)
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,nil,"gvPresent_ThiefCreated", 1)
+	gvPresent.triggerIDTable.Created[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,nil,"gvPresent_ThiefCreated", 1)
 	gvPresent.ThiefIDTable = {}
 	for i = 1,4,1 do
 		gvPresent.ThiefIDTable[i] = {}
 	end	
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_VictoryJob", 1)
+	gvPresent.triggerIDTable.Victory[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_VictoryJob", 1)
 end
 --Geschenke-Fortschritt-Anzeige updaten
 function GUIUpdate_PresentProgress_Screen(_TID)
@@ -54,54 +62,62 @@ end
 gvPresent.XmasTreePos =		{
 								[1]={X=3300,Y=34800},
 								[2]={X=51200,Y=34800}
-							}
+							}							
 -- Alle Geschenke-Typen. Beim erfolgreichen Klau wird zufällig eines davon erstellt
 gvPresent.PresentTypes = {Entities.XD_Present1,Entities.XD_Present2,Entities.XD_Present3}
 -- kritische Reichweite, in der ein Geschenk geklaut werden kann
 gvPresent.XmasTreeCriticalRange = 500
 --Check, ob ein Geschenk geklaut wurde
 function gvPresent_ThiefPresentStolenCheck(_TID)	
-	local number,eID = Logic.GetEntitiesInArea(Entities.PU_Thief, gvPresent.XmasTreePos[_TID].X, gvPresent.XmasTreePos[_TID].Y, gvPresent.XmasTreeCriticalRange, 10)
-	--[[for eID in S5Hook.EntityIterator(Predicate.OfType(Entities.PU_Thief)) do
-		
-		--local epos = {}
-		epos.X,epos.Y = Logic.GetEntityPosition(eID)
-		if GetDistance(gvPresent.XmasTreePos[1],epos) <= gvPresent.XmasTreeCriticalRange or GetDistance(gvPresent.XmasTreePos[2],epos) <= gvPresent.XmasTreeCriticalRange then]]
+	local pID1
+	local pID2
+	local eTID 
+	if _TID == 1 then
+		pID1 = 1
+		pID2 = 2
+		eTID = 2
+	elseif _TID == 2 then
+		pID1 = 3
+		pID2 = 4
+		eTID = 1
+	else
+		return
+	end					
+	local number1,eID1 = Logic.GetPlayerEntitiesInArea(pID1,Entities.PU_Thief, gvPresent.XmasTreePos[eTID].X, gvPresent.XmasTreePos[eTID].Y, gvPresent.XmasTreeCriticalRange, 10)
+	local number2,eID2 = Logic.GetPlayerEntitiesInArea(pID2,Entities.PU_Thief, gvPresent.XmasTreePos[eTID].X, gvPresent.XmasTreePos[eTID].Y, gvPresent.XmasTreeCriticalRange, 10)
+	local eID
+	if eID1 ~= nil then
+		eID = eID1
+	elseif eID2 ~= nil then
+		eID = eID2
+	else
+	end
 	if eID ~= nil then
 		local pID = Logic.EntityGetPlayer(eID)
 		local resTyp,amount 
 		resTyp,amount = Logic.GetStolenResourceInfo(eID)
-		local TID
-		local eTID
-		local pos
-		if pID <= 2 then
-			TID = 1
-			eTID = 2
-			pos = gvPresent.XmasTreePos[2]
-		else	
-			TID = 2
-			eTID = 1
-			pos = gvPresent.XmasTreePos[1]
-									
-		end
+		
+		local pos = gvPresent.XmasTreePos[eTID]
+
 		if amount ~= nil then
 			if amount > 0 then
 				DestroyEntity(Logic.GetEntityIDByName("T"..eTID.."_Present"..gvPresent.Progress[eTID]) )
 				gvPresent.Progress[eTID] = math.abs(gvPresent.Progress[eTID] - 1)
-				amount = nil
+				--amount = nil
 				GUIUpdate_PresentProgress_Screen(eTID)			
-				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "gvPresent_ThiefDeliveredPresentCheck", 1,{},{eID,pID,pos.X,pos.Y,TID})
+				gvPresent.triggerIDTable.Delivery[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "gvPresent_ThiefDeliveredPresentCheck", 1,nil,{eID,pID,pos.X,pos.Y,_TID})
+				gvPresent.triggerIDTable.Kill[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "gvPresent_ThiefKilledCheck", 1,nil,{eID,_TID})
 				ChangePlayer(Logic.GetEntityIDByName("XmasTree"..eTID),7)
 				Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..eTID),Models.XD_Xmastree1)
 				--Namen des Diebes zu "Geschenke-Dieb" ändern und unselektierbar machen
 				Logic.SetEntitySelectableFlag(eID, 0)
-				Logic.SetEntityName(eID,"XmasThief"..TID)
+				Logic.SetEntityName(eID,"XmasThief".._TID)
 				MemoryManipulation.SetSettlerOverheadWidget(eID,1)
 				if cnTable then
-					cnTable["XmasThief"..TID] = "Geschenke-Dieb" 
+					cnTable["XmasThief".._TID] = "Geschenke-Dieb" 
 				end
 				--Dieb zu Position des eigenen Weihnachtsbaums laufen lassen
-				Move("XmasThief"..TID,"XmasTree"..TID)
+				Move("XmasThief".._TID,"XmasTree".._TID)
 				--Geschenke-Diebe sind 5% langsamer
 				Logic.SetSpeedFactor(eID,0.95)
 				return true
@@ -109,7 +125,7 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 		end
 	end
 end
--- Check, ob der Dieb mit geklautem Geschenk angekommen ist oder getötet wurde	
+-- Check, ob der Dieb mit geklautem Geschenk angekommen ist 
 function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 	local enemyTID
 	local ename = Logic.GetEntityName(_eID)
@@ -140,32 +156,54 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 	if Logic.GetCurrentTaskList(_eID) == "TL_THIEF_IDLE" then
 		Move("XmasThief".._TID,"XmasTree".._TID)
 	end
-	-- überprüfen, ob der Dieb überhaupt noch am Leben ist, und wenn ja, ob er bereits angekommen ist
+	-- überprüfen, ob der Dieb bereits angekommen ist
 	if Logic.IsEntityAlive(_eID) then
 		if IsNear(ename,"XmasTree".._TID,500) then
 			gvPresent.Progress[_TID] = gvPresent.Progress[_TID] + 1
 			GUIUpdate_PresentProgress_Screen(_TID)
-			ReplacingEntity(ename,Entities.PU_Thief)
+			newID = ReplacingEntity(ename,Entities.PU_Thief)
+			Logic.SetEntityName(newID,nil)
 			local presentpos = {}
 			presentpos.X,presentpos.Y = Logic.GetEntityPosition(Logic.GetEntityIDByName("T".._TID.."Present"..gvPresent.Progress[_TID]))
 			PresentID = Logic.CreateEntity(gvPresent.PresentTypes[Logic.GetRandom(2)+1],presentpos.X,presentpos.Y,0,0)
 			Logic.SetEntityName(PresentID,"T".._TID.."_Present"..gvPresent.Progress[_TID])
 			ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 			Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
+			cnTable["XmasThief".._TID] = nil
+			Trigger.UnrequestTrigger(gvPresent.triggerIDTable.Kill[_TID])
+			gvPresent.triggerIDTable.Theft[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
 			return true
 		end
-	
-	elseif Logic.IsEntityDestroyed(_eID) then
+	end
+end
+-- Check, ob der Dieb getötet wurde
+function gvPresent_ThiefKilledCheck(_eID,_TID)
+	local enemyTID
+	if 	_TID == 1 then
+		enemyTID = 2
+		XmasEnemyID = 5		
+	elseif _TID == 2 then
+		enemyTID = 1
+		XmasEnemyID = 6
+	else
+		return
+	end
+	-- überprüfen, ob der Dieb überhaupt noch am Leben ist
+	if Logic.IsEntityDestroyed(_eID) then
 		gvPresent.Progress[enemyTID] = math.abs(gvPresent.Progress[enemyTID] + 1)
 		GUIUpdate_PresentProgress_Screen(enemyTID)
+		local presentpos = {}
+		presentpos.X,presentpos.Y = Logic.GetEntityPosition(Logic.GetEntityIDByName("T"..enemyTID.."Present"..gvPresent.Progress[enemyTID]))
+		ePresentID = Logic.CreateEntity(gvPresent.PresentTypes[Logic.GetRandom(2)+1],presentpos.X,presentpos.Y,0,0)
+		Logic.SetEntityName(ePresentID,"T"..enemyTID.."_Present"..gvPresent.Progress[enemyTID])
 		ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 		Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
+		cnTable["XmasThief".._TID] = nil
+		Trigger.UnrequestTrigger(gvPresent.triggerIDTable.Delivery[_TID])
+		gvPresent.triggerIDTable.Theft[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
 		return true
 	end
 end
-
 --Siegesbedingung, wenn ein Team alle 6 Geschenke besitzt
 function gvPresent_VictoryJob()
 
@@ -195,8 +233,8 @@ function gvPresent.CutsceneVictorious(_TID)
 		pos = "XmasTree2"
 		pname1 = XNetwork.GameInformation_GetLogicPlayerUserName(3)
 		pname2 = XNetwork.GameInformation_GetLogicPlayerUserName(4)
-		pcolorr1,pcolorb1,pcolorg1 = GUI.GetPlayerColor(3)
-		pcolorr2,pcolorb2,pcolorg2 = GUI.GetPlayerColor(4)
+		pcolorr1,pcolorg1,pcolorb1 = GUI.GetPlayerColor(3)
+		pcolorr2,pcolorg2,pcolorb2 = GUI.GetPlayerColor(4)
 	end
 	local pos1 = {Logic.GetEntityPosition(Logic.GetEntityIDByName(pos))}
 	local cutsceneTable = {
@@ -220,7 +258,7 @@ function gvPresent.CutsceneVictorious(_TID)
 								
 					end,
 					title = " @color:180,0,240 Mentor",
-					text = " @color:230,0,0 Herzlichen Gl\195\188ckwunsch! @color:"..pcolorr1,pcolorb1,pcolorg1.." "..pname1.." und @color:"..pcolorr2,pcolorb2,pcolorg2.." "..pname2.." haben diese Partie für sich entschieden!",
+					text = " @color:230,0,0 Herzlichen Gl\195\188ckwunsch! @color:"..pcolorr1..","..pcolorg1..","..pcolorb1.." "..pname1.." und @color:"..pcolorr2..","..pcolorb2..","..pcolorg2.." "..pname2.." haben diese Partie für sich entschieden!",
 					},				
 			
 			}	
