@@ -3,7 +3,7 @@
 	if CNetwork then 
 		CNetwork.SetNetworkHandler("Ghoul_LevyTaxes", 
 			function(name, _playerID) 
-				if CNetwork.isAllowedToManipulatePlayer(name, _playerID) then 
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 					CLogger.Log("Ghoul_LevyTaxes", name, _playerID); 
 					-- Cooldown handling
 					gvTaxes_NextCooldown = gvTaxes_NextCooldown or {};
@@ -26,7 +26,7 @@
 		); 
 		CNetwork.SetNetworkHandler("Ghoul_LightningRod_Protected", 
 			function(name, _playerID) 
-				if CNetwork.isAllowedToManipulatePlayer(name, _playerID) then 
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 					CLogger.Log("Ghoul_LightningRod_Protected", name, _playerID); 
 					-- Cooldown handling
 					gvLightning.NextCooldown = gvLightning.NextCooldown or {};
@@ -48,7 +48,7 @@
 		); 
 		CNetwork.SetNetworkHandler("Ghoul_Lighthouse_SpawnJob", 
 			function(name, _playerID,_eID) 
-				if CNetwork.isAllowedToManipulatePlayer(name, _playerID) then 
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 					CLogger.Log("Ghoul_Lighthouse_SpawnJob", name, _playerID,_eID); 
 					
 					if Logic.GetEntityType(_eID) ~= Entities.CB_LighthouseActivated then
@@ -87,7 +87,7 @@
 		); 
 		CNetwork.SetNetworkHandler("Ghoul_ChangeWeatherToThunderstorm", 
 			function(name, _playerID,_eID) 
-				if CNetwork.isAllowedToManipulatePlayer(name, _playerID,_eID) then 
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID,_eID) then 
 					CLogger.Log("Ghoul_ChangeWeatherToThunderstorm", name); 
 					if Logic.GetPlayersGlobalResource(_playerID,ResourceType.WeatherEnergy) < Logic.GetEnergyRequiredForWeatherChange() then
 						return

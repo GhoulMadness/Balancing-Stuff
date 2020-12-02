@@ -465,10 +465,11 @@ function GameCallback_PaydayPayed(_player,_amount)
 		local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
 		CUtil.Payday_SetFrequency(_player, frequency)		
 	end
+	LuaDebugger.Log(_player)
 	-- Sudden Death auf der Weihnachtsmap
 	if gvXmasEventFlag then
-		if gvPresent.SDPaydayFactor then
-			local xmasamount
+		local xmasamount
+		if gvPresent.SDPaydayFactor then			
 			xmasamount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
 		end
 		return xmasamount

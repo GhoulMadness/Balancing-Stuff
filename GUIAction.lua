@@ -107,11 +107,11 @@ function GUIAction_NormalResourceView()
 	XGUIEng.ShowWidget("Faith",0)
 	XGUIEng.ShowWidget("WeatherEnergy",0)
 end
-function GUIAction_Activate_Silversmith_Worker_Researched(_PlayerID,_random)
+--[[function GUIAction_Activate_Silversmith_Worker_Researched(_PlayerID,_random)
 	if Counter.Tick2("Silversmith_Worker".._random,5) == true then
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_Activate_Silversmith_Worker,2)
 	end
-end
+end]]
 function GUIAction_ExpelAll()
 	local SelectedEntityIDs = {GUI.GetSelectedEntities()}
 	for i = 1,table.getn(SelectedEntityIDs) do 

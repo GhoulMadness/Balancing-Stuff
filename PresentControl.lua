@@ -9,7 +9,7 @@ gvPresent.triggerIDTable = {
 							Victory = {}
 							}
 gvPresent.SDPaydayFactor = {}
-for i = 1,4 do
+for i = 1,8 do
 	gvPresent.SDPaydayFactor[i] = 1
 end
 function gvPresent.Init()

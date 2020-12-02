@@ -1254,9 +1254,6 @@ function GrievanceReasonTooHighTaxes()
 	--Stream.Start("Sounds\\VoicesMentor\\REASON_SettlerToHighTaxes", 100)
 end]]
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function NoTabAllowed()
-	Message("Tab ist aus technischen Gr\195\188nden auf dieser Map funktionslos!")
-end
 function HideGUI()
 	XGUIEng.ShowWidget("BackGround_BottomLeft",0)
 	XGUIEng.ShowWidget("MiniMapOverlay",0) 
