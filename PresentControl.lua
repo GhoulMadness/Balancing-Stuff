@@ -8,6 +8,10 @@ gvPresent.triggerIDTable = {
 							Created = {},
 							Victory = {}
 							}
+gvPresent.SDPaydayFactor = {}
+for i = 1,4 do
+	gvPresent.SDPaydayFactor[i] = 1
+end
 function gvPresent.Init()
 
 	if not gvPresent.Progress then
@@ -67,7 +71,9 @@ gvPresent.XmasTreePos =		{
 gvPresent.PresentTypes = {Entities.XD_Present1,Entities.XD_Present2,Entities.XD_Present3}
 -- kritische Reichweite, in der ein Geschenk geklaut werden kann
 gvPresent.XmasTreeCriticalRange = 500
---Check, ob ein Geschenk geklaut wurde
+-- Reichweite, in der um den Weihnachtsbaum keine Gebäude platziert werden können
+gvPresent.XmasTreeBuildBlockRange = 3600
+-- Check, ob ein Geschenk geklaut wurde
 function gvPresent_ThiefPresentStolenCheck(_TID)	
 	local pID1
 	local pID2
@@ -111,6 +117,7 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..eTID),Models.XD_Xmastree1)
 				--Namen des Diebes zu "Geschenke-Dieb" ändern und unselektierbar machen
 				Logic.SetEntitySelectableFlag(eID, 0)
+				gvPresent.CheckForSelection(eID)
 				Logic.SetEntityName(eID,"XmasThief".._TID)
 				MemoryManipulation.SetSettlerOverheadWidget(eID,1)
 				if cnTable then
@@ -125,8 +132,16 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 		end
 	end
 end
+function gvPresent.CheckForSelection(_eID)
+	if GUI.GetSelectedEntity() == _eID then
+		GUI.DeselectEntity(_eID)
+	else
+		return
+	end
+end
 -- Check, ob der Dieb mit geklautem Geschenk angekommen ist 
 function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
+	
 	local enemyTID
 	local ename = Logic.GetEntityName(_eID)
 	local timeline = 0
@@ -204,7 +219,7 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 		return true
 	end
 end
---Siegesbedingung, wenn ein Team alle 6 Geschenke besitzt
+-- Siegesbedingung, wenn ein Team alle 6 Geschenke besitzt
 function gvPresent_VictoryJob()
 
 	if gvPresent.Progress[1] == 6 then

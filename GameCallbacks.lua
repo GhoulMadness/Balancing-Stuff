@@ -2,6 +2,22 @@ GameCallback_GUI_SelectionChangedOrig = GameCallback_GUI_SelectionChanged;
 --GameCallback_GameSpeedChangedOrig = GameCallback_GameSpeedChanged;
 GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;	
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
+
+-- 4 Diebe max. auf der Weihnachtsmap; 
+function GameCallback_PreBuyLeader(_buildingID, _uCat)
+	if not gvXmasEventFlag then
+		return
+	end
+    local player = Logic.EntityGetPlayer(_buildingID);
+    
+    if _uCat == UpgradeCategories.Thief then
+        local nthiefs = Logic.GetNumberOfEntitiesOfTypeOfPlayer(player, Entities.PU_Thief);
+        if nthiefs >= 4 then
+            return false;
+        end;
+    end;
+    return true;
+end;
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- Selection 
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -396,7 +412,34 @@ function GameCallback_PlaceBuildingAdditionalCheck(_ucat, _x, _y, _rotation, _is
             allowed = true;
         end;
     end
-    return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	if not gvXmasEventFlag then
+		return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	else
+		local check
+		local checktree1 
+		local checktree2
+		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
+		if Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1 then
+			if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+				checktree1 = true
+			else
+				checktree1 = false
+			end
+			if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+				checktree2 = true
+			else
+				checktree2 = false
+			end
+			if checktree1 == true and checktree2 == true then
+				check = true
+			else
+				check = false
+			end
+			return allowed and check
+		else
+			return allowed and false
+		end
+	end
 end 
 
 function GameCallback_ResearchProgress(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)	
@@ -422,10 +465,14 @@ function GameCallback_PaydayPayed(_player,_amount)
 		local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
 		CUtil.Payday_SetFrequency(_player, frequency)		
 	end
-	if gvPresent then
+	-- Sudden Death auf der Weihnachtsmap
+	if gvXmasEventFlag then
 		if gvPresent.SDPaydayFactor then
-			_amount = round(_amount * gvPresent.SDPaydayFactor[_player])
+			local xmasamount
+			xmasamount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
 		end
+		return xmasamount
+	else
+		return _amount
 	end
-	return _amount
 end	

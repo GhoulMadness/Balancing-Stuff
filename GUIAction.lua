@@ -1,4 +1,3 @@
--- 4 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
 	GUIAction_BuyMilitaryUnitOrig = GUIAction_BuyMilitaryUnit
 end
