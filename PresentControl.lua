@@ -115,14 +115,16 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				gvPresent.triggerIDTable.Kill[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "gvPresent_ThiefKilledCheck", 1,nil,{eID,_TID})
 				ChangePlayer(Logic.GetEntityIDByName("XmasTree"..eTID),7)
 				Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..eTID),Models.XD_Xmastree1)
+				CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..eTID), "Weihnachtsbaum")
 				--Namen des Diebes zu "Geschenke-Dieb" ändern und unselektierbar machen
 				Logic.SetEntitySelectableFlag(eID, 0)
 				gvPresent.CheckForSelection(eID)
 				Logic.SetEntityName(eID,"XmasThief".._TID)
 				MemoryManipulation.SetSettlerOverheadWidget(eID,1)
-				if cnTable then
+				CUtil.SetEntityDisplayName(eID, "Geschenke-Dieb")
+				--[[if cnTable then
 					cnTable["XmasThief".._TID] = "Geschenke-Dieb" 
-				end
+				end]]
 				--Dieb zu Position des eigenen Weihnachtsbaums laufen lassen
 				Move("XmasThief".._TID,"XmasTree".._TID)
 				--Geschenke-Diebe sind 5% langsamer
@@ -184,7 +186,8 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 			Logic.SetEntityName(PresentID,"T".._TID.."_Present"..gvPresent.Progress[_TID])
 			ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 			Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
-			cnTable["XmasThief".._TID] = nil
+			CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..enemyTID), "Weihnachtsbaum")
+			--cnTable["XmasThief".._TID] = nil
 			Trigger.UnrequestTrigger(gvPresent.triggerIDTable.Kill[_TID])
 			gvPresent.triggerIDTable.Theft[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
 			return true
@@ -213,7 +216,8 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 		Logic.SetEntityName(ePresentID,"T"..enemyTID.."_Present"..gvPresent.Progress[enemyTID])
 		ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 		Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
-		cnTable["XmasThief".._TID] = nil
+		CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..enemyTID), "Weihnachtsbaum")
+		--cnTable["XmasThief".._TID] = nil
 		Trigger.UnrequestTrigger(gvPresent.triggerIDTable.Delivery[_TID])
 		gvPresent.triggerIDTable.Theft[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
 		return true
