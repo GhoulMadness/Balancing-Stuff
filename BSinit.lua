@@ -16,10 +16,12 @@ end
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\CNetworkHandler.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\S5Hook.lua" )
+	if not gvEMSFlag then
+		Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\S5Hook.lua" )
+		InstallS5Hook()
+	end
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )
-	InstallS5Hook()
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
 	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\SWFire.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\MemoryManipulation.lua")
 	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\mcbProjectileFix.lua")
