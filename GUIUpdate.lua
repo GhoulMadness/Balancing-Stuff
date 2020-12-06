@@ -72,6 +72,16 @@ function GUIUpdate_MoveSpeed()
 		else
 			SpeedTechBonus = 0
 		end	
+	elseif Logic.IsEntityInCategory(EntityID, EntityCategories.Thief) == 1 then
+		if Logic.GetTechnologyState(PID,Technologies.T_Agility) == 4 and Logic.GetTechnologyState(PID,Technologies.T_Chest_ThiefBuff) ~= 4 then
+			SpeedTechBonus = 50
+		elseif Logic.GetTechnologyState(PID,Technologies.T_Agility) ~= 4 and Logic.GetTechnologyState(PID,Technologies.T_Chest_ThiefBuff) == 4 then
+			SpeedTechBonus = 60
+		elseif Logic.GetTechnologyState(PID,Technologies.T_Agility) == 4 and Logic.GetTechnologyState(PID,Technologies.T_Chest_ThiefBuff) == 4 then
+			SpeedTechBonus = 110	
+		else
+			SpeedTechBonus = 0
+		end
 	else
 		SpeedTechBonus = 0
 	

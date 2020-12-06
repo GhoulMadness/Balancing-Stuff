@@ -268,6 +268,8 @@ function gvPresent.CutsceneVictorious(_TID)
 					duration = 20,
 					delay = 6,
 					action 	=	function()
+						Display.SetRenderFogOfWar(0)
+						GUI.MiniMap_SetRenderFogOfWar(0)
 						StartCountdown(6,GameEnding,false)
 						if Logic.GetDiplomacyState(_TID,GUI.GetPlayerID()) == Diplomacy.Friendly then
 							Stream.Start("Voice\\cm01_08_barmecia_txt\\notevictory.mp3",190)
@@ -277,7 +279,7 @@ function gvPresent.CutsceneVictorious(_TID)
 								
 					end,
 					title = " @color:180,0,240 Mentor",
-					text = " @color:230,0,0 Herzlichen Gl\195\188ckwunsch! @color:"..pcolorr1..","..pcolorg1..","..pcolorb1.." "..pname1.." und @color:"..pcolorr2..","..pcolorb2..","..pcolorg2.." "..pname2.." haben diese Partie für sich entschieden!",
+					text = " @color:230,0,0 Herzlichen Gl\195\188ckwunsch! @color:"..pcolorr1..","..pcolorg1..","..pcolorb1.." "..pname1.." @color:255,255,255 und @color:"..pcolorr2..","..pcolorb2..","..pcolorg2.." "..pname2.." @color:255,255,255 haben diese Partie für sich entschieden!",
 					},				
 			
 			}	

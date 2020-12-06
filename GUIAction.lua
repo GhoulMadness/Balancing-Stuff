@@ -142,8 +142,11 @@ function LightningRod_Protected(_PID)
 	gvLightning.RodProtected[_PID] = true
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","LightningRod_UnProtected",1,{},{_PID})
 end
-function LightningRod_UnProtected(_PID)
-	if Counter.Tick2("Unprotected".._PID,45) == true then
+function LightningRod_UnProtected(_PID,_SpecialTimer)
+	if _SpecialTimer == nil then
+		_SpecialTimer = 45
+	end
+	if Counter.Tick2("Unprotected".._PID,_SpecialTimer) == true then
 		gvLightning.RodProtected[_PID] = false
 		return true
 	end
