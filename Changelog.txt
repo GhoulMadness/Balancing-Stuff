@@ -7,6 +7,12 @@ als im "normalen" Spiel.
 Außerdem wurden neue Gebäude und Technologien hinzugefügt, die ein vielseitigeres Spielerlebnis garantieren sollen.
 Die Änderungen und Neuerungen sind im Nachfolgenden kurz beschrieben. Nicht gegebene Angaben sind unverändert. Alle Angaben ohne Gewähr!
 
+
+technische Infos:
+
+	Der Mod funktioniert NUR über Kimichuras Updater (SP EXT Extra2 für Singleplayer, MP Extra2 für Multiplayer)
+	Die neuen Texturen werden nur angezeigt, wenn ihr die Textureinstellungen auf HOCH habt.
+
 Änderungen im Balancing Stuff 						- 				"normales" Spiel:
 
 
@@ -1826,6 +1832,26 @@ Neuerungen im Balancing Stuff:
 
 			Forschungsgebäude:	Alte Dorfhalle
 
+		Agilität:
+
+			Erhöht das Bewegegungstempo von Dieben.
+
+			Kosten:	Taler:		300
+
+			benötigt:		-
+
+			Forschungsgebäude:	Wirtshaus
+
+		Verstärkter Lederumhang:
+
+			Erhöht den Rüstungswert von Dieben.
+
+			Kosten:	Taler:		500
+				Silber:		100
+
+			benötigt:		Agilität
+
+			Forschungsgebäude:	Wirtshaus
 
 		Ausbau zum Leuchtturm:
 

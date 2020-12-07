@@ -346,8 +346,10 @@ function Lighthouse_SpawnTroops(_pID,_posX,_posY)
 		for i = 1,gvLighthouse.troopamount do 
 			CreateGroup(_pID,gvLighthouse.troops[Logic.GetRandom(17)+1],gvLighthouse.soldieramount,_posX - 800 ,_posY - 200,0)
 		end
-		GUI.AddNote("Verst\195\164rkungstruppen sind eingetroffen")
-		Stream.Start("Voice\\cm_generictext\\supplytroopsarrive.mp3",110)
+		if _pID == GUI.GetPlayerID() then
+			GUI.AddNote("Verst\195\164rkungstruppen sind eingetroffen")
+			Stream.Start("Voice\\cm_generictext\\supplytroopsarrive.mp3",110)
+		end
 		return true
 	end
 end
@@ -981,14 +983,14 @@ function SpezEntityPlaced()
     local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
-	local pos = {Logic.GetEntityPosition(Logic.GetEntityIDByName(entityID))}
+	local pos = {Logic.GetEntityPosition(entityID)}
     if entityType == Entities.PB_Dome then       
 	
 		GUI.ScriptSignal(pos[1],pos[2],1)
 		GUI.CreateMinimapPulse(pos[1],pos[2],1)
 		
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
-		CreateEntity(i, Entities.XD_Explore10,pos)
+		Logic.CreateEntity(Entities.XD_Explore10,pos[1],pos[2],i,0)
 	end
 		DomePlaced(playerID,entityID,pos[1],pos[2])
 	end
@@ -1041,9 +1043,9 @@ function DomeVictory()
 			for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 				if Logic.GetDiplomacyState(i, k) == Diplomacy.Hostile then
 					
-						Logic.PlayerSetGameStateToLost(k)					
+					Logic.PlayerSetGameStateToLost(k)					
 				else 					
-						Logic.PlayerSetGameStateToWon(k)					
+					Logic.PlayerSetGameStateToWon(k)					
 				end
 			end
 		end

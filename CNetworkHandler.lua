@@ -66,7 +66,8 @@
 					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + 5 * 60 * 1000;
     
 					-- execute stuff
-					local pos = GetPosition(_eID)
+					local pos = {}
+					pos.X,pos.Y = Logic.GetEntityPosition(_eID)
 					local Iron   = Logic.GetPlayersGlobalResource( _playerID, ResourceType.Iron ) + Logic.GetPlayersGlobalResource( _playerID, ResourceType.IronRaw)
 					local Sulfur = Logic.GetPlayersGlobalResource( _playerID, ResourceType.Sulfur ) + Logic.GetPlayersGlobalResource( _playerID, ResourceType.SulfurRaw)
 	
