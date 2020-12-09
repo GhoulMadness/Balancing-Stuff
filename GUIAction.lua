@@ -1,16 +1,16 @@
 if gvXmasEventFlag == 1 then
 	GUIAction_BuyMilitaryUnitOrig = GUIAction_BuyMilitaryUnit
-end
-function GUIAction_BuyMilitaryUnit(_UpgradeCategory)
-	if _UpgradeCategory == UpgradeCategories.Thief then
-		if Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(),Entities.PU_Thief) >= 4 then
-			Message("Ihr habt das Diebe-Limit erreicht!")
-			return 
+	function GUIAction_BuyMilitaryUnit(_UpgradeCategory)
+		if _UpgradeCategory == UpgradeCategories.Thief then
+			if Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(),Entities.PU_Thief) >= 4 then
+				Message("Ihr habt das Diebe-Limit erreicht!")
+				return 
+			else
+				GUIAction_BuyMilitaryUnitOrig(_UpgradeCategory)
+			end
 		else
 			GUIAction_BuyMilitaryUnitOrig(_UpgradeCategory)
 		end
-	else
-		GUIAction_BuyMilitaryUnitOrig(_UpgradeCategory)
 	end
 end
 function GUIAction_ChangeView(_mode)

@@ -16,13 +16,13 @@ end
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\CNetworkHandler.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
+	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\SWFire.lua")
 	if not gvEMSFlag then
 		Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\S5Hook.lua" )
 		InstallS5Hook()
 	end
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
-	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\SWFire.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\MemoryManipulation.lua")
 	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\mcbProjectileFix.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUITooltips.lua")
@@ -34,7 +34,7 @@ end
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
 	gvLastTimeButtonPressed = -240000 	
-	--[[ not needed anymore; already fixed/defined in the names.xml; mode can´t be played on instanced other than Simis Server anyway
+	--[[ not needed anymore; already fixed/defined in the names.xml; mode can´t be played on instances other than Simis Server anyway
 	if CUtil then
 		CUtil.SetStringTableText("names/PB_GunsmithWorkshop1", "B\195\188chsen @bs macherei")
 		CUtil.SetStringTableText("names/CB_Castle2", "Handelsposten")

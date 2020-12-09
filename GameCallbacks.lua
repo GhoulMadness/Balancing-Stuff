@@ -4,20 +4,22 @@ GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
 
 -- 4 Diebe max. auf der Weihnachtsmap; 
-function GameCallback_PreBuyLeader(_buildingID, _uCat)
-	if not gvXmasEventFlag then
-		return
-	end
-    local player = Logic.EntityGetPlayer(_buildingID);
-    
-    if _uCat == UpgradeCategories.Thief then
-        local nthiefs = Logic.GetNumberOfEntitiesOfTypeOfPlayer(player, Entities.PU_Thief);
-        if nthiefs >= 4 then
-            return false;
-        end;
-    end;
-    return true;
-end;
+if gvXmasEventFlag == 1 then
+	function GameCallback_PreBuyLeader(_buildingID, _uCat)
+		if not gvXmasEventFlag then
+			return
+		end
+		local player = Logic.EntityGetPlayer(_buildingID);
+		
+		if _uCat == UpgradeCategories.Thief then
+			local nthiefs = Logic.GetNumberOfEntitiesOfTypeOfPlayer(player, Entities.PU_Thief);
+			if nthiefs >= 4 then
+				return false;
+			end;
+		end;
+		return true;
+	end;
+end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- Selection 
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
