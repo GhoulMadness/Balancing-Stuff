@@ -9,7 +9,7 @@
 					gvTaxes_NextCooldown = gvTaxes_NextCooldown or {};
 
 					if gvTaxes_NextCooldown[_playerID] then
-						if gvTaxes_NextCooldown[_playerID] < Logic.GetTimeMs() then
+						if gvTaxes_NextCooldown[_playerID] > Logic.GetTimeMs() then
 							return;
 						end;
 					end;
@@ -32,7 +32,7 @@
 					gvLightning.NextCooldown = gvLightning.NextCooldown or {};
 					
 					if gvLightning.NextCooldown[_playerID] then
-						if gvLightning.NextCooldown[_playerID] < Logic.GetTimeMs() then
+						if gvLightning.NextCooldown[_playerID] > Logic.GetTimeMs() then
 							return;
 						end;
 					end;
@@ -58,7 +58,7 @@
 					gvLighthouse.NextCooldown = gvLighthouse.NextCooldown or {};
 					
 					if gvLighthouse.NextCooldown[_playerID] then
-						if gvLighthouse.NextCooldown[_playerID] < Logic.GetTimeMs() then
+						if gvLighthouse.NextCooldown[_playerID] > Logic.GetTimeMs() then
 							return;
 						end;
 					end;
@@ -79,8 +79,7 @@
 					else
 						if GUI.GetPlayerID() == _playerID then
 							
-							Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)
-						
+							Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)					
 						end
 					end
 				end; 

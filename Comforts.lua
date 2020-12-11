@@ -339,6 +339,8 @@ gvLighthouse = { delay = 60 + Logic.GetRandom(30) , troopamount = 2 + Logic.GetR
 function Lighthouse_SpawnJob(_playerID,_eID)
 	local _pos = {}
 	_pos.X,_pos.Y = Logic.GetEntityPosition(_eID)
+	Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Iron,-600)
+	Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Sulfur,-400)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,_pos.X,_pos.Y} )	
 end
 function Lighthouse_SpawnTroops(_pID,_posX,_posY)
