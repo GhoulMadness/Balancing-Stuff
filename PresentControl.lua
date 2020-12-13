@@ -237,45 +237,50 @@ function gvPresent_VictoryJob()
 	end
 end
 function gvPresent.CutsceneVictorious(_TID)
+	Display.SetRenderFogOfWar(0)
+	GUI.MiniMap_SetRenderFogOfWar(0)
 	local pos
 	local pname1
 	local pname2
 	local pcolorr1,pcolorb1,pcolorg1
 	local pcolorr2,pcolorb2,pcolorg2
+	local PID1,PID2
 	if _TID == 1 then
+		PID1 = 1
+		PID2 = 2
 		pos = "XmasTree1"
-		pname1 = XNetwork.GameInformation_GetLogicPlayerUserName(1)
-		pname2 = XNetwork.GameInformation_GetLogicPlayerUserName(2)
-		pcolorr1,pcolorb1,pcolorg1 = GUI.GetPlayerColor(1)
-		pcolorr2,pcolorb2,pcolorg2 = GUI.GetPlayerColor(2)
+		pname1 = XNetwork.GameInformation_GetLogicPlayerUserName(PID1)
+		pname2 = XNetwork.GameInformation_GetLogicPlayerUserName(PID2)
+		pcolorr1,pcolorb1,pcolorg1 = GUI.GetPlayerColor(PID1)
+		pcolorr2,pcolorb2,pcolorg2 = GUI.GetPlayerColor(PID2)
 	elseif _TID == 2 then
+		PID1 = 3
+		PID2 = 4
 		pos = "XmasTree2"
-		pname1 = XNetwork.GameInformation_GetLogicPlayerUserName(3)
-		pname2 = XNetwork.GameInformation_GetLogicPlayerUserName(4)
-		pcolorr1,pcolorg1,pcolorb1 = GUI.GetPlayerColor(3)
-		pcolorr2,pcolorg2,pcolorb2 = GUI.GetPlayerColor(4)
+		pname1 = XNetwork.GameInformation_GetLogicPlayerUserName(PID1)
+		pname2 = XNetwork.GameInformation_GetLogicPlayerUserName(PID2)
+		pcolorr1,pcolorg1,pcolorb1 = GUI.GetPlayerColor(PID1)
+		pcolorr2,pcolorg2,pcolorb2 = GUI.GetPlayerColor(PID2)
+	end
+	if Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Friendly then
+		Stream.Start("Voice\\cm01_08_barmecia_txt\\notevictory.mp3",260)
+	elseif Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Hostile then
+		Stream.Start("Sounds\\VoicesMentor\\vc_yourteamhaslost_rnd_02.wav",210)
 	end
 	local pos1 = {Logic.GetEntityPosition(Logic.GetEntityIDByName(pos))}
 	local cutsceneTable = {
     StartPosition = {
-	position = pos1, angle = 18, zoom = 3700, rotation = -10},
+	position = pos1, angle = 18, zoom = 3700, rotation = 90},
 	Flights = 	{
 					{
 					position = pos1,
 					angle = 18,
 					zoom = 3700,
-					rotation = 90,
+					rotation = -10,
 					duration = 20,
 					delay = 6,
 					action 	=	function()
-						Display.SetRenderFogOfWar(0)
-						GUI.MiniMap_SetRenderFogOfWar(0)
 						StartCountdown(6,GameEnding,false)
-						if Logic.GetDiplomacyState(_TID,GUI.GetPlayerID()) == Diplomacy.Friendly then
-							Stream.Start("Voice\\cm01_08_barmecia_txt\\notevictory.mp3",190)
-						elseif Logic.GetDiplomacyState(_TID,GUI.GetPlayerID()) == Diplomacy.Hostile then
-							Stream.Start("Sounds\\VoicesMentor\\vc_yourteamhaslost_rnd_02.wav",190)
-						end
 								
 					end,
 					title = " @color:180,0,240 Mentor",

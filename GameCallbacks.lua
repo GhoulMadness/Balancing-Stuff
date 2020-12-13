@@ -340,19 +340,27 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 	if Sounds.VoicesMentor_JOIN_Silversmith == nil then
 		if _type == ResourceType.SilverRaw then
 			if resremain <= criticaltresholdsilver and resremain > criticaltresholdsilver - _amount then
-				Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowsilver.wav", 262)
+				if GUI.GetPlayerID() == playerID then
+					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowsilver.wav", 262)
+				end
 			end
 			if resremain <= _amount then
-				Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 262)
+				if GUI.GetPlayerID() == playerID then
+					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 262)
+				end
 			end
 			
 			
 		elseif _type == ResourceType.GoldRaw then
 			if resremain <= criticaltresholdgold and resremain > criticaltresholdgold - _amount then
-				Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowgold.wav", 262)
+				if GUI.GetPlayerID() == playerID then
+					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowgold.wav", 262)
+				end
 			end
 			if resremain <= _amount then
-				Stream.Start("Sounds\\VoicesMentor\\mine_mineemptygold.wav", 262)
+				if GUI.GetPlayerID() == playerID then
+					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptygold.wav", 262)
+				end
 			end
 		end
 		else
