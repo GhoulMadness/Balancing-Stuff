@@ -341,12 +341,12 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 		if _type == ResourceType.SilverRaw then
 			if resremain <= criticaltresholdsilver and resremain > criticaltresholdsilver - _amount then
 				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowsilver.wav", 262)
+					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowsilver.wav", 292)
 				end
 			end
 			if resremain <= _amount then
 				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 262)
+					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 292)
 				end
 			end
 			
@@ -354,12 +354,12 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 		elseif _type == ResourceType.GoldRaw then
 			if resremain <= criticaltresholdgold and resremain > criticaltresholdgold - _amount then
 				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowgold.wav", 262)
+					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowgold.wav", 292)
 				end
 			end
 			if resremain <= _amount then
 				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptygold.wav", 262)
+					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptygold.wav", 292)
 				end
 			end
 		end

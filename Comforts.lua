@@ -28,7 +28,9 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 		Logic.SetTechnologyState(i,Technologies.UP1_Lighthouse,3)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
-		Logic.SetTechnologyState(i,Technologies.B_VillageHall,0) 
+		if gvXmasEventFlag then
+			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0) 
+		end
 			
 	end
 	if MP_DiplomacyWindow.resources_to_name then
@@ -97,7 +99,9 @@ else
 	Logic.SetTechnologyState(1,Technologies.UP1_Lighthouse,3)
 	Logic.SetTechnologyState(1,Technologies.MU_Cannon5,0)
 	Logic.SetTechnologyState(1,Technologies.MU_Cannon6,0)
-	Logic.SetTechnologyState(1,Technologies.B_VillageHall,0) 
+	if gvXmasEventFlag then
+		Logic.SetTechnologyState(1,Technologies.B_VillageHall,0) 
+	end
 		
 	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
 		return 1
@@ -992,8 +996,11 @@ function SpezEntityPlaced()
 		GUI.CreateMinimapPulse(pos[1],pos[2],1)
 		
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
-		Logic.CreateEntity(Entities.XD_Explore10,pos[1],pos[2],i,0)
+		local gvViewCenterID = {}
+		gvViewCenterID[i] = Logic.CreateEntity(Entities.XD_ScriptEntity,pos[1],pos[2],i,0)
+		Logic.SetEntityExplorationRange(gvViewCenterID[i],22)
 	end
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "DomeFallen", 1)
 		DomePlaced(playerID,entityID,pos[1],pos[2])
 	end
 	if entityType == Entities.PU_Silversmith then
@@ -1006,7 +1013,7 @@ function SpezEntityPlaced()
 				Sound.PlayFeedbackSound(0,0)
 				GUI.SetFeedbackSoundOutputState(0)
 				Music.SetVolumeAdjustment(Music.GetVolumeAdjustment() * 0.5)
-				Stream.Start("Sounds\\VoicesMentor\\join_silversmith.wav", 262)
+				Stream.Start("Sounds\\VoicesMentor\\join_silversmith.wav", 292)
 				StartCountdown(math.ceil(Stream.GetDuration()),Unmuting,false)
 			end
 		end
@@ -1015,9 +1022,9 @@ end
 function DomeFallen()
 
     local entityID = Event.GetEntityID()
-    local entityTypeID = Logic.GetEntityTypeName(Logic.GetEntityType(entityID))
+    local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
-    if entityTypeID == "PB_Dome" then  
+    if entityType == Entities.PB_Dome then  
 	
 		Logic.PlayerSetGameStateToLost(playerID)
 		for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
@@ -1033,7 +1040,6 @@ end
 function DomePlaced(_pID,_eID,_posX,_posY)
 
 	if Logic.IsConstructionComplete(_eID) == 1 then
-		
 		StartCountdown(10*60,DomeVictory,true)
 	end
 end
