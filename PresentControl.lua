@@ -22,6 +22,12 @@ function gvPresent.Init()
 		gvPresent.triggerIDTable.Theft[i] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{i})
 	end
 	XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreen"),1)
+	if GUI.GetPlayerID() == 17 then
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenSpectator"),1)
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),1)
+		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),GetXmasTeamName(1))
+		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenSpectatorTeamName"),GetXmasTeamName(3))
+	end
 	gvPresent.triggerIDTable.Created[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,nil,"gvPresent_ThiefCreated", 1)
 	gvPresent.ThiefIDTable = {}
 	for i = 1,4,1 do
@@ -49,6 +55,15 @@ function GUIUpdate_PresentProgress_Screen(_TID)
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgress"..i-1),0)
 		end
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgress"..gvPresent.Progress[_TID]),1)
+	end
+	if GUI.GetPlayerID() == 17 then
+		
+		for i = 1,7,1 do
+			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgress"..i-1),0)
+			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressSpectator"..i-1),0)
+		end
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgress"..gvPresent.Progress[1]),1)
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressSpectator"..gvPresent.Progress[2]),1)
 	end
 end
 	
@@ -331,6 +346,49 @@ function gvPresent.SDPayday()
 	gvPresent.SDPaydayFactor[pID1] = PresentDifferenceFactor
 	gvPresent.SDPaydayFactor[pID2] = PresentDifferenceFactor
 	
+end
+function GetXmasTeamName(_PID)
+	local TeamName = ""
+	if XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "RitterLeo" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Norman" then
+		TeamName = "Langfinger Duo"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G Roma" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G Mathias" then
+		TeamName = "Chickenwins"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Akaito_TR" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Phoenix_TR" then
+		TeamName = "Team Rocket"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "WoS_Nebel" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "maxi" then
+		TeamName = "Kala-Fanboys"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "noascape" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Wespenstich" then
+		TeamName = "Wespenescape"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "GAS-C_banzaii" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "GAS-C_Siverdust" then
+		TeamName = "Alkohooligans"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "laulo_O" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "MadShadow" then
+		TeamName = "Die irrwitzigen Schlitzer"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "LOW_Parzival" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "LOW_Benoron" then
+		TeamName = "Rentnerkegelclub"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DerEisenfresser" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "AlcribLP" then
+		TeamName = "Das Auge des Falken"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_Actos" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_Hunter" then
+		TeamName = "Last Stand of Mittelerde"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "ARX_Minerva" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Leilche" then
+		TeamName = "Frostleilchen"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DarkShadow" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DazZ_Dark_Knight" then
+		TeamName = "Dark Knight Shadows"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Mr.Tempus" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Der_Deutsche" then
+		TeamName = "Team UTC+1"
+	else
+		local _PID2
+		if _PID == 1 then
+			_PID2 = 2
+		elseif _PID == 2 then
+			_PID2 = 1
+		elseif _PID == 3 then
+			_PID2 = 4
+		elseif _PID == 4 then
+			_PID2 = 3
+		end
+		TeamName = XNetwork.GameInformation_GetLogicPlayerUserName(_PID) .." & ".. XNetwork.GameInformation_GetLogicPlayerUserName(_PID2)
+	end
+	return TeamName
 end
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ CutsceneComforts ------------------------------------------------------------------

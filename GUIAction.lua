@@ -170,14 +170,18 @@ function GUIAction_LighthouseHireTroops()
 	local Iron   = Logic.GetPlayersGlobalResource( pID, ResourceType.Iron ) + Logic.GetPlayersGlobalResource( pID, ResourceType.IronRaw)
 	local Sulfur = Logic.GetPlayersGlobalResource( pID, ResourceType.Sulfur ) + Logic.GetPlayersGlobalResource( pID, ResourceType.SulfurRaw)
 	
+	if Logic.GetPlayerAttractionUsage(pID) >= Logic.GetPlayerAttractionLimit(pID) then
+		GUI.SendPopulationLimitReachedFeedbackEvent(pID)
+		return
+	end
 	if Iron >= 600 and Sulfur >= 400 then
 		GUI.DeselectEntity(eID)
 		GUI.SelectEntity(eID)
-		gvLighthouse.starttime = Logic.GetTime()
 		if CNetwork then
 			CNetwork.SendCommand("Ghoul_Lighthouse_SpawnJob", pID,eID);
 		else
 			Lighthouse_SpawnJob(pID,eID)
+			gvLighthouse.starttime[1] = Logic.GetTime()
 		end
 	else
 		Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)

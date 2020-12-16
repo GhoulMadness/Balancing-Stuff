@@ -63,7 +63,8 @@
 						end;
 					end;
 					-- update cooldown.
-					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + 5 * 60 * 1000;
+					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + (5 * 60 * 1000);
+					gvLighthouse.starttime[_playerID] = Logic.GetTime()
     
 					-- execute stuff
 					local pos = {}

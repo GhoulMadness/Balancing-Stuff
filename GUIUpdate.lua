@@ -241,7 +241,7 @@ function GUIUpdate_LighthouseTroops()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local eType = Logic.GetEntityType(eID)
 	
-	local TimePassed = math.floor(Logic.GetTime()- gvLighthouse.starttime)
+	local TimePassed = math.floor(Logic.GetTime()- gvLighthouse.starttime[PID])
 
 	local RechargeTime = gvLighthouse.cooldown
 	

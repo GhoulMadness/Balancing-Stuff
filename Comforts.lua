@@ -28,7 +28,7 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 		Logic.SetTechnologyState(i,Technologies.UP1_Lighthouse,3)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
-		if gvXmasEventFlag then
+		if gvXmasEventFlag or gvTutorialFlag then
 			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0) 
 		end
 			
@@ -337,9 +337,11 @@ gvLighthouse = { delay = 60 + Logic.GetRandom(30) , troopamount = 2 + Logic.GetR
 	Entities.PU_LeaderCavalry2,
 	Entities.PU_LeaderHeavyCavalry2
 									} 
-, soldieramount = 2 + Logic.GetRandom(10), soldiercavamount = 1 + Logic.GetRandom(5) , starttime = 0, cooldown = 300
+, soldieramount = 2 + Logic.GetRandom(10), soldiercavamount = 1 + Logic.GetRandom(5) , starttime = {}, cooldown = 300
 	}
-
+for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
+	gvLighthouse.starttime[i] = 0
+end
 function Lighthouse_SpawnJob(_playerID,_eID)
 	local _pos = {}
 	_pos.X,_pos.Y = Logic.GetEntityPosition(_eID)
@@ -348,7 +350,12 @@ function Lighthouse_SpawnJob(_playerID,_eID)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,_pos.X,_pos.Y} )	
 end
 function Lighthouse_SpawnTroops(_pID,_posX,_posY)
-	if Logic.GetTime() >= gvLighthouse.starttime + gvLighthouse.delay then
+	if Logic.GetTime() >= gvLighthouse.starttime[_pID] + gvLighthouse.delay then
+		-- Maximum number of settlers attracted?
+		if Logic.GetPlayerAttractionUsage(_pID) >= Logic.GetPlayerAttractionLimit(_pID) then
+			GUI.SendPopulationLimitReachedFeedbackEvent(_pID)
+			return
+		end
 		for i = 1,gvLighthouse.troopamount do 
 			CreateGroup(_pID,gvLighthouse.troops[Logic.GetRandom(17)+1],gvLighthouse.soldieramount,_posX - 800 ,_posY - 200,0)
 		end
@@ -1276,7 +1283,7 @@ function HideGUI()
 end
 function WinterTheme()
 	if Logic.GetWeatherState() == 3 then
-		local SoundChance = Logic.GetRandom(30)
+		local SoundChance = Logic.GetRandom(24)
 			if SoundChance == 10 then
 			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd1,270)
 		end
@@ -1286,6 +1293,13 @@ gvIngameTimeSec = 0
 function IngameTimeJob()
 	if gvGameSpeed ~= 0 then
 		gvIngameTimeSec = gvIngameTimeSec + 1
+	end
+end
+function BloodRushCheck()
+	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+		if Score.GetPlayerScore(i, "battle") > 1999 and Logic.GetTechnologyState(i,Technologies.T_UnlockBloodrush) ~= 4 then
+			Logic.SetTechnologyState(i,Technologies.T_UnlockBloodrush,3)
+		end
 	end
 end
 function IstDrin(_wert, _table)

@@ -616,7 +616,7 @@ technische Infos:
 
 		Dario:
 
-			Rüstung:		11									3
+			Rüstung:		9									3
 
 			HP:			1200									600
 
@@ -1272,7 +1272,7 @@ technische Infos:
 		
 		Stadtwache:
 		
-			Kosten:	Taler:		400									400
+			Kosten:	Taler:		100									400
 				
 
 			Effekt:			erhöht die Sichtweite aller Gebäude					kein Effekt
@@ -1519,7 +1519,7 @@ Neuerungen im Balancing Stuff:
 
 			ermöglicht den Bau von Banken.
 			
-			Kosten: Taler:		500
+			Kosten: Taler:		350
 
 			benötigt: 		Steuereintreibung, Universität
 
@@ -1529,8 +1529,8 @@ Neuerungen im Balancing Stuff:
 
 			ermöglicht den Bau von Außenposten sowie den Ausbau von Banken zu Schatzkammern.
 
-			Kosten: Taler: 		300
-				Schwefel:	100
+			Kosten: Taler: 		400
+				Holz:		250
 
 			benötigt:		Bankwesen, Zitadelle
 
@@ -1542,7 +1542,7 @@ Neuerungen im Balancing Stuff:
 
 			Kosten: Taler:		700
 		
-			benötigt:		mindestens 20 Technologien in der Uni erforscht.
+			benötigt:		alle anderen Technologien in der Uni erforscht.
 
 			Forschungsgebäude:	Universität
 
@@ -1790,7 +1790,7 @@ Neuerungen im Balancing Stuff:
 
 		Verbesserte Ziegel:
 
-			Verringert die Bauzeit von Gebäuden (nicht Ausbau)
+			Verringert die Bauzeit von Gebäuden (nicht Ausbau/Reparatur)
 
 			Kosten: Taler:		200
 				Lehm:		400

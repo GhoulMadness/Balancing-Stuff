@@ -1,3 +1,7 @@
+BS = BS or {}
+
+BS.Version = 0.5
+
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
 end
@@ -91,6 +95,7 @@ end
 	StartSimpleJob("WinterTheme")
 	StartSimpleJob("Unwetter")
 	StartSimpleJob("IngameTimeJob")
+	StartSimpleJob("BloodRushCheck")
 	DZTrade_Init()
 	--FireMod.Init()
 	--HurtProjectileFix.Init() --entspr. Hook Aufruf nicht von Simis Server unterstützt, Geschosse der Scharfis fehlen 
