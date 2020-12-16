@@ -771,7 +771,7 @@ MemoryManipulation.ObjFieldInfo = {
 			{name="TargetPosition", index={66}, datatype=MemoryManipulation.DataType.EmbeddedObject, vtableOverride="Position"},
 			{name="TargetRotationValid", index={68}, datatype=MemoryManipulation.DataType.Bit, bitOffset=0, check={1,0}},
 			{name="TargetRotation", index={69}, datatype=MemoryManipulation.DataType.Float, readConv=math.deg, writeConv=math.rad},
-			{name="MovementState", index={70}, datatype=MemoryManipulation.DataType.Int, check={}}, -- ?
+			{name="MovementState", index={70}, datatype=MemoryManipulation.DataType.Int, check=nil}, -- ?
 		},
 	},
 	[MemoryManipulation.ClassVTable.GGL_CEvadingEntity] = {
@@ -2456,8 +2456,8 @@ MemoryManipulation.SetSettlerTypeMinRange = MemoryManipulation.GetSettlerTypeMin
 MemoryManipulation.GetSettlerModifiedMovementSpeed = {LibFuncBase=MemoryManipulation.LibFuncBase.Entity, path="MovingSpeed", checksettler=true}
 
 function MemoryManipulation.CreateLibFuncs()
-	if XNetworkUbiCom.Manager_DoesExist()==1 and XNetworkWrapper then
-		MemoryManipulation.CreateLibFuncsUpval() -- kimichuras server removes all elval options, so we have to use upvalues there
+	if XNetworkUbiCom.Manager_DoesExist()==1 and XNetwork.EXTENDED_GameInformation_GetHost then
+		MemoryManipulation.CreateLibFuncsUpval() -- kimichuras server removes all eval options, so we have to use upvalues there
 	else
 		MemoryManipulation.CreateLibFuncsEval() -- compile the funcs, cause upvalues dont get saved
 	end

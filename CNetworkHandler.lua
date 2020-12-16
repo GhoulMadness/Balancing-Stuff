@@ -64,7 +64,6 @@
 					end;
 					-- update cooldown.
 					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + (5 * 60 * 1000);
-					gvLighthouse.starttime[_playerID] = Logic.GetTime()
     
 					-- execute stuff
 					local pos = {}
@@ -76,7 +75,7 @@
 						Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Iron,-600)
 						Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Sulfur,-400)
 						Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN,"", "Lighthouse_SpawnTroops",1,{},{_playerID,pos.X,pos.Y} )
-						gvLighthouse.starttime = Logic.GetTime()
+						gvLighthouse.starttime[_playerID] = Logic.GetTime()
 					else
 						if GUI.GetPlayerID() == _playerID then
 							
