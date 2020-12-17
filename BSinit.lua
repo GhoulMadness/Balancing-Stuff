@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.5
+BS.Version = 0.51
 
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
@@ -103,7 +103,5 @@ end
 	if not gvEMSFlag then
 		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else
-		MCS = EMS
 		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
-		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("EMSMPOptionsStart",0))
 	end

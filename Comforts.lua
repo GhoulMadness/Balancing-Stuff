@@ -41,6 +41,7 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 			[ResourceType.StoneRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameStone") .. " [R]";
 			[ResourceType.IronRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameIron") .. " [R]";
 			[ResourceType.SulfurRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameSulfur") .. " [R]";
+			[ResourceType.SilverRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameSilver") .. " [R]";
 				
 			[ResourceType.Gold] = "@color:184,182,90: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " @color:255,255,255,255: ";
 			[ResourceType.Clay] = "@color:115,66,34: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameClay") .. " @color:255,255,255,255: ";
@@ -66,7 +67,8 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 			[ResourceType.WoodRaw] = ResourceType.StoneRaw;
 			[ResourceType.StoneRaw] = ResourceType.IronRaw;
 			[ResourceType.IronRaw] = ResourceType.SulfurRaw;
-			[ResourceType.SulfurRaw] = ResourceType.Gold;
+			[ResourceType.SulfurRaw] = ResourceType.SilverRaw;
+			[ResourceType.SilverRaw] = ResourceType.Gold;
 		};
 		
 		MP_DiplomacyWindow.resource_to_check = {
@@ -86,9 +88,28 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 			[ResourceType.IronRaw] = { ResourceType.IronRaw },
 			[ResourceType.SulfurRaw] = { ResourceType.SulfurRaw },
 		};
-		
+		if MP_DiplomacyWindow.allowed_resources then
+		 MP_DiplomacyWindow.allowed_resources = {
+			[ResourceType.Gold] = true;
+			[ResourceType.Clay] = true;
+			[ResourceType.Wood] = true;
+			[ResourceType.Stone] = true;
+			[ResourceType.Iron] = true;
+			[ResourceType.Sulfur] = true;
+			[ResourceType.Silver] = true;
+		};
+		end
 		if MP_DiplomacyWindow.raw_resources_allowed then
+			MP_DiplomacyWindow.allowed_resources[ResourceType.GoldRaw] = true;
+			MP_DiplomacyWindow.allowed_resources[ResourceType.ClayRaw] = true;
+			MP_DiplomacyWindow.allowed_resources[ResourceType.WoodRaw] = true;
+			MP_DiplomacyWindow.allowed_resources[ResourceType.StoneRaw] = true;
+			MP_DiplomacyWindow.allowed_resources[ResourceType.IronRaw] = true;
+			MP_DiplomacyWindow.allowed_resources[ResourceType.SulfurRaw] = true;
+			MP_DiplomacyWindow.allowed_resources[ResourceType.SilverRaw] = true;
+			
 			MP_DiplomacyWindow.resource_to_next[ResourceType.Silver] = ResourceType.GoldRaw;
+			
 		end;
 	end
 	

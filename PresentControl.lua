@@ -25,8 +25,8 @@ function gvPresent.Init()
 	if GUI.GetPlayerID() == 17 then
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenSpectator"),1)
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),1)
-		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),GetXmasTeamName(1))
-		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenSpectatorTeamName"),GetXmasTeamName(3))
+		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenTeamName")," @center "..GetXmasTeamName(1))
+		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenSpectatorTeamName")," @center "..GetXmasTeamName(3))
 	end
 	gvPresent.triggerIDTable.Created[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,nil,"gvPresent_ThiefCreated", 1)
 	gvPresent.ThiefIDTable = {}
