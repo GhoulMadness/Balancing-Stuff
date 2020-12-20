@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.51
+BS.Version = 0.52
 
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
@@ -50,7 +50,6 @@ if 	gvGUI_TechnologyButtonIDArray then
 	gvGUI_TechnologyButtonIDArray[Technologies.T_CropCycle] = XGUIEng.GetWidgetID("Research_CropCycle");
 	gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
 	gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");	
-	
 end	
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
@@ -97,9 +96,7 @@ end
 	StartSimpleJob("IngameTimeJob")
 	StartSimpleJob("BloodRushCheck")
 	DZTrade_Init()
-	--FireMod.Init()
-	--HurtProjectileFix.Init() --entspr. Hook Aufruf nicht von Simis Server unterstützt, Geschosse der Scharfis fehlen 
-	CEntity.EnableDamageClassAoEDamage()
+	
 	if not gvEMSFlag then
 		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else

@@ -277,11 +277,6 @@ function gvPresent.CutsceneVictorious(_TID)
 		pcolorr1,pcolorg1,pcolorb1 = GUI.GetPlayerColor(PID1)
 		pcolorr2,pcolorg2,pcolorb2 = GUI.GetPlayerColor(PID2)
 	end
-	if Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Friendly then
-		Stream.Start("Voice\\cm01_08_barmecia_txt\\notevictory.mp3",260)
-	elseif Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Hostile then
-		Stream.Start("Sounds\\VoicesMentor\\vc_yourteamhaslost_rnd_02.wav",210)
-	end
 	local pos1 = {Logic.GetEntityPosition(Logic.GetEntityIDByName(pos))}
 	local cutsceneTable = {
     StartPosition = {
@@ -295,14 +290,24 @@ function gvPresent.CutsceneVictorious(_TID)
 					duration = 20,
 					delay = 6,
 					action 	=	function()
-						StartCountdown(6,GameEnding,false)
 								
 					end,
 					title = " @color:180,0,240 Mentor",
 					text = " @color:230,0,0 Herzlichen Gl\195\188ckwunsch! @color:"..pcolorr1..","..pcolorg1..","..pcolorb1.." "..pname1.." @color:255,255,255 und @color:"..pcolorr2..","..pcolorb2..","..pcolorg2.." "..pname2.." @color:255,255,255 haben diese Partie für sich entschieden!",
 					},				
 			
-			}	
+			},
+	Callback = function()	
+		Display.SetRenderFogOfWar(0)
+		GUI.MiniMap_SetRenderFogOfWar(0)
+		GameEnding()
+		if Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Friendly or PID1 == GUI.GetPlayerID() or GUI.GetPlayerID() == 17 then
+			Stream.Start("Voice\\cm01_08_barmecia_txt\\notevictory.mp3",190)
+		elseif Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Hostile then
+			Stream.Start("Sounds\\VoicesMentor\\vc_yourteamhaslost_rnd_02.wav",190)
+		end
+	
+	end
     
 	}
 	Startcutscene(cutsceneTable)
@@ -317,12 +322,12 @@ function GameEnding()
 	
 	elseif gvPresent.Progress[2] == 6 then
 	
-	gvPresent.CutsceneVictorious(2)
 		Logic.PlayerSetGameStateToWon(3)
 		Logic.PlayerSetGameStateToWon(4)
 		Logic.PlayerSetGameStateToLost(1)
 		Logic.PlayerSetGameStateToLost(2)
 	end
+	XGUIEng.ShowWidget("GameEndScreen_WindowReturnToGame",1)
 end
 
 --Sudden Death Zahltag-Faktor-Änderung (aufgerufen vom Mapscript)
@@ -349,27 +354,27 @@ function gvPresent.SDPayday()
 end
 function GetXmasTeamName(_PID)
 	local TeamName = ""
-	if XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "RitterLeo" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Norman" then
+	if XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "RitterLeo" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Norman9833" then
 		TeamName = "Langfinger Duo"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G Roma" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G Mathias" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G_Roma" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G_Mathias" then
 		TeamName = "Chickenwins"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Akaito_TR" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Phoenix_TR" then
 		TeamName = "Team Rocket"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "WoS_Nebel" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "maxi" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "WoS_Nebel" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "maxi55569874" then
 		TeamName = "Kala-Fanboys"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "noascape" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Wespenstich" then
 		TeamName = "Wespenescape"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "GAS-C_banzaii" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "GAS-C_Siverdust" then
-		TeamName = "Alkohooligans"
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "GAS-C_BaNzInGeR" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "JowBlob93" then
+		TeamName = "Die Alkohooligans"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "laulo_O" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "MadShadow" then
 		TeamName = "Die irrwitzigen Schlitzer"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "LOW_Parzival" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "LOW_Benoron" then
 		TeamName = "Rentnerkegelclub"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DerEisenfresser" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "AlcribLP" then
 		TeamName = "Das Auge des Falken"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_Actos" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_Hunter" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_actos" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_Hunter" then
 		TeamName = "Last Stand of Mittelerde"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "ARX_Minerva" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Leilche" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "ARX_Minerva" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "LeiIche" then
 		TeamName = "Frostleilchen"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DarkShadow" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DazZ_Dark_Knight" then
 		TeamName = "Dark Knight Shadows"
