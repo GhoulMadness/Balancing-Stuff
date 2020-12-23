@@ -30,7 +30,8 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	local eType = Logic.GetEntityType(_BuildingID)
 	
 	if eType == Entities.PB_Dome then
-	
+		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(_PlayerID)
+		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 1)
 		StartCountdown(10*60,DomeVictory,true)
 		
 	elseif Scaremonger.MotiEffect[eType] then
@@ -43,8 +44,20 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 				end				
 			end
 		end
+	elseif eType == Entities.PB_Beautification13 then
+		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 0.25)
+		
+		for j=1, 16, 1 do
+			if Logic.GetDiplomacyState(_PlayerID, j) == Diplomacy.Friendly then		
+				CUtil.AddToPlayersMotivationHardcap(j, 0.25)
+				CUtil.AddToPlayersMotivationSoftcap(j, 0.25)
+				for eID in S5Hook.EntityIterator(Predicate.OfPlayer(j), Predicate.OfCategory(EntityCategories.Worker)) do
+					local motivation = Logic.GetSettlersMotivation(eID) 
+					S5Hook.SetSettlerMotivation(eID, motivation + 0.25 )
+				end				
+			end
+		end
 	end
-	
 end
 function GameCallback_GUI_SelectionChanged()
 	GameCallback_GUI_SelectionChangedOrig()
@@ -391,11 +404,11 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 		
 		end;   
        
-		if GameCallback_GainedResourcesFromMineOrig then
-            return GameCallback_GainedResourcesFromMineOrig(_extractor, _e, _type, _amount);
-        end;
+		
     end;
-
+	if GameCallback_GainedResourcesFromMineOrig then
+		return GameCallback_GainedResourcesFromMineOrig(_extractor, _e, _type, _amount);
+    end;
 	return _extractor, _e, _type, _amount;
 end
 
@@ -425,30 +438,20 @@ function GameCallback_PlaceBuildingAdditionalCheck(_ucat, _x, _y, _rotation, _is
 	if not gvXmasEventFlag then
 		return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 	else
-		local check
 		local checktree1 
 		local checktree2
 		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
-		if Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1 then
-			if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
-				checktree1 = true
-			else
-				checktree1 = false
-			end
-			if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
-				checktree2 = true
-			else
-				checktree2 = false
-			end
-			if checktree1 == true and checktree2 == true then
-				check = true
-			else
-				check = false
-			end
-			return allowed and check
+		if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+			checktree1 = true
 		else
-			return allowed and false
+			checktree1 = false
 		end
+		if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+			checktree2 = true
+		else
+			checktree2 = false
+		end			
+		return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 	end
 end 
 

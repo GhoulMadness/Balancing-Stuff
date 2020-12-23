@@ -973,9 +973,11 @@ function DZTradePunishmentJob()
 			gvDZTradeCheck.PlayerDelay[player] = gvDZTradeCheck.PlayerDelay[player] - 1	
 			if gvDZTradeCheck.PlayerDelay[player] == 0 then
 				local r,g,b = GUI.GetPlayerColor(player)
-				GUI.AddNote(" @color:r,g,b "..UserTool_GetPlayerName(player).." @color:255,255,255 verf\195\188gt \195\188ber zu wenig Platz f\195\188r seine Siedler." )
+				GUI.AddNote(" @color:"..r..","..g..","..b.." "..UserTool_GetPlayerName(player).." @color:255,255,255 verf\195\188gt \195\188ber zu wenig Platz f\195\188r seine Siedler." )
 				GUI.AddNote( "Dies wird den Siedlern nicht gefallen und sie werden die Siedlung bald verlassen!")
-				Stream.Start("Sounds\\voicesmentor\\comment_badplay_rnd_06.wav",190)
+				if GUI.GetPlayerID() == player then
+					Stream.Start("Sounds\\voicesmentor\\comment_badplay_rnd_06.wav",190)
+				end
 			end
 			if gvDZTradeCheck.PlayerDelay[player] <= 0 then
 				DZTradePunishment(player)
@@ -1029,7 +1031,7 @@ function SpezEntityPlaced()
 		Logic.SetEntityExplorationRange(gvViewCenterID[i],22)
 	end
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "DomeFallen", 1)
-		DomePlaced(playerID,entityID,pos[1],pos[2])
+		--DomePlaced(playerID,entityID,pos[1],pos[2])
 	end
 	if entityType == Entities.PU_Silversmith then
 		--wenn neue Sounds vorhanden, wird das bereits über xml geregelt
@@ -1053,7 +1055,8 @@ function DomeFallen()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
     if entityType == Entities.PB_Dome then  
-	
+		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(playerID)
+		CUtil.AddToPlayersMotivationHardcap(playerID, -1)
 		Logic.PlayerSetGameStateToLost(playerID)
 		for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 			if Logic.GetDiplomacyState(playerID, k) == Diplomacy.Friendly then
@@ -1069,6 +1072,8 @@ function DomePlaced(_pID,_eID,_posX,_posY)
 
 	if Logic.IsConstructionComplete(_eID) == 1 then
 		StartCountdown(10*60,DomeVictory,true)
+		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(_pID)
+		CUtil.AddToPlayersMotivationHardcap(_pID, 1)
 	end
 end
 
@@ -1303,7 +1308,7 @@ function HideGUI()
 	XGUIEng.ShowWidget("Normal",0)
 end
 function WinterTheme()
-	if Logic.GetWeatherState() == 3 then
+	if Logic.GetWeatherState() == 3 or S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
 		local SoundChance = Logic.GetRandom(24)
 			if SoundChance == 10 then
 			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd1,270)

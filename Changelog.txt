@@ -63,9 +63,9 @@ technische Infos:
 
 			DZ Plätze:		140									125
 
-			Rüstung:		35									4
+			Rüstung:		25									4
 
-			HP:			8000									1400
+			HP:			6000									1400
 
 			Sichtweite:		6000									4000
 
@@ -111,9 +111,9 @@ technische Infos:
 
 		Kanonenturm:
 
-			Kosten:	Taler:		1500							
-				Stein:		1000							Stein:		200
-				Schwefel:	1000							Schwefel:	200			
+			Kosten:	Taler:		1000							
+				Stein:		800							Stein:		200
+				Schwefel:	800							Schwefel:	200			
 
 			benötigt:		Chemie									Metallurgie
 
@@ -131,7 +131,7 @@ technische Infos:
 		
 			DMG-Range:		480									700
 
-			DMG:			48									40
+			DMG:			56									40
 
 			Anmerkungen:		Diese Änderungen betreffen gleichermaßen die "dunklen" Versionen der Türme. Diese haben jedoch im Schnitt etwa 50% mehr HP.
 
@@ -196,7 +196,7 @@ technische Infos:
 
 			HP:			3000									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		3									2
 
@@ -292,7 +292,7 @@ technische Infos:
 
 			HP:			2200									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		5									4
 
@@ -307,7 +307,7 @@ technische Infos:
 
 			HP:			2800									2200
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		6									4
 
@@ -319,7 +319,7 @@ technische Infos:
 
 			HP:			2200									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		5									4
 
@@ -331,7 +331,7 @@ technische Infos:
 
 			HP:			1200									1000
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		6									5
 
@@ -347,7 +347,7 @@ technische Infos:
 
 			HP:			2000									1400
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		8									6
 
@@ -359,7 +359,7 @@ technische Infos:
 
 			HP:			1200									1000
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		6									5
 
@@ -375,7 +375,7 @@ technische Infos:
 
 			HP:			2000									1400
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		8									6
 
@@ -387,7 +387,7 @@ technische Infos:
 
 			HP:			1200									1000
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		6									5
 
@@ -403,7 +403,7 @@ technische Infos:
 
 			HP:			2000									1400
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		8									6
 
@@ -415,7 +415,7 @@ technische Infos:
 
 			HP:			1200									1000
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		6									5
 
@@ -431,7 +431,7 @@ technische Infos:
 
 			HP:			2000									1400
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		8									6
 
@@ -443,7 +443,7 @@ technische Infos:
 
 			HP:			1000									700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Nahrungsplätze:		11									10
 
@@ -455,7 +455,7 @@ technische Infos:
 
 			HP:			1700									1000
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Nahrungsplätze:		15									12
 
@@ -467,7 +467,7 @@ technische Infos:
 
 			HP:			2500									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		5									4
 
@@ -479,7 +479,7 @@ technische Infos:
 
 			HP:			9000									4100
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Max Leibis:		300									1000
 
@@ -498,7 +498,7 @@ technische Infos:
 
 			HP:			2000									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Arbeiter:		4									6
 
@@ -508,7 +508,7 @@ technische Infos:
 
 			HP:			7000									4500
 				
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Dieb Sprengfaktor:	15%									75%
 
@@ -518,7 +518,7 @@ technische Infos:
 
 			HP:			900									700
 
-			Sichweite:		2000									2000
+			Sichtweite:		2000									2000
 
 			Schlafplätze:		10									9
 
@@ -528,7 +528,7 @@ technische Infos:
 
 			HP:			1500									1000
 
-			Sichweite:		2000									2000
+			Sichtweite:		2000									2000
 
 			Schlafplätze:		14									12
 
@@ -538,7 +538,7 @@ technische Infos:
 
 			HP:			1500									1200
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		4									4
 
@@ -553,7 +553,7 @@ technische Infos:
 
 			HP:			2500									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		6									4
 
@@ -565,7 +565,7 @@ technische Infos:
 
 			HP:			2200									1700
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 			Veredlung/Tick:		5									4
 
@@ -577,7 +577,7 @@ technische Infos:
 
 			HP:			4000									3500
 
-			Sichweite:		3000									3000
+			Sichtweite:		3000									3000
 
 		
 		sämtliche Baukosten Stufe 1 sind unverändert!
@@ -590,7 +590,7 @@ technische Infos:
 
 			HP:			100									200
 
-			Sichweite:		1500									2000
+			Sichtweite:		1500									2000
 
 			HPReg[1/s]:		8/6									-
 
@@ -606,7 +606,7 @@ technische Infos:
 
 			HP:			100									200
 
-			Sichweite:		1500									1500
+			Sichtweite:		1500									1500
 
 			HPReg[1/s]:		-									-
 
@@ -620,27 +620,29 @@ technische Infos:
 
 			HP:			1200									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		440									400
 
 			HPReg[1/s]:		14/2									8/2
 
-			DMG:			28									16
+			DMG:			26									16
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		5									4
 
 			Reichweite:		280									250
 
 			Falken-MinReichw.:	5000									4000
 
-			Falken-MaxReichw.	9000									8000
+			Falken-MaxReichw.	12000									8000
 
 			Falken-Sichtw.:		2200									1500
 
 			Falken-Lauftempo:	550									500
 
-			Beschützen-CD[s]:	90									120
+			Falken-CD[s]:		40									60
+
+			Beschützen-CD[s]:	130									120
 
 		Pilgrim:
 
@@ -648,7 +650,7 @@ technische Infos:
 
 			HP:			1000									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
@@ -668,7 +670,7 @@ technische Infos:
 
 			HP:			800									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
@@ -698,7 +700,7 @@ technische Infos:
 
 			HP:			500									600
 
-			Sichweite:		3200									2200
+			Sichtweite:		3200									2200
 
 			Lauftempo:		360									400
 
@@ -734,7 +736,7 @@ technische Infos:
 
 			HP:			600									600
 
-			Sichweite:		2800									2800
+			Sichtweite:		2800									2800
 
 			Lauftempo:		400									400
 
@@ -760,7 +762,7 @@ technische Infos:
 
 			HP:			500									600
 
-			Sichweite:		2900									2800
+			Sichtweite:		2900									2800
 
 			Lauftempo:		360									400
 
@@ -792,7 +794,7 @@ technische Infos:
 
 			HP:			800									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		440									400
 
@@ -814,7 +816,7 @@ technische Infos:
 
 			HP:			600									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
@@ -840,7 +842,7 @@ technische Infos:
 
 			HP:			600									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
@@ -864,7 +866,7 @@ technische Infos:
 
 			HP:			800									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
@@ -888,7 +890,7 @@ technische Infos:
 
 			HP:			600									600
 
-			Sichweite:		2200									2200
+			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
@@ -970,7 +972,7 @@ technische Infos:
 
 			Sichtweite:		2500									2300
 
-			eing. DZ-Pläte:		1									2
+			eing. DZ-Plätze:		1									2
 
 			Lauftempo:		550									500
 
@@ -996,7 +998,7 @@ technische Infos:
 
 			Sichtweite:		2900									2700
 
-			eing. DZ-Pläte:		1									2
+			eing. DZ-Plätze:		1									2
 
 			Lauftempo:		550									500
 
@@ -1184,9 +1186,9 @@ technische Infos:
 
 			HP:			150									190
 
-			Sichtweite:		1800									2400
+			Sichtweite:		2100									2400
 
-			Pläte im DZ:		3									5
+			Plätze im DZ:		3									5
 
 			Lauftempo:		270									240	
 	
@@ -1196,7 +1198,7 @@ technische Infos:
 
 			Angriffstempo:		1.11									0.29
 
-			Reichweite:		1700									2400
+			Reichweite:		2050									2400
 
 		Bronzekanone
 
@@ -1208,13 +1210,13 @@ technische Infos:
 
 			Sichtweite:		3100									2800
 
-			Pläte im DZ:		3									5
+			Plätze im DZ:		3									5
 
 			Lauftempo:		210									260	
 
 			Schadensklasse:		Belagerung	(gut gegen Gebäude)					Stich	(gut gegen Einheiten)
 	
-			Schaden:		82									40	
+			Schaden:		70									40	
 
 			Schadensreichweite:	250									200
 
@@ -1231,9 +1233,9 @@ technische Infos:
 
 			HP:			180									230
 
-			Sichtweite:		2000									2700
+			Sichtweite:		2300									2700
 
-			Pläte im DZ:		8									5
+			Plätze im DZ:		8									5
 
 			Lauftempo:		250									220	
 
@@ -1245,7 +1247,7 @@ technische Infos:
 
 			Angriffstempo:		1.54									2.00
 
-			Reichweite:		1900									2700
+			Reichweite:		2300									2700
 
 		Belagerungskanone:
 			
@@ -1257,7 +1259,7 @@ technische Infos:
 
 			Sichtweite:		3500									3300
 
-			Pläte im DZ:		12									5
+			Plätze im DZ:		12									5
 
 			Lauftempo:		100									180	
 	
@@ -2195,7 +2197,7 @@ Maps:
 	Bei mit * markierten Karten handelt es sich um Koop-Karten.
 
 
-		(1) Tutorial:
+		BS Tutorial:
 
 			Silberschächte:		1
 			Goldschächte:		1
