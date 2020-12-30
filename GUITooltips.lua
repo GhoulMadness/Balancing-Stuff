@@ -4,7 +4,7 @@ function GUITooltip_ExtraDuties()
 	local TaxAmount = Logic.GetPlayerTaxIncome( PlayerID )
 	local TaxName = ""
 	local TextString = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		TaxName = "Taler"
 		TextString = "@color:180,180,180,255 Sonderabgaben  @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Steuereintreibung  @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255  Verlangt Sonderabgaben von Euren Siedlern. Das füllt Euren Staatssäckel, jedoch werden Eure Arbeiter nicht sonderlich begeistert sein und ihre Motivation wird sinken."
 	else
@@ -168,7 +168,7 @@ end
 function GUITooltip_UpgradeMarket2()
 	local TooltipName = ""
 	local TooltipCosts = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		TooltipName = "@color:180,180,180,255 Ausbau zum Handelsposten @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Münzprägung @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Schnelleren Handel"
 		TooltipCosts = "@color:255,255,255,255 Taler: 200 @cr Steine: 300 @cr Holz: 150 @cr Lehm: 100"
 	else
@@ -222,7 +222,7 @@ end
 function GUITooltip_UpgradeLighthouse()
 	local TooltipName = ""
 	local TooltipCosts = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		TooltipName = "@color:180,180,180 Ausbau zum Leuchtturm @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Stattet den Leuchtturm mit einem entzündeten Leuchtfeuer aus. So könnt ihr Verstärkungen anfordern."
 		TooltipCosts = "@color:255,255,255,255 Taler: 200 @cr Holz: 500"
 	else
@@ -236,7 +236,7 @@ end
 function GUITooltip_LighthouseHireTroops()
 	local TooltipCosts = ""
 	local TooltipName = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		TooltipCosts = "@color:255,255,255,255 Eisen: 600 @cr Schwefel: 400"
 		TooltipName = "@color:180,180,180 Verstärkungen anfordern @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Leuchtturm @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Fordert Verstärkungstruppen an."
 	else
@@ -301,7 +301,7 @@ end
 function GUITooltip_ResourceSilver()
 	local CostString = " "
 	local ShortCutToolTip = " "	
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		local TooltipText = "@color:180,180,180 Silber @cr @color:255,255,255,255 Diese Menge Silber steht Euch im Moment zur Verfügung."
 	else
 		local TooltipText = "@color:180,180,180 Silver @cr @color:255,255,255,255 This amount of silver is currently available to you."
@@ -314,7 +314,7 @@ function GUITooltip_ResourceFaith()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Glaube @cr @color:255,255,255,255 Dieser Prozentsatz Glaube steht Euch im Moment zur Verfügung."
 	else
 		Text = "@color:180,180,180 Faith @cr @color:255,255,255,255 That percentage of faith is available to you right now."
@@ -327,7 +327,7 @@ function GUITooltip_ResourceWeatherEnergy()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Wetterenergie @cr @color:255,255,255,255 Dieser Prozentsatz Wetterenergie steht Euch im Moment zur Verfügung."
 	else
 		Text = "@color:180,180,180 Weather energy @cr @color:255,255,255,255 This percentage of weather energy is available to you at the moment."
@@ -340,7 +340,7 @@ function GUITooltip_DetailedResourceView()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Erweiterte Ressourcen-Anzeige @cr @color:255,255,255,255 Klickt hier, um Euch Details zu Euren Ressourcen anzeigen zu lassen."
 	else
 		Text = "@color:180,180,180 Extended resource display @cr @color:255,255,255,255 Click here to view details about your resources."
@@ -353,7 +353,7 @@ function GUITooltip_NormalResourceView()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Normale Ressourcen-Anzeige @cr @color:255,255,255,255 Klickt hier, um zur normalen Ressourcen-Anzeige zurück zu kehren."
 	else
 		Text = "@color:180,180,180 Normal resource display @cr @color:255,255,255,255 Click here to return to the normal resource display."
@@ -366,7 +366,7 @@ function GUITooltip_RPGView()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 RPG-Sichtmodus @cr @color:255,255,255,255 Klickt hier, um zum RPG-Sichtmodus zu wechseln."
 	else
 		Text = "@color:180,180,180 RPG view mode @cr @color:255,255,255,255 Click here to switch to RPG view mode."
@@ -379,7 +379,7 @@ function GUITooltip_DownView()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Draufsicht-Modus @cr @color:255,255,255,255 Klickt hier, um zur Draufsicht zu wechseln."
 	else
 		Text = "@color:180,180,180 Top view mode @cr @color:255,255,255,255 Click here to switch to the top view."
@@ -392,7 +392,7 @@ function GUITooltip_NormalView()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 normaler Sichtmodus @cr @color:255,255,255,255 Klickt hier, um zum normalen Sichtmodus zu wechseln."
 	else
 		Text = "@color:180,180,180 normal viewing mode @cr @color:255,255,255,255 Click here to switch to normal viewing mode."
@@ -405,7 +405,7 @@ function GUITooltip_Time()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 aktuelle Uhrzeit @cr @color:255,255,255,255 Hier wird die aktuelle Uhrzeit des Spiels angezeigt. @cr Sonnenaufgang: 06:00 Uhr @cr Sonnenuntergang: 20:00 Uhr"
 	else
 		Text = "@color:180,180,180 current time @cr @color:255,255,255,255 The current time of the game is displayed here. @cr Sunrise: 6:00 AM @cr Sunset: 8:00 PM"
@@ -418,7 +418,7 @@ function GUITooltip_DetailsLeader()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Erweiterte Stats-Anzeige @cr @color:255,255,255,255 Klickt hier, um Euch Details zur Stärke Eurer Soldaten anzeigen zu lassen."
 	else
 		Text = "@color:180,180,180 Extended stats display @cr @color:255,255,255,255 Click here for details on the strength of your soldiers."
@@ -431,7 +431,7 @@ function GUITooltip_DetailsLeaderOff()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Normale Stats-Anzeige @cr @color:255,255,255,255 Klickt hier, um zur normalen Anzeige zurück zu kehren."
 	else
 		Text = "@color:180,180,180 Normal stats display @cr @color:255,255,255,255 Click here to return to the normal display."
@@ -444,7 +444,7 @@ function GUITooltip_ExpelAll()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Massenentlassung @cr @color:255,255,255,255 Klickt hier, um alle selektierten Einheiten zu entlassen."
 	else
 		Text = "@color:180,180,180 Mass layoffs @cr @color:255,255,255,255 Click here to dismiss all selected units."
@@ -457,7 +457,7 @@ function GUITooltip_AttackRange()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Angriffsreichweite @cr @color:255,255,255,255 Dies zeigt die aktuelle Angriffsreichweite dieser Einheit an."
 	else
 		Text = "@color:180,180,180 Attack range @cr @color:255,255,255,255 This indicates the current attack range of this unit."
@@ -470,7 +470,7 @@ function GUITooltip_VisionRange()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Sichtreichweite @cr @color:255,255,255,255 Dies zeigt die aktuelle Sichtreichweite dieser Einheit an."
 	else
 		Text = "@color:180,180,180 Range of vision @cr @color:255,255,255,255 This shows the current visual range of this unit."
@@ -483,7 +483,7 @@ function GUITooltip_AttackSpeed()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Angriffstempo @cr @color:255,255,255,255 Dies zeigt das aktuelle Angriffstempo dieser Einheit an (in Angriffe pro 1000s)"
 	else
 		Text = "@color:180,180,180 Attack speed @cr @color:255,255,255,255 This shows the current attack speed of this unit (in attacks per 1000s)"
@@ -496,7 +496,7 @@ function GUITooltip_MoveSpeed()
 	local CostString = " "
 	local ShortCutToolTip = " "	
 	local Text = ""
-	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" then
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Lauftempo @cr @color:255,255,255,255 Dies zeigt das aktuelle Lauftempo dieser Einheit an."
 	else	
 		Text = "@color:180,180,180 Running pace @cr @color:255,255,255,255 This shows the current movement pace of that unit."
