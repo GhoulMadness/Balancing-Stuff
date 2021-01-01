@@ -42,6 +42,8 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 					local motivation = Logic.GetSettlersMotivation(eID) 
 					S5Hook.SetSettlerMotivation(eID, motivation - Scaremonger.MotiEffect[eType] )
 				end				
+				CUtil.AddToPlayersMotivationHardcap(j, - Scaremonger.MotiEffect[eType])
+				CUtil.AddToPlayersMotivationSoftcap(j, - Scaremonger.MotiEffect[eType])
 			end
 		end
 	elseif eType == Entities.PB_Beautification13 then

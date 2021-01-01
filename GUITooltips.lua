@@ -301,10 +301,11 @@ end
 function GUITooltip_ResourceSilver()
 	local CostString = " "
 	local ShortCutToolTip = " "	
+	local TooltipText = " "
 	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
-		local TooltipText = "@color:180,180,180 Silber @cr @color:255,255,255,255 Diese Menge Silber steht Euch im Moment zur Verfügung."
+		TooltipText = "@color:180,180,180 Silber @cr @color:255,255,255,255 Diese Menge Silber steht Euch im Moment zur Verfügung."
 	else
-		local TooltipText = "@color:180,180,180 Silver @cr @color:255,255,255,255 This amount of silver is currently available to you."
+		TooltipText = "@color:180,180,180 Silver @cr @color:255,255,255,255 This amount of silver is currently available to you."
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TooltipText)
