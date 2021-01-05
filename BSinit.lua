@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.55
+BS.Version = 0.56
 
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
@@ -67,7 +67,8 @@ end
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIUpdate.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIAction.lua")
 	MemoryManipulation.CreateLibFuncs()	
-	CUtil.DisableFoW()
+	--kann aktuell noch Desyncs verursachen...
+	--CUtil.DisableFoW()
 	Camera.ZoomSetFactorMax(2)
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
