@@ -237,6 +237,10 @@ end
 function GUIUpdate_LighthouseTroops()
 
 	local eID = GUI.GetSelectedEntity()
+	
+	if eID == nil then
+		return
+	end
 	local PID = Logic.EntityGetPlayer(eID)
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local eType = Logic.GetEntityType(eID)
