@@ -237,14 +237,11 @@ end
 function GUIUpdate_LighthouseTroops()
 
 	local eID = GUI.GetSelectedEntity()
-	local PID = GUI.GetPlayerID()
+	local PID = Logic.EntityGetPlayer(eID)
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local eType = Logic.GetEntityType(eID)
 	local TimePassed = 0
 	local RechargeTime = gvLighthouse.cooldown
-	if GUI.GetPlayerID() == 17 then
-		PID = Logic.EntityGetPlayer(eID)
-	end
 	
 	TimePassed = math.floor(Logic.GetTime()- gvLighthouse.starttime[PID])
 
