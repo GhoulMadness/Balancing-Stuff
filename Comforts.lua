@@ -25,7 +25,6 @@ end
 	
 if XNetwork.Manager_DoesExist() ~= 0 then
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-		Logic.SetTechnologyState(i,Technologies.UP1_Lighthouse,3)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
 		if gvXmasEventFlag or gvTutorialFlag then
@@ -33,7 +32,6 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 		end
 			
 	end
-		Logic.SetTechnologyState(17,Technologies.UP1_Lighthouse,3)
 	if MP_DiplomacyWindow.resources_to_name then
 		MP_DiplomacyWindow.resource_to_name = {
 			[ResourceType.GoldRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " [R]";
