@@ -235,9 +235,7 @@ function GUIUpdate_LevyTaxes()
 	
 end
 function GUIUpdate_LighthouseTroops()
-	if GUI.GetPlayerID() == 17 then
-		return
-	end
+	
 	local eID = GUI.GetSelectedEntity()
 	local PID = Logic.EntityGetPlayer(eID)
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()

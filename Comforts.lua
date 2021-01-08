@@ -33,6 +33,7 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 		end
 			
 	end
+		Logic.SetTechnologyState(17,Technologies.UP1_Lighthouse,3)
 	if MP_DiplomacyWindow.resources_to_name then
 		MP_DiplomacyWindow.resource_to_name = {
 			[ResourceType.GoldRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " [R]";
