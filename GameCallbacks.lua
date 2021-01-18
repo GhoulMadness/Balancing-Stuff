@@ -233,11 +233,10 @@ function GameCallback_GameSpeedChanged( _Speed )
 local Speed = _Speed * 1000
     if Speed == 0 then
 		gvGameSpeed = 0
-		if CNetwork then
-			StartSimpleJob("RealBreakCheck")
-		else
+		if not CNetwork then
 			local PauseScreenType = Logic.GetRandom(4) + 1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
+		else
 		end
 		
         --GUI.AddNote( XGUIEng.GetStringTableText( "InGameMessages/Note_GamePaused" ) )
@@ -252,7 +251,7 @@ local Speed = _Speed * 1000
     end
 end
 
-function RealBreakCheck()
+--[[function RealBreakCheck()
 
 	if gvGameSpeed == 0 then
 		gvBreakCheck = gvBreakCheck + 1
@@ -268,7 +267,7 @@ function RealBreakCheck()
 		XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		return true
 	end
-end
+end]]
 
 function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
@@ -308,10 +307,6 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
-		
-	elseif _TechnologyType == Technologies.T_Activate_Silversmith_Worker 
-	then	
-		GUIAction_Activate_Silversmith_Worker_Researched(_PlayerID,Logic.GetRandom(1,Logic.GetTimeMs()))
 		
 	end
 	
