@@ -398,7 +398,7 @@ function GameCallback_ConstructBuilding(_csite, _nserfs, _amount)
 	
 	local playerID = Logic.EntityGetPlayer(_csite);
 	if Logic.GetTechnologyState(playerID, Technologies.T_LightBricks) == 4 then		
-		_amount = math.ceil(_amount *8/10) or _amount
+		_amount = (_amount *1.2) or _amount
 	end;
 	
 	if GameCallback_ConstructBuildingOrig then

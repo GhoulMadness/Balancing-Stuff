@@ -775,17 +775,17 @@ technische Infos:
 
 			sicher zielen-CD[s]:	240									120
 
-			sicher zielen.-Buff:	50%									100%
+			sicher zielen.-Buff:	55%									100%
 
 			sicher zielen Dauer[s]:	30									60
 
 			sicher zielen Reichw.:	1200									1500
 
-			Meisterschuss-CD[s]:	180									90
+			Meisterschuss-CD[s]:	150									90
 
-			Meisterschuss-DMG:	70%									100%
+			Meisterschuss-DMG:	88%									100%
 
-			Meisterschuss-Reichw.:	4000									5500
+			Meisterschuss-Reichw.:	4500									5500
 
 		Yuki:
 
@@ -808,6 +808,8 @@ technische Infos:
 			Feuerw. d. Furcht-CD[s]:180									120
 
 			Fr.Feuerw.ArbeiterBuff:	200 Worktime								100 Worktime
+
+			Shuriken DMG:		68									38
 
 		Kala:
 
