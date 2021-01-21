@@ -18,7 +18,14 @@ Scaremonger = {MotiEffect = {
 	[Entities.PB_Scaremonger06] = 0.18 
 								}
 }
-
+if LocalMusic then
+	LocalMusic.SetEvilBattle= 	{
+								{ "43_Extra1_DarkMoor_Combat.mp3", 120 },									
+								{ "05_CombatEvelance1.mp3", 117 },
+								{ "03_CombatEurope1.mp3", 117 },
+								{ "04_CombatMediterranean1.mp3", 113 }
+								}
+end
 if not gvLastTimeLightningRodUsed then
 	gvLastTimeLightningRodUsed = -240000
 end
@@ -27,11 +34,87 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
+		Logic.SetTechnologyState(17,Technologies.GT_StandingArmy,3)
 		if gvXmasEventFlag or gvTutorialFlag then
 			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0) 
 		end
 			
 	end
+	
+	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Outpost1}
+		
+
+else
+	Logic.SetTechnologyState(1,Technologies.UP1_Lighthouse,3)
+	Logic.SetTechnologyState(1,Technologies.MU_Cannon5,0)
+	Logic.SetTechnologyState(1,Technologies.MU_Cannon6,0)
+	if gvXmasEventFlag then
+		Logic.SetTechnologyState(1,Technologies.B_VillageHall,0) 
+	end
+		
+	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
+		return 1
+	end
+end
+	
+if CUtil then
+    GameCallback_RefinedResourceOrig = GameCallback_RefinedResource;
+	GameCallback_GainedResourcesFromMineOrig = GameCallback_GainedResourcesFromMine;
+	GameCallback_ConstructBuildingOrig = GameCallback_ConstructBuilding;
+	GameCallback_PlaceBuildingAdditionalCheckOrig = GameCallback_PlaceBuildingAdditionalCheck;
+	GameCallback_ResearchProgressOrig = GameCallback_ResearchProgress;	
+	 
+    
+	refined_resource_gold = {
+        [Entities.PB_Bank1] = 3;
+        [Entities.PB_Bank2] = 3;
+        [Entities.PB_Bank3] = 4;
+		[Entities.CB_Mint1] = 3;
+    };
+	
+	gained_resource_clay = {
+	    [Entities.PB_ClayMine1] = 5;
+		[Entities.PB_ClayMine2] = 7;
+		[Entities.PB_ClayMine3] = 9;
+	};
+	
+	gained_resource_iron = {		
+		[Entities.PB_IronMine1] = 5;
+		[Entities.PB_IronMine2] = 7;
+		[Entities.PB_IronMine3] = 9;
+	};
+	
+	gained_resource_stone = {
+		[Entities.PB_StoneMine1] = 5;
+		[Entities.PB_StoneMine2] = 7;
+		[Entities.PB_StoneMine3] = 9;
+	};
+		
+	gained_resource_sulfur = {
+		[Entities.PB_SulfurMine1] = 5;
+		[Entities.PB_SulfurMine2] = 7;
+		[Entities.PB_SulfurMine3] = 9;
+	};
+	
+	gained_resource_silver = {
+		[Entities.PB_SilverMine1] = 2;
+		[Entities.PB_SilverMine2] = 2;
+		[Entities.PB_SilverMine3] = 3;
+	};
+	
+	gained_resource_gold = {
+		[Entities.PB_GoldMine1] = 5;
+		[Entities.PB_GoldMine2] = 7;
+		[Entities.PB_GoldMine3] = 9;
+	};
+	--Control Siversmith Grievance
+	StartSimpleJob("ControlSiversmithGrievance")
+end
+
+-----------------------------------------------------------------------------------------------
+-- Added Outposts to win condition ------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+function BS.DiplomacyWindowChanges()
 	if MP_DiplomacyWindow.resources_to_name then
 		MP_DiplomacyWindow.resource_to_name = {
 			[ResourceType.GoldRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " [R]";
@@ -111,79 +194,7 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 			
 		end;
 	end
-	
-	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Outpost1}
-		
-
-else
-	Logic.SetTechnologyState(1,Technologies.UP1_Lighthouse,3)
-	Logic.SetTechnologyState(1,Technologies.MU_Cannon5,0)
-	Logic.SetTechnologyState(1,Technologies.MU_Cannon6,0)
-	if gvXmasEventFlag then
-		Logic.SetTechnologyState(1,Technologies.B_VillageHall,0) 
-	end
-		
-	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
-		return 1
-	end
 end
-	
-if CUtil then
-    GameCallback_RefinedResourceOrig = GameCallback_RefinedResource;
-	GameCallback_GainedResourcesFromMineOrig = GameCallback_GainedResourcesFromMine;
-	GameCallback_ConstructBuildingOrig = GameCallback_ConstructBuilding;
-	GameCallback_PlaceBuildingAdditionalCheckOrig = GameCallback_PlaceBuildingAdditionalCheck;
-	GameCallback_ResearchProgressOrig = GameCallback_ResearchProgress;	
-	 
-    
-	refined_resource_gold = {
-        [Entities.PB_Bank1] = 3;
-        [Entities.PB_Bank2] = 4;
-        [Entities.CB_Mint1] = 5;
-    };
-	
-	gained_resource_clay = {
-	    [Entities.PB_ClayMine1] = 5;
-		[Entities.PB_ClayMine2] = 7;
-		[Entities.PB_ClayMine3] = 9;
-	};
-	
-	gained_resource_iron = {		
-		[Entities.PB_IronMine1] = 5;
-		[Entities.PB_IronMine2] = 7;
-		[Entities.PB_IronMine3] = 9;
-	};
-	
-	gained_resource_stone = {
-		[Entities.PB_StoneMine1] = 5;
-		[Entities.PB_StoneMine2] = 7;
-		[Entities.PB_StoneMine3] = 9;
-	};
-		
-	gained_resource_sulfur = {
-		[Entities.PB_SulfurMine1] = 5;
-		[Entities.PB_SulfurMine2] = 7;
-		[Entities.PB_SulfurMine3] = 9;
-	};
-	
-	gained_resource_silver = {
-		[Entities.PB_SilverMine1] = 2;
-		[Entities.PB_SilverMine2] = 3;
-		[Entities.PB_SilverMine3] = 4;
-	};
-	
-	gained_resource_gold = {
-		[Entities.PB_GoldMine1] = 5;
-		[Entities.PB_GoldMine2] = 7;
-		[Entities.PB_GoldMine3] = 9;
-	};
-	--Control Siversmith Grievance
-	StartSimpleJob("ControlSiversmithGrievance")
-end
-
------------------------------------------------------------------------------------------------
--- Added Outposts to win condition ------------------------------------------------------------
------------------------------------------------------------------------------------------------
 function VC_Deathmatch()
 	
 	if XNetwork.Manager_DoesExist() == 0 then
@@ -396,6 +407,7 @@ gvMercenaryTower = { LastTimeUsed = 0, Cooldown = {
 	["BuyLeaderBanditSword"] = 30,
 	["BuyLeaderBanditBow"] = 10,
 	["BuyLeaderBlackKnight"] = 8,
+	["BuyLeaderBlackSword"] = 50,
 	["BuyLeaderEvilBear"] = 25,
 	["BuyLeaderEvilSkir"] = 40
 	}	, TechReq = {
@@ -404,6 +416,7 @@ gvMercenaryTower = { LastTimeUsed = 0, Cooldown = {
 	["BuyLeaderBanditSword"] = Technologies.T_BanditCulture,
 	["BuyLeaderBanditBow"] = Technologies.T_BanditCulture,
 	["BuyLeaderBlackKnight"] = Technologies.T_KnightsCulture,
+	["BuyLeaderBlackSword"] = Technologies.T_KnightsCulture,
 	["BuyLeaderEvilBear"] = Technologies.T_BearmanCulture,
 	["BuyLeaderEvilSkir"] = Technologies.T_BearmanCulture
 	} 	, RechargeButton = {
@@ -412,6 +425,7 @@ gvMercenaryTower = { LastTimeUsed = 0, Cooldown = {
 	["BuyLeaderBanditSword"] = "BanditSword_Recharge",
 	["BuyLeaderBanditBow"] = "BanditBow_Recharge",
 	["BuyLeaderBlackKnight"] = "BlackKnight_Recharge",
+	["BuyLeaderBlackSword"] = "BlackSword_Recharge",
 	["BuyLeaderEvilBear"] = "EvilBear_Recharge",
 	["BuyLeaderEvilSkir"] = "EvilSkir_Recharge"
 	}

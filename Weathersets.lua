@@ -170,5 +170,9 @@ function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount)
 		AddPeriodicSunrise(durationinsec/24)
 		AddPeriodicTransitionSunrise(durationinsec/24)
 		Display.SetRenderUseGfxSets(1)	
+		
+	end
+	if BS and CNetwork then
+		BS.DiplomacyWindowChanges()
 	end
 end

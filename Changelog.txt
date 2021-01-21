@@ -7,7 +7,6 @@ als im "normalen" Spiel.
 Außerdem wurden neue Gebäude und Technologien hinzugefügt, die ein vielseitigeres Spielerlebnis garantieren sollen.
 Die Änderungen und Neuerungen sind im Nachfolgenden kurz beschrieben. Nicht gegebene Angaben sind unverändert. Alle Angaben ohne Gewähr!
 
-
 technische Infos:
 
 	Der Mod funktioniert NUR über Kimichuras Updater (SP EXT Extra2 für Singleplayer, MP Extra2 für Multiplayer)
@@ -1659,7 +1658,7 @@ Neuerungen im Balancing Stuff:
 
 		Münzprägung:
 
-			Ermöglicht den Ausbau von Marktplätzen zu Handelsposten
+			Ermöglicht den Ausbau von Marktplätzen zu Handelsposten. Ermöglicht außerdem den Bau von Münzstätten.
 
 			Kosten: Taler:		600
 				Eisen:		400
@@ -1903,9 +1902,9 @@ Neuerungen im Balancing Stuff:
 
 			benötigt:		Chemie
 
-		Ausbau zur Münzstätte:
+		Ausbau zum Münztresor:
 			
-			Baut Eure Schatzkammer zur Münzstätte aus.
+			Baut Eure Schatzkammer zum Münztresor aus.
 
 			Kosten:	Taler:		600
 				Stein:		800

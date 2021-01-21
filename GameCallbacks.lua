@@ -236,7 +236,6 @@ local Speed = _Speed * 1000
 		if not CNetwork then
 			local PauseScreenType = Logic.GetRandom(4) + 1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
-		else
 		end
 		
         --GUI.AddNote( XGUIEng.GetStringTableText( "InGameMessages/Note_GamePaused" ) )
@@ -250,24 +249,6 @@ local Speed = _Speed * 1000
 		end
     end
 end
-
---[[function RealBreakCheck()
-
-	if gvGameSpeed == 0 then
-		gvBreakCheck = gvBreakCheck + 1
-		gvSecondsDuringBreak = gvSecondsDuringBreak + 1
-	else
-		gvBreakCheck = 0
-	return true
-	end
-	--mehr als 5 Sekunden pausiert (damit kurze Laggs nicht fälschlich als Pause erkannt werden)
-	if gvBreakCheck >= 5 then						
-	
-		local PauseScreenType = Logic.GetRandom(4) + 1
-		XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
-		return true
-	end
-end]]
 
 function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
@@ -307,6 +288,10 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
+		
+	elseif _TechnologyType == Technologies.T_Activate_Silversmith_Worker 
+	then	
+		GUIAction_Activate_Silversmith_Worker_Researched(_PlayerID,Logic.GetRandom(1,Logic.GetTimeMs()))
 		
 	end
 	
@@ -412,10 +397,8 @@ end
 function GameCallback_ConstructBuilding(_csite, _nserfs, _amount)
 	
 	local playerID = Logic.EntityGetPlayer(_csite);
-	if Logic.GetTechnologyState(playerID, Technologies.T_LightBricks) == 4 then
-		if _nserfs == 0 then
-			_amount = math.ceil(_amount *8/10) or _amount
-		end;
+	if Logic.GetTechnologyState(playerID, Technologies.T_LightBricks) == 4 then		
+		_amount = math.ceil(_amount *8/10) or _amount
 	end;
 	
 	if GameCallback_ConstructBuildingOrig then

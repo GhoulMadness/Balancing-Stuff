@@ -359,9 +359,9 @@ function GetXmasTeamName(_PID)
 	local TeamName = ""
 	if XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "RitterLeo" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Norman9833" then
 		TeamName = "Langfinger Duo"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G_Roma" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G_Mathias" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "CAS-G_Roma" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "G4F_Mathias" then
 		TeamName = "Chickenwins"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Akaito_TR" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Phoenix_TR" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Akaito_TR" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "ThePhoenix_TR" then
 		TeamName = "Team Rocket"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "WoS_Nebel" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "maxi55569874" then
 		TeamName = "Kala-Fanboys"
@@ -381,7 +381,7 @@ function GetXmasTeamName(_PID)
 		TeamName = "Frostleilchen"
 	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DarkShadow" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "DazZ_Dark_Knight" then
 		TeamName = "Dark Knight Shadows"
-	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Mr.Tempus" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Der_Deutsche" then
+	elseif XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "Mr.Tempus" or XNetwork.GameInformation_GetLogicPlayerUserName(_PID) == "schmeling65" then
 		TeamName = "Team UTC+1"
 	else
 		local _PID2

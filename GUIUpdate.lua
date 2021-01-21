@@ -132,7 +132,9 @@ function GUIUpdate_ResourceAmountRawAndRefined( _ResourceType )
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	
 	local PlayerID = GUI.GetPlayerID()
-	
+	if PlayerID == 17 then
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
+	end
 	local Amount = round(Logic.GetPlayersGlobalResource( PlayerID, _ResourceType ))	
 	
 	local RawResourceType = Logic.GetRawResourceType( _ResourceType )
@@ -146,7 +148,10 @@ end
 function GUIUpdate_SpecialResourceAmount(_ResourceType)
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	local PlayerID = GUI.GetPlayerID()	
+	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == 17 then
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
+	end	
 	local Amount = Logic.GetPlayersGlobalResource(PlayerID,_ResourceType)	
 	local WeatherEnergyMax = Logic.GetEnergyRequiredForWeatherChange()
 	local FaithMax = 5000
@@ -406,7 +411,7 @@ function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
 		end
 		
 		if _Technology == Technologies.T_Debenture then
-			if SelectedBuildingType == Entities.PB_Bank2 or SelectedBuildingType == Entities.CB_Mint1 then
+			if SelectedBuildingType == Entities.PB_Bank2 or SelectedBuildingType == Entities.PB_Bank3 then
 				XGUIEng.DisableButton(_Button,0)
 			else 
 				XGUIEng.DisableButton(_Button,1)
@@ -414,7 +419,7 @@ function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
 		end 
 		
 		if _Technology == Technologies.T_Scale then
-			if SelectedBuildingType == Entities.PB_Bank2 or SelectedBuildingType == Entities.CB_Mint1 then
+			if SelectedBuildingType == Entities.PB_Bank2 or SelectedBuildingType == Entities.PB_Bank3 then
 				XGUIEng.DisableButton(_Button,0)
 			else 
 				XGUIEng.DisableButton(_Button,1)
@@ -424,7 +429,7 @@ function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
 
 		if _Technology == Technologies.T_BookKeeping then
 			local TechReq = Logic.GetTechnologyState(PlayerID, Technologies.T_Debenture)
-			if SelectedBuildingType == Entities.CB_Mint1 and TechReq == 4 then
+			if SelectedBuildingType == Entities.PB_Bank3 and TechReq == 4 then
 				XGUIEng.DisableButton(_Button,0)
 			else 
 				XGUIEng.DisableButton(_Button,1)
@@ -432,7 +437,7 @@ function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
 		end
 		if _Technology == Technologies.T_Coinage then
 			local TechReq = Logic.GetTechnologyState(PlayerID, Technologies.T_Scale)
-			if SelectedBuildingType == Entities.CB_Mint1 and TechReq == 4 then
+			if SelectedBuildingType == Entities.PB_Bank3 and TechReq == 4 then
 				XGUIEng.DisableButton(_Button,0)
 			else 
 				XGUIEng.DisableButton(_Button,1)

@@ -107,7 +107,6 @@ function GUIAction_NormalResourceView()
 	XGUIEng.ShowWidget("Faith",0)
 	XGUIEng.ShowWidget("WeatherEnergy",0)
 end
-
 function GUIAction_ExpelAll()
 	local SelectedEntityIDs = {GUI.GetSelectedEntities()}
 	for i = 1,table.getn(SelectedEntityIDs) do 

@@ -267,6 +267,11 @@ function GUITooltip_MercenaryTowerRecruitBlackKnight()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 250 @cr Eisen: 60")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
+function GUITooltip_MercenaryTowerRecruitBlackSword()
+	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderBlackSword_disabled"))
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 320 @cr Eisen: 140")
+	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
+end
 function GUITooltip_MercenaryTowerRecruitElite()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderElite_disabled"))
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 1000 @cr Eisen: 320 @cr Silber: 80")
