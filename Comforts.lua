@@ -29,7 +29,9 @@ end
 if not gvLastTimeLightningRodUsed then
 	gvLastTimeLightningRodUsed = -240000
 end
-	
+if GUI.GetPlayerID() == 17 then
+	Input.KeyBindDown(Keys.ModifierControl +  Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
+end
 if XNetwork.Manager_DoesExist() ~= 0 then
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
@@ -41,6 +43,9 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 			
 	end
 	
+	-----------------------------------------------------------------------------------------------
+	-- Added Outposts to win condition ------------------------------------------------------------
+	-----------------------------------------------------------------------------------------------
 	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Outpost1}
 		
 
@@ -110,90 +115,85 @@ if CUtil then
 	--Control Siversmith Grievance
 	StartSimpleJob("ControlSiversmithGrievance")
 end
-
------------------------------------------------------------------------------------------------
--- Added Outposts to win condition ------------------------------------------------------------
------------------------------------------------------------------------------------------------
-function BS.DiplomacyWindowChanges()
-	if MP_DiplomacyWindow.resources_to_name then
-		MP_DiplomacyWindow.resource_to_name = {
-			[ResourceType.GoldRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " [R]";
-			[ResourceType.ClayRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameClay") .. " [R]";
-			[ResourceType.WoodRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameWood") .. " [R]";
-			[ResourceType.StoneRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameStone") .. " [R]";
-			[ResourceType.IronRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameIron") .. " [R]";
-			[ResourceType.SulfurRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameSulfur") .. " [R]";
-			[ResourceType.SilverRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameSilver") .. " [R]";
+--Silver added to resource window
+if MP_DiplomacyWindow.resource_to_name then
+	MP_DiplomacyWindow.resource_to_name = {
+		[ResourceType.GoldRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " [R]";
+		[ResourceType.ClayRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameClay") .. " [R]";
+		[ResourceType.WoodRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameWood") .. " [R]";
+		[ResourceType.StoneRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameStone") .. " [R]";
+		[ResourceType.IronRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameIron") .. " [R]";
+		[ResourceType.SulfurRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameSulfur") .. " [R]";
+		[ResourceType.SilverRaw] = XGUIEng.GetStringTableText("ingamemessages/GUI_NameSilver") .. " [R]";
 				
-			[ResourceType.Gold] = "@color:184,182,90: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " @color:255,255,255,255: ";
-			[ResourceType.Clay] = "@color:115,66,34: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameClay") .. " @color:255,255,255,255: ";
-			[ResourceType.Wood] = "@color:85,45,9: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameWood") .. " @color:255,255,255,255: ";
-			[ResourceType.Stone] = "@color:147,147,136: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameStone") .. " @color:255,255,255,255: ";
-			[ResourceType.Iron] = "@color:98,108,100: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameIron") .. " @color:255,255,255,255: ";
-			[ResourceType.Sulfur] = "@color:234,240,68: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameSulfur") .. " @color:255,255,255,255: ";
-			[ResourceType.Silver] =  " @color:198,208,200: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameSilver") .. " @color:255,255,255,255: ";
-		};
+		[ResourceType.Gold] = "@color:184,182,90: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameMoney") .. " @color:255,255,255,255: ";
+		[ResourceType.Clay] = "@color:115,66,34: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameClay") .. " @color:255,255,255,255: ";
+		[ResourceType.Wood] = "@color:85,45,9: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameWood") .. " @color:255,255,255,255: ";
+		[ResourceType.Stone] = "@color:147,147,136: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameStone") .. " @color:255,255,255,255: ";
+		[ResourceType.Iron] = "@color:98,108,100: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameIron") .. " @color:255,255,255,255: ";
+		[ResourceType.Sulfur] = "@color:234,240,68: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameSulfur") .. " @color:255,255,255,255: ";
+		[ResourceType.Silver] =  " @color:198,208,200: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameSilver") .. " @color:255,255,255,255: ";
+	};
 		
 		
-		MP_DiplomacyWindow.resource_to_next = {
-			[ResourceType.Gold] = ResourceType.Clay;
-			[ResourceType.Clay] = ResourceType.Wood;
-			[ResourceType.Wood] = ResourceType.Stone;
-			[ResourceType.Stone] = ResourceType.Iron;
-			[ResourceType.Iron] = ResourceType.Sulfur;
-			[ResourceType.Sulfur] = ResourceType.Silver;
-			[ResourceType.Silver] = ResourceType.Gold;
-				
-			[ResourceType.GoldRaw] = ResourceType.ClayRaw;
-			[ResourceType.ClayRaw] = ResourceType.WoodRaw;
-			[ResourceType.WoodRaw] = ResourceType.StoneRaw;
-			[ResourceType.StoneRaw] = ResourceType.IronRaw;
-			[ResourceType.IronRaw] = ResourceType.SulfurRaw;
-			[ResourceType.SulfurRaw] = ResourceType.SilverRaw;
-			[ResourceType.SilverRaw] = ResourceType.Gold;
-		};
+	MP_DiplomacyWindow.resource_to_next = {
+		[ResourceType.Gold] = ResourceType.Clay;
+		[ResourceType.Clay] = ResourceType.Wood;
+		[ResourceType.Wood] = ResourceType.Stone;
+		[ResourceType.Stone] = ResourceType.Iron;
+		[ResourceType.Iron] = ResourceType.Sulfur;
+		[ResourceType.Sulfur] = ResourceType.Silver;
+		[ResourceType.Silver] = ResourceType.Gold;
+			
+		[ResourceType.GoldRaw] = ResourceType.ClayRaw;
+		[ResourceType.ClayRaw] = ResourceType.WoodRaw;
+		[ResourceType.WoodRaw] = ResourceType.StoneRaw;
+		[ResourceType.StoneRaw] = ResourceType.IronRaw;
+		[ResourceType.IronRaw] = ResourceType.SulfurRaw;
+		[ResourceType.SulfurRaw] = ResourceType.SilverRaw;
+		[ResourceType.SilverRaw] = ResourceType.Gold;
+	};
 		
-		MP_DiplomacyWindow.resource_to_check = {
+	MP_DiplomacyWindow.resource_to_check = {
 			
-			[ResourceType.Gold] = { ResourceType.Gold, ResourceType.GoldRaw },
-			[ResourceType.Clay] = { ResourceType.Clay, ResourceType.ClayRaw },
-			[ResourceType.Wood] = { ResourceType.Wood, ResourceType.WoodRaw },
-			[ResourceType.Stone] = { ResourceType.Stone, ResourceType.StoneRaw },
-			[ResourceType.Iron] = { ResourceType.Iron, ResourceType.IronRaw },
-			[ResourceType.Sulfur] = { ResourceType.Sulfur, ResourceType.SulfurRaw },
-			[ResourceType.Silver] = { ResourceType.Silver, ResourceType.SilverRaw },
+		[ResourceType.Gold] = { ResourceType.Gold, ResourceType.GoldRaw },
+		[ResourceType.Clay] = { ResourceType.Clay, ResourceType.ClayRaw },
+		[ResourceType.Wood] = { ResourceType.Wood, ResourceType.WoodRaw },
+		[ResourceType.Stone] = { ResourceType.Stone, ResourceType.StoneRaw },
+		[ResourceType.Iron] = { ResourceType.Iron, ResourceType.IronRaw },
+		[ResourceType.Sulfur] = { ResourceType.Sulfur, ResourceType.SulfurRaw },
+		[ResourceType.Silver] = { ResourceType.Silver, ResourceType.SilverRaw },
 			
-			[ResourceType.GoldRaw] = { ResourceType.GoldRaw },
-			[ResourceType.ClayRaw] = { ResourceType.ClayRaw },
-			[ResourceType.WoodRaw] = { ResourceType.WoodRaw },
-			[ResourceType.StoneRaw] ={ ResourceType.StoneRaw },
-			[ResourceType.IronRaw] = { ResourceType.IronRaw },
-			[ResourceType.SulfurRaw] = { ResourceType.SulfurRaw },
-		};
-		if MP_DiplomacyWindow.allowed_resources then
-		 MP_DiplomacyWindow.allowed_resources = {
-			[ResourceType.Gold] = true;
-			[ResourceType.Clay] = true;
-			[ResourceType.Wood] = true;
-			[ResourceType.Stone] = true;
-			[ResourceType.Iron] = true;
-			[ResourceType.Sulfur] = true;
-			[ResourceType.Silver] = true;
-		};
-		end
-		if MP_DiplomacyWindow.raw_resources_allowed then
-			MP_DiplomacyWindow.allowed_resources[ResourceType.GoldRaw] = true;
-			MP_DiplomacyWindow.allowed_resources[ResourceType.ClayRaw] = true;
-			MP_DiplomacyWindow.allowed_resources[ResourceType.WoodRaw] = true;
-			MP_DiplomacyWindow.allowed_resources[ResourceType.StoneRaw] = true;
-			MP_DiplomacyWindow.allowed_resources[ResourceType.IronRaw] = true;
-			MP_DiplomacyWindow.allowed_resources[ResourceType.SulfurRaw] = true;
-			MP_DiplomacyWindow.allowed_resources[ResourceType.SilverRaw] = true;
-			
-			MP_DiplomacyWindow.resource_to_next[ResourceType.Silver] = ResourceType.GoldRaw;
-			
-		end;
+		[ResourceType.GoldRaw] = { ResourceType.GoldRaw },
+		[ResourceType.ClayRaw] = { ResourceType.ClayRaw },
+		[ResourceType.WoodRaw] = { ResourceType.WoodRaw },
+		[ResourceType.StoneRaw] ={ ResourceType.StoneRaw },
+		[ResourceType.IronRaw] = { ResourceType.IronRaw },
+		[ResourceType.SulfurRaw] = { ResourceType.SulfurRaw },
+	};
+	if MP_DiplomacyWindow.allowed_resources then
+	 MP_DiplomacyWindow.allowed_resources = {
+		[ResourceType.Gold] = true;
+		[ResourceType.Clay] = true;
+		[ResourceType.Wood] = true;
+		[ResourceType.Stone] = true;
+		[ResourceType.Iron] = true;
+		[ResourceType.Sulfur] = true;
+		[ResourceType.Silver] = true;
+	};
 	end
+	if MP_DiplomacyWindow.raw_resources_allowed then
+		MP_DiplomacyWindow.allowed_resources[ResourceType.GoldRaw] = true;
+		MP_DiplomacyWindow.allowed_resources[ResourceType.ClayRaw] = true;
+		MP_DiplomacyWindow.allowed_resources[ResourceType.WoodRaw] = true;
+		MP_DiplomacyWindow.allowed_resources[ResourceType.StoneRaw] = true;
+		MP_DiplomacyWindow.allowed_resources[ResourceType.IronRaw] = true;
+		MP_DiplomacyWindow.allowed_resources[ResourceType.SulfurRaw] = true;
+		MP_DiplomacyWindow.allowed_resources[ResourceType.SilverRaw] = true;
+			
+		MP_DiplomacyWindow.resource_to_next[ResourceType.Silver] = ResourceType.GoldRaw;
+		
+	end;
 end
 function VC_Deathmatch()
 	
@@ -1319,6 +1319,18 @@ function HideGUI()
 	XGUIEng.ShowWidget("Top",0) 
 	XGUIEng.ShowWidget("FindView",0) 
 	XGUIEng.ShowWidget("Normal",0)
+	Input.KeyBindDown(Keys.ModifierControl +  Keys.ModifierAlt + Keys.G, "ShowGUI()", 2 )
+end
+function ShowGUI()
+	XGUIEng.ShowWidget("BackGround_BottomLeft",1)
+	XGUIEng.ShowWidget("MiniMapOverlay",1) 
+	XGUIEng.ShowWidget("MiniMap",1) 
+	XGUIEng.ShowWidget("ResourceView",1) 
+	XGUIEng.ShowWidget("MinimapButtons",1) 
+	XGUIEng.ShowWidget("Top",1) 
+	XGUIEng.ShowWidget("FindView",1) 
+	XGUIEng.ShowWidget("Normal",1)
+	Input.KeyBindDown(Keys.ModifierControl +  Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 end
 function WinterTheme()
 	if Logic.GetWeatherState() == 3 or S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then

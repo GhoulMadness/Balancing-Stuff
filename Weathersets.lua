@@ -172,7 +172,4 @@ function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount)
 		Display.SetRenderUseGfxSets(1)	
 		
 	end
-	if BS and CNetwork then
-		BS.DiplomacyWindowChanges()
-	end
 end
