@@ -714,11 +714,11 @@ function TransactionDetails()
 	if Logic.GetCurrentPrice(PID,TSellTyp) > 1.3 then
 		Logic.SetCurrentPrice(PID, TSellTyp, 1.3 )
 	end
-	if Logic.GetCurrentPrice(PID,TSellTyp) < 0.6 then
-		Logic.SetCurrentPrice(PID, TSellTyp, 0.6 )
+	if Logic.GetCurrentPrice(PID,TSellTyp) < 0.7 then
+		Logic.SetCurrentPrice(PID, TSellTyp, 0.7 )
 	end
-	if Logic.GetCurrentPrice(PID,TTyp) > 1.7 then
-		Logic.SetCurrentPrice(PID, TTyp, 1.7 )
+	if Logic.GetCurrentPrice(PID,TTyp) > 1.5 then
+		Logic.SetCurrentPrice(PID, TTyp, 1.5 )
 	end
 	if Logic.GetCurrentPrice(PID,TTyp) < 0.7 then
 		Logic.SetCurrentPrice(PID, TTyp, 0.7 )
@@ -1106,6 +1106,19 @@ function DomeVictory()
 			end
 		end
 	end
+end
+function BeautiAnimCheck()
+	for eID in S5Hook.EntityIterator(Predicate.OfType(Entities.PB_Beautification07)) do
+		if eID  ~= nil then
+			Logic.SetBuildingSubAnim(eID, 1, "PB_Beautification07_Clockwork_600")
+		end
+	end
+	for eID in S5Hook.EntityIterator(Predicate.OfType(Entities.PB_Beautification12)) do
+		if eID  ~= nil then
+			Logic.SetBuildingSubAnim(eID, 1, "PB_Beautification12_Turn_600")
+		end
+	end
+	StartCountdown(2,BeautiAnimCheck,false)
 end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- Silversmith Grievance Job ------------------------------------------------------------------------------------

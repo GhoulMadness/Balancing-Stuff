@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.612
+BS.Version = 0.613
 
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
@@ -97,6 +97,7 @@ end
 	StartSimpleJob("IngameTimeJob")
 	StartSimpleJob("BloodRushCheck")
 	DZTrade_Init()
+	StartCountdown(10*60,BeautiAnimCheck,false)
 	
 	if not gvEMSFlag then
 		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
