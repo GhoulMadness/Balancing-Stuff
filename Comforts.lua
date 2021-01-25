@@ -60,6 +60,22 @@ else
 	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
 		return 1
 	end
+	GUIUpdate_BuyHeroButton = function()	
+		if Logic.GetNumberOfBuyableHerosForPlayer( GUI.GetPlayerID() ) > 0 then			
+			XGUIEng.ShowWidget(XGUIEng.GetCurrentWidgetID(),1)	
+		else		
+			XGUIEng.ShowWidget(XGUIEng.GetCurrentWidgetID(),0)		
+		end	
+	end	
+	GUIAction_ToggleMenu_Orig = GUIAction_ToggleMenu	
+	GUIAction_ToggleMenu = function(_menu, _status)	
+		if _menu == gvGUI_WidgetID.BuyHeroWindow then	
+			XGUIEng.ShowWidget(gvGUI_WidgetID.BuyHeroWindow, 1)
+		else	
+			GUIAction_ToggleMenu_Orig(_menu, _status)	
+		end	
+		gvMission.singleplayerMode = true	
+	end
 end
 	
 if CUtil then
