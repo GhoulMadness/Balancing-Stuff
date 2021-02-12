@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.615
+BS.Version = 0.616
 
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
@@ -98,9 +98,10 @@ end
 	StartSimpleJob("BloodRushCheck")
 	DZTrade_Init()
 	StartCountdown(10*60,BeautiAnimCheck,false)
-	
 	if not gvEMSFlag then
 		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else
 		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
 	end
+	--Simis Rotation Widget nach links schieben, damit es visuell besser in die größere GUI passt
+	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 

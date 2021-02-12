@@ -30,18 +30,18 @@ if not gvLastTimeLightningRodUsed then
 	gvLastTimeLightningRodUsed = -240000
 end
 if GUI.GetPlayerID() == 17 then
-	Input.KeyBindDown(Keys.ModifierControl +  Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
+	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 end
 if XNetwork.Manager_DoesExist() ~= 0 then
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
-		Logic.SetTechnologyState(17,Technologies.GT_StandingArmy,3)
 		if gvXmasEventFlag or gvTutorialFlag then
 			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0) 
 		end
 			
 	end
+	Logic.SetTechnologyState(17,Technologies.GT_Tactics,3)
 	
 	-----------------------------------------------------------------------------------------------
 	-- Added Outposts to win condition ------------------------------------------------------------
@@ -1350,7 +1350,7 @@ function HideGUI()
 	XGUIEng.ShowWidget("Top",0) 
 	XGUIEng.ShowWidget("FindView",0) 
 	XGUIEng.ShowWidget("Normal",0)
-	Input.KeyBindDown(Keys.ModifierControl +  Keys.ModifierAlt + Keys.G, "ShowGUI()", 2 )
+	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "ShowGUI()", 2 )
 end
 function ShowGUI()
 	XGUIEng.ShowWidget("BackGround_BottomLeft",1)
@@ -1361,7 +1361,7 @@ function ShowGUI()
 	XGUIEng.ShowWidget("Top",1) 
 	XGUIEng.ShowWidget("FindView",1) 
 	XGUIEng.ShowWidget("Normal",1)
-	Input.KeyBindDown(Keys.ModifierControl +  Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
+	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 end
 function WinterTheme()
 	if Logic.GetWeatherState() == 3 or S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
