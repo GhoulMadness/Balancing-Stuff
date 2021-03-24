@@ -151,8 +151,8 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the Market?
 			elseif 	UpgradeCategory == UpgradeCategories.Market then
 			
-				--You can only trade at market level 2
-				if EntityType == Entities.PB_Market2 or EntityType == Entities.CB_Castle2 then
+				--You can only trade at market level 2 or higher
+				if EntityType == Entities.PB_Market2 or EntityType == Entities.PB_Market3 then
 					XGUIEng.ShowWidget(gvGUI_WidgetID.Trade,1)
 					--Trdae in progress?
 					if Logic.GetTransactionProgress(EntityId) ~= 100 then
@@ -176,11 +176,11 @@ function GameCallback_GUI_SelectionChanged()
 				end
 			
 			
-			elseif 	UpgradeCategory == UpgradeCategories.Outpost then
+			elseif 	UpgradeCategory == UpgradeCategories.Castle then
 			
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Castle"),1)	
 				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
-				XGUIEng.ShowWidget(gvGUI_WidgetID.Outpost,1)					
-				XGUIEng.ShowWidget(gvGUI_WidgetID.HQOutpostCommands,1)	
+				ButtonStem =  "Upgrade_Castle"
 			
 				
 			--Is EntityType the Tavern?
@@ -210,6 +210,9 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the MercenaryTower?
 			elseif 	UpgradeCategory == UpgradeCategories.Mercenary then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MercenaryTower"),1)	
+			--Is EntityType the Mint?
+			elseif 	UpgradeCategory == UpgradeCategories.Mint then				
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Mint"),1)	
 			--Is EntityType the Silversmith?
 			elseif 	UpgradeCategory == UpgradeCategories.Silversmith then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silversmith"),1)	
@@ -289,9 +292,6 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
 		
-	elseif _TechnologyType == Technologies.T_Activate_Silversmith_Worker 
-	then	
-		GUIAction_Activate_Silversmith_Worker_Researched(_PlayerID,Logic.GetRandom(1,Logic.GetTimeMs()))
 		
 	end
 	
@@ -407,31 +407,45 @@ function GameCallback_ConstructBuilding(_csite, _nserfs, _amount)
         return _amount;
     end;
 end;
-function GameCallback_PlaceBuildingAdditionalCheck(_ucat, _x, _y, _rotation, _isBuildOn)
+function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _isBuildOn)
     local allowed = true;
     if GameCallback_PlaceBuildingAdditionalCheckOrig then
-        allowed = GameCallback_PlaceBuildingAdditionalCheckOrig(_ucat, _x, _y, _rotation, _isBuildOn)
+        allowed = GameCallback_PlaceBuildingAdditionalCheckOrig(_eType, _x, _y, _rotation, _isBuildOn)
         if allowed ~= false then
             allowed = true;
         end;
     end
-	if not gvXmasEventFlag then
-		return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-	else
-		local checktree1 
-		local checktree2
-		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
-		if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
-			checktree1 = true
+	if _eType ~= Entities.PB_Castle1 then
+		if not gvXmasEventFlag then
+			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 		else
-			checktree1 = false
+			local checktree1 
+			local checktree2
+			-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
+			if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+				checktree1 = true
+			else
+				checktree1 = false
+			end
+			if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+				checktree2 = true
+			else
+				checktree2 = false
+			end			
+			return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 		end
-		if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
-			checktree2 = true
-		else
-			checktree2 = false
-		end			
-		return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	else
+		local checkpos = true
+		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
+		for i = 1,table.getn(gvCastle.PositionTable) do
+			
+			if math.sqrt((_x - gvCastle.PositionTable[0+i][1])^2+(_y - gvCastle.PositionTable[0+i][2])^2) <= gvCastle.BlockRange then
+				checkpos = false
+			--else
+			--	checkpos = false
+			end
+		end
+		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 	end
 end 
 
@@ -458,6 +472,12 @@ function GameCallback_PaydayPayed(_player,_amount)
 		local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
 		CUtil.Payday_SetFrequency(_player, frequency)		
 	end
+	-- Zahltag pro Münzstätte um 1% erhöht, max 20%
+	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(_player,Entities.CB_Mint1)*0.01))
+	if factor > 1.2 then 
+		factor = 1.2
+	end
+	_amount = math.floor(_amount*factor)
 	-- Sudden Death auf der Weihnachtsmap
 	if gvXmasEventFlag then
 		local xmasamount

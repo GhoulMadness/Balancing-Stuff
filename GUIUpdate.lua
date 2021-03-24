@@ -562,3 +562,90 @@ function GUIUpdate_BuildingButtonsNew(_Button, _Technology)
 		return
 	end
 end
+function GUIUpdate_SumOfTaxes()
+	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	
+	local PlayerID = GUI.GetPlayerID()
+	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)		
+	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
+	if factor > 1.2 then 
+		factor = 1.2
+	end
+	if gvPresent then			
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
+	end
+	local TotalPayday = math.floor(GrossPayday * factor)
+	XGUIEng.SetTextByValue( CurrentWidgetID, TotalPayday, 1 )
+	
+end
+function GUIUpdate_TaxPaydayIncome()
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local PlayerID = GUI.GetPlayerID()
+	
+	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)
+	local LeaderCosts = Logic.GetPlayerPaydayLeaderCosts(PlayerID)
+	
+	local TaxesPlayerWillGet = GrossPayday - LeaderCosts
+	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
+	if factor > 1.2 then 
+		factor = 1.2
+	end
+	if gvPresent then			
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
+	end
+	local TotalPayday = math.floor(TaxesPlayerWillGet * factor)
+	local String
+	
+	if TaxesPlayerWillGet < 0 then
+		String = "@color:255,100,100,255 @ra " .. TotalPayday
+    else
+    	String = "@color:100,255,100,255 @ra +" .. TotalPayday
+    end
+	
+	XGUIEng.SetText(CurrentWidgetID, String)	
+	
+end
+
+
+function GUIUpdate_TaxSumOfTaxes()
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local PlayerID = GUI.GetPlayerID()
+	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)		
+	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
+	if factor > 1.2 then 
+		factor = 1.2
+	end
+	if gvPresent then			
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
+	end
+	local TotalIncome = math.floor(TaxIncome * factor)
+	XGUIEng.SetText(CurrentWidgetID, TotalIncome)	
+	
+end
+function GUIUpdate_TaxLeaderCosts()
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local PlayerID = GUI.GetPlayerID()
+	
+	local LeaderCosts = -(Logic.GetPlayerPaydayLeaderCosts(PlayerID))
+	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
+	if factor > 1.2 then 
+		factor = 1.2
+	end
+	if gvPresent then			
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
+	end
+	local TotalCosts = math.floor(LeaderCosts * factor)
+	XGUIEng.SetText(CurrentWidgetID, TotalCosts)	
+	
+end
+function GUIUpdate_MintTaxBonus()
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local PlayerID = GUI.GetPlayerID()
+	local NumOfMints = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)
+	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*0.01))
+	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*0.01)))
+	local String = "@color:255,255,255,255 aktueller Bonus: @color:100,255,100,255 " .. NumOfMints .. " % @color:255,255,255,255 erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:255,255,255 erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts
+	
+	XGUIEng.SetText(CurrentWidgetID, String)	
+end

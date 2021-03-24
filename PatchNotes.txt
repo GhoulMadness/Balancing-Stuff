@@ -1,0 +1,23 @@
+PatchNotizen Balancing Stuff
+
+Für Versionen älter als 0.62 schaut bitte in die Changelog.txt-Datei.
+
+--- Version 0.62 ---
+
+Pilgrims Bombe wurde leicht abgeschwächt, die Kanone leicht verstärkt.
+
+Salims Falle verursacht nun mehr Schaden.
+
+Yukis Shuriken verursachen nun mehr Schaden.
+
+Marys Gift verursacht etwas mehr Schaden, die Reichweite wurde reduziert. Außerdem wurde die Abklingzeit erhöht.
+
+Kalas Gift und Kalas Shuriken verursachen etwas mehr Schaden.
+
+Münzstätten erhöhen nun zusätzlichen zur "normalen" Taler-Veredlung den Zahltag um je 1% (max. 20%).
+
+Handelsposten haben ein passenderes, neues Aussehen bekommen. Außerdem wurden Startpreise und Inflation/Deflation geringfügig verändert.
+
+Außenposten wurden entfernt und durch Schlösser ersetzt. Die Grundmechanik bleibt bestehen, jedoch können Schlösser nur in gewisser Entfernung zu
+anderen Schlössern und Burgen (unabhängig von der Spieler ID) errichtet werden. Sie können insgesamt viermal ausgebaut werden. Dabei steigen 
+Ausbaukosten, DZ-Plätze, Lebenspunkte und Rüstungswerte pro Stufe weiter an. Es gibt ein Limit von 2 Schlössern pro Spieler.

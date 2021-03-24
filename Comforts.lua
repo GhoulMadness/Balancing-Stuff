@@ -46,7 +46,7 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 	-----------------------------------------------------------------------------------------------
 	-- Added Outposts to win condition ------------------------------------------------------------
 	-----------------------------------------------------------------------------------------------
-	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Outpost1}
+	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5}
 		
 
 else
@@ -448,6 +448,57 @@ gvMercenaryTower = { LastTimeUsed = 0, Cooldown = {
 	["BuyLeaderEvilSkir"] = "EvilSkir_Recharge"
 	}
 } 
+------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------- Castle Table -----------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+gvCastle = gvCastle or {}
+
+-- Blockreichweite in Siedler-cm, abhängig von der Fläche der Map
+gvCastle.BlockRange = 4000 + math.floor(((Logic.WorldGetSize()/100)^2)/110)
+-- max. Anzahl erlaubter Schlösser
+gvCastle.CastleLimit = 2
+gvCastle.HQIDTable = {}
+gvCastle.PositionTable = {}
+gvCastle.AmountOfCastles = {}
+if CNetwork then
+	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
+		gvCastle.AmountOfCastles[i] = 0
+		gvCastle.HQIDTable = {Logic.GetEntities(Entities.PB_Headquarters1,i)}
+		table.remove(gvCastle.HQIDTable,1)
+		for k = 1,table.getn(gvCastle.HQIDTable) do
+			gvCastle.PositionTable[k]={Logic.GetEntityPosition(gvCastle.HQIDTable[k])}
+		end
+	end
+else
+	gvCastle.AmountOfCastles[1] = 0
+	gvCastle.HQIDTable = {Logic.GetEntities(Entities.PB_Headquarters1,12)}
+	table.remove(gvCastle.HQIDTable,1)
+	for k = 1,table.getn(gvCastle.HQIDTable) do
+		gvCastle.PositionTable[k]={Logic.GetEntityPosition(gvCastle.HQIDTable[k])}
+	end
+end
+function OnCastleCreated()
+
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local playerID = GetPlayer(entityID)
+	local pos = {Logic.GetEntityPosition(entityID)}
+    if entityType == Entities.PB_Castle1 then     
+		table.insert(gvCastle.PositionTable,pos)
+		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] + 1
+	end
+end
+function OnCastleDestroyed()
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local playerID = GetPlayer(entityID)
+	local pos = {Logic.GetEntityPosition(entityID)}
+    if entityType == Entities.PB_Castle1 then     
+		--table.remove(gvCastle.PositionTable,pos)
+		--gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
+	end
+end
+
 
 -------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------- MP Key Sounds added -----------------------------------------------------------
@@ -1885,4 +1936,75 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 	
 	SetHostile(1,_playerId)
 	
+end
+
+function InterfaceTool_UpdateUpgradeButtons(_EntityType, _UpgradeCategory, _ButtonNameStem )
+
+	if _ButtonNameStem == "" then
+		return
+	end
+
+	local Upgrades = {Logic.GetBuildingTypesInUpgradeCategory(_UpgradeCategory)}
+	
+	if Upgrades[1] == 2 then
+		if _EntityType == Upgrades[2] then
+			XGUIEng.ShowWidget(_ButtonNameStem .. 1,1)
+		else
+			XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+		end
+	
+	elseif Upgrades[1] == 3 then	
+		local i
+		for i = 1, Upgrades[1], 1
+		do		
+			if _EntityType == Upgrades[i+1] then
+				
+			 	if i == 1 then
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,1)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,0)
+				elseif i == 2 then
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,1)
+				else
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,0)
+				end
+
+			end
+		end
+	elseif Upgrades[1] == 5 then	
+		local i
+		for i = 1, Upgrades[1], 1
+		do		
+			if _EntityType == Upgrades[i+1] then
+				
+			 	if i == 1 then
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,1)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 3,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 4,0)
+				elseif i == 2 then
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,1)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 3,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 4,0)
+				elseif i == 3 then
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 3,1)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 4,0)
+				elseif i == 4 then
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 3,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 4,1)
+				else
+					XGUIEng.ShowWidget(_ButtonNameStem .. 1,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 2,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 3,0)
+					XGUIEng.ShowWidget(_ButtonNameStem .. 4,0)
+				end
+			end
+		end
+	end
 end
