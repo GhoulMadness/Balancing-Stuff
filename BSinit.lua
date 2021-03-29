@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.62
+BS.Version = 0.621
 
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
