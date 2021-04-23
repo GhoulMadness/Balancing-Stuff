@@ -221,7 +221,9 @@ function VC_Deathmatch()
 	if MultiplayerTools.GameFinished == 1 then
 		return
 	end
-	
+	if KoopFlag == 1 then
+		return
+	end
 	
 	-- Get number of humen player
 	local HumenPlayer = XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()	
@@ -494,12 +496,39 @@ function OnCastleDestroyed()
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
     if entityType == Entities.PB_Castle1 then     
-		--table.remove(gvCastle.PositionTable,pos)
-		--gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
+		--removetablekeyvalue(gvCastle.PositionTable,pos)
+		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
 	end
 end
 
-
+--[[function removetablekeyvalue(_tid,_key)
+	local tpos 
+	if type(_key) == "string" then
+		for i = 1, table.getn(_tid) do
+			if string.find(table.getn[i],_key) ~= nil then
+				tpos = i
+			end
+		end
+	elseif type(_key) == "number" then
+		for i = 1, table.getn(_tid) do
+			if _tid[i] == _key then
+				tpos = i
+			end
+		end	
+	elseif type(_key) == "table" then
+		for i = 1, table.getn(_tid) do
+			for k = 1,table.getn(_tid[i]) do
+				if _tid[i][k] == _key then
+					tpos = i
+				end
+			end
+		end	
+	else
+		return
+	end
+	table.remove(_tid,tpos)
+    return _key
+end]]
 -------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------- MP Key Sounds added -----------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
@@ -781,14 +810,14 @@ function TransactionDetails()
 	if Logic.GetCurrentPrice(PID,TSellTyp) > 1.3 then
 		Logic.SetCurrentPrice(PID, TSellTyp, 1.3 )
 	end
-	if Logic.GetCurrentPrice(PID,TSellTyp) < 0.7 then
-		Logic.SetCurrentPrice(PID, TSellTyp, 0.7 )
+	if Logic.GetCurrentPrice(PID,TSellTyp) < 0.75 then
+		Logic.SetCurrentPrice(PID, TSellTyp, 0.75 )
 	end
-	if Logic.GetCurrentPrice(PID,TTyp) > 1.5 then
-		Logic.SetCurrentPrice(PID, TTyp, 1.5 )
+	if Logic.GetCurrentPrice(PID,TTyp) > 1.3 then
+		Logic.SetCurrentPrice(PID, TTyp, 1.3 )
 	end
-	if Logic.GetCurrentPrice(PID,TTyp) < 0.7 then
-		Logic.SetCurrentPrice(PID, TTyp, 0.7 )
+	if Logic.GetCurrentPrice(PID,TTyp) < 0.75 then
+		Logic.SetCurrentPrice(PID, TTyp, 0.75 )
 	end
 end
 --------------------------------------------------------------------------------------------------------------------
@@ -913,7 +942,8 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.ZB_ConstructionSiteTower1] = true,
 		[Entities.ZB_ConstructionSiteUniversity1] = true,
 		[Entities.ZB_ConstructionSiteVillageCenter1] = true,
-		[Entities.ZB_ConstructionSiteDome1] = true
+		[Entities.ZB_ConstructionSiteDome1] = true,
+		[Entities.ZB_ConstructionSiteCastle1] = true
 	}
 }
 function IsLightningProofBuilding(_entityID)

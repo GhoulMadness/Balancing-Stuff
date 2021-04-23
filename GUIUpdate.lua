@@ -567,6 +567,9 @@ function GUIUpdate_SumOfTaxes()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == 17 then
+		PlayerID = GUI.GetSelectedEntity()
+	end
 	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)		
 	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
 	if factor > 1.2 then 
@@ -582,6 +585,9 @@ end
 function GUIUpdate_TaxPaydayIncome()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == 17 then
+		PlayerID = GUI.GetSelectedEntity()
+	end
 	
 	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)
 	local LeaderCosts = Logic.GetPlayerPaydayLeaderCosts(PlayerID)
@@ -611,6 +617,9 @@ end
 function GUIUpdate_TaxSumOfTaxes()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == 17 then
+		PlayerID = GUI.GetSelectedEntity()
+	end
 	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)		
 	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
 	if factor > 1.2 then 
@@ -626,6 +635,9 @@ end
 function GUIUpdate_TaxLeaderCosts()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == 17 then
+		PlayerID = GUI.GetSelectedEntity()
+	end
 	
 	local LeaderCosts = -(Logic.GetPlayerPaydayLeaderCosts(PlayerID))
 	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
@@ -642,6 +654,9 @@ end
 function GUIUpdate_MintTaxBonus()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == 17 then
+		PlayerID = GUI.GetSelectedEntity()
+	end
 	local NumOfMints = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)
 	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*0.01))
 	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*0.01)))
