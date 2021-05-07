@@ -478,6 +478,15 @@ function GameCallback_PaydayPayed(_player,_amount)
 		factor = 1.2
 	end
 	_amount = math.floor(_amount*factor)
+	--KI bekommt 5fachen Zahltag
+	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 or XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == false then
+		if _amount > 0 then
+			_amount = _amount * 5
+		else
+			--KI kann keinen negativen Zahltag haben
+			_amount = 0
+		end
+	end	
 	-- Sudden Death auf der Weihnachtsmap
 	if gvXmasEventFlag then
 		local xmasamount
