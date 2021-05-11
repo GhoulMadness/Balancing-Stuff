@@ -1,7 +1,103 @@
 BS = BS or {}
 
-BS.Version = 0.63
+BS.Version = 0.631
 
+BS.MapList = { 	[1] =	{
+					},
+				[2] =	{
+					["(2) bs koop canyon"] = true,
+					["(2) bs koop castrum"] = true,
+					["(2) bs koop eisiger fjord"] = true,
+					["(2) bs koop kerberos dunkle horden"] = true,
+					["(2) bs koop vereinter widerstand"] = true,
+					["(2) emsbs dunkelforst"] = true,
+					["(2) emsbs kampf am kap"] = true,
+					["(2) emsbs leichenfledderer"] = true,
+					["(2) emsbs schnitters abenddaemmerung"] = true,
+					["(2) emsbs schwefelwahn"] = true,
+					["(2) emsbs skal"] = true,
+					["(2) emsbs trommeln im moor"] = true,
+					["(2) emsbs zerklueftete inseln"] = true
+					},
+				[3] =	{
+					["(3) bs koop kalas zorn"] = true,
+					["(3) bs koop kerberos dunkle horden"] = true,
+					["(3) bs koop marys verrat"] = true,
+					["(3) bs koop schlacht um evelance"] = true,
+					["(3) bs koop vereinter widerstand"] = true,
+					["(3) emsbs der lachende dritte"] = true,
+					["(3) emsbs eingekesselt"] = true,
+					["(3) emsbs hochland"] = true
+					},
+				[4] =	{
+					["(4) bs koop angriff auf evelance"] = true,
+					["(4) bs koop die smaragdebene"] = true,
+					["(4) bs koop kalas giftnebel"] = true,
+					["(4) bs koop marys intrige"] = true,
+					["(4) emsbs battle isle"] = true,
+					["(4) emsbs eklipse"] = true,
+					["(4) emsbs grosser wald des daemmerlichts"] = true,
+					["(4) emsbs kaloix"] = true,
+					["(4) emsbs nachtmahr"] = true,
+					["(4) emsbs nebelberge"] = true,
+					["(4) emsbs nebelsteppe"] = true,
+					["(4) emsbs rotzzcana"] = true,
+					["(4) emsbs schneetage"] = true,
+					["(4) emsbs steppenkampf"] = true,
+					["(4) emsbs tropensturm"] = true
+					},
+				[5] = 	{
+					["(5) bs koop der grosse aufstand"] = true,
+					["(5) emsbs feste nuamyr"] = true,
+					["(5) emsbs marys intrige"] = true,
+					["(5) emsbs oredominance"] = true
+					},
+				[6] =	{
+					["(6) bs koop vargs raubzug"] = true,
+					["(6) emsbs die zwei burgherrn"] = true,
+					["(6) emsbs heldenschlacht"] = true,
+					["(6) emsbs hochland"] = true,
+					["(6) emsbs inseln der ahnen"] = true,
+					["(6) emsbs tropensturm"] = true
+					},
+				[7] = 	{
+					["(7) emsbs blutmoor"] = true,
+					["(7) emsbs wuesteninsel"] = true
+					},
+				[8] = 	{
+					["(8) emsbs die kralberge"] = true,
+					["(8) emsbs die zwei burgherrn"] = true,
+					["(8) emsbs finsteres evelance"] = true,
+					["(8) emsbs inferno"] = true,
+					["(8) emsbs smaragdinseln"] = true,
+					["(8) emsbs tropensturm"] = true,
+					["(8) emsbs verrat"] = true
+					},
+				[9] = 	{
+					},
+				[10] =	{
+					["(10) emsbs tropensturm"] = true
+					},
+				[11] = 	{
+					},
+				[12] = 	{
+					["(12) emsbs goldrausch"] = true,
+					["(12) emsbs grabraeuber"] = true,
+					["(12) emsbs tropensturm"] = true,
+					["(12) emsbs wilde horden"] = true
+					}
+					
+				
+				}
+function BS.ValidateMap()
+	--XNetwork.GameInformation_GetMapName() exactly the same functionality?
+	return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
+end
+if CNetwork then
+	if BS.ValidateMap() ~= true then
+		Framework.CloseGame()
+	end
+end
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
 end
