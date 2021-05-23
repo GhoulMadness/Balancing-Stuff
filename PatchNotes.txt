@@ -21,3 +21,21 @@ Handelsposten haben ein passenderes, neues Aussehen bekommen. Außerdem wurden S
 Außenposten wurden entfernt und durch Schlösser ersetzt. Die Grundmechanik bleibt bestehen, jedoch können Schlösser nur in gewisser Entfernung zu
 anderen Schlössern und Burgen (unabhängig von der Spieler ID) errichtet werden. Sie können insgesamt viermal ausgebaut werden. Dabei steigen 
 Ausbaukosten, DZ-Plätze, Lebenspunkte und Rüstungswerte pro Stufe weiter an. Es gibt ein Limit von 2 Schlössern pro Spieler.
+
+--- Version 0.63
+
+Drake verursacht nun mehr Schaden, seine Rüstungswerte wurden jedoch im Gegenzug reduziert. Die Reichweite seines Kopfschusses wurde leicht reduziert.
+
+Helias verursacht nun mehr Schaden.
+
+Kerberos besitzt nun ein wenig mehr HP und HP Reg. Gleichermaßen wurde sein verursachter Schaden und seine Angriffsreichweite leicht erhöht. Außerdem klingt sein Höllenschrei jetzt ein wenig schneller ab.
+
+Ari verursacht nun mehr Schaden. Die Abklingzeiten ihrer beiden Fähigkeiten wurden reduziert. Im Gegenzug wurde ihr Rüstungswert reduziert.
+
+Yukis Schadenswert wurde erhöht. Außerdem wirft sie nun weitere Shuriken. Die Abklingzeit wurde leicht erhöht.
+
+Kala verursacht nun deutlich mehr Schaden, jedoch wurden ihre Lebenspunkte und Rüstungswerte stark gesenkt. Ihre Giftpfeile verursachen mehr Schaden. Ihr Giftnebel verursacht mehr Schaden und die Abklingzeit wurde stark gesenkt. Der Wirkungsradius wurde ebenfalls stark abgesenkt.
+
+Weitere Entitäten sind nun (im Mapeditor und einigen Maps) verfügbar.
+
+Speerwerfer und Bärenmenschen verursachen nun weniger Schaden und ihre Rüstungs- und Lebenswerte wurden reduziert. Die Kosten wurden erhöht.
