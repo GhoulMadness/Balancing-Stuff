@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.632
+BS.Version = 0.633
 
 BS.MapList = { 	[1] =	{
 					},
@@ -58,7 +58,8 @@ BS.MapList = { 	[1] =	{
 					["(6) emsbs heldenschlacht"] = true,
 					["(6) emsbs hochland"] = true,
 					["(6) emsbs inseln der ahnen"] = true,
-					["(6) emsbs tropensturm"] = true
+					["(6) emsbs tropensturm"] = true,
+					["(6) emsbs schneetage"] = true
 					},
 				[7] = 	{
 					["(7) emsbs blutmoor"] = true,
@@ -163,8 +164,8 @@ end
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIUpdate.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIAction.lua")
 	MemoryManipulation.CreateLibFuncs()	
-	--kann aktuell noch Desyncs verursachen...
-	--CUtil.DisableFoW()
+	
+	CUtil.DisableFoW()
 	Camera.ZoomSetFactorMax(2)
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
