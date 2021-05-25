@@ -72,7 +72,8 @@ BS.MapList = { 	[1] =	{
 					["(8) emsbs inferno"] = true,
 					["(8) emsbs smaragdinseln"] = true,
 					["(8) emsbs tropensturm"] = true,
-					["(8) emsbs verrat"] = true
+					["(8) emsbs verrat"] = true,
+					["(8) emsbs schneetage"] = true
 					},
 				[9] = 	{
 					},
