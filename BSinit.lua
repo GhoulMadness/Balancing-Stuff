@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.633
+BS.Version = 0.634
 
 BS.MapList = { 	[1] =	{
 					},
@@ -17,7 +17,9 @@ BS.MapList = { 	[1] =	{
 					["(2) emsbs schwefelwahn"] = true,
 					["(2) emsbs skal"] = true,
 					["(2) emsbs trommeln im moor"] = true,
-					["(2) emsbs zerklueftete inseln"] = true
+					["(2) emsbs zerklueftete inseln"] = true,
+					["(2) emsbs fort nogersund"] = true,
+					["(2) emsbs grabenkampf"] = true
 					},
 				[3] =	{
 					["(3) bs koop kalas zorn"] = true,

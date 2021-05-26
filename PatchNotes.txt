@@ -22,7 +22,11 @@ Außenposten wurden entfernt und durch Schlösser ersetzt. Die Grundmechanik ble
 anderen Schlössern und Burgen (unabhängig von der Spieler ID) errichtet werden. Sie können insgesamt viermal ausgebaut werden. Dabei steigen 
 Ausbaukosten, DZ-Plätze, Lebenspunkte und Rüstungswerte pro Stufe weiter an. Es gibt ein Limit von 2 Schlössern pro Spieler.
 
---- Version 0.63
+--- Version 0.63 ---
+
+höhere Ausbaustufen von Schlössern geben nun mehr DZ-Platz.
+
+Leibeigene verfügen nun über eine (relativ niedrige) HP-Regenerationsrate.
 
 Drake verursacht nun mehr Schaden, seine Rüstungswerte wurden jedoch im Gegenzug reduziert. Die Reichweite seines Kopfschusses wurde leicht reduziert.
 
@@ -38,4 +42,4 @@ Kala verursacht nun deutlich mehr Schaden, jedoch wurden ihre Lebenspunkte und R
 
 Weitere Entitäten sind nun (im Mapeditor und einigen Maps) verfügbar.
 
-Speerwerfer und Bärenmenschen verursachen nun weniger Schaden und ihre Rüstungs- und Lebenswerte wurden reduziert. Die Kosten wurden erhöht.
+Speerwerfer und Bärenmenschen verursachen nun weniger Schaden und ihre Rüstungs- und Lebenswerte wurden reduziert. Die Kosten wurden leicht erhöht.
