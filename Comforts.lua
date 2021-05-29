@@ -501,7 +501,7 @@ function OnCastleDestroyed()
 	end
 end
 
---[[function removetablekeyvalue(_tid,_key)
+function removetablekeyvalue(_tid,_key)
 	local tpos 
 	if type(_key) == "string" then
 		for i = 1, table.getn(_tid) do
@@ -528,7 +528,7 @@ end
 	end
 	table.remove(_tid,tpos)
     return _key
-end]]
+end
 -------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------- MP Key Sounds added -----------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
@@ -980,11 +980,11 @@ function Unwetter()
 		end
 		local pID = GUI.GetPlayerID()
 		if gvLightning.RecentlyDamaged[pID] == true then
-			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 152 ) 
-			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 164 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 132 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 144 ) 
 			Sound.PlayGUISound( Sounds.OnKlick_PB_PowerPlant1, 112 )
-			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,210)
-			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",62)
+			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,170)
+			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",102)
 			gvLightning.RecentlyDamaged[pID] = false
 		end
     end	
@@ -1217,6 +1217,41 @@ function BeautiAnimCheck()
 	end
 	StartCountdown(2,BeautiAnimCheck,false)
 end
+--------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------ Trigger für Leibeigene ----------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------
+SerfHPRegenAmount = 1
+SerfHPRegenTime = 5
+function SerfCreated()
+
+    local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local playerID = GetPlayer(entityID)
+	local pos = {Logic.GetEntityPosition(entityID)}
+    if entityType == Entities.PU_Serf then       
+	
+		table.insert(SerfIDTable,entityID)
+	end
+end
+function SerfDestroyed()
+
+    local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local playerID = GetPlayer(entityID)
+	local pos = {Logic.GetEntityPosition(entityID)}
+    if entityType == Entities.PU_Serf then       
+	
+		removetablekeyvalue(SerfIDTable,entityID)
+	end
+end
+function SerfHPRegen()
+
+	for i = 1,table.getn(SerfIDTable) do 
+		Logic.HealEntity(SerfIDTable[i], SerfHPRegenAmount)
+	end
+	StartCountdown(SerfHPRegenTime,SerfHPRegen,false)
+end
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- Silversmith Grievance Job ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------

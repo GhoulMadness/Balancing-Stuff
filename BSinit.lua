@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.634
+BS.Version = 0.635
 
 BS.MapList = { 	[1] =	{
 					},
@@ -186,9 +186,17 @@ end
 	BonusKeys()
 	--Trigger für Handel
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
+	--Trigger für Spez-Gebäude (Schreckensgebäude/Dom etc.)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SpezEntityPlaced", 1)
+	--Trigger für Schlösser
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnCastleCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCastleDestroyed", 1)
+	--Trigger für Leibeigene
+	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
+	table.remove(SerfIDTable,1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SerfCreated", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "SerfDestroyed", 1)
+	StartCountdown(5,SerfHPRegen,false)
 	if CUtil then 
 		for i = 1,16 do 
 			CUtil.Payday_SetActive(i, true) 
