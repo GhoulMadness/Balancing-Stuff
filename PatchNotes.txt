@@ -43,3 +43,15 @@ Kala verursacht nun deutlich mehr Schaden, jedoch wurden ihre Lebenspunkte und R
 Weitere Entitäten sind nun (im Mapeditor und einigen Maps) verfügbar.
 
 Speerwerfer und Bärenmenschen verursachen nun weniger Schaden und ihre Rüstungs- und Lebenswerte wurden reduziert. Die Kosten wurden leicht erhöht.
+
+Bugfixes und Verbesserungen:
+
+Es wurde ein Fehler behoben, durch den Leibeigene manchmal den Befehl des Spielers ignorierten und zurück zu ihrem letzten Befehl liefen.
+
+Es wurde ein Fehler behoben, durch den in manchen Fällen mehr als zwei Schlösser errichtet werden konnten.
+
+Es wurde ein Fehler behoben, durch den der "Verfallene Leuchtturm" und der "Leuchtturm" nicht im Nahkampf angegriffen werden konnten.
+
+Die Bau- und Reparierpositionen der Leibeigenen am Leuchtturm wurden angepasst und stimmen nun mehr mit dem Aussehen des Gebäudes überein.
+
+Leibeigene sind nun nicht mehr furchtlos.

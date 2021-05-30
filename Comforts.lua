@@ -485,7 +485,7 @@ function OnCastleCreated()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
-    if entityType == Entities.PB_Castle1 then     
+    if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
 		table.insert(gvCastle.PositionTable,pos)
 		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] + 1
 	end
@@ -495,8 +495,8 @@ function OnCastleDestroyed()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
-    if entityType == Entities.PB_Castle1 then     
-		--removetablekeyvalue(gvCastle.PositionTable,pos)
+    if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
+		removetablekeyvalue(gvCastle.PositionTable,pos)
 		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
 	end
 end

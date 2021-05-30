@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.635
+BS.Version = 0.636
 
 BS.MapList = { 	[1] =	{
 					},
