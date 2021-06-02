@@ -1483,7 +1483,7 @@ function WinterTheme()
 	if Logic.GetWeatherState() == 3 or S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
 		local SoundChance = Logic.GetRandom(24)
 			if SoundChance == 10 then
-			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd1,270)
+			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,170)
 		end
 	end
 end

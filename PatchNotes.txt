@@ -55,3 +55,5 @@ Es wurde ein Fehler behoben, durch den der "Verfallene Leuchtturm" und der "Leuc
 Die Bau- und Reparierpositionen der Leibeigenen am Leuchtturm wurden angepasst und stimmen nun mehr mit dem Aussehen des Gebäudes überein.
 
 Leibeigene sind nun nicht mehr furchtlos.
+
+Die Silber-Kosten für Schreckstatuen wurden halbiert. Gleichermaßen wurden die Kosten an anderen Ressourcen leicht erhöht.
