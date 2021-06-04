@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.637
+BS.Version = 0.6371
 
 BS.MapList = { 	[1] =	{
 					},
@@ -80,7 +80,8 @@ BS.MapList = { 	[1] =	{
 				[9] = 	{
 					},
 				[10] =	{
-					["(10) emsbs tropensturm"] = true
+					["(10) emsbs tropensturm"] = true,
+					["(10) emsbs kuestenlandschaft"] = true
 					},
 				[11] = 	{
 					},
