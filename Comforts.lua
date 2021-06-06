@@ -396,9 +396,24 @@ end
 function Lighthouse_SpawnJob(_playerID,_eID)
 	local _pos = {}
 	_pos.X,_pos.Y = Logic.GetEntityPosition(_eID)
+	local rot = Logic.GetEntityOrientation(_eID)
+	local posadjust = {}
+	if rot == 0 or rot == 360 then
+		posadjust.X = -700
+		posadjust.Y = -100
+	elseif rot == 90 then
+		posadjust.X = 100
+		posadjust.Y = -800
+	elseif rot == 180 then
+		posadjust.X = 600
+		posadjust.Y = 100
+	elseif rot == 270 then
+		posadjust.X = -100
+		posadjust.Y = 600
+	end
 	Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Iron,-600)
 	Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Sulfur,-400)
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,_pos.X,_pos.Y} )	
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,(_pos.X + posadjust.X),(_pos.Y + posadjust.Y)} )	
 end
 function Lighthouse_SpawnTroops(_pID,_posX,_posY)
 	if Logic.GetTime() >= gvLighthouse.starttime[_pID] + gvLighthouse.delay then
@@ -408,7 +423,7 @@ function Lighthouse_SpawnTroops(_pID,_posX,_posY)
 			return
 		end
 		for i = 1,gvLighthouse.troopamount do 
-			CreateGroup(_pID,gvLighthouse.troops[Logic.GetRandom(17)+1],gvLighthouse.soldieramount,_posX - 800 ,_posY - 200,0)
+			CreateGroup(_pID,gvLighthouse.troops[Logic.GetRandom(17)+1],gvLighthouse.soldieramount,_posX ,_posY,0)
 		end
 		if _pID == GUI.GetPlayerID() then
 			GUI.AddNote("Verst\195\164rkungstruppen sind eingetroffen")

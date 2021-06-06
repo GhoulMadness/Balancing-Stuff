@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.6371
+BS.Version = 0.6372
 
 BS.MapList = { 	[1] =	{
 					},
@@ -40,6 +40,7 @@ BS.MapList = { 	[1] =	{
 					["(4) emsbs eklipse"] = true,
 					["(4) emsbs grosser wald des daemmerlichts"] = true,
 					["(4) emsbs kaloix"] = true,
+					["(4) emsbs kaltenberg"] = true,
 					["(4) emsbs nachtmahr"] = true,
 					["(4) emsbs nebelberge"] = true,
 					["(4) emsbs nebelsteppe"] = true,
