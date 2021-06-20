@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.6373
+BS.Version = 0.64
 
 BS.MapList = { 	[1] =	{
 					},
@@ -194,6 +194,8 @@ end
 	--Trigger für Schlösser
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnCastleCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCastleDestroyed", 1)
+	--Trigger für Drake
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "drakedmg", 1);
 	--Trigger für Leibeigene
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)

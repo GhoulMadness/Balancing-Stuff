@@ -57,3 +57,9 @@ Die Bau- und Reparierpositionen der Leibeigenen am Leuchtturm wurden angepasst u
 Leibeigene sind nun nicht mehr furchtlos.
 
 Die Silber-Kosten für Schreckstatuen wurden halbiert. Gleichermaßen wurden die Kosten an anderen Ressourcen leicht erhöht.
+
+--- Version 0.64 ---
+
+Drakes Meisterschuss tötet nun schwächere Einheiten wie Leibeigene, Diebe, Kanonen, etc. mit einem Schuss. Der Schaden gegen Helden hat sich nur geringfügig geändert. Der Schaden ist nun außerdem abhängig von Drakes Angriffsschaden und kann so mit Buffs gesteigert bzw. mit Debuffs (Marys Gift) gesenkt werden.
+
+Hellebardiere sind nun ein wenig schwächer und die Kosten gegenüber Schwertkämpfern wurden angeglichen.

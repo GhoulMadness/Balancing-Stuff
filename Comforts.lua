@@ -363,6 +363,22 @@ function VC_Deathmatch()
 	end
 
 end 
+function drakedmg() 
+	local attacker = Event.GetEntityID1()
+    local target = Event.GetEntityID2();
+	local attype = Logic.GetEntityType(attacker)
+	local task = Logic.GetCurrentTaskList(attacker)
+	local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilitySniper)
+    local max = Logic.GetEntityMaxHealth(target);
+    local dmg = CEntity.TriggerGetDamage();
+	local attackerdmg = Logic.GetEntityDamage(attacker)
+	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" and cooldown == 1 then
+		if max == dmg then 
+			CEntity.TriggerSetDamage(math.floor((max * 0.4) + (attackerdmg*5)));
+		end;
+	end;
+end;
+
 ---------------------------------------------------------------------------------------------------------------------------	
    
 ------------------------------------------------------------------------------------------------------------------------------------------
@@ -995,11 +1011,11 @@ function Unwetter()
 		end
 		local pID = GUI.GetPlayerID()
 		if gvLightning.RecentlyDamaged[pID] == true then
-			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 132 ) 
-			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 144 ) 
-			Sound.PlayGUISound( Sounds.OnKlick_PB_PowerPlant1, 112 )
-			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,170)
-			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",102)
+			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 102 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 114 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_PB_PowerPlant1, 92 )
+			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,140)
+			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",82)
 			gvLightning.RecentlyDamaged[pID] = false
 		end
     end	
@@ -1103,7 +1119,7 @@ function DZTradePunishmentJob()
 				GUI.AddNote(" @color:"..r..","..g..","..b.." "..UserTool_GetPlayerName(player).." @color:255,255,255 verf\195\188gt \195\188ber zu wenig Platz f\195\188r seine Siedler." )
 				GUI.AddNote( "Dies wird den Siedlern nicht gefallen und sie werden die Siedlung bald verlassen!")
 				if GUI.GetPlayerID() == player then
-					Stream.Start("Sounds\\voicesmentor\\comment_badplay_rnd_06.wav",190)
+					Stream.Start("Sounds\\voicesmentor\\comment_badplay_rnd_06.wav",150)
 				end
 			end
 			if gvDZTradeCheck.PlayerDelay[player] <= 0 then
@@ -1120,7 +1136,9 @@ function DZTradePunishment(_playerID)
 	for eID in S5Hook.EntityIterator(Predicate.OfPlayer(_playerID), Predicate.OfCategory(EntityCategories.Worker)) do
 		local motivation = Logic.GetSettlersMotivation(eID) 
 		if motivation >= 0.29 then
-		S5Hook.SetSettlerMotivation(eID, motivation - math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100,0.08) )
+			S5Hook.SetSettlerMotivation(eID, motivation - math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100,0.08) )
+		elseif motivation < 0.24 then
+			S5Hook.SetSettlerMotivation(eID, 0.24 )
 		end
 	end
 end
@@ -1236,7 +1254,7 @@ end
 ------------------------------------------ Trigger für Leibeigene ----------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------
 SerfHPRegenAmount = 1
-SerfHPRegenTime = 5
+SerfHPRegenTime = 4
 function SerfCreated()
 
     local entityID = Event.GetEntityID()
@@ -1496,9 +1514,9 @@ function ShowGUI()
 end
 function WinterTheme()
 	if Logic.GetWeatherState() == 3 or S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
-		local SoundChance = Logic.GetRandom(24)
+		local SoundChance = Logic.GetRandom(28)
 			if SoundChance == 10 then
-			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,170)
+			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,140)
 		end
 	end
 end
@@ -1510,7 +1528,7 @@ function IngameTimeJob()
 end
 function BloodRushCheck()
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-		if Score.GetPlayerScore(i, "battle") > 1999 and Logic.GetTechnologyState(i,Technologies.T_UnlockBloodrush) ~= 4 then
+		if Score.GetPlayerScore(i, "battle") > 999 and Logic.GetTechnologyState(i,Technologies.T_UnlockBloodrush) ~= 4 then
 			Logic.SetTechnologyState(i,Technologies.T_UnlockBloodrush,3)
 		end
 	end
