@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.64
+BS.Version = 0.65
 
 BS.MapList = { 	[1] =	{
 					},
@@ -19,7 +19,8 @@ BS.MapList = { 	[1] =	{
 					["(2) emsbs trommeln im moor"] = true,
 					["(2) emsbs zerklueftete inseln"] = true,
 					["(2) emsbs fort nogersund"] = true,
-					["(2) emsbs grabenkampf"] = true
+					["(2) emsbs grabenkampf"] = true,
+					["(2) emsbs der taktiker"] = true
 					},
 				[3] =	{
 					["(3) bs koop kalas zorn"] = true,
@@ -47,13 +48,17 @@ BS.MapList = { 	[1] =	{
 					["(4) emsbs rotzzcana"] = true,
 					["(4) emsbs schneetage"] = true,
 					["(4) emsbs steppenkampf"] = true,
-					["(4) emsbs tropensturm"] = true
+					["(4) emsbs tropensturm"] = true,
+					["(4) emsbs die zusammenkunft"] = true,
+					["(4) emsbs imperium"] = true,
+					["(4) emsbs magic circle"] = true,
+					["(4) emsbs sand cliffs"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
 					["(5) emsbs feste nuamyr"] = true,
 					["(5) emsbs marys intrige"] = true,
-					["(5) emsbs oredominance"] = true
+					["(5) emsbs predominance"] = true
 					},
 				[6] =	{
 					["(6) bs koop vargs raubzug"] = true,
@@ -62,7 +67,8 @@ BS.MapList = { 	[1] =	{
 					["(6) emsbs hochland"] = true,
 					["(6) emsbs inseln der ahnen"] = true,
 					["(6) emsbs tropensturm"] = true,
-					["(6) emsbs schneetage"] = true
+					["(6) emsbs schneetage"] = true,
+					["(6) emsbs riffe"] = true
 					},
 				[7] = 	{
 					["(7) emsbs blutmoor"] = true,
@@ -76,7 +82,9 @@ BS.MapList = { 	[1] =	{
 					["(8) emsbs smaragdinseln"] = true,
 					["(8) emsbs tropensturm"] = true,
 					["(8) emsbs verrat"] = true,
-					["(8) emsbs schneetage"] = true
+					["(8) emsbs schneetage"] = true,
+					["(8) emsbs death island"] = true,
+					["(8) emsbs koenigreiche"] = true
 					},
 				[9] = 	{
 					},

@@ -139,34 +139,34 @@ function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount)
 		AddPeriodicTransitionSunrise(durationinsec/24)				--1min
 		Display.SetRenderUseGfxSets(1)	
 	elseif _rainflag == 1 and _snowflag == 0 then
-		AddPeriodicSummer((durationinsec/2.4)-bonuscountinsec)		--10min	Tag startet um 08:00 morgens
-		AddPeriodicRain((durationinsec/48)+bonuscountinsec)			--0.5min
-		AddPeriodicSnowyRain((durationinsec/48)+bonuscountinsec)	--0.5min
+		AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))		--10min	Tag startet um 08:00 morgens
+		AddPeriodicRain((durationinsec/48)+(bonuscountinsec/2))			--0.5min
+		AddPeriodicSnowyRain((durationinsec/48)+(bonuscountinsec/2))	--0.5min
 		AddPeriodicTransitionSunrise(durationinsec/48)				--0.5min
 		AddPeriodicSunrise(durationinsec/24)						--1min
-		AddPeriodicNight((durationinsec/2.4)-bonuscountinsec)			--10min
+		AddPeriodicNight((durationinsec/2.4)-(bonuscountinsec/2))			--10min
 		AddPeriodicSunrise(durationinsec/24)						--1min
 		AddPeriodicTransitionSunrise(durationinsec/48)				--0.5min
 		Display.SetRenderUseGfxSets(1)	
 	elseif _rainflag == 0 and _snowflag == 1 then
-		AddPeriodicSummer((durationinsec/2.4)-bonuscountinsec)
-		AddPeriodicWinter((durationinsec/48)+bonuscountinsec)
-		AddPeriodicSnow((durationinsec/48)+bonuscountinsec)
+		AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))
+		AddPeriodicWinter((durationinsec/48)+(bonuscountinsec/2))
+		AddPeriodicSnow((durationinsec/48)+(bonuscountinsec/2))
 		AddPeriodicTransitionSunrise(durationinsec/48)
 		AddPeriodicSunrise(durationinsec/24)
-		AddPeriodicNight((durationinsec/2.4)-bonuscountinsec)
+		AddPeriodicNight((durationinsec/2.4)-(bonuscountinsec/2))
 		AddPeriodicSunrise(durationinsec/24)
 		AddPeriodicTransitionSunrise(durationinsec/48)
 		Display.SetRenderUseGfxSets(1)	
 	elseif _rainflag == 1 and _snowflag == 1 then
-		AddPeriodicSummer((durationinsec/2.4)-bonuscountinsec)
-		AddPeriodicWinter((durationinsec/48)+(bonuscountinsec/2))
-		AddPeriodicSnowyRain((durationinsec/48)+(bonuscountinsec/2))
-		AddPeriodicSnow((durationinsec/48)+(bonuscountinsec/2))
-		AddPeriodicRain((durationinsec/48)+(bonuscountinsec/2))
+		AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))
+		AddPeriodicWinter((durationinsec/48)+((bonuscountinsec/2)/2))
+		AddPeriodicSnowyRain((durationinsec/48)+((bonuscountinsec/2)/2))
+		AddPeriodicSnow((durationinsec/48)+((bonuscountinsec/2)/2))
+		AddPeriodicRain((durationinsec/48)+((bonuscountinsec/2)/2))
 		AddPeriodicTransitionSunrise(durationinsec/24)
 		AddPeriodicSunrise(durationinsec/24)
-		AddPeriodicNight((durationinsec/3)-bonuscountinsec)
+		AddPeriodicNight((durationinsec/3)-(bonuscountinsec/2))
 		AddPeriodicSunrise(durationinsec/24)
 		AddPeriodicTransitionSunrise(durationinsec/24)
 		Display.SetRenderUseGfxSets(1)	

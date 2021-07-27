@@ -1929,7 +1929,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		--	set up default information
 		local description = {
 		
-			serfLimit				=	(_strength-1)*2,
+			serfLimit				=	(_strength-1)*3,
 			--------------------------------------------------
 			extracting				=	false,
 			--------------------------------------------------
@@ -1955,18 +1955,21 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 			constructing			=	true,
 			--------------------------------------------------
 			rebuild = {
-				delay				=	10*(4-_strength),
-				randomTime			=	5*(4-_strength)
+				delay				=	20*(4-_strength),
+				randomTime			=	15*(4-_strength)
 			},
 		}
 		
 		SetupPlayerAi(_playerId,description)
 
 	-- Tech level
-	
-		local CannonEntityType1 = Entities["PV_Cannon".._techlevel]
-		local CannonEntityType2 = Entities["PV_Cannon".._techlevel+1]
-
+		if _techlevel == 2 then		
+			local CannonEntityType1 = Entities.PV_Cannon1
+			local CannonEntityType2 = Entities.PV_Cannon2
+		elseif _techlevel == 3 then
+			local CannonEntityType1 = Entities.PV_Cannon3
+			local CannonEntityType2 = Entities.PV_Cannon4
+		end
 		-- Upgrade entities..Rifle?
 		for i=1,_techlevel do
 			Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderBow, _playerId)
@@ -1986,12 +1989,12 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		
 	MapEditor_Armies[_playerId] = {}
 		
-	for i=1, _strength*2 do
+	for i=1, _strength do
 		
 		MapEditor_Armies[_playerId][i] 						=	{}
 		MapEditor_Armies[_playerId][i].player 				=	_playerId
 		MapEditor_Armies[_playerId][i].id					=	i
-		MapEditor_Armies[_playerId][i].strength				=	6
+		MapEditor_Armies[_playerId][i].strength				=	_strength*2
 		MapEditor_Armies[_playerId][i].position				=	GetPosition(_position)
 		local offset = (math.mod((i-1),3)-1)
 		MapEditor_Armies[_playerId][i].position.X			=	MapEditor_Armies[_playerId][i].position.X + offset*1000
@@ -2035,7 +2038,59 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 	SetHostile(1,_playerId)
 	
 end
+SetupAITroopGenerator = function(_Name, _army)
 
+	local Index = AddData(_army)
+
+	-- Setup trigger
+	assert(_army.generatorID==nil, "There is already a generator registered")
+	_army.generatorID = Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_SECOND,
+												"AITroopGenerator_Condition",
+												"AITroopGenerator_Action",
+												1,
+												{_Name, Index},
+												{Index})
+
+end
+AITroopGenerator_Condition = function(_Name, _Index)
+
+	-- Not enough troops
+	if 	Counter.Tick2(_Name.."Generator",5) == false
+		or
+		(
+			(
+				DataTable[_Index].ignoreAttack == nil
+				or	not DataTable[_Index].ignoreAttack
+			)
+			and	DataTable[_Index].Attack
+		) then
+		return false
+	end
+
+	-- Already enough
+	if AI.Army_GetNumberOfTroops(DataTable[_Index].player, DataTable[_Index].id) < DataTable[_Index].strength then
+
+		-- Connect unemployed leader
+		AI.Entity_ConnectUnemployedLeaderToArmy(DataTable[_Index].player, DataTable[_Index].id, 6)
+
+	end
+
+	return AI.Army_GetNumberOfTroops(DataTable[_Index].player, DataTable[_Index].id) < DataTable[_Index].strength
+
+end
+AITroopGenerator_Action = function(_Index)
+
+	-- Get table size
+	local UpgradeCategoryCount = table.getn(DataTable[_Index].AllowedTypes)
+
+	-- Get random category
+	local UpgradeCategoryIndex = Logic.GetRandom(UpgradeCategoryCount)+1
+
+	AI.Army_BuyLeader(DataTable[_Index].player, DataTable[_Index].id, DataTable[_Index].AllowedTypes[UpgradeCategoryIndex])
+
+	return false
+
+end
 function InterfaceTool_UpdateUpgradeButtons(_EntityType, _UpgradeCategory, _ButtonNameStem )
 
 	if _ButtonNameStem == "" then
