@@ -60,6 +60,8 @@ else
 	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
 		return 1
 	end
+	MultiplayerTools.RemoveAllPlayerEntities = function( _PlayerID)
+	end
 	GUIUpdate_BuyHeroButton = function()	
 		if Logic.GetNumberOfBuyableHerosForPlayer( GUI.GetPlayerID() ) > 0 then			
 			XGUIEng.ShowWidget(XGUIEng.GetCurrentWidgetID(),1)	

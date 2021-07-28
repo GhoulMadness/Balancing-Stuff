@@ -63,3 +63,15 @@ Die Silber-Kosten für Schreckstatuen wurden halbiert. Gleichermaßen wurden die
 Drakes Meisterschuss tötet nun schwächere Einheiten wie Leibeigene, Diebe, Kanonen, etc. mit einem Schuss. Der Schaden gegen Helden hat sich nur geringfügig geändert. Der Schaden ist nun außerdem abhängig von Drakes Angriffsschaden und kann so mit Buffs gesteigert bzw. mit Debuffs (Marys Gift) gesenkt werden.
 
 Hellebardiere sind nun ein wenig schwächer und die Kosten gegenüber Schwertkämpfern wurden angeglichen.
+
+--- Version 0.65
+
+Es wurde ein Fehler behoben, durch den die angeheuerten Truppen aus dem Leuchtturm an falscher Position erstellt wurden.
+
+Es wurde ein Fehler behoben, durch den ein Spieler nach Überschreiten des DZ-Platz-Limits (durch die eingebaute Gegenmaßnahme) auf knapp über 25% Motivation fallen konnte, wodurch nicht wie vorgesehen alle Arbeiter die Siedlung verließen.
+
+Armeen von Computerspielern (meist auf Kooperations-Karten) sollten sich nun etwas klüger verhalten. Außerdem wird dies im späteren Spielverlauf zu einer generell verbesserten Performance führen.
+
+Die Angriffs-Reichweite von Ballista- und Kanonentürmen wurde leicht reduziert. Außerdem kosten Kanonentürme nun mehr Ressourcen und verursachen etwas weniger Flächenschaden (direkter Schaden unverändert).
+
+Die HP von Dario sowie sein Rüstwert wurden leicht reduziert. Im Gegenzug wurde sein Schadenswert sowie der zufällige Bonusschaden erhöht. Die Reichweite der "Beschützen"-Fähigkeit wurde leicht reduziert und die Dauer fliehender Truppen wurde ebenfalls leicht verringert.

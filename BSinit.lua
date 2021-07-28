@@ -1,8 +1,8 @@
 BS = BS or {}
 
-BS.Version = 0.651
+BS.Version = 0.6511
 
-BS.CurrentMappoolTotalAmount = 75
+BS.CurrentMappoolTotalAmount = 76
 
 BS.MapList = { 	[1] =	{
 					},
@@ -12,6 +12,7 @@ BS.MapList = { 	[1] =	{
 					["(2) bs koop eisiger fjord"] = true,
 					["(2) bs koop kerberos dunkle horden"] = true,
 					["(2) bs koop vereinter widerstand"] = true,
+					["(2) bs koop dunkelheit"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
