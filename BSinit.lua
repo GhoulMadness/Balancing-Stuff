@@ -1,6 +1,8 @@
 BS = BS or {}
 
-BS.Version = 0.65
+BS.Version = 0.651
+
+BS.CurrentMappoolTotalAmount = 75
 
 BS.MapList = { 	[1] =	{
 					},

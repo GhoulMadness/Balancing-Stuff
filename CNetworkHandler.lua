@@ -68,13 +68,28 @@
 					-- execute stuff
 					local pos = {}
 					pos.X,pos.Y = Logic.GetEntityPosition(_eID)
+					local rot = Logic.GetEntityOrientation(_eID)
+					local posadjust = {}
+					if rot == 0 or rot == 360 then
+						posadjust.X = -700
+						posadjust.Y = -100
+					elseif rot == 90 then
+						posadjust.X = 100
+						posadjust.Y = -800
+					elseif rot == 180 then
+						posadjust.X = 600
+						posadjust.Y = 100
+					elseif rot == 270 then
+						posadjust.X = -100
+						posadjust.Y = 600
+					end
 					local Iron   = Logic.GetPlayersGlobalResource( _playerID, ResourceType.Iron ) + Logic.GetPlayersGlobalResource( _playerID, ResourceType.IronRaw)
 					local Sulfur = Logic.GetPlayersGlobalResource( _playerID, ResourceType.Sulfur ) + Logic.GetPlayersGlobalResource( _playerID, ResourceType.SulfurRaw)
 	
 					if Iron >= 600 and Sulfur >= 400 then
 						Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Iron,-600)
 						Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Sulfur,-400)
-						Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN,"", "Lighthouse_SpawnTroops",1,{},{_playerID,pos.X,pos.Y} )
+						Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN,"", "Lighthouse_SpawnTroops",1,{},{_playerID,(pos.X + posadjust.X),(pos.Y + posadjust.Y)} )
 						gvLighthouse.starttime[_playerID] = Logic.GetTime()
 					else
 						if GUI.GetPlayerID() == _playerID then

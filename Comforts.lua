@@ -1934,21 +1934,21 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 			extracting				=	false,
 			--------------------------------------------------
 			resources = {
-				gold				=	_strength*1500,
-				clay				=	_strength*1250,
-				iron				=	_strength*1250,
-				sulfur				=	_strength*1250,
-				stone				=	_strength*1250,
-				wood				=	_strength*1250
+				gold				=	_strength*15000,
+				clay				=	_strength*12500,
+				iron				=	_strength*12500,
+				sulfur				=	_strength*12500,
+				stone				=	_strength*12500,
+				wood				=	_strength*12500
 			},
 			--------------------------------------------------
 			refresh = {
-				gold				=	_strength*1000,
+				gold				=	_strength*2000,
 				clay				=	_strength*500,
-				iron				=	_strength*500,
-				sulfur				=	_strength*500,
+				iron				=	_strength*1500,
+				sulfur				=	_strength*700,
 				stone				=	_strength*500,
-				wood				=	_strength*500,
+				wood				=	_strength*1000,
 				updateTime			=	math.floor(30/_strength)
 			},
 			--------------------------------------------------

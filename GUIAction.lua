@@ -13,6 +13,18 @@ if gvXmasEventFlag == 1 then
 		end
 	end
 end
+	GUIAction_ForceSettlersToWorkOrig = GUIAction_ForceSettlersToWork
+function GUIAction_ForceSettlersToWork()
+	local BuildingID = GUI.GetSelectedEntity()
+	local BuildingType =  Logic.GetEntityType( BuildingID )
+	local BuildingCategory = Logic.GetUpgradeCategoryByBuildingType( BuildingType )
+	if BuildingCategory == UpgradeCategories.Silversmith then
+		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine \195\156berstunden verrichten!")
+	else
+		GUIAction_ForceSettlersToWorkOrig()
+	end
+
+end
 function GUIAction_ChangeView(_mode)
 	if _mode == 0 then
 		--normale Sicht anzeigen
