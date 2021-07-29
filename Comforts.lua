@@ -1991,12 +1991,12 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		
 	MapEditor_Armies[_playerId] = {}
 		
-	for i=1, _strength do
+	for i=1, (_strength+3) do
 		
 		MapEditor_Armies[_playerId][i] 						=	{}
 		MapEditor_Armies[_playerId][i].player 				=	_playerId
 		MapEditor_Armies[_playerId][i].id					=	i
-		MapEditor_Armies[_playerId][i].strength				=	_strength*2
+		MapEditor_Armies[_playerId][i].strength				=	_strength+3
 		MapEditor_Armies[_playerId][i].position				=	GetPosition(_position)
 		local offset = (math.mod((i-1),3)-1)
 		MapEditor_Armies[_playerId][i].position.X			=	MapEditor_Armies[_playerId][i].position.X + offset*1000
@@ -2013,7 +2013,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 																	UpgradeCategories.LeaderCavalry,
 																	UpgradeCategories.LeaderHeavyCavalry,
 																	UpgradeCategories.LeaderRifle,
-																	CannonEntityType1 ,
+																	CannonEntityType1,
 																	CannonEntityType2
 																	}
 													
@@ -2057,7 +2057,7 @@ end
 AITroopGenerator_Condition = function(_Name, _Index)
 
 	-- Not enough troops
-	if 	Counter.Tick2(_Name.."Generator",5) == false
+	if 	Counter.Tick2(_Name.."Generator",7) == false
 		or
 		(
 			(
