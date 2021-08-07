@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.6512
+BS.Version = 0.652
 
 BS.CurrentMappoolTotalAmount = 78
 
@@ -110,8 +110,12 @@ BS.MapList = { 	[1] =	{
 				
 				}
 function BS.ValidateMap()
-	--XNetwork.GameInformation_GetMapName() exactly the same functionality?
-	return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
+	if XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() > 0 then
+		--XNetwork.GameInformation_GetMapName() exactly the same functionality?
+		return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
+	else
+		return true
+	end
 end
 if CNetwork then
 	if BS.ValidateMap() ~= true then

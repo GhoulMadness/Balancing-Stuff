@@ -75,3 +75,5 @@ Armeen von Computerspielern (meist auf Kooperations-Karten) sollten sich nun etw
 Die Angriffs-Reichweite von Ballista- und Kanonentürmen wurde leicht reduziert. Außerdem kosten Kanonentürme nun mehr Ressourcen und verursachen etwas weniger Flächenschaden (direkter Schaden unverändert).
 
 Die HP von Dario sowie sein Rüstwert wurden leicht reduziert. Im Gegenzug wurde sein Schadenswert sowie der zufällige Bonusschaden erhöht. Die Reichweite der "Beschützen"-Fähigkeit wurde leicht reduziert und die Dauer fliehender Truppen wurde ebenfalls leicht verringert.
+
+Die Lebenspunkte-Regeneration von Helias, Kala und Mary de Morfichet wurden erhöht. Außerdem wurde deren Schadenswert leicht erhöht. Die Abklingzeit von Yukis "Feuerwerk der Freude" wurde reduziert.
