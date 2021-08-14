@@ -1,8 +1,8 @@
 BS = BS or {}
 
-BS.Version = 0.653
+BS.Version = 0.654
 
-BS.CurrentMappoolTotalAmount = 78
+BS.CurrentMappoolTotalAmount = 0
 
 BS.MapList = { 	[1] =	{
 					},
@@ -109,6 +109,24 @@ BS.MapList = { 	[1] =	{
 					
 				
 				}
+
+-- counting total Map amount (currently not used, just for information purpose)				
+do
+	local i = table.getn(BS.MapList)
+	
+	while i > 0 do
+		--[[local MapListDummy = {}
+		MapListDummy[i] = BS.MapList[i]		
+		local _, count = string.gsub(table.concat(MapListDummy[i],", "), "bs", "")]]
+		local count = 0
+		for _ in pairs(BS.MapList[i]) do count = count + 1 end
+
+		BS.CurrentMappoolTotalAmount = BS.CurrentMappoolTotalAmount + count
+	
+		i = i - 1 
+	end
+	
+end
 function BS.ValidateMap()
 	if XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() > 0 then
 		--XNetwork.GameInformation_GetMapName() exactly the same functionality?
@@ -125,8 +143,8 @@ end
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
 end
-
--- needed for SWFire Mod
+--[[ Score stuff
+needed for SWFire Mod]]
 if not Score.Player[0] then
 	Score.Player[0] = {
         battle = 0,
@@ -137,6 +155,26 @@ if not Score.Player[0] then
         technology = 0,
 	};
 end	
+--[[ Score points orig values
+Score.WinPoints = 200
+Score.ResearchPoints = 5
+Score.UpgradePoints = 5
+Score.BattleSettlersPoints = 2
+Score.BattleBuildingPoints = 5
+Score.SettlersPoints = 2 
+Score.ResourcePoints  = 0.2
+Score.ConstructionPoints = 5]]
+
+Score.WinPoints = 1
+Score.ResearchPoints = 50
+Score.UpgradePoints = 25
+Score.BattleSettlersPoints = 3
+Score.BattleBuildingPoints = 50
+Score.SettlersPoints = 5 
+Score.ResourcePoints  = 0.05
+Score.ConstructionPoints = 5
+
+-- Spectator Buttons and Widgets (Correct Icon shown)
 if 	gvGUI_TechnologyButtonIDArray then
 	gvGUI_TechnologyButtonIDArray[Technologies.T_ThunderStorm] = XGUIEng.GetWidgetID("Research_ThunderStorm");
 	gvGUI_TechnologyButtonIDArray[Technologies.T_HeavyThunder] = XGUIEng.GetWidgetID("Research_HeavyThunder");
