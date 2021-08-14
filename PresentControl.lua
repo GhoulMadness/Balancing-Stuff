@@ -106,8 +106,8 @@ end
 -- Positionen der beiden Weihnachtsbäume
 if gvMaxPlayers == 4 then
 	gvPresent.XmasTreePos =		{
-								[1]={X=3300,Y=34800},
-								[2]={X=51200,Y=34800}
+								[1]={X=21200,Y=10500},
+								[2]={X=33200,Y=10300}
 							}				
 elseif gvMaxPlayers == 6 or gvMaxPlayers == 8 then
 	gvPresent.XmasTreePos =		{
@@ -121,7 +121,7 @@ gvPresent.PresentTypes = {Entities.XD_Present1,Entities.XD_Present2,Entities.XD_
 gvPresent.XmasTreeCriticalRange = 500
 -- Reichweite, in der um den Weihnachtsbaum keine Gebäude platziert werden können
 if gvMaxPlayers <= 4 then
-gvPresent.XmasTreeBuildBlockRange = 3600
+gvPresent.XmasTreeBuildBlockRange = 2600
 elseif gvMaxPlayers >= 6 then
 gvPresent.XmasTreeBuildBlockRange = 2400
 end
