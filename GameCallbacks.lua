@@ -2,6 +2,7 @@ GameCallback_GUI_SelectionChangedOrig = GameCallback_GUI_SelectionChanged;
 --GameCallback_GameSpeedChangedOrig = GameCallback_GameSpeedChanged;
 GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;	
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
+HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
 
 -- 4 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
@@ -38,9 +39,9 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	
 		for j=1, 16, 1 do
 			if Logic.GetDiplomacyState( _PlayerID, j) == Diplomacy.Hostile then			
-				for eID in S5Hook.EntityIterator(Predicate.OfPlayer(j), Predicate.OfCategory(EntityCategories.Worker)) do
+				for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(j), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 					local motivation = Logic.GetSettlersMotivation(eID) 
-					S5Hook.SetSettlerMotivation(eID, motivation - Scaremonger.MotiEffect[eType] )
+					CEntity.SetMotivation(eID, motivation - Scaremonger.MotiEffect[eType] )
 				end				
 				CUtil.AddToPlayersMotivationHardcap(j, - Scaremonger.MotiEffect[eType])
 				CUtil.AddToPlayersMotivationSoftcap(j, - Scaremonger.MotiEffect[eType])
@@ -53,9 +54,9 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 			if Logic.GetDiplomacyState(_PlayerID, j) == Diplomacy.Friendly then		
 				CUtil.AddToPlayersMotivationHardcap(j, 0.25)
 				CUtil.AddToPlayersMotivationSoftcap(j, 0.25)
-				for eID in S5Hook.EntityIterator(Predicate.OfPlayer(j), Predicate.OfCategory(EntityCategories.Worker)) do
+				for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(j), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 					local motivation = Logic.GetSettlersMotivation(eID) 
-					S5Hook.SetSettlerMotivation(eID, motivation + 0.25 )
+					CEntity.SetMotivation(eID, motivation + 0.25 )
 				end				
 			end
 		end
@@ -498,3 +499,24 @@ function GameCallback_PaydayPayed(_player,_amount)
 		return _amount
 	end
 end	
+
+function HeroWidgetUpdate_ShowHeroWidget(EntityId)
+	local EntityType = Logic.GetEntityType(EntityId)
+	
+	if Logic.IsEntityInCategory(EntityId,EntityCategories.Hero13) == 1 then
+	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)
+	
+		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)
+	
+		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)	
+		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)
+		
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero13" ) ,1)
+	
+	else
+		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
+	end
+end

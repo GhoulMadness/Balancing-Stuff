@@ -77,3 +77,22 @@ Die Angriffs-Reichweite von Ballista- und Kanonentürmen wurde leicht reduziert.
 Die HP von Dario sowie sein Rüstwert wurden leicht reduziert. Im Gegenzug wurde sein Schadenswert sowie der zufällige Bonusschaden erhöht. Die Reichweite der "Beschützen"-Fähigkeit wurde leicht reduziert und die Dauer fliehender Truppen wurde ebenfalls leicht verringert.
 
 Die Lebenspunkte-Regeneration von Helias, Kala und Mary de Morfichet wurden erhöht. Außerdem wurde deren Schadenswert leicht erhöht. Die Abklingzeit von Yukis "Feuerwerk der Freude" wurde reduziert.
+
+--- Version 0.66
+
+Es wurden diverse Fehler behoben sowie das grundsätzliche Spielerlebnis verbessert.
+
+Die Lebenspunkte-Regeneration von Helias wurde reduziert.
+
+--- Version 0.67
+
+Der Hook wurde weitesgehend entfernt. Die wenigen übriggebliebenen Funktionen, die den Hook noch benötigen, werden demnächst ebenfalls entfernt. Auf das Spielerlebnis hat dies KEINEN Einfluss.
+
+Beschworene Einheiten wie die Banditen von Ari sowie die Wölfe von Varg haben nun eine kürzere Lebensdauer sowie leicht reduzierte Rüstung.
+
+Salims Falle verursacht nun etwas mehr Schaden und löst erst später aus (die kritische Reichweite wurde reduziert). Seine Heilung stellt nun etwas mehr HP wieder her und seine Lebenspunkteregeneration wurde an die anderer Helden mit ähnlichen HP angepasst.
+
+Drakes Meisterschuss verursacht nun geringfügig weniger Schaden.
+
+Dovbar ist nun als weiterer Held verfügbar. Um ihn spielen zu können, müsst ihr (oder jemand anderes aus der Runde) die Errungenschaft >>Das war doch ein Klacks...<< erhalten haben (aus der kommenden extra3-Kampagne)
+

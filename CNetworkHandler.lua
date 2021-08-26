@@ -18,8 +18,9 @@
     
 					-- execute stuff
 					Logic.AddToPlayersGlobalResource(_playerID, ResourceType.GoldRaw, Logic.GetPlayerTaxIncome(_playerID)) 
-					for eID in S5Hook.EntityIterator(Predicate.OfPlayer(_playerID), Predicate.OfCategory(EntityCategories.Worker)) do 
-						local motivation = Logic.GetSettlersMotivation(eID) S5Hook.SetSettlerMotivation(eID, motivation - 0.12) 
+					for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
+						local motivation = Logic.GetSettlersMotivation(eID) 
+						CEntity.SetMotivation(eID, motivation - 0.12) 
 					end; 
 				end; 
 			end 

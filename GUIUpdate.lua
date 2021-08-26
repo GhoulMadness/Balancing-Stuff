@@ -10,6 +10,13 @@ function GUIUpdate_VisionRange()
 	local Range = (Logic.GetEntityExplorationRange(EntityID)	* 100)
 	XGUIEng.SetTextByValue( CurrentWidgetID, Range, 1 )	
 end
+--[[-- Movespeed
+CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(GUI.GetSelectedEntity()))[tonumber("784938", 16)][0][5][4]:GetFloat()
+-- Battle Wait Until
+CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entity))[tonumber("7731C0", 16)][0][8][21]:GetFloat()
+-- Max Range
+CUtilMemory.GetMemory(tonumber("7731C0", 16))[0][8][CUtilMemory.GetEntityAddress(GUI.GetSelectedEntity())][23]:GetFloat()
+]]
 function GUIUpdate_AttackSpeed()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
@@ -665,4 +672,115 @@ function GUIUpdate_MintTaxBonus()
 	local String = "@color:255,255,255,255 aktueller Bonus: @color:100,255,100,255 " .. NumOfMints .. " % @color:255,255,255,255 erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:255,255,255 erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts
 	
 	XGUIEng.SetText(CurrentWidgetID, String)	
+end
+
+function GUIUpdate_Hero13Ability(_Ability)
+	local PlayerID = GUI.GetPlayerID()
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local ProgressBarWidget = 0
+	
+	local HeroID = GUI.GetSelectedEntity()
+	
+	local TimePassed = 0
+	local cooldown = 0
+	if _Ability == "StoneArmor" then
+		cooldown = 150
+		ProgressBarWidget = XGUIEng.GetWidgetID("Hero13_RechargeStoneArmor")
+		TimePassed = math.floor(Logic.GetTime()- gvHero13.LastTimeStoneArmorUsed)
+		if TimePassed < cooldown then
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)
+			XGUIEng.HighLightButton(CurrentWidgetID,0)	
+			XGUIEng.DisableButton(CurrentWidgetID,1)
+		else
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
+			XGUIEng.DisableButton(CurrentWidgetID,0)
+		end
+		XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
+	
+	elseif _Ability == "DivineJudgment" then
+		cooldown = 60
+		ProgressBarWidget = XGUIEng.GetWidgetID("Hero13_RechargeDivineJudgment")
+		TimePassed = math.floor(Logic.GetTime()- gvHero13.LastTimeDivineJudgmentUsed)
+		if TimePassed < cooldown then
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)
+			XGUIEng.HighLightButton(CurrentWidgetID,0)	
+			XGUIEng.DisableButton(CurrentWidgetID,1)
+		else
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
+			XGUIEng.DisableButton(CurrentWidgetID,0)
+		end
+		XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
+	end	
+end
+
+function GUIUpdate_HeroButton()
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	
+	local EntityID = XGUIEng.GetBaseWidgetUserVariable(CurrentWidgetID, 0)
+	
+	
+	
+	local SourceButton
+	
+	if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero1) == 1 then	
+		SourceButton = "FindHeroSource1"
+		XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
+		if Logic.SentinelGetUrgency(EntityID) == 1 then					
+		
+		if gvGUI.DarioCounter < 50 then
+			
+			XGUIEng.SetMaterialColor(CurrentWidgetID,0, 100,100,200,255)		
+			gvGUI.DarioCounter = gvGUI.DarioCounter +1
+		end		
+		if gvGUI.DarioCounter >= 50 then			
+			XGUIEng.SetMaterialColor(CurrentWidgetID,0, 255,255,255,255)		
+			gvGUI.DarioCounter = gvGUI.DarioCounter +1
+		end
+		if gvGUI.DarioCounter == 100 then
+			gvGUI.DarioCounter= 0
+		end
+		else	
+			XGUIEng.SetMaterialColor(CurrentWidgetID,0, 255,255,255,255)		
+		end
+	else
+		
+		
+		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero2) == 1 then
+			SourceButton = "FindHeroSource2"
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero3) == 1 then
+			SourceButton = "FindHeroSource3"
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero4) == 1 then
+			SourceButton = "FindHeroSource4"
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero5) == 1 then
+			SourceButton = "FindHeroSource5"
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero6) == 1 then
+			SourceButton = "FindHeroSource6"
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_BlackKnight then
+			SourceButton = "FindHeroSource7"
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Mary_de_Mortfichet then
+			SourceButton = "FindHeroSource8"
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Barbarian_Hero then
+			SourceButton = "FindHeroSource9"
+		
+		--AddOn
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then
+			SourceButton = "FindHeroSource10"
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero11) == 1 then
+			SourceButton = "FindHeroSource11"
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Evil_Queen then
+			SourceButton = "FindHeroSource12"
+			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero13) then
+			SourceButton = "FindHeroSource13"
+		
+		else
+			SourceButton = "FindHeroSource9"
+		end
+		
+		XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
+	end
+	
+	
+	
 end

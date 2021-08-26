@@ -376,7 +376,7 @@ function drakedmg()
 	local attackerdmg = Logic.GetEntityDamage(attacker)
 	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" and cooldown == 1 then
 		if max == dmg then 
-			CEntity.TriggerSetDamage(math.floor((max * 0.4) + (attackerdmg*5)));
+			CEntity.TriggerSetDamage(math.floor((max * 0.33) + (attackerdmg*4.5)));
 		end;
 	end;
 end;
@@ -990,7 +990,7 @@ function Unwetter()
 	if Logic.GetWeatherState() == 2 then
 		local range = gvLightning.Range + Logic.GetRandom(gvLightning.Range)
 		local damage = gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage) 
-		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + (S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()*5))*gvLightning.DamageAmplifier
+		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + (CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()*5))*gvLightning.DamageAmplifier
 		
 		local posTable = {X = {},Y = {} }		
 		for i = 1,Amount do		
@@ -1001,7 +1001,7 @@ function Unwetter()
 			Lightning_Damage(posTable.X[i],posTable.Y[i],range,damage,buildingdamage)
 		end
 		--noch mehr Blitze bei Unwetter (Gfx-Set 11)
-		if S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 11 then
+		if CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 11 then
 			local posiTable = {X = {},Y = {} }		
 			for i = 1,((Amount*2)+gvLightning.AdditionalStrikes) do		
 				table.insert(posiTable.X,Logic.GetRandom(Mapsize))		
@@ -1024,7 +1024,7 @@ function Unwetter()
 end
 function Lightning_Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
-    for eID in S5Hook.EntityIterator(Predicate.NotOfPlayer0(), Predicate.InCircle(_posX, _posY, _range)) do
+    for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
 	
 		if Logic.IsHero(eID) == 1 or Logic.IsSerf(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 			Logic.HurtEntity(eID, _damage)
@@ -1135,12 +1135,12 @@ function DZTradePunishmentJob()
 end
 function DZTradePunishment(_playerID)		
 	local timepassed = math.floor((Logic.GetTime() - gvDZTradeCheck.PlayerTime[_playerID])/4)
-	for eID in S5Hook.EntityIterator(Predicate.OfPlayer(_playerID), Predicate.OfCategory(EntityCategories.Worker)) do
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 		local motivation = Logic.GetSettlersMotivation(eID) 
 		if motivation >= 0.29 then
-			S5Hook.SetSettlerMotivation(eID, motivation - math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100,0.08) )
+			CEntity.SetMotivation(eID, motivation - math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100,0.08) )
 		elseif motivation < 0.24 then
-			S5Hook.SetSettlerMotivation(eID, 0.24 )
+			CEntity.SetMotivation(eID, 0.24 )
 		end
 	end
 end
@@ -1240,12 +1240,12 @@ function DomeVictory()
 	end
 end
 function BeautiAnimCheck()
-	for eID in S5Hook.EntityIterator(Predicate.OfType(Entities.PB_Beautification07)) do
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PB_Beautification07)) do
 		if eID  ~= nil then
 			Logic.SetBuildingSubAnim(eID, 1, "PB_Beautification07_Clockwork_600")
 		end
 	end
-	for eID in S5Hook.EntityIterator(Predicate.OfType(Entities.PB_Beautification12)) do
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PB_Beautification12)) do
 		if eID  ~= nil then
 			Logic.SetBuildingSubAnim(eID, 1, "PB_Beautification12_Turn_600")
 		end
@@ -1515,7 +1515,7 @@ function ShowGUI()
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 end
 function WinterTheme()
-	if Logic.GetWeatherState() == 3 or S5Hook.GetRawMem(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
+	if Logic.GetWeatherState() == 3 or CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
 		local SoundChance = Logic.GetRandom(28)
 			if SoundChance == 10 then
 			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,140)
@@ -1634,7 +1634,7 @@ function IsPositionExplored(_pID,_x,_y,_range)
 	if not _range then
 		_range = 7000
 	end
-	for eID in S5Hook.EntityIterator(Predicate.OfPlayer(_pID), Predicate.InCircle(_x, _y, _range)) do
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_pID), CEntityIterator.InCircleFilter(_x, _y, _range)) do
 		if GetDistance({Logic.GetEntityPosition(Logic.GetEntityIDByName(eID))},{X=_x,Y=_y}) <= Logic.GetEntityExplorationRange(eID) then
 			return 1
 			else

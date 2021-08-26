@@ -278,3 +278,95 @@ function GUIAction_ChangeToSpecialWeather(_weathertype,_EntityID)
 	end
 	
 end
+gvHero13 = {LastTimeStoneArmorUsed = - 6000,LastTimeDivineJudgmentUsed = - 6000}
+function GUIAction_Hero13StoneArmor()
+	local heroID = GUI.GetSelectedEntity()
+	local player = Logic.EntityGetPlayer(heroID)
+	local starttime = Logic.GetTimeMs()
+	gvHero13.LastTimeStoneArmorUsed = starttime/1000
+	_G["Hero13TriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_"..player, 1, nil, {heroID,starttime})
+end
+function GUIAction_Hero13RegenAura()
+	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
+end
+function GUIAction_Hero13DivineJudgment()
+	local heroID = GUI.GetSelectedEntity()
+	local player = Logic.EntityGetPlayer(heroID)
+	local basedmg = Logic.GetEntityDamage(heroID)
+	local starttime = Logic.GetTimeMs()
+	local posX,posY = Logic.GetEntityPosition(heroID)
+	gvHero13.LastTimeDivineJudgmentUsed = starttime/1000
+	Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
+	_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
+	_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
+end
+for i = 1,12 do
+	_G["gvHero13_DamageStored_"..i] = 0
+	_G["Hero13_StoneArmor_Trigger_"..i] = function(_heroID,_starttime)
+		local attacker = Event.GetEntityID1()
+		local target = Event.GetEntityID2();
+		local player = Logic.EntityGetPlayer(target)
+		local posX,posY = Logic.GetEntityPosition(target)
+		local time = Logic.GetTimeMs()
+		-- Dauer der Fähigkeit in Millisekunden
+		local duration = 1000*7
+		local dmg = CEntity.TriggerGetDamage();
+		if time <= (_starttime + duration) then
+			if target == _heroID then
+				CEntity.TriggerSetDamage(0);
+				Logic.CreateEffect(GGL_Effects.FXSalimHeal,posX,posY)
+				_G["gvHero13_DamageStored_"..player] = _G["gvHero13_DamageStored_"..player] + dmg
+			end;
+		else
+			if target == _heroID then
+				CEntity.TriggerSetDamage(dmg + _G["gvHero13_DamageStored_"..player])
+				Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)
+				_G["gvHero13_DamageStored_"..player] = 0
+				Trigger.UnrequestTrigger(_G["Hero13TriggerID_"..player])
+			end
+		end;
+	end;
+	_G["Hero13_DMGBonus_Trigger_"..i] = function(_heroID,_starttime)
+		local attacker = Event.GetEntityID1()
+		local player = Logic.EntityGetPlayer(_heroID)
+		local time = Logic.GetTimeMs()
+		-- Dauer der Fähigkeit in Millisekunden
+		local duration = 1000*5
+		local dmg = CEntity.TriggerGetDamage();
+		if time <= (_starttime + duration) then
+			if attacker == _heroID then
+				CEntity.TriggerSetDamage(dmg*4);
+				Trigger.UnrequestTrigger(_G["Hero13DMGBonusTriggerID_"..player])
+			end;
+		else
+			Trigger.UnrequestTrigger(_G["Hero13DMGBonusTriggerID_"..player])
+		end;
+	end;
+	_G["Hero13_DivineJudgment_Trigger_"..i] = function(_heroID,_origdmg,_posX,_posY,_starttime)
+		local time = Logic.GetTimeMs()
+		-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
+		local duration = 1000*3
+		if time > (_starttime + duration) then
+			if Logic.IsEntityAlive(_heroID) then
+				
+			else
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY)
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-100,_posY-100)
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-200,_posY-200)
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+100,_posY+100)
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+200,_posY+200)
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+150,_posY-150)
+				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-150,_posY+150)
+				-- Reichweite der Fähigkeit (in S-cm)
+				local range = 600
+				local damage = _origdmg * 10
+				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
+					Logic.HurtEntity(eID, damage)
+				end				
+			end
+			
+			Trigger.UnrequestTrigger(_G["Hero13JudgmentTriggerID_".._heroID])
+			return true
+		end
+	end
+end

@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.660
+BS.Version = 0.670
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -209,18 +209,35 @@ if 	gvGUI_TechnologyButtonIDArray then
 	gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
 	gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");
 end	
+if EMS then
+	if EMS.GC then
+		if EMS.GC.HeroKeys then
+			EMS.GC.HeroKeys[Entities.PU_Hero13] = "Dovbar"
+			_G.EMS.RD.Rules["Dovbar"] = EMS.T.CopyTable(EMS.RD.Templates.StdHero)
+			_G.EMS.RD.Rules["Dovbar"].HeroID = 13
+			EMS.L.Heroes[13] = "Dovbar"
+		end
+	end
+	local KeyName = "Game\\Extra3\\Achievements\\Campaign1\\WonMapsHard"
+	if GDB.IsKeyValid(KeyName) then
+		if GDB.GetValue(KeyName) == 1 then
+			_G.EMS.RD.Rules["Dovbar"].value = 1
+			EMS.RD.Config.Dovbar = 1
+		end
+	end
+end
+
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\CNetworkHandler.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
-	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\SWFire.lua")
+	
 	if not gvEMSFlag then
 		Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\S5Hook.lua" )
 		InstallS5Hook()
 	end
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\MemoryManipulation.lua")
-	--Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\mcbProjectileFix.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUITooltips.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIUpdate.lua")
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIAction.lua")
@@ -231,15 +248,7 @@ end
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
 	gvLastTimeButtonPressed = -240000 	
-	--[[ not needed anymore; already fixed/defined in the names.xml; mode can´t be played on instances other than Simis Server anyway
-	if CUtil then
-		CUtil.SetStringTableText("names/PB_GunsmithWorkshop1", "B\195\188chsen @bs macherei")
-		CUtil.SetStringTableText("names/CB_Castle2", "Handelsposten")
-		CUtil.SetStringTableText("names/CB_OldKingsCastleRuin", "Nebelburg")  
-	else
-		S5Hook.ChangeString("names/pb_gunsmithworkshop1", "Büchsen @bs macherei")
-		S5Hook.ChangeString("names/cb_castle2", "Handelsposten")	  
-    end ]]
+	
 	--zusätzliche Taunts hinzugefügt
 	BonusKeys()
 	--Trigger für Handel
@@ -269,9 +278,9 @@ end
 	DZTrade_Init()
 	StartCountdown(10*60,BeautiAnimCheck,false)
 	if not gvEMSFlag then
-		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
+		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else
-		S5Hook.LoadGUI("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
+		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
 	end
 	--Simis Rotation Widget nach links schieben, damit es visuell besser in die größere GUI passt
 	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 
