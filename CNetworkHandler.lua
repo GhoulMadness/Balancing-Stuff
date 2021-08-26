@@ -124,7 +124,50 @@
 				end; 
 			end 
 		); 
-	
+		CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor", 
+			function(name,_playerID,_heroID) 
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+					CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID); 
+					-- Cooldown handling
+					gvHero13StoneArmor_NextCooldown = gvHero13StoneArmor_NextCooldown or {};
+					local starttime = Logic.GetTimeMs()
+					if gvHero13StoneArmor_NextCooldown[_playerID] then
+						if gvHero13StoneArmor_NextCooldown[_playerID] > starttime then
+							return;
+						end;
+					end;
+					-- update cooldown.
+					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + 2.5 * 60 * 1000;
+    
+					-- execute stuff
+					_G["Hero13TriggerID_".._playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_".._playerID, 1, nil, {_heroID,starttime})
+				end; 
+			end 
+		); 
+		CNetwork.SetNetworkHandler("Ghoul_Hero13DivineJudgment", 
+			function(name,_playerID,_heroID) 
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+					CLogger.Log("Ghoul_Hero13DivineJudgment", name, _playerID,_heroID); 
+					-- Cooldown handling
+					gvHero13DivineJudgment_NextCooldown = gvHero13DivineJudgment_NextCooldown or {};
+					local starttime = Logic.GetTimeMs()
+					local basedmg = Logic.GetEntityDamage(_heroID)
+					local posX,posY = Logic.GetEntityPosition(_heroID)
+					if gvHero13DivineJudgment_NextCooldown[_playerID] then
+						if gvHero13DivineJudgment_NextCooldown[_playerID] > starttime then
+							return;
+						end;
+					end;
+					-- update cooldown.
+					gvHero13DivineJudgment_NextCooldown[_playerID] = Logic.GetTimeMs() + 1 * 60 * 1000;
+    
+					-- execute stuff
+					Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
+					_G["Hero13DMGBonusTriggerID_".._playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_".._playerID, 1, nil, {_heroID,starttime})
+					_G["Hero13JudgmentTriggerID_".._playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_".._playerID, 1, nil, {_heroID,basedmg,posX,posY,starttime})
+				end; 
+			end 
+		); 
 		
 	end
 

@@ -94,5 +94,5 @@ Salims Falle verursacht nun etwas mehr Schaden und löst erst später aus (die k
 
 Drakes Meisterschuss verursacht nun geringfügig weniger Schaden.
 
-Dovbar ist nun als weiterer Held verfügbar. Um ihn spielen zu können, müsst ihr (oder jemand anderes aus der Runde) die Errungenschaft >>Das war doch ein Klacks...<< erhalten haben (aus der kommenden extra3-Kampagne)
+Dovbar ist nun als weiterer Held verfügbar. Um ihn spielen zu können, muss der Host die Errungenschaft >>Das war doch ein Klacks...<< erhalten haben (aus der kommenden extra3-Kampagne)
 

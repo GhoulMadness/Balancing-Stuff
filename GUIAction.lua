@@ -284,7 +284,11 @@ function GUIAction_Hero13StoneArmor()
 	local player = Logic.EntityGetPlayer(heroID)
 	local starttime = Logic.GetTimeMs()
 	gvHero13.LastTimeStoneArmorUsed = starttime/1000
-	_G["Hero13TriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_"..player, 1, nil, {heroID,starttime})
+	if CNetwork then
+		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID);
+	else
+		_G["Hero13TriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_"..player, 1, nil, {heroID,starttime})
+	end
 end
 function GUIAction_Hero13RegenAura()
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
@@ -296,9 +300,13 @@ function GUIAction_Hero13DivineJudgment()
 	local starttime = Logic.GetTimeMs()
 	local posX,posY = Logic.GetEntityPosition(heroID)
 	gvHero13.LastTimeDivineJudgmentUsed = starttime/1000
-	Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
-	_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
-	_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
+	if CNetwork then
+		CNetwork.SendCommand("Ghoul_Hero13DivineJudgment",GUI.GetPlayerID(),heroID);
+	else
+		Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
+		_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
+		_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
+	end
 end
 for i = 1,12 do
 	_G["gvHero13_DamageStored_"..i] = 0
