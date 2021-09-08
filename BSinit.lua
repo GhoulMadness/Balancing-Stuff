@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.671
+BS.Version = 0.672
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -255,6 +255,8 @@ end
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
 	--Trigger für Spez-Gebäude (Schreckensgebäude/Dom etc.)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SpezEntityPlaced", 1)
+	--Trigger für Salim-Falle
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SalimTrapPlaced", 1)
 	--Trigger für Schlösser
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnCastleCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCastleDestroyed", 1)

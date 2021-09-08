@@ -533,7 +533,18 @@ function OnCastleDestroyed()
 		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
 	end
 end
-
+function SalimTrapPlaced()
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local eplayerID = GetPlayer(entityID)
+	local hplayerID = GUI.GetPlayerID()
+	if entityType == Entities.PU_Hero3_Trap then
+		if Logic.GetDiplomacyState(eplayerID, hplayerID) ~= Diplomacy.Friendly then
+			--Model ändern und Overhead-Widget ausblenden, wenn nicht verbündet (im Model definiert)
+			Logic.SetModelAndAnimSet(entityID,Models.SalimTrapEnemy)
+		end	
+	end
+end
 function removetablekeyvalue(_tid,_key)
 	local tpos 
 	if type(_key) == "string" then

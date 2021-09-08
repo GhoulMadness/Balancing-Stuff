@@ -96,3 +96,14 @@ Drakes Meisterschuss verursacht nun geringfügig weniger Schaden.
 
 Dovbar ist nun als weiterer Held verfügbar. Um ihn spielen zu können, muss der Host die Errungenschaft >>Das war doch ein Klacks...<< erhalten haben (aus der kommenden extra3-Kampagne)
 
+Es wurde ein Fehler behoben, durch den der Modus nicht in polnischer Sprache gespielt werden konnte. Aktuell mögliche Sprachen: De, En, Ru, Pl
+
+Pilgrims Bombe verursacht nun etwas weniger Schaden und Reichweite. Die Abklingzeit wurde leicht erhöht.
+
+Pilgrims Rüstwert wurde geringfügig verringert.
+
+Pilgrims Kanone verursacht nun mehr Schaden, jedoch wurde die Schadensreichweite reduziert.
+
+Salims Falle verursacht nun etwas mehr Schaden. Außerdem ist sie für Nicht-Verbündete schwerer sichtbar.
+
+
