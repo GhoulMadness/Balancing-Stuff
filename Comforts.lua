@@ -539,8 +539,8 @@ function SalimTrapPlaced()
     local eplayerID = GetPlayer(entityID)
 	local hplayerID = GUI.GetPlayerID()
 	if entityType == Entities.PU_Hero3_Trap then
-		if Logic.GetDiplomacyState(eplayerID, hplayerID) ~= Diplomacy.Friendly then
-			--Model ändern und Overhead-Widget ausblenden, wenn nicht verbündet (im Model definiert)
+		if Logic.GetDiplomacyState(eplayerID, hplayerID) ~= Diplomacy.Friendly and eplayerID ~= hplayerID then
+			--Model ändern und Overhead-Widget ausblenden, wenn nicht verbündet (Durch Eintrag in der models.xml gehandhabt)
 			Logic.SetModelAndAnimSet(entityID,Models.SalimTrapEnemy)
 		end	
 	end
@@ -1974,14 +1974,16 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		}
 		
 		SetupPlayerAi(_playerId,description)
-
+		
+		local CannonEntityType1
+		local CannonEntityType2
 	-- Tech level
-		if _techlevel == 2 then		
-			local CannonEntityType1 = Entities.PV_Cannon1
-			local CannonEntityType2 = Entities.PV_Cannon2
+		if _techlevel <= 2 then		
+			CannonEntityType1 = Entities.PV_Cannon1
+			CannonEntityType2 = Entities.PV_Cannon2
 		elseif _techlevel == 3 then
-			local CannonEntityType1 = Entities.PV_Cannon3
-			local CannonEntityType2 = Entities.PV_Cannon4
+			CannonEntityType1 = Entities.PV_Cannon3
+			CannonEntityType2 = Entities.PV_Cannon4
 		end
 		-- Upgrade entities..Rifle?
 		for i=1,_techlevel do
@@ -2076,7 +2078,9 @@ AITroopGenerator_Condition = function(_Name, _Index)
 				or	not DataTable[_Index].ignoreAttack
 			)
 			and	DataTable[_Index].Attack
-		) then
+		) 
+		or
+		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= 12*DataTable[_Index].strength then
 		return false
 	end
 
@@ -2098,9 +2102,9 @@ AITroopGenerator_Action = function(_Index)
 
 	-- Get random category
 	local UpgradeCategoryIndex = Logic.GetRandom(UpgradeCategoryCount)+1
-
-	AI.Army_BuyLeader(DataTable[_Index].player, DataTable[_Index].id, DataTable[_Index].AllowedTypes[UpgradeCategoryIndex])
-
+	if AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < 12*DataTable[_Index].strength then
+		AI.Army_BuyLeader(DataTable[_Index].player, DataTable[_Index].id, DataTable[_Index].AllowedTypes[UpgradeCategoryIndex])
+	end
 	return false
 
 end
