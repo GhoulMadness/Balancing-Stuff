@@ -820,6 +820,10 @@ function ResearchAllUniversityTechnologiesExtra(_PlayerID)
 	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Banking,3)
 	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Laws,3)
 	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Gilds,3)
+	
+	Logic.SetTechnologyState(_PlayerID,Technologies.T_Coinage,3)
+	Logic.SetTechnologyState(_PlayerID,Technologies.T_Scale,3)
+	Logic.SetTechnologyState(_PlayerID,Technologies.T_WeatherForecast,3)
 end
 
 -----------------------------------------------------------------------------------------------------------

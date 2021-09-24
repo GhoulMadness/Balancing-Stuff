@@ -575,8 +575,20 @@ function GUIUpdate_SumOfTaxes()
 	
 	local PlayerID = GUI.GetPlayerID()
 
-	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)		
-	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
+	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)	
+	
+	local factor = 1
+	local workers 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+			if workers[1] >= 3 then
+				factor = factor + 0.01
+			else
+			end
+		else
+		end
+	end
 	if factor > 1.2 then 
 		factor = 1.2
 	end
@@ -603,10 +615,20 @@ function GUIUpdate_TaxPaydayIncome()
 	local LeaderCosts = Logic.GetPlayerPaydayLeaderCosts(PlayerID)
 		
 	local TaxesPlayerWillGet = GrossPayday - LeaderCosts
-	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
-	if factor > 1.2 then 
-		factor = 1.2
+	
+	local factor = 1
+	local workers 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+			if workers[1] >= 3 then
+				factor = factor + 0.01
+			else
+			end
+		else
+		end
 	end
+	
 	if gvPresent then			
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
 	end
@@ -629,8 +651,21 @@ function GUIUpdate_TaxSumOfTaxes()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local PlayerID = GUI.GetPlayerID()
 
-	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)		
-	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
+	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)	
+	
+	local factor = 1
+	local workers 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+			if workers[1] >= 3 then
+				factor = factor + 0.01
+			else
+			end
+		else
+		end
+	end
+	
 	if factor > 1.2 then 
 		factor = 1.2
 	end
@@ -646,10 +681,20 @@ function GUIUpdate_TaxLeaderCosts()
 	local PlayerID = GUI.GetPlayerID()
 	
 	local LeaderCosts = -(Logic.GetPlayerPaydayLeaderCosts(PlayerID))
-	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)*0.01))
-	if factor > 1.2 then 
-		factor = 1.2
+	
+	local factor = 1
+	local workers 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+			if workers[1] >= 3 then
+				factor = factor + 0.01
+			else
+			end
+		else
+		end
 	end
+	
 	if gvPresent and PlayerID ~= 17 then			
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
 	end
@@ -663,7 +708,18 @@ function GUIUpdate_MintTaxBonus()
 	if PlayerID == 17 then
 		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
 	end
-	local NumOfMints = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID,Entities.CB_Mint1)
+	local NumOfMints = 0
+	local workers 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+			if workers[1] >= 3 then
+				NumOfMints = NumOfMints + 1
+			else
+			end
+		else
+		end
+	end
 	if NumOfMints > 20 then
 		NumOfMints = 20
 	end

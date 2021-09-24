@@ -106,4 +106,6 @@ Pilgrims Kanone verursacht nun mehr Schaden, jedoch wurde die Schadensreichweite
 
 Salims Falle verursacht nun etwas mehr Schaden. Außerdem ist sie für Nicht-Verbündete schwerer sichtbar.
 
+Der Zahltag-Bonus der Münzstätten wirkt nun ausschließlich für fertig errichtete Münzstätten, in der min. die Hälfte der maximalen Arbeiter beschäftigt werden.
+
 

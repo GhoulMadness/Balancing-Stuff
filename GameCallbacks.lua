@@ -474,7 +474,19 @@ function GameCallback_PaydayPayed(_player,_amount)
 		CUtil.Payday_SetFrequency(_player, frequency)		
 	end
 	-- Zahltag pro Münzstätte um 1% erhöht, max 20%
-	local factor = (1+(Logic.GetNumberOfEntitiesOfTypeOfPlayer(_player,Entities.CB_Mint1)*0.01))
+	local factor = 1
+	local workers 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+			if workers[1] >= 3 then
+				factor = factor + 0.01
+			else
+			end
+		else
+		end
+	end
+		
 	if factor > 1.2 then 
 		factor = 1.2
 	end
