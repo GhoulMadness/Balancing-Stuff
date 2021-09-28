@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.674
+BS.Version = 0.675
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -42,6 +42,7 @@ BS.MapList = { 	[1] =	{
 					["(4) bs koop die smaragdebene"] = true,
 					["(4) bs koop kalas giftnebel"] = true,
 					["(4) bs koop marys intrige"] = true,
+					["(4) bs koop die tore der stadt"] = true,
 					["(4) emsbs battle isle"] = true,
 					["(4) emsbs eklipse"] = true,
 					["(4) emsbs grosser wald des daemmerlichts"] = true,
@@ -57,7 +58,8 @@ BS.MapList = { 	[1] =	{
 					["(4) emsbs die zusammenkunft"] = true,
 					["(4) emsbs imperium"] = true,
 					["(4) emsbs magic circle"] = true,
-					["(4) emsbs sand cliffs"] = true
+					["(4) emsbs sand cliffs"] = true,
+					["(4) emsbs winterberge"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,

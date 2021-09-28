@@ -105,10 +105,17 @@ function gvPresent_ThiefCreated()
 end
 -- Positionen der beiden Weihnachtsbäume
 if gvMaxPlayers == 4 then
-	gvPresent.XmasTreePos =		{
-								[1]={X=21200,Y=10500},
-								[2]={X=33200,Y=10300}
-							}				
+	if not gvXmas2021Flag then
+		gvPresent.XmasTreePos =		{
+									[1]={X=21200,Y=10500},
+									[2]={X=33200,Y=10300}
+								}		
+	else
+		gvPresent.XmasTreePos = 	{
+									[1]={X=39900,Y=34800},
+									[2]={X=39900,Y=22900}
+								}		
+	end
 elseif gvMaxPlayers == 6 or gvMaxPlayers == 8 then
 	gvPresent.XmasTreePos =		{
 								[1]={X=32300,Y=21600},
