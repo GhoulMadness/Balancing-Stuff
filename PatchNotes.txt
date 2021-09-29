@@ -106,6 +106,16 @@ Pilgrims Kanone verursacht nun mehr Schaden, jedoch wurde die Schadensreichweite
 
 Salims Falle verursacht nun etwas mehr Schaden. Außerdem ist sie für Nicht-Verbündete schwerer sichtbar.
 
+--- Version 0.674
+
 Der Zahltag-Bonus der Münzstätten wirkt nun ausschließlich für fertig errichtete Münzstätten, in der min. die Hälfte der maximalen Arbeiter beschäftigt werden.
+
+--- Version 0.676
+
+Erecs Basiswerte wurden leicht erhöht. Die Wirkdauer seiner Aura wurde leicht erhöht.
+
+Die Schadensreichweite von Salims Falle wurde reduziert. Im Gegenzug wurde der Schaden leicht erhöht.
+
+Drakes Meisterschuss verursacht nun nur noch einen Bruchteil des Schadens, wenn das Ziel sich in direkter Nähe von Drake befindet. Der Schaden gegen Ziele außerhalb dieser kritischen Reichweite wurde leicht erhöht.
 
 

@@ -367,7 +367,9 @@ function VC_Deathmatch()
 end 
 function drakedmg() 
 	local attacker = Event.GetEntityID1()
+	local attackerpos = GetPosition(attacker)
     local target = Event.GetEntityID2();
+	local targetpos = GetPosition(target)
 	local attype = Logic.GetEntityType(attacker)
 	local task = Logic.GetCurrentTaskList(attacker)
 	local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilitySniper)
@@ -376,7 +378,11 @@ function drakedmg()
 	local attackerdmg = Logic.GetEntityDamage(attacker)
 	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" and cooldown == 1 then
 		if max == dmg then 
-			CEntity.TriggerSetDamage(math.floor((max * 0.33) + (attackerdmg*4.5)));
+			if GetDistance(attackerpos,targetpos) >= 500 then
+				CEntity.TriggerSetDamage(math.floor((max * 0.36) + (attackerdmg*4.8)));
+			else
+				CEntity.TriggerSetDamage(math.floor((max * 0.12) + (attackerdmg*1.6)));
+			end
 		end;
 	end;
 end;
@@ -1028,11 +1034,11 @@ function Unwetter()
 		end
 		local pID = GUI.GetPlayerID()
 		if gvLightning.RecentlyDamaged[pID] == true then
-			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 102 ) 
-			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 114 ) 
-			Sound.PlayGUISound( Sounds.OnKlick_PB_PowerPlant1, 92 )
-			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,140)
-			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",82)
+			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 92 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 94 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_PB_PowerPlant1, 82 )
+			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,120)
+			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",72)
 			gvLightning.RecentlyDamaged[pID] = false
 		end
     end	

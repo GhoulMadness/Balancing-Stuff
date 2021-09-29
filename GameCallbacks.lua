@@ -4,7 +4,7 @@ GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
 HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
 
--- 4 Diebe max. auf der Weihnachtsmap; 
+-- 3 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
 	function GameCallback_PreBuyLeader(_buildingID, _uCat)
 		if not gvXmasEventFlag then
@@ -14,7 +14,7 @@ if gvXmasEventFlag == 1 then
 		
 		if _uCat == UpgradeCategories.Thief then
 			local nthiefs = Logic.GetNumberOfEntitiesOfTypeOfPlayer(player, Entities.PU_Thief);
-			if nthiefs >= 4 then
+			if nthiefs >= 3 then
 				return false;
 			end;
 		end;

@@ -137,7 +137,7 @@ end
 function GUIAction_LightningRod()
 	gvLastTimeLightningRodUsed = Logic.GetTimeMs()
     GUIUpdate_LightningRod()   
-	Sound.PlayGUISound( Sounds.OnKlick_Select_salim, 727 )
+	Sound.PlayGUISound( Sounds.OnKlick_Select_salim, 627 )
 	local PlayerID = GUI.GetPlayerID()
 	if CNetwork then
         CNetwork.SendCommand("Ghoul_LightningRod_Protected", PlayerID);
@@ -162,7 +162,7 @@ end
 function GUIAction_LevyTaxes()
     gvLastTimeButtonPressed = Logic.GetTimeMs()
     GUIUpdate_LevyTaxes()
-    Sound.PlayGUISound( Sounds.OnKlick_Select_dario, 727 )
+    Sound.PlayGUISound( Sounds.OnKlick_Select_dario, 627 )
     if CNetwork then
         CNetwork.SendCommand("Ghoul_LevyTaxes", GUI.GetPlayerID());
     else
@@ -327,7 +327,7 @@ for i = 1,12 do
 			end;
 		else
 			if target == _heroID then
-				CEntity.TriggerSetDamage(dmg + _G["gvHero13_DamageStored_"..player])
+				CEntity.TriggerSetDamage(dmg + (_G["gvHero13_DamageStored_"..player]*0.7))
 				Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)
 				_G["gvHero13_DamageStored_"..player] = 0
 				Trigger.UnrequestTrigger(_G["Hero13TriggerID_"..player])
@@ -366,8 +366,8 @@ for i = 1,12 do
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+150,_posY-150)
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-150,_posY+150)
 				-- Reichweite der Fähigkeit (in S-cm)
-				local range = 600
-				local damage = _origdmg * 10
+				local range = 900
+				local damage = _origdmg * 12
 				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
 					Logic.HurtEntity(eID, damage)
 				end				
