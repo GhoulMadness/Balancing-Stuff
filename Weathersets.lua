@@ -17,6 +17,26 @@
 	AddPeriodicNight = function(dauer)
 		Logic.AddWeatherElement(1, dauer, 1, 9, 5, 15)
 	end
+	--Nacht mit Regen
+    Display.GfxSetSetSkyBox(13, 0.0, 1.0, "YSkyBox04")
+    Display.GfxSetSetRainEffectStatus(13, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(13, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(13, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(13, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(13,  0.0, 1.0, 40, -15, -50,  80,90,80,  1,1,1)
+	AddPeriodicNight = function(dauer)
+		Logic.AddWeatherElement(2, dauer, 1, 13, 5, 15)
+	end
+	--Nacht mit Winter
+    Display.GfxSetSetSkyBox(14, 0.0, 1.0, "YSkyBox01")
+    Display.GfxSetSetRainEffectStatus(14, 0.0, 1.0, 0)
+    Display.GfxSetSetSnowStatus(14, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(14, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(14, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(14,  0.0, 1.0, 40, -15, -50,  80,90,80,  1,1,1)
+	AddPeriodicNight = function(dauer)
+		Logic.AddWeatherElement(3, dauer, 1, 14, 5, 15)
+	end
 	--normaler Regen
     Display.GfxSetSetSkyBox(2, 0.0, 1.0, "YSkyBox04")
     Display.GfxSetSetRainEffectStatus(2, 0.0, 1.0, 1)
@@ -91,6 +111,26 @@
 	 AddPeriodicSunrise = function(dauer)		
 		Logic.AddWeatherElement(1, dauer, 1, 10, 5, 15)		
 	 end	
+	 --Sonnenauf-/-untergang mit Regen
+    Display.GfxSetSetSkyBox(15, 0.0, 1.0, "YSkyBox04")
+    Display.GfxSetSetRainEffectStatus(15, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(15, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(15, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(15, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(15,  0.0, 1.0, 40, 165, -50,  80,90,80,  91,91,91)
+	AddPeriodicNight = function(dauer)
+		Logic.AddWeatherElement(2, dauer, 1, 15, 5, 15)
+	end
+	--Sonnenauf-/-untergang mit Winter
+    Display.GfxSetSetSkyBox(16, 0.0, 1.0, "YSkyBox01")
+    Display.GfxSetSetRainEffectStatus(16, 0.0, 1.0, 0)
+    Display.GfxSetSetSnowStatus(16, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(16, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(16, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(16,  0.0, 1.0, 40, 165, -50,  80,90,80,  91,91,91)
+	AddPeriodicNight = function(dauer)
+		Logic.AddWeatherElement(3, dauer, 1, 16, 5, 15)
+	end
 	 --Sonnenauf-/-untergangs-Übergang
 	 Display.GfxSetSetSkyBox(12, 0.0, 1.0, "YSkyBox07")   
 	 Display.GfxSetSetRainEffectStatus(12, 0.0, 1.0, 0)   
@@ -101,6 +141,26 @@
 	 AddPeriodicTransitionSunrise = function(dauer)		
 		Logic.AddWeatherElement(1, dauer, 1, 12, 5, 15)		
 	 end	
+	  --Sonnenauf-/-untergangs-Übergang mit Regen
+    Display.GfxSetSetSkyBox(17, 0.0, 1.0, "YSkyBox04")
+    Display.GfxSetSetRainEffectStatus(17, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(17, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(17, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(17, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(17,  0.0, 1.0, 40, 115, -50,  80,90,80,  51,51,51)
+	AddPeriodicNight = function(dauer)
+		Logic.AddWeatherElement(2, dauer, 1, 17, 5, 15)
+	end
+	--Sonnenauf-/-untergangs-Übergang mit Winter
+    Display.GfxSetSetSkyBox(18, 0.0, 1.0, "YSkyBox01")
+    Display.GfxSetSetRainEffectStatus(18, 0.0, 1.0, 0)
+    Display.GfxSetSetSnowStatus(18, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(18, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(18, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(18,  0.0, 1.0, 40, 115, -50,  80,90,80,  51,51,51)
+	AddPeriodicNight = function(dauer)
+		Logic.AddWeatherElement(3, dauer, 1, 18, 5, 15)
+	end
 	 --Gewitter
 	 Display.GfxSetSetSkyBox(11, 0.0, 1.0, "YSkyBox04")
 	 Display.GfxSetSetRainEffectStatus(11, 0.0, 1.0, 1)
@@ -112,7 +172,7 @@
 		Logic.AddWeatherElement(2, dauer, 1, 11, 5, 15)	
 	 end
 	 
-function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount)
+function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount,_randomflag)
 
 	if _duration == nil then
 		_duration = 24
@@ -126,50 +186,146 @@ function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount)
 	if _snowflag == nil then
 		_snowflag = 0
 	end
+	if _randomflag == nil then
+		_randomflag = 0
+	end
 	local durationinsec = _duration*60 
 	local bonuscountinsec = _bonuscount * 60
+	--0 = weder Regen noch Winter; 1 = Regen, aber kein Winter; 2 = Winter, aber kein Regen; 3 = Regen und Winter
+	local allowed_weathertypes = _rainflag + (2*_snowflag)
 	gvDayTimeSeconds = _duration
-
 	if _rainflag == 0 and _snowflag == 0 then
-		AddPeriodicSummer(durationinsec/2)							--12min Tag startet um 08:00 morgens
-		AddPeriodicTransitionSunrise(durationinsec/24)				--1min
-		AddPeriodicSunrise(durationinsec/24)						--1min
-		AddPeriodicNight(durationinsec/3)							--8min
-		AddPeriodicSunrise(durationinsec/24)						--1min
-		AddPeriodicTransitionSunrise(durationinsec/24)				--1min
+		AddPeriodicSummer(round(durationinsec/2))							--12min Tag startet um 08:00 morgens
+		AddPeriodicTransitionSunrise(round(durationinsec/24))				--1min
+		AddPeriodicSunrise(round(durationinsec/24))							--1min
+		AddPeriodicNight(round(durationinsec/3))							--8min
+		AddPeriodicSunrise(round(durationinsec/24))							--1min
+		AddPeriodicTransitionSunrise(round(durationinsec/24))				--1min
 		Display.SetRenderUseGfxSets(1)	
-	elseif _rainflag == 1 and _snowflag == 0 then
-		AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))		--10min	Tag startet um 08:00 morgens
-		AddPeriodicRain((durationinsec/48)+(bonuscountinsec/2))			--0.5min
-		AddPeriodicSnowyRain((durationinsec/48)+(bonuscountinsec/2))	--0.5min
-		AddPeriodicTransitionSunrise(durationinsec/48)				--0.5min
-		AddPeriodicSunrise(durationinsec/24)						--1min
-		AddPeriodicNight((durationinsec/2.4)-(bonuscountinsec/2))			--10min
-		AddPeriodicSunrise(durationinsec/24)						--1min
-		AddPeriodicTransitionSunrise(durationinsec/48)				--0.5min
-		Display.SetRenderUseGfxSets(1)	
-	elseif _rainflag == 0 and _snowflag == 1 then
-		AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))
-		AddPeriodicWinter((durationinsec/48)+(bonuscountinsec/2))
-		AddPeriodicSnow((durationinsec/48)+(bonuscountinsec/2))
-		AddPeriodicTransitionSunrise(durationinsec/48)
-		AddPeriodicSunrise(durationinsec/24)
-		AddPeriodicNight((durationinsec/2.4)-(bonuscountinsec/2))
-		AddPeriodicSunrise(durationinsec/24)
-		AddPeriodicTransitionSunrise(durationinsec/48)
-		Display.SetRenderUseGfxSets(1)	
-	elseif _rainflag == 1 and _snowflag == 1 then
-		AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))
-		AddPeriodicWinter((durationinsec/48)+((bonuscountinsec/2)/2))
-		AddPeriodicSnowyRain((durationinsec/48)+((bonuscountinsec/2)/2))
-		AddPeriodicSnow((durationinsec/48)+((bonuscountinsec/2)/2))
-		AddPeriodicRain((durationinsec/48)+((bonuscountinsec/2)/2))
-		AddPeriodicTransitionSunrise(durationinsec/24)
-		AddPeriodicSunrise(durationinsec/24)
-		AddPeriodicNight((durationinsec/3)-(bonuscountinsec/2))
-		AddPeriodicSunrise(durationinsec/24)
-		AddPeriodicTransitionSunrise(durationinsec/24)
-		Display.SetRenderUseGfxSets(1)	
-		
 	end
+	if _randomflag == 0 then
+		if _rainflag == 1 and _snowflag == 0 then
+			AddPeriodicSummer((durationinsec/2)-(bonuscountinsec/2))		--12min	Tag startet um 08:00 morgens
+			AddPeriodicRain((durationinsec/48)+(bonuscountinsec/2))			--0.5min
+			AddPeriodicSnowyRain((durationinsec/48)+(bonuscountinsec/2))	--0.5min
+			AddPeriodicTransitionSunrise(durationinsec/48)					--0.5min
+			AddPeriodicSunrise(durationinsec/24)							--1min
+			AddPeriodicNight((durationinsec/3)-(bonuscountinsec/2))			--8min
+			AddPeriodicSunrise(durationinsec/24)							--1min
+			AddPeriodicTransitionSunrise(durationinsec/48)					--0.5min
+			Display.SetRenderUseGfxSets(1)	
+		elseif _rainflag == 0 and _snowflag == 1 then
+			AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))
+			AddPeriodicWinter((durationinsec/48)+(bonuscountinsec/2))
+			AddPeriodicSnow((durationinsec/48)+(bonuscountinsec/2))
+			AddPeriodicTransitionSunrise(durationinsec/48)
+			AddPeriodicSunrise(durationinsec/24)
+			AddPeriodicNight((durationinsec/2.4)-(bonuscountinsec/2))
+			AddPeriodicSunrise(durationinsec/24)
+			AddPeriodicTransitionSunrise(durationinsec/48)
+			Display.SetRenderUseGfxSets(1)	
+		elseif _rainflag == 1 and _snowflag == 1 then
+			AddPeriodicSummer((durationinsec/2.4)-(bonuscountinsec/2))			--10min
+			AddPeriodicWinter((durationinsec/48)+((bonuscountinsec/2)/2))		--0.5min
+			AddPeriodicSnowyRain((durationinsec/48)+((bonuscountinsec/2)/2))	--0.5min
+			AddPeriodicSnow((durationinsec/48)+((bonuscountinsec/2)/2))			--0.5min
+			AddPeriodicRain((durationinsec/48)+((bonuscountinsec/2)/2))			--0.5min
+			AddPeriodicTransitionSunrise(durationinsec/24)						--1min
+			AddPeriodicSunrise(durationinsec/24)								--1min
+			AddPeriodicNight((durationinsec/3)-(bonuscountinsec/2))				--8min
+			AddPeriodicSunrise(durationinsec/24)								--1min
+			AddPeriodicTransitionSunrise(durationinsec/24)						--1min
+			Display.SetRenderUseGfxSets(1)	
+			
+		end
+	else
+		AddRandomWeatherSet(round(durationinsec/12),4,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),4,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),4,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),4,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),4,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),4,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/48),2,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/48),2,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/12),1,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),1,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),1,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/12),1,allowed_weathertypes,_bonuscount)							--2min
+		AddRandomWeatherSet(round(durationinsec/48),2,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/48),2,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
+		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
+	
+	end
+end	
+--daytypes: 1 = Nacht, 2 = Sonnenauf-/-untergang, 3 = Sonnenauf-/-untergangs-Übergang, 4 = Tag
+--weathertypes: 1 = Sommer, 2 = Regen, 3 = Winter
+GfxElements = 	{ daytypes =   {[1] = {weathertypes = {[1] = {[1] = 9},
+													   [2] = {[1] = 13},
+													   [3] = {[1] = 14}}},					
+								[2] = {weathertypes = {[1] = {[1] = 10},
+													   [2] = {[1] = 15},
+													   [3] = {[1] = 16}}},
+								[3] = {weathertypes = {[1] = {[1] = 12},
+													   [2] = {[1] = 17},
+													   [3] = {[1] = 18}}},
+								[4] = {weathertypes = {[1] = {[1] = 1,
+															  [2] = 7},
+													   [2] = {[1] = 2,
+															  [2] = 5,
+															  [3] = 11},
+													   [3] = {[1] = 3,
+															  [2] = 4,
+															  [3] = 6,
+															  [4] = 8,
+															  [5] = 11}}}
+							   },
+				 weathertypes = { [1] = {1,7,9,10,12},								  
+								  [2] = {2,5,11,13,15,17},
+								  [3] = {3,4,6,8,14,16,18}
+								}
+				}
+
+function AddRandomWeatherSet(_duration,_daytype,_allowed_weathertypes,_modifier)
+
+	local num = Logic.GetRandom(100)
+	local weathergfx,weathertype
+	if _allowed_weathertypes == 1 then
+		if num <= (80 - (_modifier*5)) then
+			--Sommer
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[1][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[1]))]
+			weathertype = 1
+		else
+			--Regen
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[2][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[2]))]
+			weathertype = 3
+		end
+	elseif _allowed_weathertypes == 2 then
+		if num <= (80 - (_modifier*5)) then
+			--Sommer
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[1][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[1]))]
+			weathertype = 1
+		else
+			--Winter
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[3][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[3]))]
+			weathertype = 3
+		end
+	elseif _allowed_weathertypes == 3 then
+		if num <= (70 - (_modifier*5)) then
+			--Sommer
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[1][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[1]))]
+			weathertype = 1
+		elseif num > (70 - (_modifier*5)) and num <= (90 - (_modifier*2)) then
+			--Regen
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[2][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[2]))]	
+			weathertype = 2
+		else
+			--Winter
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[3][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[3]))]
+			weathertype = 3
+		end
+	end
+	return Logic.AddWeatherElement(weathertype, _duration, 1, weathergfx, 5, 15)
 end

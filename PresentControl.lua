@@ -112,8 +112,8 @@ if gvMaxPlayers == 4 then
 								}		
 	else
 		gvPresent.XmasTreePos = 	{
-									[1]={X=39900,Y=34800},
-									[2]={X=39900,Y=22900}
+									[1]={X=39900,Y=36400},
+									[2]={X=39900,Y=24500}
 								}		
 	end
 elseif gvMaxPlayers == 6 or gvMaxPlayers == 8 then

@@ -499,16 +499,17 @@ function GameCallback_PaydayPayed(_player,_amount)
 			--KI kann keinen negativen Zahltag haben
 			_amount = 0
 		end
-	end	
-	-- Sudden Death auf der Weihnachtsmap
-	if gvXmasEventFlag then
-		local xmasamount
-		if gvPresent.SDPaydayFactor then			
-			xmasamount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
-		end
-		return xmasamount
 	else
-		return _amount
+	-- Sudden Death auf der Weihnachtsmap
+		if gvXmasEventFlag then
+			local xmasamount
+			if gvPresent.SDPaydayFactor then			
+				xmasamount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
+			end
+			return xmasamount
+		else
+			return _amount
+		end
 	end
 end	
 

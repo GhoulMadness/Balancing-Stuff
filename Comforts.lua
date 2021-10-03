@@ -1011,7 +1011,7 @@ function Unwetter()
 	if Logic.GetWeatherState() == 2 then
 		local range = gvLightning.Range + Logic.GetRandom(gvLightning.Range)
 		local damage = gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage) 
-		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + (CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()*5))*gvLightning.DamageAmplifier
+		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + (GetCurrentWeatherGfxSet()*5))*gvLightning.DamageAmplifier
 		
 		local posTable = {X = {},Y = {} }		
 		for i = 1,Amount do		
@@ -1022,7 +1022,7 @@ function Unwetter()
 			Lightning_Damage(posTable.X[i],posTable.Y[i],range,damage,buildingdamage)
 		end
 		--noch mehr Blitze bei Unwetter (Gfx-Set 11)
-		if CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 11 then
+		if GetCurrentWeatherGfxSet() == 11 then
 			local posiTable = {X = {},Y = {} }		
 			for i = 1,((Amount*2)+gvLightning.AdditionalStrikes) do		
 				table.insert(posiTable.X,Logic.GetRandom(Mapsize))		
@@ -1536,12 +1536,15 @@ function ShowGUI()
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 end
 function WinterTheme()
-	if Logic.GetWeatherState() == 3 or CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt() == 9 then
+	if Logic.GetWeatherState() == 3 or GetCurrentWeatherGfxSet() == 9 or GetCurrentWeatherGfxSet() == 13 then
 		local SoundChance = Logic.GetRandom(28)
 			if SoundChance == 10 then
-			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,140)
+			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,130)
 		end
 	end
+end
+function GetCurrentWeatherGfxSet()
+	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()
 end
 gvIngameTimeSec = 0
 function IngameTimeJob()
