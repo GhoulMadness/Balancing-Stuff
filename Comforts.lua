@@ -1666,6 +1666,55 @@ function IsPositionExplored(_pID,_x,_y,_range)
 		end
 	end
 end
+-- comfort to let a group of given player IDs share the same diplomacy state
+-- param1: table with player IDs
+-- param2: diplomacy state
+function SetPlayerDiplomacy(_PlayerID,_Diplomacy)
+	assert(type(_PlayerID) == "table","first argument must be a table filled with valid player IDs");
+	assert(type(_Diplomacy) == "number","second argument must be a number (either Diplomacy.XXX or ID of the given diplomacy state)");
+	local tablelength = table.getn(_PlayerID)
+	for i = 1,tablelength,1 do
+		for k = 1,tablelength,-1 do
+			if _PlayerID[i] ~= _PlayerID[k] then
+				Logic.SetDiplomacyState(_PlayerID[i],_PlayerID[k],_Diplomacy)
+			end
+		end
+	end
+end
+-- comfort to set the diplomacy state between a player ID or a group of given player IDs and all AI player IDs on the map
+-- param1: player ID or table with player IDs (optional, default: all humen player IDs on the map)
+-- param2: diplomacy state (optional, default: hostile)
+function SetHumanPlayerDiplomacyToAllAIs(_PlayerID,_Diplomacy)
+	assert(type(_PlayerID) ~= "string","Argument must be either a valid player ID or a table filled with valid player IDs");
+	if not _PlayerID then
+		_PlayerID = {}
+		for i = 1,16 do
+			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_PlayerID) == 1 then
+				table.insert(_PlayerID,i)
+			end
+		end
+	end
+	if not _Diplomacy then
+		_Diplomacy = Diplomacy.Hostile
+	end
+	local AITable = {}
+	for i = 2,16 do
+		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_PlayerID) == 0 then
+			table.insert(AITable,i)
+		end
+	end
+	if type(_PlayerID) == "number" then
+		for k,v in pairs(AITable) do
+			Logic.SetDiplomacyState(_PlayerID,v,_Diplomacy)
+		end
+	elseif type(_PlayerID) == "table" then
+		for i = 1,table.getn(_PlayerID) do
+			for k,v in pairs(AITable) do
+				Logic.SetDiplomacyState(_PlayerID[i],v,_Diplomacy)
+			end
+		end
+	end
+end
 
 GetDistance = function(_a, _b)
 	if type(_a) ~= "table" then
