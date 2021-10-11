@@ -106,6 +106,8 @@ Pilgrims Kanone verursacht nun mehr Schaden, jedoch wurde die Schadensreichweite
 
 Salims Falle verursacht nun etwas mehr Schaden. Außerdem ist sie für Nicht-Verbündete schwerer sichtbar.
 
+Die Tarnfähigkeit von Dieben ist nun für den Spieler des Diebes leichter zu erkennen (analog zu Ari wird ein getarnter Dieb nun leicht transparent dargestellt)
+
 --- Version 0.674
 
 Der Zahltag-Bonus der Münzstätten wirkt nun ausschließlich für fertig errichtete Münzstätten, in der min. die Hälfte der maximalen Arbeiter beschäftigt werden.
@@ -117,5 +119,13 @@ Erecs Basiswerte wurden leicht erhöht. Die Wirkdauer seiner Aura wurde leicht e
 Die Schadensreichweite von Salims Falle wurde reduziert. Im Gegenzug wurde der Schaden leicht erhöht.
 
 Drakes Meisterschuss verursacht nun nur noch einen Bruchteil des Schadens, wenn das Ziel sich in direkter Nähe von Drake befindet. Der Schaden gegen Ziele außerhalb dieser kritischen Reichweite wurde leicht erhöht.
+
+--- Version 0.678
+
+Die Silbernitratgeschosse kosten nun weniger Silber. Im gleichen Maße wurde auch der Schadensbonus reduziert.
+
+Die Basisressourcen, die sich im Lehm- und Silberschacht befinden, wurden leicht reduziert.
+
+Die Menge an Ressourcen, die aus Eisen- und Schwefelhaufen gefördert werden kann, wurde reduziert.
 
 
