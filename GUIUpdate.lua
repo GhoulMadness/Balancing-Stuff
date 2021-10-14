@@ -583,14 +583,14 @@ function GUIUpdate_SumOfTaxes()
 		if Logic.IsConstructionComplete(eID) == 1 then
 			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
 			if workers[1] >= 3 then
-				factor = factor + 0.01
+				factor = factor + 0.015
 			else
 			end
 		else
 		end
 	end
-	if factor > 1.2 then 
-		factor = 1.2
+	if factor > 1.15 then 
+		factor = 1.15
 	end
 	if gvPresent and PlayerID ~= 17 then			
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
@@ -622,14 +622,16 @@ function GUIUpdate_TaxPaydayIncome()
 		if Logic.IsConstructionComplete(eID) == 1 then
 			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
 			if workers[1] >= 3 then
-				factor = factor + 0.01
+				factor = factor + 0.015
 			else
 			end
 		else
 		end
 	end
-	
-	if gvPresent then			
+	if factor > 1.15 then
+		factor = 1.15
+	end
+	if gvPresent and PlayerID ~= 17 then		
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
 	end
 	local TotalPayday = math.floor(TaxesPlayerWillGet * factor)
@@ -659,15 +661,15 @@ function GUIUpdate_TaxSumOfTaxes()
 		if Logic.IsConstructionComplete(eID) == 1 then
 			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
 			if workers[1] >= 3 then
-				factor = factor + 0.01
+				factor = factor + 0.015
 			else
 			end
 		else
 		end
 	end
 	
-	if factor > 1.2 then 
-		factor = 1.2
+	if factor > 1.15 then 
+		factor = 1.15
 	end
 	if gvPresent and PlayerID ~= 17 then			
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
@@ -688,13 +690,13 @@ function GUIUpdate_TaxLeaderCosts()
 		if Logic.IsConstructionComplete(eID) == 1 then
 			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
 			if workers[1] >= 3 then
-				factor = factor + 0.01
+				factor = factor + 0.015
 			else
 			end
 		else
 		end
 	end
-	
+	factor = math.min(factor,1.15)
 	if gvPresent and PlayerID ~= 17 then			
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
 	end
@@ -720,12 +722,10 @@ function GUIUpdate_MintTaxBonus()
 		else
 		end
 	end
-	if NumOfMints > 20 then
-		NumOfMints = 20
-	end
-	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*0.01))
-	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*0.01)))
-	local String = "@color:255,255,255,255 aktueller Bonus: @color:100,255,100,255 " .. NumOfMints .. " % @color:255,255,255,255 erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:255,255,255 erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts
+	NumOfMints = math.min(NumOfMints,10)
+	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*0.015))
+	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*0.015)))
+	local String = "@color:255,255,255,255 aktueller Bonus: @color:100,255,100,255 " .. NumOfMints*1.5 .. " % @color:255,255,255,255 erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:255,255,255 erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts
 	
 	XGUIEng.SetText(CurrentWidgetID, String)	
 end

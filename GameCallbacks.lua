@@ -259,7 +259,7 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	
 	if _TechnologyType == Technologies.T_HeavyThunder 
 	then
-	gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 2
+	gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
 		
 	elseif _TechnologyType == Technologies.T_TotalDestruction 
 	then
@@ -469,47 +469,50 @@ function GameCallback_ResearchProgress(_player, _research_building, _technology,
 end
 function GameCallback_PaydayPayed(_player,_amount)
 
-	if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then		
-		local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
-		CUtil.Payday_SetFrequency(_player, frequency)		
-	end
-	-- Zahltag pro Münzstätte um 1% erhöht, max 20%
-	local factor = 1
-	local workers 
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
-		if Logic.IsConstructionComplete(eID) == 1 then
-			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-			if workers[1] >= 3 then
-				factor = factor + 0.01
+	if _amount ~= nil then
+	
+		if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then		
+			local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
+			CUtil.Payday_SetFrequency(_player, frequency)		
+		end
+		-- Zahltag pro Münzstätte um 1.5% erhöht, max 15%
+		local factor = 1
+		local workers 
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+			if Logic.IsConstructionComplete(eID) == 1 then
+				workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+				if workers[1] >= 3 then
+					factor = factor + 0.015
+				else
+				end
 			else
 			end
-		else
 		end
-	end
-		
-	if factor > 1.2 then 
-		factor = 1.2
-	end
-	_amount = math.floor(_amount*factor)
-	--KI bekommt 5fachen Zahltag
-	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 or XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == false then
-		if _amount > 0 then
-			_amount = _amount * 5
-		else
-			--KI kann keinen negativen Zahltag haben
-			_amount = 0
+			
+		if factor > 1.15 then 
+			factor = 1.15
 		end
-	else
-	-- Sudden Death auf der Weihnachtsmap
-		if gvXmasEventFlag then
-			local xmasamount
-			if gvPresent.SDPaydayFactor then			
-				xmasamount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
+		_amount = math.floor(_amount*factor)
+		--KI bekommt 5fachen Zahltag
+		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 then
+			if _amount > 0 then
+				_amount = _amount * 5
+			else
+				--KI kann keinen negativen Zahltag haben
+				_amount = 0
 			end
-			return xmasamount
 		else
+		-- Sudden Death auf der Weihnachtsmap
+			if gvXmasEventFlag then
+				if gvPresent.SDPaydayFactor then			
+					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
+				end
+			end
 			return _amount
 		end
+	else
+		LuaDebugger.Log(_player)
+		return 0
 	end
 end	
 

@@ -1,13 +1,7 @@
 
-	--normaler Sommer
-	Display.GfxSetSetSkyBox(1, 0.0, 1.0, "YSkyBox07")
-    Display.GfxSetSetRainEffectStatus(1, 0.0, 1.0, 0)
-    Display.GfxSetSetSnowStatus(1, 0, 1.0, 0)
-    Display.GfxSetSetSnowEffectStatus(1, 0.0, 0.8, 0)
-	Display.GfxSetSetFogParams(1, 0.0, 1.0, 1, 152,172,182, 5000,32000)
-	Display.GfxSetSetLightParams(1,  0.0, 1.0, 40, -15, -50,  120,130,110,  205,204,180)
-	
-	--Nacht
+
+----------------------------  Nacht -GFXs  --------------------------------------------------------	
+	--Sommer-Nacht
     Display.GfxSetSetSkyBox(9, 0.0, 1.0, "YSkyBox09")
     Display.GfxSetSetRainEffectStatus(9, 0.0, 1.0, 0)
     Display.GfxSetSetSnowStatus(9, 0, 1.0, 0)
@@ -17,26 +11,61 @@
 	AddPeriodicNight = function(dauer)
 		Logic.AddWeatherElement(1, dauer, 1, 9, 5, 15)
 	end
-	--Nacht mit Regen
+	--Sommer-Nacht mit Schneefall
+    Display.GfxSetSetSkyBox(19, 0.0, 1.0, "YSkyBox09")
+    Display.GfxSetSetRainEffectStatus(19, 0.0, 1.0, 0)
+    Display.GfxSetSetSnowStatus(19, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(19, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(19, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(19,  0.0, 1.0, 40, -15, -50,  80,90,80,  31,31,31)
+	--Regen-Nacht 
     Display.GfxSetSetSkyBox(13, 0.0, 1.0, "YSkyBox04")
     Display.GfxSetSetRainEffectStatus(13, 0.0, 1.0, 1)
     Display.GfxSetSetSnowStatus(13, 0, 1.0, 0)
     Display.GfxSetSetSnowEffectStatus(13, 0.0, 0.8, 1)
 	Display.GfxSetSetFogParams(13, 0.0, 1.0, 1, 52,82,92, 3500,32000)
-	Display.GfxSetSetLightParams(13,  0.0, 1.0, 40, -15, -50,  80,90,80,  1,1,1)
-	AddPeriodicNight = function(dauer)
-		Logic.AddWeatherElement(2, dauer, 1, 13, 5, 15)
-	end
-	--Nacht mit Winter
+	Display.GfxSetSetLightParams(13,  0.0, 1.0, 40, -15, -50,  80,90,80,  21,21,21)
+	--Regen-Nacht mit Schneefall
+    Display.GfxSetSetSkyBox(20, 0.0, 1.0, "YSkyBox04")
+    Display.GfxSetSetRainEffectStatus(20, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(20, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(20, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(20, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(20,  0.0, 1.0, 40, -15, -50,  80,90,80,  21,21,21)
+	--Nächtliches Gewitter
+	 Display.GfxSetSetSkyBox(28, 0.0, 1.0, "YSkyBox04")
+	 Display.GfxSetSetRainEffectStatus(28, 0.0, 1.0, 1)
+	 Display.GfxSetSetSnowStatus(28, 0, 1.0, 0)
+	 Display.GfxSetSetSnowEffectStatus(28, 0.0, 0.8, 1)
+	 Display.GfxSetSetFogParams(28, 0.0, 1.0, 1, 30,30,85, 7500,28000)
+	 Display.GfxSetSetLightParams(28,  0.0, 1.0, 40, -15, -50,  10,30,70,  0,0,40)
+	 
+	--Winter-Nacht 
     Display.GfxSetSetSkyBox(14, 0.0, 1.0, "YSkyBox01")
     Display.GfxSetSetRainEffectStatus(14, 0.0, 1.0, 0)
     Display.GfxSetSetSnowStatus(14, 0, 1.0, 1)
     Display.GfxSetSetSnowEffectStatus(14, 0.0, 0.8, 1)
 	Display.GfxSetSetFogParams(14, 0.0, 1.0, 1, 52,82,92, 3500,32000)
-	Display.GfxSetSetLightParams(14,  0.0, 1.0, 40, -15, -50,  80,90,80,  1,1,1)
-	AddPeriodicNight = function(dauer)
-		Logic.AddWeatherElement(3, dauer, 1, 14, 5, 15)
-	end
+	Display.GfxSetSetLightParams(14,  0.0, 1.0, 40, -15, -50,  80,90,80,  21,21,21)
+	--Winter-Nacht mit Regen
+    Display.GfxSetSetSkyBox(21, 0.0, 1.0, "YSkyBox01")
+    Display.GfxSetSetRainEffectStatus(21, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(21, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(21, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(21, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(21,  0.0, 1.0, 40, -15, -50,  80,90,80,  21,21,21)
+	
+	
+	
+	
+----------------------------  Tag -GFXs  ---------------------------------------------------------------	
+	--normaler Sommer
+	Display.GfxSetSetSkyBox(1, 0.0, 1.0, "YSkyBox07")
+    Display.GfxSetSetRainEffectStatus(1, 0.0, 1.0, 0)
+    Display.GfxSetSetSnowStatus(1, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(1, 0.0, 0.8, 0)
+	Display.GfxSetSetFogParams(1, 0.0, 1.0, 1, 152,172,182, 5000,32000)
+	Display.GfxSetSetLightParams(1,  0.0, 1.0, 40, -15, -50,  120,130,110,  205,204,180)
 	--normaler Regen
     Display.GfxSetSetSkyBox(2, 0.0, 1.0, "YSkyBox04")
     Display.GfxSetSetRainEffectStatus(2, 0.0, 1.0, 1)
@@ -101,6 +130,22 @@
 	AddPeriodicSnow = function(dauer)
 		Logic.AddWeatherElement(3, dauer, 1, 8, 5, 15)
 	end
+	--Gewitter
+	 Display.GfxSetSetSkyBox(11, 0.0, 1.0, "YSkyBox04")
+	 Display.GfxSetSetRainEffectStatus(11, 0.0, 1.0, 1)
+	 Display.GfxSetSetSnowStatus(11, 0, 1.0, 0)
+	 Display.GfxSetSetSnowEffectStatus(11, 0.0, 0.8, 1)
+	 Display.GfxSetSetFogParams(11, 0.0, 1.0, 1, 0,0,230, 7500,27000)	
+	 Display.GfxSetSetLightParams(11,  0.0, 1.0, 40, -15, -50,  80,90,80,  0,0,170) 
+	 AddPeriodicThunderstorm = function(dauer)		
+		Logic.AddWeatherElement(2, dauer, 1, 11, 5, 15)	
+	 end
+	
+	
+	
+	
+	
+-------------------------------  Sonnenauf-/-untergangs -GFXs  -------------------------------------------
 	--Sonnenauf-/-untergang
 	 Display.GfxSetSetSkyBox(10, 0.0, 1.0, "YSkyBox08")   
 	 Display.GfxSetSetRainEffectStatus(10, 0.0, 1.0, 0)   
@@ -111,16 +156,30 @@
 	 AddPeriodicSunrise = function(dauer)		
 		Logic.AddWeatherElement(1, dauer, 1, 10, 5, 15)		
 	 end	
+	 --Sonnenauf-/-untergang mit Schneefall
+	 Display.GfxSetSetSkyBox(22, 0.0, 1.0, "YSkyBox08")   
+	 Display.GfxSetSetRainEffectStatus(22, 0.0, 1.0, 0)   
+	 Display.GfxSetSetSnowStatus(22, 0, 1.0, 1)   
+	 Display.GfxSetSetSnowEffectStatus(22, 0.0, 0.8, 0)	
+	 Display.GfxSetSetFogParams(22, 0.0, 1.0, 1, 215,70,0, 3500,29000)	
+	 Display.GfxSetSetLightParams(22,  0.0, 1.0, 40, 165, -50,  80,90,80,  175,70,0)	
+	 
 	 --Sonnenauf-/-untergang mit Regen
     Display.GfxSetSetSkyBox(15, 0.0, 1.0, "YSkyBox04")
     Display.GfxSetSetRainEffectStatus(15, 0.0, 1.0, 1)
     Display.GfxSetSetSnowStatus(15, 0, 1.0, 0)
-    Display.GfxSetSetSnowEffectStatus(15, 0.0, 0.8, 1)
+    Display.GfxSetSetSnowEffectStatus(15, 0.0, 0.8, 0)
 	Display.GfxSetSetFogParams(15, 0.0, 1.0, 1, 52,82,92, 3500,32000)
 	Display.GfxSetSetLightParams(15,  0.0, 1.0, 40, 165, -50,  80,90,80,  91,91,91)
-	AddPeriodicNight = function(dauer)
-		Logic.AddWeatherElement(2, dauer, 1, 15, 5, 15)
-	end
+	
+	--Sonnenauf-/-untergang mit Regen und Schneefall
+    Display.GfxSetSetSkyBox(23, 0.0, 1.0, "YSkyBox04")
+    Display.GfxSetSetRainEffectStatus(23, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(23, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(23, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(23, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(23,  0.0, 1.0, 40, 165, -50,  80,90,80,  91,91,91)
+	
 	--Sonnenauf-/-untergang mit Winter
     Display.GfxSetSetSkyBox(16, 0.0, 1.0, "YSkyBox01")
     Display.GfxSetSetRainEffectStatus(16, 0.0, 1.0, 0)
@@ -128,49 +187,69 @@
     Display.GfxSetSetSnowEffectStatus(16, 0.0, 0.8, 1)
 	Display.GfxSetSetFogParams(16, 0.0, 1.0, 1, 52,82,92, 3500,32000)
 	Display.GfxSetSetLightParams(16,  0.0, 1.0, 40, 165, -50,  80,90,80,  91,91,91)
-	AddPeriodicNight = function(dauer)
-		Logic.AddWeatherElement(3, dauer, 1, 16, 5, 15)
-	end
+	
+	--Sonnenauf-/-untergang mit Winter und Regen
+    Display.GfxSetSetSkyBox(24, 0.0, 1.0, "YSkyBox01")
+    Display.GfxSetSetRainEffectStatus(24, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(24, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(24, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(24, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(24,  0.0, 1.0, 40, 165, -50,  80,90,80,  91,91,91)
+	
+	
+	
+	
 	 --Sonnenauf-/-untergangs-Übergang
 	 Display.GfxSetSetSkyBox(12, 0.0, 1.0, "YSkyBox07")   
 	 Display.GfxSetSetRainEffectStatus(12, 0.0, 1.0, 0)   
 	 Display.GfxSetSetSnowStatus(12, 0, 1.0, 0)   
 	 Display.GfxSetSetSnowEffectStatus(12, 0.0, 0.8, 0)	
 	 Display.GfxSetSetFogParams(12, 0.0, 1.0, 1, 165,70,70, 3500,29000)	
-	 Display.GfxSetSetLightParams(12,  0.0, 1.0, 40, 115, -50,  80,90,80,  135,70,60)	
+	 Display.GfxSetSetLightParams(12,  0.0, 1.0, 40, 115, -50,  100,110,100,  135,70,60)	
 	 AddPeriodicTransitionSunrise = function(dauer)		
 		Logic.AddWeatherElement(1, dauer, 1, 12, 5, 15)		
 	 end	
+	 --Sonnenauf-/-untergangs-Übergang mit Schneefall
+	 Display.GfxSetSetSkyBox(25, 0.0, 1.0, "YSkyBox07")   
+	 Display.GfxSetSetRainEffectStatus(25, 0.0, 1.0, 0)   
+	 Display.GfxSetSetSnowStatus(25, 0, 1.0, 1)   
+	 Display.GfxSetSetSnowEffectStatus(25, 0.0, 0.8, 0)	
+	 Display.GfxSetSetFogParams(25, 0.0, 1.0, 1, 165,70,70, 3500,29000)	
+	 Display.GfxSetSetLightParams(25,  0.0, 1.0, 40, 115, -50,  100,110,100,  135,70,60)	
+	 
 	  --Sonnenauf-/-untergangs-Übergang mit Regen
     Display.GfxSetSetSkyBox(17, 0.0, 1.0, "YSkyBox04")
     Display.GfxSetSetRainEffectStatus(17, 0.0, 1.0, 1)
     Display.GfxSetSetSnowStatus(17, 0, 1.0, 0)
-    Display.GfxSetSetSnowEffectStatus(17, 0.0, 0.8, 1)
+    Display.GfxSetSetSnowEffectStatus(17, 0.0, 0.8, 0)
 	Display.GfxSetSetFogParams(17, 0.0, 1.0, 1, 52,82,92, 3500,32000)
 	Display.GfxSetSetLightParams(17,  0.0, 1.0, 40, 115, -50,  80,90,80,  51,51,51)
-	AddPeriodicNight = function(dauer)
-		Logic.AddWeatherElement(2, dauer, 1, 17, 5, 15)
-	end
+	
+	  --Sonnenauf-/-untergangs-Übergang mit Regen und Schnee
+    Display.GfxSetSetSkyBox(26, 0.0, 1.0, "YSkyBox04")
+    Display.GfxSetSetRainEffectStatus(26, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(26, 0, 1.0, 0)
+    Display.GfxSetSetSnowEffectStatus(26, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(26, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(26,  0.0, 1.0, 40, 115, -50,  70,80,70,  51,51,51)
+	
 	--Sonnenauf-/-untergangs-Übergang mit Winter
     Display.GfxSetSetSkyBox(18, 0.0, 1.0, "YSkyBox01")
     Display.GfxSetSetRainEffectStatus(18, 0.0, 1.0, 0)
     Display.GfxSetSetSnowStatus(18, 0, 1.0, 1)
     Display.GfxSetSetSnowEffectStatus(18, 0.0, 0.8, 1)
 	Display.GfxSetSetFogParams(18, 0.0, 1.0, 1, 52,82,92, 3500,32000)
-	Display.GfxSetSetLightParams(18,  0.0, 1.0, 40, 115, -50,  80,90,80,  51,51,51)
-	AddPeriodicNight = function(dauer)
-		Logic.AddWeatherElement(3, dauer, 1, 18, 5, 15)
-	end
-	 --Gewitter
-	 Display.GfxSetSetSkyBox(11, 0.0, 1.0, "YSkyBox04")
-	 Display.GfxSetSetRainEffectStatus(11, 0.0, 1.0, 1)
-	 Display.GfxSetSetSnowStatus(11, 0, 1.0, 0)
-	 Display.GfxSetSetSnowEffectStatus(11, 0.0, 0.8, 1)
-	 Display.GfxSetSetFogParams(11, 0.0, 1.0, 1, 0,0,230, 7500,27000)	
-	 Display.GfxSetSetLightParams(11,  0.0, 1.0, 40, -15, -50,  80,90,80,  0,0,170) 
-	 AddPeriodicThunderstorm = function(dauer)		
-		Logic.AddWeatherElement(2, dauer, 1, 11, 5, 15)	
-	 end
+	Display.GfxSetSetLightParams(18,  0.0, 1.0, 40, 115, -50,  100,110,100,  51,51,51)
+	
+	--Sonnenauf-/-untergangs-Übergang mit Winter und Regen
+    Display.GfxSetSetSkyBox(27, 0.0, 1.0, "YSkyBox01")
+    Display.GfxSetSetRainEffectStatus(27, 0.0, 1.0, 1)
+    Display.GfxSetSetSnowStatus(27, 0, 1.0, 1)
+    Display.GfxSetSetSnowEffectStatus(27, 0.0, 0.8, 1)
+	Display.GfxSetSetFogParams(27, 0.0, 1.0, 1, 52,82,92, 3500,32000)
+	Display.GfxSetSetLightParams(27,  0.0, 1.0, 40, 115, -50,  80,90,80,  51,51,51)
+	
+-------------------------------------------------------------------------------------------------------	 
 	 
 function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount,_randomflag)
 
@@ -262,15 +341,25 @@ function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount,_randomflag)
 end	
 --daytypes: 1 = Nacht, 2 = Sonnenauf-/-untergang, 3 = Sonnenauf-/-untergangs-Übergang, 4 = Tag
 --weathertypes: 1 = Sommer, 2 = Regen, 3 = Winter
-GfxElements = 	{ daytypes =   {[1] = {weathertypes = {[1] = {[1] = 9},
-													   [2] = {[1] = 13},
-													   [3] = {[1] = 14}}},					
-								[2] = {weathertypes = {[1] = {[1] = 10},
-													   [2] = {[1] = 15},
-													   [3] = {[1] = 16}}},
-								[3] = {weathertypes = {[1] = {[1] = 12},
-													   [2] = {[1] = 17},
-													   [3] = {[1] = 18}}},
+GfxElements = 	{ daytypes =   {[1] = {weathertypes = {[1] = {[1] = 9,
+															  [2] = 19},
+													   [2] = {[1] = 13,
+															  [2] = 20,
+															  [3] = 28},																	
+													   [3] = {[1] = 14,
+															  [2] = 21}}},					
+								[2] = {weathertypes = {[1] = {[1] = 10,
+															  [2] = 22},
+													   [2] = {[1] = 15,
+															  [2] = 23},
+													   [3] = {[1] = 16,
+															  [2] = 24}}},
+								[3] = {weathertypes = {[1] = {[1] = 12,
+															  [2] = 25},
+													   [2] = {[1] = 17,
+															  [2] = 26},
+													   [3] = {[1] = 18,
+															  [2] = 27}}},
 								[4] = {weathertypes = {[1] = {[1] = 1,
 															  [2] = 7},
 													   [2] = {[1] = 2,
@@ -282,15 +371,15 @@ GfxElements = 	{ daytypes =   {[1] = {weathertypes = {[1] = {[1] = 9},
 															  [4] = 8,
 															  [5] = 11}}}
 							   },
-				 weathertypes = { [1] = {1,7,9,10,12},								  
-								  [2] = {2,5,11,13,15,17},
-								  [3] = {3,4,6,8,14,16,18}
+				 weathertypes = { [1] = {1,7,9,10,12,19,22,25},								  
+								  [2] = {2,5,11,13,15,17,20,23,26,28},
+								  [3] = {3,4,6,8,14,16,18,21,24,27}
 								}
 				}
 
 function AddRandomWeatherSet(_duration,_daytype,_allowed_weathertypes,_modifier)
 
-	local num = Logic.GetRandom(100)
+	local num = math.random(100)
 	local weathergfx,weathertype
 	if _allowed_weathertypes == 1 then
 		if num <= (80 - (_modifier*5)) then

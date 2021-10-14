@@ -128,4 +128,8 @@ Die Basisressourcen, die sich im Lehm- und Silberschacht befinden, wurden leicht
 
 Die Menge an Ressourcen, die aus Eisen- und Schwefelhaufen gefördert werden kann, wurde reduziert.
 
+--- Version 0.679
 
+Münzstätten erhöhen nun den Zahltag um 1.5% anstatt der vorherigen 1%. Der Zahltag ist nun um maximal 15% (10 Münzstätten) erhöhbar anstatt der vorherigen 20% (20 Münzstätten).
+
+Beim Unwetter kommt es nun zu zusätzlichen Blitzeinschlägen.
