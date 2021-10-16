@@ -508,8 +508,8 @@ function GameCallback_PaydayPayed(_player,_amount)
 					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
 				end
 			end
-			return _amount
 		end
+		return _amount
 	else
 		LuaDebugger.Log(_player)
 		return 0

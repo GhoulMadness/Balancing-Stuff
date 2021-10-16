@@ -964,6 +964,7 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.CB_MonasteryBuildingSite1] = true,
 		[Entities.CB_OldKingsCastle] = true,
 		[Entities.CB_RobberyTower1] = true,
+		[Entities.CB_Tower1] = true,
 		[Entities.CB_SteamMashine] = true,
 		[Entities.CB_TechTrader] = true,
 		[Entities.XD_WallCorner] = true,
@@ -1025,7 +1026,7 @@ function Unwetter()
 		--noch mehr Blitze bei Unwetter (Gfx-Set 11)
 		if GetCurrentWeatherGfxSet() == 11 then
 			local posiTable = {X = {},Y = {} }		
-			for i = 1,((Amount*3)+gvLightning.AdditionalStrikes) do		
+			for i = 1,((Amount*2)+gvLightning.AdditionalStrikes) do		
 				table.insert(posiTable.X,Logic.GetRandom(Mapsize))		
 				table.insert(posiTable.Y,Logic.GetRandom(Mapsize))
 			
