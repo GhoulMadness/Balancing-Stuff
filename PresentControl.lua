@@ -271,8 +271,8 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 	end
 	-- Zeigt die Position des Diebes dem Gegnerteam alle 5 Sekunden an
 	if timeline >= 5 then
-		if Logic.GetDiplomacyState(GUI.GetPlayerID(),_pID) ==  Diplomacy.Hostile then
-			thiefcurrentpos.X,thiefcurrentpos.Y = Logic.GetEntityPosition(eID)
+		if Logic.GetDiplomacyState(GUI.GetPlayerID(),_pID) ==  Diplomacy.Hostile or GUI.GetPlayerID() == 17 then
+			thiefcurrentpos.X,thiefcurrentpos.Y = Logic.GetEntityPosition(_eID)
 			GUI.ScriptSignal(thiefcurrentpos.X, thiefcurrentpos.Y, 1)
 			timeline = 0
 		end
@@ -293,7 +293,7 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 			Logic.SetEntityName(newID,nil)
 			local presentpos = {}
 			presentpos.X,presentpos.Y = Logic.GetEntityPosition(Logic.GetEntityIDByName("T".._TID.."Present"..gvPresent.Progress[_TID]))
-			PresentID = Logic.CreateEntity(gvPresent.PresentTypes[Logic.GetRandom(2)+1],presentpos.X,presentpos.Y,0,0)
+			PresentID = Logic.CreateEntity(gvPresent.PresentTypes[math.random(3)],presentpos.X,presentpos.Y,0,0)
 			Logic.SetEntityName(PresentID,"T".._TID.."_Present"..gvPresent.Progress[_TID])
 			ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 			Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
@@ -336,7 +336,7 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 		GUIUpdate_PresentProgress_Screen(enemyTID)
 		local presentpos = {}
 		presentpos.X,presentpos.Y = Logic.GetEntityPosition(Logic.GetEntityIDByName("T"..enemyTID.."Present"..gvPresent.Progress[enemyTID]))
-		ePresentID = Logic.CreateEntity(gvPresent.PresentTypes[Logic.GetRandom(2)+1],presentpos.X,presentpos.Y,0,0)
+		ePresentID = Logic.CreateEntity(gvPresent.PresentTypes[math.random(3)],presentpos.X,presentpos.Y,0,0)
 		Logic.SetEntityName(ePresentID,"T"..enemyTID.."_Present"..gvPresent.Progress[enemyTID])
 		ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 		Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)

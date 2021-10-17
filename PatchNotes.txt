@@ -133,3 +133,11 @@ Die Menge an Ressourcen, die aus Eisen- und Schwefelhaufen gefördert werden kan
 Münzstätten erhöhen nun den Zahltag um 1.5% anstatt der vorherigen 1%. Der Zahltag ist nun um maximal 15% (10 Münzstätten) erhöhbar anstatt der vorherigen 20% (20 Münzstätten).
 
 Beim Unwetter kommt es nun zu zusätzlichen Blitzeinschlägen.
+
+--- Version 0.68
+
+Die Lebenspunkte von Ziergebäuden wurden erhöht (sodass Blitzeinschläge eben diese nicht direkt zum Brennen bringen)
+
+Ein Fehler im Zusammenhang mit geklauten Geschenken (Turnierkarte) wurde behoben.
+
+Ein Fehler, durch den KI-Spieler nicht den korrekten Zahltag erhalten haben, wurde behoben.
