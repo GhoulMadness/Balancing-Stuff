@@ -128,9 +128,13 @@ gvPresent.PresentTypes = {Entities.XD_Present1,Entities.XD_Present2,Entities.XD_
 gvPresent.XmasTreeCriticalRange = 500
 -- Reichweite, in der um den Weihnachtsbaum keine Gebäude platziert werden können
 if gvMaxPlayers <= 4 then
-gvPresent.XmasTreeBuildBlockRange = 2600
+	if gvXmas2021Flag then
+		gvPresent.XmasTreeBuildBlockRange = 3600
+	else
+		gvPresent.XmasTreeBuildBlockRange = 2600
+	end
 elseif gvMaxPlayers >= 6 then
-gvPresent.XmasTreeBuildBlockRange = 2400
+	gvPresent.XmasTreeBuildBlockRange = 2400
 end
 -- Check, ob ein Geschenk geklaut wurde
 function gvPresent_ThiefPresentStolenCheck(_TID)	
@@ -225,8 +229,8 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				end]]
 				--Dieb zu Position des eigenen Weihnachtsbaums laufen lassen
 				Move("XmasThief".._TID,"XmasTree".._TID)
-				--Geschenke-Diebe sind 5% langsamer
-				Logic.SetSpeedFactor(eID,0.95)
+				--Geschenke-Diebe sind 25% langsamer
+				Logic.SetSpeedFactor(eID,0.75)
 				return true
 			end
 		end

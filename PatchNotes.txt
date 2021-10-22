@@ -141,3 +141,5 @@ Die Lebenspunkte von Ziergebäuden wurden erhöht (sodass Blitzeinschläge eben 
 Ein Fehler im Zusammenhang mit geklauten Geschenken (Turnierkarte) wurde behoben.
 
 Ein Fehler, durch den KI-Spieler nicht den korrekten Zahltag erhalten haben, wurde behoben.
+
+Da das Release der Extra3-Kampagne auf unbestimmt verschoben werden muss, kann die Errungenschaft fürs Freischalten von Dovbar nicht in absehbarer Zeit erhalten werden. Ab sofort ist er frei verfügbar und bedarf keiner erreichten Errungenschaft mehr.

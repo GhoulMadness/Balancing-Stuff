@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.682
+BS.Version = 0.683
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -212,7 +212,7 @@ if 	gvGUI_TechnologyButtonIDArray then
 	gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
 	gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");
 end	
-if EMS then
+--[[if EMS then
 	if EMS.GC then
 		if EMS.GC.HeroKeys then
 			EMS.GC.HeroKeys[Entities.PU_Hero13] = "Dovbar"
@@ -228,7 +228,7 @@ if EMS then
 			EMS.RD.Config.Dovbar = 1
 		end
 	end
-end
+end]]
 
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
