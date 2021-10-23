@@ -142,4 +142,16 @@ Ein Fehler im Zusammenhang mit geklauten Geschenken (Turnierkarte) wurde behoben
 
 Ein Fehler, durch den KI-Spieler nicht den korrekten Zahltag erhalten haben, wurde behoben.
 
+--- Version 0.683
+
 Da das Release der Extra3-Kampagne auf unbestimmt verschoben werden muss, kann die Errungenschaft fürs Freischalten von Dovbar nicht in absehbarer Zeit erhalten werden. Ab sofort ist er frei verfügbar und bedarf keiner erreichten Errungenschaft mehr.
+
+--- Version 0.684
+
+Es wurde ein Fehler behoben, durch den Soldaten der Elitekrieger nicht am Söldnerturm nachrekrutiert werden konnten.
+
+Die für Zuschauer angezeigten Teamnamen des vergangenen Winterturniers wurden entfernt, da diese nun irreführend und unzutreffend sind.
+
+Es wurde ein Fehler im Zusammenhang mit der GUI von Dovbar behoben.
+
+Die GUI in PvP Karten wurde an die neueste EMS-Version angepasst (0.68).

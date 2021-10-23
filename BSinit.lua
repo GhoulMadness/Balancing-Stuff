@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.683
+BS.Version = 0.684
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -212,23 +212,18 @@ if 	gvGUI_TechnologyButtonIDArray then
 	gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
 	gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");
 end	
---[[if EMS then
+if EMS then
 	if EMS.GC then
 		if EMS.GC.HeroKeys then
 			EMS.GC.HeroKeys[Entities.PU_Hero13] = "Dovbar"
 			_G.EMS.RD.Rules["Dovbar"] = EMS.T.CopyTable(EMS.RD.Templates.StdHero)
 			_G.EMS.RD.Rules["Dovbar"].HeroID = 13
-			EMS.L.Heroes[13] = "Dovbar"
-		end
-	end
-	local KeyName = "Game\\Extra3\\Achievements\\Campaign1\\WonMapsHard"
-	if GDB.IsKeyValid(KeyName) then
-		if GDB.GetValue(KeyName) == 1 then
 			_G.EMS.RD.Rules["Dovbar"].value = 1
+			EMS.L.Heroes[13] = "Dovbar"
 			EMS.RD.Config.Dovbar = 1
 		end
-	end
-end]]
+	end					
+end
 
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
@@ -281,7 +276,7 @@ end]]
 	StartSimpleJob("IngameTimeJob")
 	StartSimpleJob("BloodRushCheck")
 	DZTrade_Init()
-	StartCountdown(10*60,BeautiAnimCheck,false)
+	StartCountdown(5*60,BeautiAnimCheck,false)
 	if not gvEMSFlag then
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else
