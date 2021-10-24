@@ -155,3 +155,10 @@ Die für Zuschauer angezeigten Teamnamen des vergangenen Winterturniers wurden e
 Es wurde ein Fehler im Zusammenhang mit der GUI von Dovbar behoben.
 
 Die GUI in PvP Karten wurde an die neueste EMS-Version angepasst (0.68).
+
+--- Version 0.685
+
+Es wurde ein Fehler behoben, durch den in manchen Fällen Drakes Kopfschuss mehr Schaden als beabsichtigt verursacht hat.
+
+Es wurde ein Fehler behoben, durch den ein unsichtbarer Button der GUI im normalen Spiel gedrückt werden konnte.
+

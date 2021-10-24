@@ -376,9 +376,9 @@ function drakedmg()
     local max = Logic.GetEntityMaxHealth(target);
     local dmg = CEntity.TriggerGetDamage();
 	local attackerdmg = Logic.GetEntityDamage(attacker)
-	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" and cooldown == 1 then
+	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" and cooldown <= 3 then
 		if max == dmg then 
-			if GetDistance(attackerpos,targetpos) >= 500 then
+			if math.abs(GetDistance(attackerpos,targetpos)) >= 500 then
 				CEntity.TriggerSetDamage(math.floor((max * 0.36) + (attackerdmg*4.8)));
 			else
 				CEntity.TriggerSetDamage(math.floor((max * 0.12) + (attackerdmg*1.6)));

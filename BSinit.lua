@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.684
+BS.Version = 0.685
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -118,11 +118,11 @@ do
 	local i = table.getn(BS.MapList)
 	
 	while i > 0 do
-		--[[local MapListDummy = {}
-		MapListDummy[i] = BS.MapList[i]		
-		local _, count = string.gsub(table.concat(MapListDummy[i],", "), "bs", "")]]
+
 		local count = 0
-		for _ in pairs(BS.MapList[i]) do count = count + 1 end
+		for _ in pairs(BS.MapList[i]) do 
+			count = count + 1 
+		end
 
 		BS.CurrentMappoolTotalAmount = BS.CurrentMappoolTotalAmount + count
 	
@@ -132,7 +132,6 @@ do
 end
 function BS.ValidateMap()
 	if XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() > 0 then
-		--XNetwork.GameInformation_GetMapName() exactly the same functionality?
 		return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
 	else
 		return true
@@ -146,8 +145,7 @@ end
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
 end
---[[ Score stuff
-needed for SWFire Mod]]
+-- Score stuff
 if not Score.Player[0] then
 	Score.Player[0] = {
         battle = 0,
