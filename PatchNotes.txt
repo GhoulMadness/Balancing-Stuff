@@ -162,3 +162,6 @@ Es wurde ein Fehler behoben, durch den in manchen Fällen Drakes Kopfschuss mehr
 
 Es wurde ein Fehler behoben, durch den ein unsichtbarer Button der GUI im normalen Spiel gedrückt werden konnte.
 
+--- Version 0.686
+
+Schreckensgebäude können die Motivation von Gegnern nur noch auf ein Minimum von 40% reduzieren (Maximallimit Segnungen/neue Gebäude gleichermaßen).
