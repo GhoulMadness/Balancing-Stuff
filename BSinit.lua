@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.686
+BS.Version = 0.687
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -24,7 +24,8 @@ BS.MapList = { 	[1] =	{
 					["(2) emsbs zerklueftete inseln"] = true,
 					["(2) emsbs fort nogersund"] = true,
 					["(2) emsbs grabenkampf"] = true,
-					["(2) emsbs der taktiker"] = true
+					["(2) emsbs der taktiker"] = true,
+					["(2) emsbs die alten imperien"] = true
 					},
 				[3] =	{
 					["(3) bs koop kalas zorn"] = true,
@@ -59,7 +60,8 @@ BS.MapList = { 	[1] =	{
 					["(4) emsbs imperium"] = true,
 					["(4) emsbs magic circle"] = true,
 					["(4) emsbs sand cliffs"] = true,
-					["(4) emsbs winterberge"] = true
+					["(4) emsbs winterberge"] = true,
+					["(4) emsbs verschneites moor"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,

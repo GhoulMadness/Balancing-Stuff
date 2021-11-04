@@ -21,24 +21,26 @@ function gvPresent.Init()
 		gvPresent.Progress[i] = 3
 		gvPresent.triggerIDTable.Theft[i] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{i})
 	end
-	XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreen"),1)
-	if GUI.GetPlayerID() == 17 then
-		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenSpectator"),1)
-		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),1)
-		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenTeamName")," @center "..GetXmasTeamName(1))
-		XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenSpectatorTeamName")," @center "..GetXmasTeamName(3))
+	if gvEMSFlag then
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreen"),1)
+		gvPresent.triggerIDTable.Victory[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_VictoryJob", 1)
+		if GUI.GetPlayerID() == 17 then
+			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenSpectator"),1)
+			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),1)
+			XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenTeamName")," @center "..GetXmasTeamName(1))
+			XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenSpectatorTeamName")," @center "..GetXmasTeamName(3))
+		end
 	end
 	gvPresent.triggerIDTable.Created[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,nil,"gvPresent_ThiefCreated", 1)
 	gvPresent.ThiefIDTable = {}
 	for i = 1,gvMaxPlayers,1 do
 		gvPresent.ThiefIDTable[i] = {}
-	end	
-	gvPresent.triggerIDTable.Victory[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_VictoryJob", 1)
+	end		
 end
 --Geschenke-Fortschritt-Anzeige updaten
 function GUIUpdate_PresentProgress_Screen(_TID)
 
-	if type(_TID) ~= "number" then 
+	if type(_TID) ~= "number" or gvXmas2021 then 
 		return
 	end
 	gvPresent.Progress[_TID] = math.abs(gvPresent.Progress[_TID])
@@ -216,6 +218,13 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 					ChangePlayer(Logic.GetEntityIDByName("XmasTree"..eTID),14)
 				end
 				Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..eTID),Models.XD_Xmastree1)
+				if gvXmas2021 then
+					Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..eTID),Models.XD_RuinFragment1)
+					local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..eTID).X,GetPosition("XmasTree"..eTID).Y,0,0)	
+					Logic.SetEntityName(eID,"XmasTree"..eTID.."Fake")	
+					Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..eTID.."Fake"),Models.XD_Xmastree1)
+					S5Hook.GetEntityMem(Logic.GetEntityIDByName("XmasTree"..eTID.."Fake"))[25]:SetFloat(3)
+				end
 				CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..eTID), "Weihnachtsbaum")
 				MakeInvulnerable("XmasTree"..eTID)
 				--Namen des Diebes zu "Geschenke-Dieb" ändern und unselektierbar machen
@@ -224,9 +233,6 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				Logic.SetEntityName(eID,"XmasThief".._TID)
 				MemoryManipulation.SetSettlerOverheadWidget(eID,1)
 				CUtil.SetEntityDisplayName(eID, "Geschenke-Dieb")
-				--[[if cnTable then
-					cnTable["XmasThief".._TID] = "Geschenke-Dieb" 
-				end]]
 				--Dieb zu Position des eigenen Weihnachtsbaums laufen lassen
 				Move("XmasThief".._TID,"XmasTree".._TID)
 				--Geschenke-Diebe sind 25% langsamer
@@ -301,11 +307,22 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 			Logic.SetEntityName(PresentID,"T".._TID.."_Present"..gvPresent.Progress[_TID])
 			ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 			Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
+			if gvXmas2021 then
+				Logic.SetModelAndAnimSet(PresentID,Models.XD_MiscPile1)
+				Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID),Models.XD_RuinFragment1)
+				local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..enemyTID).X,GetPosition("XmasTree"..enemyTID).Y,0,0)	
+				Logic.SetEntityName(eID,"XmasTree"..enemyTID.."Fake")	
+				Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID.."Fake"),Models.XD_Xmastree1)
+				S5Hook.GetEntityMem(Logic.GetEntityIDByName("XmasTree"..enemyTID.."Fake"))[25]:SetFloat(3)
+			end
 			CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..enemyTID), "Weihnachtsbaum")
 			MakeInvulnerable("XmasTree"..enemyTID)
 			--cnTable["XmasThief".._TID] = nil
 			Trigger.UnrequestTrigger(gvPresent.triggerIDTable.Kill[_TID])
 			gvPresent.triggerIDTable.Theft[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
+			if gvXmas2021.Score then
+				gvXmas2021.Score[_TID] = gvXmas2021.Score[_TID] + 400
+			end
 			return true
 		end
 	end
@@ -344,6 +361,14 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 		Logic.SetEntityName(ePresentID,"T"..enemyTID.."_Present"..gvPresent.Progress[enemyTID])
 		ChangePlayer(Logic.GetEntityIDByName("XmasTree"..enemyTID),XmasEnemyID)
 		Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..enemyTID),Models.XD_Xmastree1)
+		if gvXmas2021 then
+			Logic.SetModelAndAnimSet(ePresentID,Models.XD_MiscPile1)
+			Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID),Models.XD_RuinFragment1)
+			local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..enemyTID).X,GetPosition("XmasTree"..enemyTID).Y,0,0)	
+			Logic.SetEntityName(eID,"XmasTree"..enemyTID.."Fake")	
+			Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID.."Fake"),Models.XD_Xmastree1)
+			S5Hook.GetEntityMem(Logic.GetEntityIDByName("XmasTree"..enemyTID.."Fake"))[25]:SetFloat(3)
+		end
 		CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..enemyTID), "Weihnachtsbaum")
 		MakeInvulnerable("XmasTree"..enemyTID)
 		--cnTable["XmasThief".._TID] = nil

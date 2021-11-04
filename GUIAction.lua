@@ -294,18 +294,20 @@ function GUIAction_Hero13RegenAura()
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
 end
 function GUIAction_Hero13DivineJudgment()
-	local heroID = GUI.GetSelectedEntity()
-	local player = Logic.EntityGetPlayer(heroID)
-	local basedmg = Logic.GetEntityDamage(heroID)
-	local starttime = Logic.GetTimeMs()
-	local posX,posY = Logic.GetEntityPosition(heroID)
-	gvHero13.LastTimeDivineJudgmentUsed = starttime/1000
-	if CNetwork then
-		CNetwork.SendCommand("Ghoul_Hero13DivineJudgment",GUI.GetPlayerID(),heroID);
-	else
-		Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
-		_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
-		_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero13,1)})[2]
+	if heroID ~= nil then
+		local player = Logic.EntityGetPlayer(heroID)
+		local basedmg = Logic.GetEntityDamage(heroID)
+		local starttime = Logic.GetTimeMs()
+		local posX,posY = Logic.GetEntityPosition(heroID)
+		gvHero13.LastTimeDivineJudgmentUsed = starttime/1000
+		if CNetwork then
+			CNetwork.SendCommand("Ghoul_Hero13DivineJudgment",GUI.GetPlayerID(),heroID);
+		else
+			Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
+			_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
+			_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
+		end
 	end
 end
 for i = 1,12 do
@@ -317,7 +319,7 @@ for i = 1,12 do
 		local posX,posY = Logic.GetEntityPosition(target)
 		local time = Logic.GetTimeMs()
 		-- Dauer der Fähigkeit in Millisekunden
-		local duration = 1000*7
+		local duration = 1000*5
 		local dmg = CEntity.TriggerGetDamage();
 		if time <= (_starttime + duration) then
 			if target == _heroID then
@@ -353,7 +355,7 @@ for i = 1,12 do
 	_G["Hero13_DivineJudgment_Trigger_"..i] = function(_heroID,_origdmg,_posX,_posY,_starttime)
 		local time = Logic.GetTimeMs()
 		-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
-		local duration = 1000*3
+		local duration = 1000*2
 		if time > (_starttime + duration) then
 			if Logic.IsEntityAlive(_heroID) then
 				
@@ -366,7 +368,7 @@ for i = 1,12 do
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+150,_posY-150)
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-150,_posY+150)
 				-- Reichweite der Fähigkeit (in S-cm)
-				local range = 900
+				local range = 800
 				local damage = _origdmg * 12
 				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
 					Logic.HurtEntity(eID, damage)
