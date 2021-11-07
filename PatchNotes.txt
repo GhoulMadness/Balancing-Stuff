@@ -165,3 +165,7 @@ Es wurde ein Fehler behoben, durch den ein unsichtbarer Button der GUI im normal
 --- Version 0.686
 
 Schreckensgebäude können die Motivation von Gegnern nur noch auf ein Minimum von 40% reduzieren (Maximallimit Segnungen/neue Gebäude gleichermaßen).
+
+--- Version 0.687
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbar im exakten Moment seines Todes eine bestimmte Fähigkeit zündete.

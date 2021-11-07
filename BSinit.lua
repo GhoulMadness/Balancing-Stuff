@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.687
+BS.Version = 0.688
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -61,7 +61,8 @@ BS.MapList = { 	[1] =	{
 					["(4) emsbs magic circle"] = true,
 					["(4) emsbs sand cliffs"] = true,
 					["(4) emsbs winterberge"] = true,
-					["(4) emsbs verschneites moor"] = true
+					["(4) emsbs verschneites moor"] = true,
+					["(4) emsbs glc battlestar"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
