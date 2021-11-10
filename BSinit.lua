@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.688
+BS.Version = 0.689
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -273,9 +273,9 @@ end
 		end 
 	end
 	StartSimpleJob("WinterTheme")
-	StartSimpleJob("Unwetter")
 	StartSimpleJob("IngameTimeJob")
 	StartSimpleJob("BloodRushCheck")
+	StartSimpleJob("Lightning_Job")
 	DZTrade_Init()
 	StartCountdown(5*60,BeautiAnimCheck,false)
 	if not gvEMSFlag then

@@ -877,7 +877,10 @@ end
 --------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------- Blitzeinschläge & Unwetter ---------------------------------------
 --------------------------------------------------------------------------------------------------------------------
+Mapsize = Logic.WorldGetSize()
 gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStrikes = 0, 
+	--Menge an Blitzen pro Sekunde abhängig von der Fläche der Map
+	Amount = math.floor((((Mapsize/100)^2)/70000)+0.5),
 	RecentlyDamaged = 
 	{
 		false, 
@@ -1002,13 +1005,10 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.ZB_ConstructionSiteCastle1] = true
 	}
 }
-function IsLightningProofBuilding(_entityID)
+function gvLightning.IsLightningProofBuilding(_entityID)
 	return gvLightning.DamageProofBuildings[Logic.GetEntityType(_entityID)] 
 end
-function Unwetter() 
-	local Mapsize = Logic.WorldGetSize()
-	--Menge an Blitzen pro Sekunde abhängig von der Fläche der Map
-	local Amount = round(((Mapsize/100)^2)/70000)
+function Lightning_Job() 
 	--Blitzeinschläge nur bei Regen
 	if Logic.GetWeatherState() == 2 then
 		local range = gvLightning.Range + Logic.GetRandom(gvLightning.Range)
@@ -1016,22 +1016,22 @@ function Unwetter()
 		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + (GetCurrentWeatherGfxSet()*5))*gvLightning.DamageAmplifier
 		
 		local posTable = {X = {},Y = {} }		
-		for i = 1,Amount do		
+		for i = 1,gvLightning.Amount do		
 			table.insert(posTable.X,Logic.GetRandom(Mapsize))		
 			table.insert(posTable.Y,Logic.GetRandom(Mapsize))
 		
 			Logic.Lightning(posTable.X[i],posTable.Y[i])
-			Lightning_Damage(posTable.X[i],posTable.Y[i],range,damage,buildingdamage)
+			gvLightning.Damage(posTable.X[i],posTable.Y[i],range,damage,buildingdamage)
 		end
 		--noch mehr Blitze bei Unwetter (Gfx-Set 11)
 		if GetCurrentWeatherGfxSet() == 11 then
 			local posiTable = {X = {},Y = {} }		
-			for i = 1,((Amount*2)+gvLightning.AdditionalStrikes) do		
+			for i = 1,((gvLightning.Amount*2)+gvLightning.AdditionalStrikes) do		
 				table.insert(posiTable.X,Logic.GetRandom(Mapsize))		
 				table.insert(posiTable.Y,Logic.GetRandom(Mapsize))
 			
 				Logic.Lightning(posiTable.X[i],posiTable.Y[i])
-				Lightning_Damage(posiTable.X[i],posiTable.Y[i],range,damage,buildingdamage)
+				gvLightning.Damage(posiTable.X[i],posiTable.Y[i],range,damage,buildingdamage)
 			end
 		end
 		local pID = GUI.GetPlayerID()
@@ -1045,7 +1045,7 @@ function Unwetter()
 		end
     end	
 end
-function Lightning_Damage(_posX,_posY,_range,_damage,_buildingdamage)
+function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
     for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
 	
@@ -1079,7 +1079,7 @@ function Lightning_Damage(_posX,_posY,_range,_damage,_buildingdamage)
 			end
 			
 		if Logic.IsBuilding(eID) == 1 then 
-			if IsLightningProofBuilding(eID) ~= true then
+			if gvLightning.IsLightningProofBuilding(eID) ~= true then
 				if Logic.IsConstructionComplete(eID) == 1 then
 					local PID = Logic.EntityGetPlayer(eID)
 					if gvLightning.RodProtected[PID] == false then
@@ -1103,6 +1103,7 @@ function Lightning_Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		end   	
 	end
 end
+-----------------------------------------------------------------------------------------------------------------------------
 function ChangeToThunderstorm(_playerID,_EntityID)
 	if Logic.GetEntityType(_EntityID) ~= Entities.PB_WeatherTower1 then
 		return
@@ -1127,13 +1128,13 @@ function DZTrade_Init()
 		gvDZTradeCheck.PlayerDelay[i] = 60 + Logic.GetRandom(20)
 
 	end
-	StartSimpleJob("DZTradePunishmentJob")
+	StartSimpleJob("DZTrade_PunishmentJob")
 	
 end
-function DZTradePunishmentJob()
+function DZTrade_PunishmentJob()
 	for player = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-		if Logic.GetPlayerAttractionUsage(player) >= (Logic.GetPlayerAttractionLimit(player) + gvDZTradeCheck.treshold) then
-			if DZTradePunishmentProtected(player) == 0 then
+		if Logic.GetNumberOfAttractedWorker(player) > 0 and Logic.GetPlayerAttractionUsage(player) >= (Logic.GetPlayerAttractionLimit(player) + gvDZTradeCheck.treshold) then
+			if gvDZTradeCheck.PunishmentProtected(player) == 0 then
 				if gvDZTradeCheck.PlayerTime[player] == - 1 then
 					gvDZTradeCheck.PlayerTime[player] = Logic.GetTime()	+ gvDZTradeCheck.PlayerDelay[player]
 				end
@@ -1148,7 +1149,7 @@ function DZTradePunishmentJob()
 				end
 			end
 			if gvDZTradeCheck.PlayerDelay[player] <= 0 then
-				DZTradePunishment(player)
+				gvDZTradeCheck.Punishment(player)
 			end
 		else
 		gvDZTradeCheck.PlayerTime[player] = - 1
@@ -1156,7 +1157,7 @@ function DZTradePunishmentJob()
 		end
 	end
 end
-function DZTradePunishment(_playerID)		
+function gvDZTradeCheck.Punishment(_playerID)		
 	local timepassed = math.floor((Logic.GetTime() - gvDZTradeCheck.PlayerTime[_playerID])/4)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 		local motivation = Logic.GetSettlersMotivation(eID) 
@@ -1167,7 +1168,7 @@ function DZTradePunishment(_playerID)
 		end
 	end
 end
-function DZTradePunishmentProtected(_playerID)		
+function gvDZTradeCheck.PunishmentProtected(_playerID)		
 	local DZTable = {	Logic.GetPlayerEntities(_playerID, Entities.PB_VillageCenter3, 10)	}
 	local HPTable = {}
 	table.remove(DZTable,1)
@@ -1188,7 +1189,7 @@ function SpezEntityPlaced()
 
     local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
-    local playerID = GetPlayer(entityID)
+    local playerID = Logic.EntityGetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
     if entityType == Entities.PB_Dome then       
 	
@@ -1505,15 +1506,6 @@ function ControlSiversmithGrievance()
 		end
 	end
 end
---[[defined by grievance xml, not needed
-function GrievanceReasonTooMuchWork()
-	Sound.PlayQueuedFeedbackSound( Sounds.VoicesMentor_REASON_SettlerForcedToWork, 0 )	
-	--Stream.Start("Sounds\\VoicesMentor\\REASON_SettlerForcedToWork", 100)
-end
-function GrievanceReasonTooHighTaxes()
-	Sound.PlayQueuedFeedbackSound( Sounds.VoicesMentor_REASON_SettlerToHighTaxes, 0 )	
-	--Stream.Start("Sounds\\VoicesMentor\\REASON_SettlerToHighTaxes", 100)
-end]]
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function HideGUI()
 	XGUIEng.ShowWidget("BackGround_BottomLeft",0)

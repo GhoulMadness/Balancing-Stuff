@@ -361,17 +361,41 @@ for i = 1,12 do
 				
 			else
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY)
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-100,_posY-100)
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-200,_posY-200)
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+100,_posY+100)
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+200,_posY+200)
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX+150,_posY-150)
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX-150,_posY+150)
+				for i = 1,8 do
+					Logic.CreateEffect(GGL_Effects.FXLightning,_posX-(100*i),_posY-(100*i))
+					Logic.CreateEffect(GGL_Effects.FXLightning,_posX-(100*i),_posY)
+					Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY-(100*i))
+				end
 				-- Reichweite der Fähigkeit (in S-cm)
 				local range = 800
 				local damage = _origdmg * 12
 				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
-					Logic.HurtEntity(eID, damage)
+					-- wenn Leader, dann...
+					if Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then
+						if damage >= Logic.GetEntityHealth(eID) then
+							--[[ besser Logic.DestroyGroupByLeader?
+							local soltab = {Logic.GetSoldiersAttachedToLeader(eID)}
+							if soltab[1] >= 1 then
+								table.remove(soltab,1)
+								for i = 1,table.getn(soltab) do
+									Logic.HurtEntity(soltab[i], damage)
+								end
+							end
+							Logic.HurtEntity(eID, damage)]]
+							Logic.DestroyGroupByLeader(eID)
+						else
+							Logic.HurtEntity(eID, damage)
+						end
+					-- wenn Soldier, dann...
+					elseif Logic.IsBuilding(eID) == 0 and Logic.GetEntityScriptingValue(eID,69) > 0 and Logic.GetEntityScriptingValue(eID,69) ~= eID then
+						Logic.HurtEntity(eID, damage)
+					-- wenn Held, dann...
+					elseif Logic.IsHero(eID) == 1 then		
+						Logic.HurtEntity(eID, damage*1.5)
+					-- wenn alles andere (Leibi, Kanone, Gebäude), dann...
+					else
+						Logic.HurtEntity(eID, damage*2)
+					end
 				end				
 			end
 			

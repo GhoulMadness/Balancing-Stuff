@@ -169,3 +169,14 @@ Schreckensgebäude können die Motivation von Gegnern nur noch auf ein Minimum v
 --- Version 0.687
 
 Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbar im exakten Moment seines Todes eine bestimmte Fähigkeit zündete.
+
+--- Version 0.688
+
+Die Schadens-Reichweite von Dovbars Göttlichem Zorn wurde leicht reduziert. Außerdem wurde das Zeitfenster verkleinert sowie die Dauer der Unverwundbarkeit (Göttlicher Segen) reduziert.
+
+--- Version 0.689
+
+Es wurden einige Anpassungen an Dovbars Göttlichem Zorn vorgenommen. So können nun keine Soldaten mehr am Leben bleiben, wenn der Leader in der Reichweite stirbt, die Soldaten jedoch außerhalb der Reichweite waren. 
+Außerdem stimmt der visuelle Effekt nun besser mit der tatsächlichen Reichweite überein.
+
+Helden, Gebäude und Kanonen erleiden nun mehr Schaden durch den Göttlichen Zorn.
