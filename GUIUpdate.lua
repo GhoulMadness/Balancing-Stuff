@@ -309,7 +309,7 @@ function GUIUpdate_MercenaryTower(_button)
 	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),TimePassed, RechargeTime)
 	
 end
-function GUIUpdate_UpgradeButtonsNew(_Button, _Technology)
+--[[function GUIUpdate_UpgradeButtonsNew(_Button, _Technology)
 	
 	local PlayerID = GUI.GetPlayerID()
 	if _Button == "Upgrade_Bank2" then
@@ -347,11 +347,11 @@ function GUIUpdate_UpgradeButtonsNew(_Button, _Technology)
 			XGUIEng.DisableButton(_Button,0)
 		end
 	end
-end
+end]]
 --------------------------------------------------------------------------------
 -- Update Technology buttons that are depening on the Buildingtype
 --------------------------------------------------------------------------------
-function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
+--[[function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
 	
 	local PlayerID = GUI.GetPlayerID()
 	local SelectedBuildingID = GUI.GetSelectedEntity()
@@ -496,8 +496,8 @@ function GUIUpdate_TechnologyButtonsNew(_Button, _Technology, _BuildingType)
 		XGUIEng.HighLightButton(_Button,0)
 		return
 	end
-end
-function GUIUpdate_BuildingButtonsNew(_Button, _Technology)
+end]]
+--[[function GUIUpdate_BuildingButtonsNew(_Button, _Technology)
 	
 	local PlayerID = GUI.GetPlayerID()
 	local TechState = Logic.GetTechnologyState(PlayerID, _Technology)
@@ -520,11 +520,11 @@ function GUIUpdate_BuildingButtonsNew(_Button, _Technology)
 				XGUIEng.DisableButton(_Button,1)
 			end
 		end
-		--[[if _Technology == Technologies.MU_Serf then
+		if _Technology == Technologies.MU_Serf then
 			XGUIEng.DisableButton(_Button,0)
 		else
 			XGUIEng.DisableButton(_Button,0)
-		end]]
+		end
 		if _Technology == Technologies.B_Lighthouse then
 			local TechReq1 = Logic.GetTechnologyState(PlayerID, Technologies.GT_Architecture)
 			local TechReq2 = Logic.GetTechnologyState(PlayerID, Technologies.GT_Binocular)
@@ -568,7 +568,7 @@ function GUIUpdate_BuildingButtonsNew(_Button, _Technology)
 		XGUIEng.HighLightButton(_Button,1)
 		return
 	end
-end
+end]]
 function GUIUpdate_SumOfTaxes()
 	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()

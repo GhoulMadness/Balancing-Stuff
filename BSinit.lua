@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.689
+BS.Version = 0.690
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -148,6 +148,7 @@ end
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
 end
+Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")																   
 -- Score stuff
 if not Score.Player[0] then
 	Score.Player[0] = {
@@ -178,57 +179,18 @@ Score.SettlersPoints = 5
 Score.ResourcePoints  = 0.05
 Score.ConstructionPoints = 5
 
--- Spectator Buttons and Widgets (Correct Icon shown)
-if 	gvGUI_TechnologyButtonIDArray then
-	gvGUI_TechnologyButtonIDArray[Technologies.T_ThunderStorm] = XGUIEng.GetWidgetID("Research_ThunderStorm");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_HeavyThunder] = XGUIEng.GetWidgetID("Research_HeavyThunder");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_TotalDestruction] = XGUIEng.GetWidgetID("Research_TotalDestruction");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_LightningInsurance] = XGUIEng.GetWidgetID("Research_LightningInsurance");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Foresight] = XGUIEng.GetWidgetID("Research_Foresight");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Alacricity] = XGUIEng.GetWidgetID("Research_Alacricity");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BarbarianCulture] = XGUIEng.GetWidgetID("Research_BarbarianCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BanditCulture] = XGUIEng.GetWidgetID("Research_BanditCulture");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BearmanCulture] = XGUIEng.GetWidgetID("Research_BearmanCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_KnightsCulture] = XGUIEng.GetWidgetID("Research_KnightsCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverPlateArmor] = XGUIEng.GetWidgetID("Research_SilverPlateArmor");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverArcherArmor] = XGUIEng.GetWidgetID("Research_SilverArcherArmor");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverArrows] = XGUIEng.GetWidgetID("Research_SilverArrows");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverSwords] = XGUIEng.GetWidgetID("Research_SilverSwords");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverLance] = XGUIEng.GetWidgetID("Research_SilverLance");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverBullets] = XGUIEng.GetWidgetID("Research_SilverBullets");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverMissiles] = XGUIEng.GetWidgetID("Research_SilverMissiles");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BloodRush] = XGUIEng.GetWidgetID("Research_BloodRush");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Agility] = XGUIEng.GetWidgetID("Research_Agility");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_LeatherCoat] = XGUIEng.GetWidgetID("Research_LeatherCoat");	
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Taxation] = XGUIEng.GetWidgetID("Research_Taxation");
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Laws] = XGUIEng.GetWidgetID("Research_Laws");
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Banking] = XGUIEng.GetWidgetID("Research_Banking");	
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Gilds] = XGUIEng.GetWidgetID("Research_Gilds");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_LightBricks] = XGUIEng.GetWidgetID("Research_LightBricks");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Debenture] = XGUIEng.GetWidgetID("Research_Debenture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BookKeeping] = XGUIEng.GetWidgetID("Research_BookKeeping");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Scale] = XGUIEng.GetWidgetID("Research_Scale");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Coinage] = XGUIEng.GetWidgetID("Research_Coinage");	
-	gvGUI_TechnologyButtonIDArray[Technologies.T_CropCycle] = XGUIEng.GetWidgetID("Research_CropCycle");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");
-end	
-if EMS then
-	if EMS.GC then
-		if EMS.GC.HeroKeys then
-			EMS.GC.HeroKeys[Entities.PU_Hero13] = "Dovbar"
-			_G.EMS.RD.Rules["Dovbar"] = EMS.T.CopyTable(EMS.RD.Templates.StdHero)
-			_G.EMS.RD.Rules["Dovbar"].HeroID = 13
-			_G.EMS.RD.Rules["Dovbar"].value = 1
-			EMS.L.Heroes[13] = "Dovbar"
-			EMS.RD.Config.Dovbar = 1
-		end
-	end					
-end
-
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\CNetworkHandler.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Lighthouse.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\MercenaryTower.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Lightning.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\DZTradePunishment.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\SilversmithGrievance.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\AI.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Castle.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Scaremonger.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Trigger.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
 	
@@ -260,7 +222,9 @@ end
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnCastleCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCastleDestroyed", 1)
 	--Trigger für Drake
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "drakedmg", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
+	--Trigger für Heldentod
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
 	--Trigger für Leibeigene
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)

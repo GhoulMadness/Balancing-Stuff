@@ -172,11 +172,30 @@ Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbar im exakten Moment
 
 --- Version 0.688
 
-Die Schadens-Reichweite von Dovbars Göttlichem Zorn wurde leicht reduziert. Außerdem wurde das Zeitfenster verkleinert sowie die Dauer der Unverwundbarkeit (Göttlicher Segen) reduziert.
+Die Schadens-Reichweite von Dovbars Götterdämmerung wurde leicht reduziert. Außerdem wurde das Zeitfenster verkleinert sowie die Dauer der Unverwundbarkeit (Göttlicher Segen) reduziert.
 
 --- Version 0.689
 
-Es wurden einige Anpassungen an Dovbars Göttlichem Zorn vorgenommen. So können nun keine Soldaten mehr am Leben bleiben, wenn der Leader in der Reichweite stirbt, die Soldaten jedoch außerhalb der Reichweite waren. 
+Es wurden einige Anpassungen an Dovbars Götterdämmerung vorgenommen. So können nun keine Soldaten mehr am Leben bleiben, wenn der Leader in der Reichweite stirbt, die Soldaten jedoch außerhalb der Reichweite waren. 
 Außerdem stimmt der visuelle Effekt nun besser mit der tatsächlichen Reichweite überein.
 
-Helden, Gebäude und Kanonen erleiden nun mehr Schaden durch den Göttlichen Zorn.
+Helden, Gebäude und Kanonen erleiden nun mehr Schaden durch die Götterdämmerung.
+
+--- Version 0.690
+
+Die vorherige Änderung an Dovbars Fähigkeit Götterdämmerung (Zeitfenster des Auslösens) wurde rückgängig gemacht. Das Zeitfenster beträgt nun wieder 3 Sekunden.
+
+Es wurde ein Fehler behoben, durch den Dovbars Fähigkeiten Götterdämmerung und Göttlicher Segen abgeklungen sind, während Dovbar tot war. 
+Die Fähigkeiten müssen nun (wie andere Fähigkeiten auch) von vorne aufgeladen werden, wenn Dovbar wiederbelebt wird.
+
+Das EMS-Regelfenster wurde um BS-spezifische Regeln erweitert. Ihr könnt nun folgendes ein - und ausstellen (standardmäßig alles erlaubt).
+		
+		Dovbar
+		Unwetter (im Wetterturm)
+		Schlösser (und alle Ausbaustufen)
+		Leuchttürme (und alle Ausbaustufen)
+		Dome
+		Söldnertürme
+		Silberschmelzen (und alle Ausbaustufen)
+		Schreckensgebäude
+		
