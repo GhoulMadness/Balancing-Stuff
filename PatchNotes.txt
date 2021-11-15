@@ -198,4 +198,14 @@ Das EMS-Regelfenster wurde um BS-spezifische Regeln erweitert. Ihr könnt nun fo
 		Söldnertürme
 		Silberschmelzen (und alle Ausbaustufen)
 		Schreckensgebäude
+
+--- Version 0.691
+
+Es wurde ein Fehler behoben, der auf BS Koop Karten aufgetreten ist.
+
+--- Version 0.692
+
+Die generelle Performance von Blitzen wurde verbessert. Dies betrifft sowohl die Blitze während regnerischem Wetters sowie die Blitze, die durch Dovbars Götterdämmerung entstehen.
+
+Es wurden kleinere Verbesserungen an der GUI vorgenommen.
 		

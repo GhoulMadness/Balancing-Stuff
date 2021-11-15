@@ -132,7 +132,6 @@ function TransactionDetails()
 		Logic.SetCurrentPrice(PID, TTyp, 0.75 )
 	end
 end
-
 --------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------ Trigger for Special Buildings (Dome and Silversmith) --------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------
@@ -143,15 +142,9 @@ function SpezEntityPlaced()
     local playerID = Logic.EntityGetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
     if entityType == Entities.PB_Dome then       
-	
-		GUI.ScriptSignal(pos[1],pos[2],1)
-		GUI.CreateMinimapPulse(pos[1],pos[2],1)
 		
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
-		local gvViewCenterID = {}
-		gvViewCenterID[i] = Logic.CreateEntity(Entities.XD_ScriptEntity,pos[1],pos[2],i,0)
-		Logic.SetEntityExplorationRange(gvViewCenterID[i],22)
-	end
+		DomeVision(pos[1],pos[2])
+		
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "DomeFallen", 1)
 		--DomePlaced(playerID,entityID,pos[1],pos[2])
 	end
@@ -188,6 +181,16 @@ function DomeFallen()
 				Logic.PlayerSetGameStateToWon(k)					
 			end
 		end
+	end
+end
+function DomeVision(_posX,_posY)
+	GUI.ScriptSignal(_posX,_posY,1)
+	GUI.CreateMinimapPulse(_posX,_posY,1)
+		
+	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
+		local gvViewCenterID = {}
+		gvViewCenterID[i] = Logic.CreateEntity(Entities.XD_ScriptEntity,_posX-(i/100),_posY-(i/100),i,0)
+		Logic.SetEntityExplorationRange(gvViewCenterID[i],22)
 	end
 end
 function DomePlaced(_pID,_eID,_posX,_posY)
@@ -346,9 +349,9 @@ for i = 1,12 do
 			else
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY)
 				for i = 1,8 do
-					Logic.CreateEffect(GGL_Effects.FXLightning,_posX-(100*i),_posY-(100*i))
-					Logic.CreateEffect(GGL_Effects.FXLightning,_posX-(100*i),_posY)
-					Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY-(100*i))
+					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX-(100*i),_posY-(100*i))
+					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX-(100*i),_posY)
+					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX,_posY-(100*i))
 				end
 				-- Reichweite der Fähigkeit (in S-cm)
 				local range = 800
@@ -357,15 +360,6 @@ for i = 1,12 do
 					-- wenn Leader, dann...
 					if Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then
 						if damage >= Logic.GetEntityHealth(eID) then
-							--[[ besser Logic.DestroyGroupByLeader?
-							local soltab = {Logic.GetSoldiersAttachedToLeader(eID)}
-							if soltab[1] >= 1 then
-								table.remove(soltab,1)
-								for i = 1,table.getn(soltab) do
-									Logic.HurtEntity(soltab[i], damage)
-								end
-							end
-							Logic.HurtEntity(eID, damage)]]
 							Logic.DestroyGroupByLeader(eID)
 						else
 							Logic.HurtEntity(eID, damage)

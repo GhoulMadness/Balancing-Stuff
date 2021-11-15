@@ -490,9 +490,9 @@ function GUITooltip_AttackSpeed()
 	local ShortCutToolTip = " "	
 	local Text = ""
 	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
-		Text = "@color:180,180,180 Angriffstempo @cr @color:255,255,255,255 Dies zeigt das aktuelle Angriffstempo dieser Einheit an (in Angriffe pro 1000s)"
+		Text = "@color:180,180,180 Angriffstempo @cr @color:255,255,255,255 Dies zeigt das aktuelle Angriffstempo dieser Einheit an (in Angriffe pro Sekunde)"
 	else
-		Text = "@color:180,180,180 Attack speed @cr @color:255,255,255,255 This shows the current attack speed of this unit (in attacks per 1000s)"
+		Text = "@color:180,180,180 Attack speed @cr @color:255,255,255,255 This shows the current attack speed of this unit (in attacks per second)"
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)

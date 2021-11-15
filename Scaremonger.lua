@@ -10,3 +10,26 @@ Scaremonger = {MotiEffect = {
 	[Entities.PB_Scaremonger06] = 0.18 
 								}
 }
+Scaremonger.MotiDebuff = function(_PlayerID,_eType)
+	local amount = Scaremonger.MotiEffect[_eType]
+	for j=1, 16, 1 do
+		if Logic.GetDiplomacyState( _PlayerID, j) == Diplomacy.Hostile then			
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(j), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
+				local motivation = Logic.GetSettlersMotivation(eID) 
+				if motivation > 0.4 then
+					CEntity.SetMotivation(eID, math.min(0.4,motivation - amount ))
+				end
+			end			
+			if	GetPlayersMotivationHardcap(j) >= (0.4 + amount) then
+				CUtil.AddToPlayersMotivationHardcap(j, - amount)
+			else
+				CUtil.AddToPlayersMotivationHardcap(j, - (GetPlayersMotivationHardcap(j)-0.4))
+			end
+			if GetPlayersMotivationSoftcap(j) >= (0.4 + amount) then
+				CUtil.AddToPlayersMotivationSoftcap(j, - amount)
+			else
+				CUtil.AddToPlayersMotivationSoftcap(j, - (GetPlayersMotivationSoftcap(j)-0.4))
+			end
+		end
+	end
+end

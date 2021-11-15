@@ -137,27 +137,22 @@ function Lightning_Job()
 	if Logic.GetWeatherState() == 2 then
 		local range = gvLightning.Range + Logic.GetRandom(gvLightning.Range)
 		local damage = gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage) 
-		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + (GetCurrentWeatherGfxSet()*5))*gvLightning.DamageAmplifier
-		
-		local posTable = {X = {},Y = {} }		
-		for i = 1,gvLightning.Amount do		
-			table.insert(posTable.X,Logic.GetRandom(Mapsize))		
-			table.insert(posTable.Y,Logic.GetRandom(Mapsize))
-		
-			Logic.Lightning(posTable.X[i],posTable.Y[i])
-			gvLightning.Damage(posTable.X[i],posTable.Y[i],range,damage,buildingdamage)
+		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + math.min(GetCurrentWeatherGfxSet()*5,55)*gvLightning.DamageAmplifier)
+		local amount = gvLightning.Amount
+		local x,y
+		--noch mehr Blitze bei Unwetter und nächtlichem Unwetter (Gfx-Set 11 und 28)
+		if GetCurrentWeatherGfxSet() == 11 or GetCurrentWeatherGfxSet() == 28 then
+			amount = amount + (gvLightning.Amount *2) + gvLightning.AdditionalStrikes
 		end
-		--noch mehr Blitze bei Unwetter (Gfx-Set 11)
-		if GetCurrentWeatherGfxSet() == 11 then
-			local posiTable = {X = {},Y = {} }		
-			for i = 1,((gvLightning.Amount*2)+gvLightning.AdditionalStrikes) do		
-				table.insert(posiTable.X,Logic.GetRandom(Mapsize))		
-				table.insert(posiTable.Y,Logic.GetRandom(Mapsize))
 			
-				Logic.Lightning(posiTable.X[i],posiTable.Y[i])
-				gvLightning.Damage(posiTable.X[i],posiTable.Y[i],range,damage,buildingdamage)
-			end
-		end
+		for i = 1,amount do	
+			x = Logic.GetRandom(Mapsize)
+			y = Logic.GetRandom(Mapsize)
+		
+			Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,x,y)
+			gvLightning.Damage(x,y,range,damage,buildingdamage)
+		end		
+		
 		local pID = GUI.GetPlayerID()
 		if gvLightning.RecentlyDamaged[pID] == true then
 			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 92 ) 
@@ -169,6 +164,7 @@ function Lightning_Job()
 		end
     end	
 end
+-- besser als HiResJob (10 mal so oft, 10 mal weniger Blitze/Performance verteilt sich auf Ticks nicht auf Sekunden)
 function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
     for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do

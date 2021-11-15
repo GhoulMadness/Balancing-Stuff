@@ -2,13 +2,13 @@ function GUIUpdate_AttackRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
 	local Range = MemoryManipulation.GetEntityMaxRange(EntityID)
-	XGUIEng.SetTextByValue( CurrentWidgetID, Range, 1 )	
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
 end
 function GUIUpdate_VisionRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
 	local Range = (Logic.GetEntityExplorationRange(EntityID)	* 100)
-	XGUIEng.SetTextByValue( CurrentWidgetID, Range, 1 )	
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
 end
 --[[-- Movespeed
 CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(GUI.GetSelectedEntity()))[tonumber("784938", 16)][0][5][4]:GetFloat()
@@ -25,7 +25,7 @@ function GUIUpdate_AttackSpeed()
 	local Speed = math.floor(1000000/(MemoryManipulation.GetSettlerTypeBattleWaitUntil(EntityType)))
 	local SpeedAsString = string.format(Speed/1000,"%.2f")
 	
-	XGUIEng.SetTextByValue( CurrentWidgetID, Speed, 1 )		
+	XGUIEng.SetText( CurrentWidgetID, " @ra "..SpeedAsString )		
 end
 function GUIUpdate_MoveSpeed()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
@@ -93,7 +93,7 @@ function GUIUpdate_MoveSpeed()
 		SpeedTechBonus = 0
 	
 	end
-	XGUIEng.SetTextByValue( CurrentWidgetID, round((BaseSpeed+SpeedTechBonus)*SpeedWeatherFactor), 1 )	
+	XGUIEng.SetText( CurrentWidgetID, " @ra "..round((BaseSpeed+SpeedTechBonus)*SpeedWeatherFactor) )	
 end
 function GUIUpdate_Time()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
