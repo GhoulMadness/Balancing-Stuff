@@ -37,28 +37,8 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 		
 	elseif Scaremonger.MotiEffect[eType] then
 	
-		for j=1, 16, 1 do
-			if Logic.GetDiplomacyState( _PlayerID, j) == Diplomacy.Hostile then			
-				for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(j), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
-					local motivation = Logic.GetSettlersMotivation(eID) 
-					if motivation > 0.4 then
-						CEntity.SetMotivation(eID, math.min(0.4,motivation - Scaremonger.MotiEffect[eType] ))
-					else
-						
-					end
-				end			
-				if	GetPlayersMotivationHardcap(j) >= (0.4+Scaremonger.MotiEffect[eType]) then
-					CUtil.AddToPlayersMotivationHardcap(j, - Scaremonger.MotiEffect[eType])
-				else
-					CUtil.AddToPlayersMotivationHardcap(j, - (GetPlayersMotivationHardcap(j)-0.4))
-				end
-				if GetPlayersMotivationSoftcap(j) >= (0.4+Scaremonger.MotiEffect[eType]) then
-					CUtil.AddToPlayersMotivationSoftcap(j, - Scaremonger.MotiEffect[eType])
-				else
-					CUtil.AddToPlayersMotivationSoftcap(j, - (GetPlayersMotivationSoftcap(j)-0.4))
-				end
-			end
-		end
+		Scaremonger.MotiDebuff(_PlayerID,eType)
+		
 	elseif eType == Entities.PB_Beautification13 then
 		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 0.25)
 		
