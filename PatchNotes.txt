@@ -208,4 +208,10 @@ Es wurde ein Fehler behoben, der auf BS Koop Karten aufgetreten ist.
 Die generelle Performance von Blitzen wurde verbessert. Dies betrifft sowohl die Blitze während regnerischem Wetters sowie die Blitze, die durch Dovbars Götterdämmerung entstehen.
 
 Es wurden kleinere Verbesserungen an der GUI vorgenommen.
+
+--- Version 0.693
+
+Es wurden einige Anpassungen an der KI vorgenommen. 
+
+Es wurde ein Fehler behoben, durch den ausgebildete Truppen in einem um bestimmte Winkel gedrehten Stall nach der Rekrutierung gestorben sind.
 		

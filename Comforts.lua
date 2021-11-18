@@ -562,6 +562,7 @@ UniTechAmount = function(_PlayerID)
 	return amount
 end 
 function GetEntityHealth( _entity )
+	local entityID = Logic.GetEntityIDByName(_entity)
     if not Tools.IsEntityAlive( entityID ) then
         return 0
     end
@@ -768,6 +769,21 @@ function IsPositionExplored(_pID,_x,_y,_range)
 			return 0
 		end
 	end
+end
+-- returns the start positions (HQ) of the current player as a table 
+function GetPlayerStartPosition()
+	local playerID = GUI.GetPlayerID()
+	local t = {}
+	t.LVL = {}
+	-- search for all upgrade levels
+	for i = 1,3 do		
+		t.LVL[i] = {Logic.GetPlayerEntities(playerID,_G["Entities.PB_Headquarters"..i],1)}
+		table.remove(t.LVL[i],1)
+		for k = 1,table.getn(t.LVL[i]) do
+			table.insert(t,t.LVL[i][k])
+		end
+	end
+	return GetPosition(t[1])	
 end
 -- comfort to let a group of given player IDs share the same diplomacy state
 -- param1: table with player IDs

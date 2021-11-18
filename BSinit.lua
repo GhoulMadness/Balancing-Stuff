@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.692
+BS.Version = 0.693
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -34,6 +34,7 @@ BS.MapList = { 	[1] =	{
 					["(3) bs koop schlacht um evelance"] = true,
 					["(3) bs koop vereinter widerstand"] = true,
 					["(3) bs koop dunkelheit"] = true,
+					["(3) bs koop vargs bergfestung"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
 					["(3) emsbs hochland"] = true
