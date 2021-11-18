@@ -808,7 +808,7 @@ function SetHumanPlayerDiplomacyToAllAIs(_PlayerID,_Diplomacy)
 	if not _PlayerID then
 		_PlayerID = {}
 		for i = 1,16 do
-			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_PlayerID) == 1 then
+			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 1 then
 				table.insert(_PlayerID,i)
 			end
 		end
@@ -818,7 +818,7 @@ function SetHumanPlayerDiplomacyToAllAIs(_PlayerID,_Diplomacy)
 	end
 	local AITable = {}
 	for i = 2,16 do
-		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_PlayerID) == 0 then
+		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 0 then
 			table.insert(AITable,i)
 		end
 	end
