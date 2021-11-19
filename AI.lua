@@ -86,7 +86,13 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 	end
 		
 	MapEditor_Armies[_playerId] = {}
-		
+	
+	if MapEditor_Armies.controlerId == nil then
+		MapEditor_Armies.controlerId = {}
+		for i = 2,16 do
+			MapEditor_Armies.controlerId[i] = {}
+		end
+	end
 	for i=1, (_strength+6) do
 		
 		MapEditor_Armies[_playerId][i] 						=	{}
@@ -126,15 +132,28 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 									{_playerId, i-1, _peaceTime})
 			
 		end
-					
-	end
-	
-	if MapEditor_Armies.controlerId == nil then
-		MapEditor_Armies.controlerId = StartSimpleJob("ControlMapEditor_Armies")
-	end
+		Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_TURN,
+												"",
+												"StartMapEditor_Controller",
+												1,{},
+												{_playerId, i})		
+	end	
 	
 	SetHostile(1,_playerId)
 	
+end
+function StartMapEditor_Controller(_playerId,_armycount)
+	if Counter.Tick2("StartMapEditor_Controller_Ticker",_armycount) then
+		
+		if MapEditor_Armies.controlerId[_playerId][_armycount] == nil then
+			MapEditor_Armies.controlerId[_playerId][_armycount] = Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_TURN,
+												"",
+												"ControlMapEditor_Armies_".._playerId.."_".._armycount,
+												1,{},
+												{_playerId, _armycount})
+		end
+		return true
+	end
 end
 function StartMapEditor_ArmyAttack(_playerId,_armyId,_delay)
 
@@ -147,30 +166,28 @@ function StartMapEditor_ArmyAttack(_playerId,_armyId,_delay)
 	end
 
 end
-function ControlMapEditor_Armies()
+for i = 2,16 do
+	for j = 1,9 do
+		_G["ControlMapEditor_Armies_"..i.."_"..j] = function(_playerId,_armycount)
 
-	if Counter.Tick2("ControlMapEditor_Armies",10) then
-		
-		for player=1,16 do
-			
-			for army=1,9 do
-				
-				if MapEditor_Armies[player] ~= nil then
-					
-					if MapEditor_Armies[player][army] ~= nil then
+			if Counter.Tick2("ControlMapEditor_Armies_".._playerId.."_".._armycount,100) then
 						
-						TickOffensiveAIController(MapEditor_Armies[player][army])
+				if MapEditor_Armies[_playerId] ~= nil then
+							
+					if MapEditor_Armies[_playerId][_armycount] ~= nil then
+								
+						TickOffensiveAIController(MapEditor_Armies[_playerId][_armycount])								
 						
 					end
 					
-				end
+				end	
 				
 			end
 			
 		end
 		
 	end
-
+	
 end
 TickOffensiveAIController = function(_army)
 
@@ -354,7 +371,7 @@ SetupAITroopGenerator = function(_Name, _army)
 end
 AITroopGenerator_Condition = function(_Name, _Index)
 
-	-- Not enough troops
+	-- Already enough troops
 	if 	Counter.Tick2(_Name.."Generator",7) == false
 		or
 		(
@@ -365,29 +382,27 @@ AITroopGenerator_Condition = function(_Name, _Index)
 			and	DataTable[_Index].Attack
 		) 
 		or
-		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= 12*DataTable[_Index].strength then
+		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= table.getn(MapEditor_Armies[DataTable[_Index].player]) *DataTable[_Index].strength then
 		return false
 	end
 
-	-- Already enough
+	-- not enough troops
 	if AI.Army_GetNumberOfTroops(DataTable[_Index].player, DataTable[_Index].id) < DataTable[_Index].strength then
 
 		-- Connect unemployed leader
 		AI.Entity_ConnectUnemployedLeaderToArmy(DataTable[_Index].player, DataTable[_Index].id, 6)
 
 	end
-
 	return AI.Army_GetNumberOfTroops(DataTable[_Index].player, DataTable[_Index].id) < DataTable[_Index].strength
 
 end
 AITroopGenerator_Action = function(_Index)
-
 	-- Get table size
 	local UpgradeCategoryCount = table.getn(DataTable[_Index].AllowedTypes)
 
 	-- Get random category
 	local UpgradeCategoryIndex = Logic.GetRandom(UpgradeCategoryCount)+1
-	if AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < 12*DataTable[_Index].strength then
+	if AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < table.getn(MapEditor_Armies[DataTable[_Index].player]) then
 		AI.Army_BuyLeader(DataTable[_Index].player, DataTable[_Index].id, DataTable[_Index].AllowedTypes[UpgradeCategoryIndex])
 	end
 	return false
