@@ -402,7 +402,7 @@ AITroopGenerator_Action = function(_Index)
 
 	-- Get random category
 	local UpgradeCategoryIndex = Logic.GetRandom(UpgradeCategoryCount)+1
-	if AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < table.getn(MapEditor_Armies[DataTable[_Index].player]) then
+	if AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < table.getn(MapEditor_Armies[DataTable[_Index].player]) * DataTable[_Index].strength * 3/4 then
 		AI.Army_BuyLeader(DataTable[_Index].player, DataTable[_Index].id, DataTable[_Index].AllowedTypes[UpgradeCategoryIndex])
 	end
 	return false

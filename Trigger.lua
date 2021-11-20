@@ -67,8 +67,16 @@ for i = 1,12 do
 				gvHero13.LastTimeStoneArmorUsed = Logic.GetTime()
 				gvHero13.LastTimeDivineJudgmentUsed = Logic.GetTime()
 				if CNetwork then
-					gvHero13StoneArmor_NextCooldown[playerID] = Logic.GetTimeMs() + 2.5 * 60 * 1000;
-					gvHero13DivineJudgment_NextCooldown[playerID] = Logic.GetTimeMs() + 1 * 60 * 1000;
+					if gvHero13StoneArmor_NextCooldown then
+						if gvHero13StoneArmor_NextCooldown[playerID] then
+							gvHero13StoneArmor_NextCooldown[playerID] = Logic.GetTimeMs() + 2.5 * 60 * 1000;
+						end
+					end
+					if gvHero13DivineJudgment_NextCooldown then
+						if gvHero13DivineJudgment_NextCooldown[playerID] then
+							gvHero13DivineJudgment_NextCooldown[playerID] = Logic.GetTimeMs() + 1 * 60 * 1000;
+						end
+					end
 				end
 				return true
 			end		
