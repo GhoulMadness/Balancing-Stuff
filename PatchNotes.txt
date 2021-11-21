@@ -218,6 +218,7 @@ Es wurde ein Fehler behoben, durch den ausgebildete Truppen in einem um bestimmt
 --- Version 0.694
 
 Die KI bildet nun zum korrekt (geplanten) Oberlimit Truppen aus. Einige Koop-Karten wurden dementsprechend aktualisiert, damit ein vernünftiges Spielerlebnis weiterhin bestehen kann.
+Anpassungen an weiteren Koop-Maps sind für die nahe Zukunft geplant.
 
 --- Version 0.695
 

@@ -194,6 +194,7 @@ end
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Scaremonger.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Trigger.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
+	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\InterfaceTools.lua" )
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
 	
 	if not gvEMSFlag then
