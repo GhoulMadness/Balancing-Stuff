@@ -117,6 +117,9 @@
 					if Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy ) > Logic.GetEnergyRequiredForWeatherChange() then
 						Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy )))
 					end
+					if EMS then
+						EMS.RF.WLT.LockWeatherChange()
+					end
 					if _playerID == GUI.GetPlayerID() and GUI.GetSelectedEntity() == _eID then
 						GUI.DeselectEntity(_eID)
 						GUI.SelectEntity(_eID)

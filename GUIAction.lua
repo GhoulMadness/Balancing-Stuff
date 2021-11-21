@@ -288,6 +288,9 @@ function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
 	if Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy ) > Logic.GetEnergyRequiredForWeatherChange() then
 		Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy )))
 	end
+	if EMS then
+		EMS.RF.WLT.LockWeatherChange()
+	end
 	GUI.DeselectEntity(_EntityID)
 	GUI.SelectEntity(_EntityID)
 end	

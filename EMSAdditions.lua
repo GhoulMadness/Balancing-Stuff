@@ -237,7 +237,32 @@ if EMS then
 	EMS.RD.Rules.Scaremonger.value = 1
 	EMS.RD.Rules.MakeThunderstorm.value = 1
 	EMS.RD.Rules["Dovbar"].value = 1
-end	
+	
+	-- weather tower bugfix. Dont start multiple counters
+	EMS.RF.ActivateWeatherLockTimerOrig = EMS.RF.ActivateWeatherLockTimer
+	function EMS.RF.ActivateWeatherLockTimer(_time)
+		EMS.RF.ActivateWeatherLockTimerOrig(_time)
+		
+		EMS.RF.WLT.LockWeatherChange = function()
+			if not EMS.RF.WLT.IsAlreadyActive then
+				EMS.RF.WLT.Cooldown = EMS.RF.WLT.CooldownMax;
+				StartSimpleJob("EMS_RF_WLT_Counter");
+				EMS.RF.WLT.IsAlreadyActive = true
+			end
+		end
+		EMS_RF_WLT_Counter = function()
+			if EMS.RF.WLT.Cooldown > 0 then
+				EMS.RF.WLT.Cooldown = EMS.RF.WLT.Cooldown - 1;
+				return;
+			end
+			EMS.RF.WLT.IsAlreadyActive = false
+			return true;				
+		end
+		
+	end
+		
+end
+
 	-- Spectator Buttons and Widgets (Correct Icon shown)
 if 	gvGUI_TechnologyButtonIDArray then
 	gvGUI_TechnologyButtonIDArray[Technologies.T_ThunderStorm] = XGUIEng.GetWidgetID("Research_ThunderStorm");

@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.694
+BS.Version = 0.695
 
 BS.CurrentMappoolTotalAmount = 0
 
@@ -14,6 +14,7 @@ BS.MapList = { 	[1] =	{
 					["(2) bs koop vereinter widerstand"] = true,
 					["(2) bs koop dunkelheit"] = true,
 					["(2) bs koop kampf oder flucht"] = true,
+					["(2) bs koop schlacht um evelance"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
@@ -149,8 +150,7 @@ if CNetwork then
 end
 if gvXmasEventFlag == 1 then
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
-end
-Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")																   
+end															   
 -- Score stuff
 if not Score.Player[0] then
 	Score.Player[0] = {
@@ -162,24 +162,24 @@ if not Score.Player[0] then
         technology = 0,
 	};
 end	
---[[ Score points orig values
-Score.WinPoints = 200
-Score.ResearchPoints = 5
-Score.UpgradePoints = 5
-Score.BattleSettlersPoints = 2
-Score.BattleBuildingPoints = 5
-Score.SettlersPoints = 2 
-Score.ResourcePoints  = 0.2
-Score.ConstructionPoints = 5]]
+	--[[ Score points orig values
+	Score.WinPoints = 200
+	Score.ResearchPoints = 5
+	Score.UpgradePoints = 5
+	Score.BattleSettlersPoints = 2
+	Score.BattleBuildingPoints = 5
+	Score.SettlersPoints = 2 
+	Score.ResourcePoints  = 0.2
+	Score.ConstructionPoints = 5]]
 
-Score.WinPoints = 1
-Score.ResearchPoints = 50
-Score.UpgradePoints = 25
-Score.BattleSettlersPoints = 3
-Score.BattleBuildingPoints = 50
-Score.SettlersPoints = 5 
-Score.ResourcePoints  = 0.05
-Score.ConstructionPoints = 5
+	Score.WinPoints = 1
+	Score.ResearchPoints = 50
+	Score.UpgradePoints = 25
+	Score.BattleSettlersPoints = 3
+	Score.BattleBuildingPoints = 50
+	Score.SettlersPoints = 5 
+	Score.ResourcePoints  = 0.05
+	Score.ConstructionPoints = 5
 
 -- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
 	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
@@ -248,6 +248,7 @@ Score.ConstructionPoints = 5
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
+		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	
 	end
 	--Simis Rotation Widget nach links schieben, damit es visuell besser in die größere GUI passt
 	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 

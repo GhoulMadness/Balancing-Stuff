@@ -214,4 +214,14 @@ Es wurden kleinere Verbesserungen an der GUI vorgenommen.
 Es wurden einige Anpassungen an der KI vorgenommen. 
 
 Es wurde ein Fehler behoben, durch den ausgebildete Truppen in einem um bestimmte Winkel gedrehten Stall nach der Rekrutierung gestorben sind.
+
+--- Version 0.694
+
+Die KI bildet nun zum korrekt (geplanten) Oberlimit Truppen aus. Einige Koop-Karten wurden dementsprechend aktualisiert, damit ein vernünftiges Spielerlebnis weiterhin bestehen kann.
+
+--- Version 0.695
+
+Es wurde ein Fehler auf EMSBS-Karten behoben, durch den die Wetterwechselsperre schneller als geplant abklingen konnte. 
+
+Die Wetterwechselsperre gilt nun auch für das Unwetter im Wetterturm. Außerdem löst das Aktivieren von Unwetter im Wetterturm die Wetterwechselsperre aus, sodass das Unwetter nicht mehr vorzeitig beendet werden kann.
 		

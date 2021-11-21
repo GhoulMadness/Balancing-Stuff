@@ -636,6 +636,7 @@ function ResearchAllUniversityTechnologiesExtra(_PlayerID)
 	Logic.SetTechnologyState(_PlayerID,Technologies.T_Coinage,3)
 	Logic.SetTechnologyState(_PlayerID,Technologies.T_Scale,3)
 	Logic.SetTechnologyState(_PlayerID,Technologies.T_WeatherForecast,3)
+	Logic.SetTechnologyState(_PlayerID,Technologies.T_ChangeWeather,3)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function HideGUI()
