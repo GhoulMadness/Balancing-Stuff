@@ -15,6 +15,7 @@ BS.MapList = { 	[1] =	{
 					["(2) bs koop dunkelheit"] = true,
 					["(2) bs koop kampf oder flucht"] = true,
 					["(2) bs koop schlacht um evelance"] = true,
+					["(2) bs koop vargs bergfestung"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
@@ -36,9 +37,11 @@ BS.MapList = { 	[1] =	{
 					["(3) bs koop vereinter widerstand"] = true,
 					["(3) bs koop dunkelheit"] = true,
 					["(3) bs koop vargs bergfestung"] = true,
+					["(3) bs koop canyon"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
-					["(3) emsbs hochland"] = true
+					["(3) emsbs hochland"] = true,
+					["(3) emsbs gestrandet"] = true
 					},
 				[4] =	{
 					["(4) bs koop angriff auf evelance"] = true,
