@@ -260,8 +260,6 @@ function SerfDestroyed()
 
     local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
-    local playerID = GetPlayer(entityID)
-	local pos = {Logic.GetEntityPosition(entityID)}
     if entityType == Entities.PU_Serf then       
 	
 		removetablekeyvalue(SerfIDTable,entityID)

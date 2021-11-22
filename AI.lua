@@ -118,7 +118,10 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 																	CannonEntityType1,
 																	CannonEntityType2
 																	}
-													
+		
+		AI.Army_BeAlwaysAggressive(_playerId, MapEditor_Armies[_playerId][i].id)
+		AI.Army_SetScatterTolerance(_playerId, MapEditor_Armies[_playerId][i].id,4)		
+		--AI.Army_SetSize(_playerId, MapEditor_Armies[_playerId][i].id, 1)
 		-- Spawn generator
 		SetupAITroopGenerator("MapEditor_Armies_".._playerId.."_"..i, MapEditor_Armies[_playerId][i])
 				
@@ -138,7 +141,6 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 												1,{},
 												{_playerId, i})		
 	end	
-	
 	SetHostile(1,_playerId)
 	
 end
