@@ -231,7 +231,7 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				Logic.SetEntitySelectableFlag(eID, 0)
 				gvPresent.CheckForSelection(eID)
 				Logic.SetEntityName(eID,"XmasThief".._TID)
-				MemoryManipulation.SetSettlerOverheadWidget(eID,1)
+				Logic.SetEntityScriptingValue(eID,72,1)
 				CUtil.SetEntityDisplayName(eID, "Geschenke-Dieb")
 				--Dieb zu Position des eigenen Weihnachtsbaums laufen lassen
 				Move("XmasThief".._TID,"XmasTree".._TID)
@@ -317,11 +317,12 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 			end
 			CUtil.SetEntityDisplayName(Logic.GetEntityIDByName("XmasTree"..enemyTID), "Weihnachtsbaum")
 			MakeInvulnerable("XmasTree"..enemyTID)
-			--cnTable["XmasThief".._TID] = nil
 			Trigger.UnrequestTrigger(gvPresent.triggerIDTable.Kill[_TID])
 			gvPresent.triggerIDTable.Theft[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_ThiefPresentStolenCheck", 1,nil,{_TID})
-			if gvXmas2021.Score then
-				gvXmas2021.Score[_TID] = gvXmas2021.Score[_TID] + 400
+			if gvXmas2021 then
+				if gvXmas2021.Score then
+					gvXmas2021.Score[_TID] = gvXmas2021.Score[_TID] + 400
+				end
 			end
 			return true
 		end
@@ -381,13 +382,13 @@ end
 function gvPresent_VictoryJob()
 
 	if gvPresent.Progress[1] == 6 then
-	gvPresent.CutsceneVictorious(1)
-	return true
+		gvPresent.CutsceneVictorious(1)
+		return true
 	end
 	
 	if gvPresent.Progress[2] == 6 then	
-	gvPresent.CutsceneVictorious(2)
-	return true
+		gvPresent.CutsceneVictorious(2)
+		return true
 	end
 end
 function gvPresent.CutsceneVictorious(_TID)
@@ -579,7 +580,7 @@ function gvPresent.SDPayday()
 		pID2 = 2
 	end
 	
-	--20% höherer Zahltag-Faktor pro Geschenke-Differenz (siehe GameCallback_PaydayPayed(_player,_amount) )
+	--20% höherer Zahltag-Faktor pro Geschenke-Differenz (siehe GameCallback_PaydayPayed)
 	local PresentDifferenceFactor = 1+ (math.sqrt((gvPresent.Progress[1]-gvPresent.Progress[2])^2)/5)
 	
 	gvPresent.SDPaydayFactor[pID1] = PresentDifferenceFactor

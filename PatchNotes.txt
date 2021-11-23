@@ -225,4 +225,11 @@ Anpassungen an weiteren Koop-Maps sind für die nahe Zukunft geplant.
 Es wurde ein Fehler auf EMSBS-Karten behoben, durch den die Wetterwechselsperre schneller als geplant abklingen konnte. 
 
 Die Wetterwechselsperre gilt nun auch für das Unwetter im Wetterturm. Außerdem löst das Aktivieren von Unwetter im Wetterturm die Wetterwechselsperre aus, sodass das Unwetter nicht mehr vorzeitig beendet werden kann.
+
+--- Version 0.696
+
+Der Hook wurde gänzlich aus BS entfernt und wird nun nur noch in Zusammenhang mit Mad's EMS geladen.
+Auf das Spielerlebnis hat dies keine negativen Auswirkungen.
+
+Es wurden einige kleinere Fehler behoben
 		

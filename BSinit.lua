@@ -1,10 +1,11 @@
-BS = BS or {}
+	BS = BS or {}
 
-BS.Version = 0.695
+	BS.Version = 0.696
 
-BS.CurrentMappoolTotalAmount = 0
+	BS.CurrentMappoolTotalAmount = 0
 
-BS.MapList = { 	[1] =	{
+	BS.MapList = {
+				[1] =	{
 					},
 				[2] =	{
 					["(2) bs koop canyon"] = true,
@@ -122,58 +123,49 @@ BS.MapList = { 	[1] =	{
 				
 				}
 
--- counting total Map amount (currently not used, just for information purpose)				
-do
-	local i = table.getn(BS.MapList)
-	
-	while i > 0 do
+	-- counting total Map amount (currently not used, just for information purpose)				
+	do
+		local i = table.getn(BS.MapList)
+		
+		while i > 0 do
 
-		local count = 0
-		for _ in pairs(BS.MapList[i]) do 
-			count = count + 1 
+			local count = 0
+			for _ in pairs(BS.MapList[i]) do 
+				count = count + 1 
+			end
+
+			BS.CurrentMappoolTotalAmount = BS.CurrentMappoolTotalAmount + count
+		
+			i = i - 1 
 		end
-
-		BS.CurrentMappoolTotalAmount = BS.CurrentMappoolTotalAmount + count
-	
-		i = i - 1 
+		
 	end
-	
-end
-function BS.ValidateMap()
-	if XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() > 0 then
-		return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
-	else
-		return true
+	function BS.ValidateMap()
+		if XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() > 0 then
+			return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
+		else
+			return true
+		end
 	end
-end
-if CNetwork then
-	if BS.ValidateMap() ~= true then
-		Framework.CloseGame()
+	if CNetwork then
+		if BS.ValidateMap() ~= true then
+			Framework.CloseGame()
+		end
 	end
-end
-if gvXmasEventFlag == 1 then
-	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
-end															   
--- Score stuff
-if not Score.Player[0] then
-	Score.Player[0] = {
-        battle = 0,
-        buildings = 0,
-        settlers = 2,
-        all = 2,
-        resources = 0,
-        technology = 0,
-	};
-end	
-	--[[ Score points orig values
-	Score.WinPoints = 200
-	Score.ResearchPoints = 5
-	Score.UpgradePoints = 5
-	Score.BattleSettlersPoints = 2
-	Score.BattleBuildingPoints = 5
-	Score.SettlersPoints = 2 
-	Score.ResourcePoints  = 0.2
-	Score.ConstructionPoints = 5]]
+	if gvXmasEventFlag == 1 then
+		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
+	end															   
+	-- Score stuff
+	if not Score.Player[0] then
+		Score.Player[0] = {
+			battle = 0,
+			buildings = 0,
+			settlers = 2,
+			all = 2,
+			resources = 0,
+			technology = 0,
+		};
+	end	
 
 	Score.WinPoints = 1
 	Score.ResearchPoints = 50
@@ -183,32 +175,33 @@ end
 	Score.SettlersPoints = 5 
 	Score.ResourcePoints  = 0.05
 	Score.ConstructionPoints = 5
+	-----------------------------------------------------------------------------------------------------------------------------
+	-------------------- important Balancing_Stuff... Stuff ^^ ; do not change or even delete -----------------------------------
+	-----------------------------------------------------------------------------------------------------------------------------
 
--- important Balancing_Stuff... Stuff ^^ ; do not change or even delete	
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Weathersets.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\CNetworkHandler.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Lighthouse.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\MercenaryTower.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Lightning.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\DZTradePunishment.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\SilversmithGrievance.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\AI.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Castle.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Scaremonger.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Trigger.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\Comforts.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\InterfaceTools.lua" )
-	Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\GameCallbacks.lua" )	
-	
-	if not gvEMSFlag then
-		Script.Load( "maps\\user\\Balancing_Stuff_in_Dev\\S5Hook.lua" )
-		InstallS5Hook()
+	---------------------------------------------- loading scripts --------------------------------------------------------------
+	do
+		local files = {
+			"Weathersets",
+			"CNetworkHandler",
+			"Lighthouse",
+			"MercenaryTower",
+			"Lightning",
+			"DZTradePunishment",
+			"SilversmithGrievance",
+			"AI",
+			"Castle",
+			"Scaremonger",
+			"Trigger",
+			"Comforts",
+			"InterfaceTools",
+			"GameCallbacks",
+			"GUITooltips",
+			"GUIUpdate",
+			"GUIAction"
+		};
+		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end);
 	end
-	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\MemoryManipulation.lua")
-	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUITooltips.lua")
-	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIUpdate.lua")
-	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\GUIAction.lua")
-	MemoryManipulation.CreateLibFuncs()	
 	
 	CUtil.DisableFoW()
 	Camera.ZoomSetFactorMax(2)
@@ -218,6 +211,8 @@ end
 	
 	--zusätzliche Taunts hinzugefügt
 	BonusKeys()
+	
+	------------------------------------ Trigger initialisieren -----------------------------------------------------
 	--Trigger für Handel
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
 	--Trigger für Spez-Gebäude (Schreckensgebäude/Dom etc.)
@@ -248,6 +243,7 @@ end
 	StartSimpleJob("Lightning_Job")
 	DZTrade_Init()
 	StartCountdown(5*60,BeautiAnimCheck,false)
+	------------------------------------------- GUI laden (verschiedene für EMS und Koop Karten ----------------------------
 	if not gvEMSFlag then
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	else

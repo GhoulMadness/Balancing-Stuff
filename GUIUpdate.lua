@@ -1,8 +1,27 @@
 function GUIUpdate_AttackRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
-	local Range = MemoryManipulation.GetEntityMaxRange(EntityID)
-	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
+	local EntityType = Logic.GetEntityType(EntityID)
+	local PID = GUI.GetPlayerID()
+	local RangeTechBonus = 0
+	local BaseRange = round(GetEntityTypeBaseAttackRange(EntityType))
+	--Check auf Technologie Modifikatoren
+	if Logic.IsEntityInCategory(EntityID, EntityCategories.Bow) == 1 or Logic.IsEntityInCategory(EntityID, EntityCategories.CavalryLight) == 1 then
+		if Logic.GetTechnologyState(PID,Technologies.T_Fletching) == 4 then
+			RangeTechBonus = 300
+		else
+			RangeTechBonus = 0
+		end
+	elseif  Logic.IsEntityInCategory(EntityID, EntityCategories.Rifle) == 1 then
+		if Logic.GetTechnologyState(PID,Technologies.T_Sights) == 4 then
+			RangeTechBonus = 300
+		else
+			RangeTechBonus = 0
+		end		
+	else
+		RangeTechBonus = 0
+	end
+	XGUIEng.SetText( CurrentWidgetID," @ra "..BaseRange + RangeTechBonus )	
 end
 function GUIUpdate_VisionRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
@@ -10,20 +29,14 @@ function GUIUpdate_VisionRange()
 	local Range = (Logic.GetEntityExplorationRange(EntityID)	* 100)
 	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
 end
---[[-- Movespeed
-CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(GUI.GetSelectedEntity()))[tonumber("784938", 16)][0][5][4]:GetFloat()
--- Battle Wait Until
-CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entity))[tonumber("7731C0", 16)][0][8][21]:GetFloat()
--- Max Range
-CUtilMemory.GetMemory(tonumber("7731C0", 16))[0][8][CUtilMemory.GetEntityAddress(GUI.GetSelectedEntity())][23]:GetFloat()
-]]
 function GUIUpdate_AttackSpeed()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
 	local EntityType = Logic.GetEntityType(EntityID)
 	-- Angriffe pro 1000 Sek.
-	local Speed = math.floor(1000000/(MemoryManipulation.GetSettlerTypeBattleWaitUntil(EntityType)))
-	local SpeedAsString = string.format(round(Speed*10)/10000,"%.2f")
+	local BaseSpeed = round(1000000/GetEntityTypeBaseAttackSpeed(EntityType))
+	-- Angriffe pro Sek.
+	local SpeedAsString = string.format("%.3f",BaseSpeed/1000)
 	
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..SpeedAsString )		
 end
@@ -33,7 +46,7 @@ function GUIUpdate_MoveSpeed()
 	local PID = GUI.GetPlayerID()
 	local SpeedTechBonus = 0
 	local SpeedWeatherFactor = 1
-	local BaseSpeed = round(MemoryManipulation.GetSettlerMovementSpeed(EntityID)) 
+	local BaseSpeed = round(GetSettlerBaseMovementSpeed(EntityID))
 	--Check auf Wetter
 	if Logic.GetWeatherState() == 1 then
 		SpeedWeatherFactor = 1

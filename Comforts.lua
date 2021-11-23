@@ -925,3 +925,19 @@ function CreateSoldiersForLeader( _LeaderID, _SoldierAmount )
 	return _SoldierAmount
 	
 end
+-- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
+function GetSettlerBaseMovementSpeed(_entityID)
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
+end
+-- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
+function GetEntityTypeBaseAttackSpeed(_entityType)
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][21]:GetInt()
+end
+-- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
+function GetEntityTypeBaseAttackRange(_entityType)
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][23]:GetFloat() 
+end
+-- Rundungs-Comfort
+function round( _n )
+	return math.floor( _n + 0.5 );
+end
