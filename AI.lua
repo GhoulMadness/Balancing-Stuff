@@ -104,7 +104,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		MapEditor_Armies[_playerId][i].position.X			=	MapEditor_Armies[_playerId][i].position.X + offset*1000
 		MapEditor_Armies[_playerId][i].position.Y			=	MapEditor_Armies[_playerId][i].position.Y + (math.floor((i-1)/3)*1000)
 		MapEditor_Armies[_playerId][i].rodeLength			=	(_range*2)/3
-		MapEditor_Armies[_playerId][i].retreatStrength		=	3-_strength
+		MapEditor_Armies[_playerId][i].retreatStrength		=	0
 		MapEditor_Armies[_playerId][i].baseDefenseRange		=	(_range)/3
 		MapEditor_Armies[_playerId][i].outerDefenseRange	=	_range
 		MapEditor_Armies[_playerId][i].AttackAllowed		=	false

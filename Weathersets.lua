@@ -388,7 +388,7 @@ function AddRandomWeatherSet(_duration,_daytype,_allowed_weathertypes,_modifier)
 		else
 			--Regen
 			weathergfx = GfxElements.daytypes[_daytype].weathertypes[2][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[2]))]
-			weathertype = 3
+			weathertype = 2
 		end
 	elseif _allowed_weathertypes == 2 then
 		if num <= (80 - (_modifier*5)) then
