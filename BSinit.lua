@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.696
+	BS.Version = 0.697
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -198,7 +198,8 @@
 			"GameCallbacks",
 			"GUITooltips",
 			"GUIUpdate",
-			"GUIAction"
+			"GUIAction",
+			"VersionCheck"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end);
 	end
@@ -243,12 +244,22 @@
 	StartSimpleJob("Lightning_Job")
 	DZTrade_Init()
 	StartCountdown(5*60,BeautiAnimCheck,false)
-	------------------------------------------- GUI laden (verschiedene für EMS und Koop Karten ----------------------------
+	----------------------------------- GUI und spezielle Scripte laden (verschiedene für EMS und Koop Karten ----------------------------------
 	if not gvEMSFlag then
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
+		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")	
+		function Sync.Send(_str)
+			if CNetwork then
+				XNetwork.Chat_SendMessageToAll(_str)
+			else
+				MPGame_ApplicationCallback_ReceivedChatMessage(_str, 0, GUI.GetPlayerID())
+			end
+		end
+		Sync.Init()
 	else
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	
 	end
+	BS.VersionCheck.Setup()
 	--Simis Rotation Widget nach links schieben, damit es visuell besser in die größere GUI passt
 	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 

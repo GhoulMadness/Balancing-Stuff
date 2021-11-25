@@ -26,7 +26,8 @@ end
 function GUIUpdate_VisionRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
-	local Range = (Logic.GetEntityExplorationRange(EntityID)	* 100)
+	-- range in settlers centimeter (rounded due to uncertainties in rain)
+	local Range = round(Logic.GetEntityExplorationRange(EntityID)*100) 
 	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
 end
 function GUIUpdate_AttackSpeed()

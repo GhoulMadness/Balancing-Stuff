@@ -134,7 +134,7 @@ Münzstätten erhöhen nun den Zahltag um 1.5% anstatt der vorherigen 1%. Der Za
 
 Beim Unwetter kommt es nun zu zusätzlichen Blitzeinschlägen.
 
---- Version 0.68
+--- Version 0.680
 
 Die Lebenspunkte von Ziergebäuden wurden erhöht (sodass Blitzeinschläge eben diese nicht direkt zum Brennen bringen)
 
@@ -232,4 +232,8 @@ Der Hook wurde gänzlich aus BS entfernt und wird nun nur noch in Zusammenhang m
 Auf das Spielerlebnis hat dies keine negativen Auswirkungen.
 
 Es wurden einige kleinere Fehler behoben
+
+--- Version 0.697
+
+Es wird nun im Spiel angezeigt, wenn Spieler verschiedene bzw. veraltete Versionen von BS haben. 
 		
