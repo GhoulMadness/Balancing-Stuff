@@ -751,7 +751,7 @@ function AddTribute( _tribute )
 	assert( type( _tribute ) == "table", "Tribut muß ein Table sein" );
 	assert( type( _tribute.text ) == "string", "Tribut.text muß ein String sein" );
 	assert( type( _tribute.cost ) == "table", "Tribut.cost muß ein Table sein" );
-	assert( type( _tribute.pId ) == "number", "Tribut.pId muß eine Nummer sein" );
+	assert( type( _tribute.pId or _tribute.playerId ) == "number", "Tribut.pId muß eine Nummer sein" );
 	assert( not _tribute.Tribute , "Tribut.Tribute darf nicht vorbelegt sein");
 
 	uniqueTributeCounter = uniqueTributeCounter or 1;
