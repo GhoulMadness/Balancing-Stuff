@@ -960,7 +960,8 @@ BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
 										[Entities.PU_Hero1c] = true,
 										[Entities.PU_Hero11] = true,
 										[Entities.PU_Hero13] = true,
-										[Entities.CU_Mary_de_Mortfichet] = true
+										[Entities.CU_Mary_de_Mortfichet] = true,
+										[Entities.PU_Serf] = true
 									}
 
 -- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
