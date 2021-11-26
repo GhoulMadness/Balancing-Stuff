@@ -380,7 +380,13 @@ function AddRandomWeatherSet(_duration,_daytype,_allowed_weathertypes,_modifier)
 
 	local num = math.random(100)
 	local weathergfx,weathertype
-	if _allowed_weathertypes == 1 then
+	-- nur Sommer
+	if _allowed_weathertypes == 0 then
+			--Sommer
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[1][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[1]))]
+			weathertype = 1
+	-- Sommer und Regen
+	elseif _allowed_weathertypes == 1 then
 		if num <= (80 - (_modifier*5)) then
 			--Sommer
 			weathergfx = GfxElements.daytypes[_daytype].weathertypes[1][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[1]))]
@@ -390,6 +396,7 @@ function AddRandomWeatherSet(_duration,_daytype,_allowed_weathertypes,_modifier)
 			weathergfx = GfxElements.daytypes[_daytype].weathertypes[2][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[2]))]
 			weathertype = 2
 		end
+	-- Sommer und Winter
 	elseif _allowed_weathertypes == 2 then
 		if num <= (80 - (_modifier*5)) then
 			--Sommer
@@ -400,6 +407,7 @@ function AddRandomWeatherSet(_duration,_daytype,_allowed_weathertypes,_modifier)
 			weathergfx = GfxElements.daytypes[_daytype].weathertypes[3][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[3]))]
 			weathertype = 3
 		end
+	-- Sommer, Regen und Winter
 	elseif _allowed_weathertypes == 3 then
 		if num <= (70 - (_modifier*5)) then
 			--Sommer

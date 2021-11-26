@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.697
+	BS.Version = 0.698
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -89,6 +89,7 @@
 					["(6) emsbs riffe"] = true
 					},
 				[7] = 	{
+					["(7) bs koop vargs raubzug"] = true,
 					["(7) emsbs blutmoor"] = true,
 					["(7) emsbs wuesteninsel"] = true
 					},

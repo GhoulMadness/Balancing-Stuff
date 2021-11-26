@@ -953,13 +953,31 @@ end
 function GetSettlerBaseMovementSpeed(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
 end
+-- table with entityTypes with leaderBehavior two places further (index 8 instead of 6)
+BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
+										[Entities.PU_Hero1a] = true,
+										[Entities.PU_Hero1b] = true,
+										[Entities.PU_Hero1c] = true,
+										[Entities.PU_Hero11] = true,
+										[Entities.PU_Hero13] = true,
+										[Entities.CU_Mary_de_Mortfichet] = true
+									}
+
 -- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackSpeed(_entityType)
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][21]:GetInt()
+	if not BehaviorExceptionEntityTypeTable[_entityType] then
+		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][21]:GetInt()
+	else
+		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8][21]:GetInt()
+	end
 end
 -- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackRange(_entityType)
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][23]:GetFloat() 
+	if not BehaviorExceptionEntityTypeTable[_entityType] then
+		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][23]:GetFloat() 
+	else
+		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8][23]:GetFloat()
+	end
 end
 -- Rundungs-Comfort
 function round( _n )
