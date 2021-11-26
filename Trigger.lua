@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------- Trigger for Drakes Headshot --------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Drakes Headshot ----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function DrakeHeadshotDamage() 
 	local attacker = Event.GetEntityID1()
@@ -23,7 +23,7 @@ function DrakeHeadshotDamage()
 	end;
 end;
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---------------------------------------- Trigger for Castles (global variables to be find in Castle.lua -------------------------------------------------------------------------
+--------------------------------------- Trigger for Castles (global variables to be find in Castle.lua) --------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function OnCastleCreated()
 	local entityID = Event.GetEntityID()
@@ -43,6 +43,29 @@ function OnCastleDestroyed()
     if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
 		removetablekeyvalue(gvCastle.PositionTable,pos)
 		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
+	end
+end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------- Trigger for Towers (global variables to be find in Tower.lua) ----------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function OnTowerCreated()
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local playerID = GetPlayer(entityID)
+	local pos = {Logic.GetEntityPosition(entityID)}
+    if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 then     
+		table.insert(gvTower.PositionTable,pos)
+		gvTower.AmountOfTowers[playerID] = gvTower.AmountOfTowers[playerID] + 1
+	end
+end
+function OnTowerDestroyed()
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+    local playerID = GetPlayer(entityID)
+	local pos = {Logic.GetEntityPosition(entityID)}
+    if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 then     
+		removetablekeyvalue(gvTower.PositionTable,pos)
+		gvTower.AmountOfTowers[playerID] = gvTower.AmountOfTowers[playerID] - 1
 	end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

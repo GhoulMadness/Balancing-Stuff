@@ -1,5 +1,4 @@
 GameCallback_GUI_SelectionChangedOrig = GameCallback_GUI_SelectionChanged;	
---GameCallback_GameSpeedChangedOrig = GameCallback_GameSpeedChanged;
 GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;	
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
 HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
@@ -95,10 +94,6 @@ function GameCallback_GUI_SelectionChanged()
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionSerf,OnlySerfsSelected)						
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingGroup")
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)	
-			--XGUIEng.ShowWidget(XGUIEng.GetWidgetID("DetailsAttackRange"),1)
-			--XGUIEng.ShowWidget(XGUIEng.GetWidgetID("DetailsAttackSpeed"),1)
-			--XGUIEng.ShowWidget(XGUIEng.GetWidgetID("DetailsMoveSpeed"),1)
-			--XGUIEng.ShowWidget(XGUIEng.GetWidgetID("DetailsVisionRange"),1)
 			--Set contrsuction menu as default and highlight the tab
 			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)		
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SerfConstructionMenu,1)
@@ -112,8 +107,6 @@ function GameCallback_GUI_SelectionChanged()
 	
 		local UpgradeCategory = Logic.GetUpgradeCategoryByBuildingType(EntityType)
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)
-		
-		--XGUIEng.ShowWidget(XGUIEng.GetWidgetID("DetailsVisionRange"),1)	
 		
 		--Display building container
 		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionBuilding,1)
@@ -174,24 +167,6 @@ function GameCallback_GUI_SelectionChanged()
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Castle"),1)	
 				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
 				ButtonStem =  "Upgrade_Castle"
-			
-				
-			--Is EntityType the Tavern?
-			--[[elseif 	UpgradeCategory == UpgradeCategories.Tavern then
-				XGUIEng.ShowWidget(gvGUI_WidgetID.Tavern,1)					
-				ButtonStem =  "Upgrade_Tavern"
-				-- max. 5 Diebe pro Spieler auf der Weihnachtsmap
-				if gvXmasEventFlag == 1 then
-					if Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(),Entities.PU_Thief) >= 5 then
-						--XGUIEng.DisableButton(XGUIEng.GetWidgetID("Buy_Thief"),1)
-						XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Buy_Thief"),0)
-						--GUI.DeselectEntity(EntityId)
-						--GUI.SelectEntity(EntityId)
-					else
-						--XGUIEng.DisableButton(XGUIEng.GetWidgetID("Buy_Thief"),0)
-						XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Buy_Thief"),1)
-					end
-				end]]
 				
 			--Is EntityType the weathermanipulator?
 			elseif 	UpgradeCategory == UpgradeCategories.Weathermanipulator then				
@@ -215,8 +190,7 @@ function GameCallback_GUI_SelectionChanged()
 			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)								
 		end
 	end
-	
-		
+			
 	--Update all buttons in the visible container
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
 		
@@ -233,11 +207,9 @@ local Speed = _Speed * 1000
 			local PauseScreenType = Logic.GetRandom(4) + 1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		end
-		
-        --GUI.AddNote( XGUIEng.GetStringTableText( "InGameMessages/Note_GamePaused" ) )
        
     else
-    	--GUI.AddNote( XGUIEng.GetStringTableText( "InGameMessages/Note_GameContinues" ) )
+    
 		gvGameSpeed = _Speed
 		gvBreakCheck = 0
 		for i = 1,5 do
@@ -408,7 +380,27 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
             allowed = true;
         end;
     end
-	if _eType ~= Entities.PB_Castle1 then
+	if _eType == Entities.PB_Castle1 then
+		local checkpos = true
+		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
+		for i = 1,table.getn(gvCastle.PositionTable) do
+			
+			if math.sqrt((_x - gvCastle.PositionTable[0+i][1])^2+(_y - gvCastle.PositionTable[0+i][2])^2) <= gvCastle.BlockRange then
+				checkpos = false
+			end
+		end
+		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	elseif _eType == Entities.PB_Tower1 then
+		local checkpos = true
+		-- Türme dürfen nicht nahe anderer Türme gebaut werden
+		for i = 1,table.getn(gvTower.PositionTable) do
+			
+			if math.sqrt((_x - gvTower.PositionTable[0+i][1])^2+(_y - gvTower.PositionTable[0+i][2])^2) <= gvTower.BlockRange then
+				checkpos = false
+			end
+		end
+		return allowed and checkpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	else
 		if not gvXmasEventFlag then
 			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 		else
@@ -427,18 +419,6 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			end			
 			return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 		end
-	else
-		local checkpos = true
-		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
-		for i = 1,table.getn(gvCastle.PositionTable) do
-			
-			if math.sqrt((_x - gvCastle.PositionTable[0+i][1])^2+(_y - gvCastle.PositionTable[0+i][2])^2) <= gvCastle.BlockRange then
-				checkpos = false
-			--else
-			--	checkpos = false
-			end
-		end
-		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 	end
 end 
 

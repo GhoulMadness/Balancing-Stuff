@@ -192,6 +192,7 @@
 			"SilversmithGrievance",
 			"AI",
 			"Castle",
+			"Tower",
 			"Scaremonger",
 			"Trigger",
 			"Comforts",
@@ -224,6 +225,9 @@
 	--Trigger für Schlösser
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnCastleCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCastleDestroyed", 1)
+	--Trigger für Türme
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnTowerCreated", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnTowerDestroyed", 1)
 	--Trigger für Drake
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
 	--Trigger für Heldentod

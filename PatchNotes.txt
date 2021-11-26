@@ -231,9 +231,18 @@ Die Wetterwechselsperre gilt nun auch für das Unwetter im Wetterturm. Außerdem
 Der Hook wurde gänzlich aus BS entfernt und wird nun nur noch in Zusammenhang mit Mad's EMS geladen.
 Auf das Spielerlebnis hat dies keine negativen Auswirkungen.
 
-Es wurden einige kleinere Fehler behoben
+Es wurden einige kleinere Fehler behoben.
 
 --- Version 0.697
 
 Es wird nun im Spiel angezeigt, wenn Spieler verschiedene bzw. veraltete Versionen von BS haben. 
+
+--- Version 0.698
+
+Es wurden einige kleinere Fehler behoben.
+
+Es können nun maximal 15 Türme pro Spieler (auf allen Karten) errichtet werden. Außerdem müssen Türme (ähnlich wie die Schlösser) einen gewissen Mindestabstand zu anderen Türmen einhalten.
+Der Mindestabstand ist dabei abhängig von der Mapgröße. Dadurch soll das Verschanzen an Engpässen durch Bauen sehr vieler Türme eingedämmt werden.
+
+Damit Türme trotz der obigen Änderungen weiterhin attraktiv bleiben, wurden die Ausbaukosten zu Kanonentürmen reduziert (um etwa ein Drittel).
 		

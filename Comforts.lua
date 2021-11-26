@@ -371,13 +371,21 @@ function removetablekeyvalue(_tid,_key)
 			end
 		end	
 	elseif type(_key) == "table" then
-		for i = 1, table.getn(_tid) do
-			for k = 1,table.getn(_tid[i]) do
-				if _tid[i][k] == _key then
+		if type(_tid[1]) == "table" then
+			for i = 1, table.getn(_tid) do
+				for k = 1,table.getn(_tid[i]) do
+					if _tid[i][k] == _key then
+						tpos = i
+					end
+				end
+			end	
+		else
+			for i = 1, table.getn(_tid) do
+				if _tid[i] == _key then
 					tpos = i
 				end
-			end
-		end	
+			end	
+		end
 	else
 		return
 	end
