@@ -52,9 +52,9 @@ function GUIUpdate_MoveSpeed()
 	if Logic.GetWeatherState() == 1 then
 		SpeedWeatherFactor = 1
 	elseif Logic.GetWeatherState() == 2 then
-		SpeedWeatherFactor = 1.1
+		SpeedWeatherFactor = 1.05
 	elseif Logic.GetWeatherState() == 3 then
-		SpeedWeatherFactor = 0.75
+		SpeedWeatherFactor = 0.8
 	else
 		return
 	end

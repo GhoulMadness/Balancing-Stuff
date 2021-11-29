@@ -17,6 +17,7 @@
 					["(2) bs koop kampf oder flucht"] = true,
 					["(2) bs koop schlacht um evelance"] = true,
 					["(2) bs koop vargs bergfestung"] = true,
+					["(2) bs koop bergpass"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
