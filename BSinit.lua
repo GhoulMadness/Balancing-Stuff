@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.698
+	BS.Version = 0.699
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -69,7 +69,8 @@
 					["(4) emsbs winterberge"] = true,
 					["(4) emsbs winterliche bergpaesse"] = true,
 					["(4) emsbs verschneites moor"] = true,
-					["(4) emsbs glc battlestar"] = true
+					["(4) emsbs glc battlestar"] = true,
+					["(4) emsbs im graben der verdammnis"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,

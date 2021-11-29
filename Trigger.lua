@@ -30,9 +30,11 @@ function OnCastleCreated()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
-    if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
+	if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
 		table.insert(gvCastle.PositionTable,pos)
-		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] + 1
+		if gvCastle.AmountOfCastles[playerID] then
+			gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] + 1
+		end
 	end
 end
 function OnCastleDestroyed()
@@ -40,9 +42,11 @@ function OnCastleDestroyed()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
-    if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
+	if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
 		removetablekeyvalue(gvCastle.PositionTable,pos)
-		gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
+		if gvCastle.AmountOfCastles[playerID] then
+			gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
+		end
 	end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -53,9 +57,11 @@ function OnTowerCreated()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
-    if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 then     
+	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then     
 		table.insert(gvTower.PositionTable,pos)
-		gvTower.AmountOfTowers[playerID] = gvTower.AmountOfTowers[playerID] + 1
+		if gvTower.AmountOfTowers[playerID] then
+			gvTower.AmountOfTowers[playerID] = gvTower.AmountOfTowers[playerID] + 1
+		end
 	end
 end
 function OnTowerDestroyed()
@@ -63,9 +69,11 @@ function OnTowerDestroyed()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
 	local pos = {Logic.GetEntityPosition(entityID)}
-    if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 then     
+	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then     
 		removetablekeyvalue(gvTower.PositionTable,pos)
-		gvTower.AmountOfTowers[playerID] = gvTower.AmountOfTowers[playerID] - 1
+		if gvTower.AmountOfTowers[playerID] then
+			gvTower.AmountOfTowers[playerID] = gvTower.AmountOfTowers[playerID] - 1
+		end
 	end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

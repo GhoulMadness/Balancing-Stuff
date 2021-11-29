@@ -390,7 +390,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			end
 		end
 		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-	elseif _eType == Entities.PB_Tower1 then
+	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag then
 		local checkpos = true
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
 		for i = 1,table.getn(gvTower.PositionTable) do
@@ -401,12 +401,12 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		end
 		return allowed and checkpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 	else
-		if not gvXmasEventFlag then
+		if not gvXmasEventFlag and not gvXmas2021ExpFlag then
 			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-		else
+		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
+		elseif gvXmasEventFlag and gvPresent then
 			local checktree1 
-			local checktree2
-			-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
+			local checktree2			
 			if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
 				checktree1 = true
 			else
@@ -418,10 +418,33 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 				checktree2 = false
 			end			
 			return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+			
+		-- Auf der Experimente-Karte dürfen in der Mitte nur Dario-Statuen errichtet werden
+		elseif gvXmas2021ExpFlag and WT21 then
+			local checkpos = true
+			local pos = GetPosition("center")
+			if _eType ~= Entities.PB_Beautification01 and _eType ~= Entities.PB_Tower1 then				
+				if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
+					checkpos = false
+				end
+				return allowed and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+			elseif _eType == Entities.PB_Tower1 then
+				local checktowerpos = true
+				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
+				for i = 1,table.getn(gvTower.PositionTable) do
+					
+					if math.sqrt((_x - gvTower.PositionTable[0+i][1])^2+(_y - gvTower.PositionTable[0+i][2])^2) <= gvTower.BlockRange then
+						checktowerpos = false
+					end
+					if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
+						checkpos = false
+					end
+				end
+				return allowed and checkpos and checktowerpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+			end			
 		end
-	end
-end 
-
+	end 
+end
 function GameCallback_ResearchProgress(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)	
 	
 	local playerID = _player
