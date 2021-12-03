@@ -46,6 +46,7 @@
 					["(3) bs koop dunkelheit"] = true,
 					["(3) bs koop vargs bergfestung"] = true,
 					["(3) bs koop canyon"] = true,
+					["(3) bs koop die grossen drei"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
 					["(3) emsbs hochland"] = true,
@@ -77,7 +78,8 @@
 					["(4) emsbs winterliche bergpaesse"] = true,
 					["(4) emsbs verschneites moor"] = true,
 					["(4) emsbs glc battlestar"] = true,
-					["(4) emsbs im graben der verdammnis"] = true
+					["(4) emsbs im graben der verdammnis"] = true,
+					["(4) emsbs tal rasha"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
