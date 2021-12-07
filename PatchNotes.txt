@@ -245,4 +245,15 @@ Es können nun maximal 15 Türme pro Spieler (auf allen Karten) errichtet werden
 Der Mindestabstand ist dabei abhängig von der Mapgröße. Dadurch soll das Verschanzen an Engpässen durch Bauen sehr vieler Türme eingedämmt werden.
 
 Damit Türme trotz der obigen Änderungen weiterhin attraktiv bleiben, wurden die Ausbaukosten zu Kanonentürmen reduziert (um etwa ein Drittel).
+
+--- Version 0.699
+
+Der Lauftempo-Bonus von Siedlern im Regen wurde von 10% auf 5% reduziert.
+
+Das Lauftempo-Malus von Siedlern im Schnee wurde von 25% auf 20% reduziert.
+
+Der Zeitintervall zwischen zwei Siedlern, die die Siedlung betreten, wurde von 2 Sekunden auf 1 Sekunde reduziert. Das heißt, dass Siedler nun doppelt so schnell die Siedlung betreten können.
+
+Es wurde ein Fehler behoben, durch den Türme unter bestimmten Umständen näher als geplant aneinander gebaut werden konnten.
+
 		

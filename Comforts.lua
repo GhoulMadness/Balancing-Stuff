@@ -359,34 +359,44 @@ end
 function removetablekeyvalue(_tid,_key)
 	local tpos 
 	if type(_key) == "string" then
-		for i = 1, table.getn(_tid) do
-			if string.find(table.getn[i],_key) ~= nil then
+		for i,_ in pairs(_tid) do
+			if string.find(_tid[i],_key) ~= nil then
 				tpos = i
 			end
 		end
 	elseif type(_key) == "number" then
-		for i = 1, table.getn(_tid) do
+		for i,_ in pairs(_tid) do
 			if _tid[i] == _key then
 				tpos = i
 			end
 		end	
 	elseif type(_key) == "table" then
 		if type(_tid[1]) == "table" then
-			for i = 1, table.getn(_tid) do
-				for k = 1,table.getn(_tid[i]) do
-					if _tid[i][k] == _key then
+			if _tid[1].X and _tid[1].Y then
+				for i,_ in pairs(_tid) do
+					if _tid[i].X == _key.X and _tid[i].Y == _key.Y then
 						tpos = i
 					end
-				end
-			end	
+				end	
+			else
+				for i,_ in pairs(_tid) do
+					for k,_ in pairs(_tid[i]) do
+						if _tid[i][k] == _key then
+							tpos = i
+						end
+					end
+				end	
+			end
+				
 		else
-			for i = 1, table.getn(_tid) do
+			for i,_ in pairs(_tid) do
 				if _tid[i] == _key then
 					tpos = i
 				end
 			end	
 		end
 	else
+		LuaDebugger.Log("Invalid Input for removetablekeyvalue!")
 		return
 	end
 	table.remove(_tid,tpos)

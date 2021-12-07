@@ -23,6 +23,8 @@
 		table.insert(gvTower.StartTowersIDTable, id);
 	end;
 	for k = 1,table.getn(gvTower.StartTowersIDTable) do
-		table.insert(gvTower.PositionTable,{Logic.GetEntityPosition(gvTower.StartTowersIDTable[k])})
+		local posX,posY = Logic.GetEntityPosition(gvTower.StartTowersIDTable[k])
+		local pos = {X = posX, Y = posY}
+		table.insert(gvTower.PositionTable,pos)
 	end
 	

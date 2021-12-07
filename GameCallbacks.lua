@@ -383,9 +383,8 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	if _eType == Entities.PB_Castle1 then
 		local checkpos = true
 		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
-		for i = 1,table.getn(gvCastle.PositionTable) do
-			
-			if math.sqrt((_x - gvCastle.PositionTable[0+i][1])^2+(_y - gvCastle.PositionTable[0+i][2])^2) <= gvCastle.BlockRange then
+		for i,_ in pairs(gvCastle.PositionTable) do
+			if math.sqrt((_x - gvCastle.PositionTable[i].X)^2+(_y - gvCastle.PositionTable[i].Y)^2) <= gvCastle.BlockRange then
 				checkpos = false
 			end
 		end
@@ -393,9 +392,8 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag then
 		local checkpos = true
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
-		for i = 1,table.getn(gvTower.PositionTable) do
-			
-			if math.sqrt((_x - gvTower.PositionTable[0+i][1])^2+(_y - gvTower.PositionTable[0+i][2])^2) <= gvTower.BlockRange then
+		for i,_ in pairs(gvTower.PositionTable) do			
+			if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 				checkpos = false
 			end
 		end
@@ -431,9 +429,8 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			elseif _eType == Entities.PB_Tower1 then
 				local checktowerpos = true
 				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
-				for i = 1,table.getn(gvTower.PositionTable) do
-					
-					if math.sqrt((_x - gvTower.PositionTable[0+i][1])^2+(_y - gvTower.PositionTable[0+i][2])^2) <= gvTower.BlockRange then
+				for i,_ in pairs(gvTower.PositionTable) do					
+					if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 						checktowerpos = false
 					end
 					if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then

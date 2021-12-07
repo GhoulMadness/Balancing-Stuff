@@ -29,7 +29,8 @@ function OnCastleCreated()
 	local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
-	local pos = {Logic.GetEntityPosition(entityID)}
+	local posX,posY = Logic.GetEntityPosition(entityID)
+	local pos = {X = posX, Y = posY}
 	if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
 		table.insert(gvCastle.PositionTable,pos)
 		if gvCastle.AmountOfCastles[playerID] then
@@ -41,7 +42,8 @@ function OnCastleDestroyed()
 	local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
-	local pos = {Logic.GetEntityPosition(entityID)}
+	local posX,posY = Logic.GetEntityPosition(entityID)
+	local pos = {X = posX, Y = posY}
 	if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then     
 		removetablekeyvalue(gvCastle.PositionTable,pos)
 		if gvCastle.AmountOfCastles[playerID] then
@@ -56,7 +58,8 @@ function OnTowerCreated()
 	local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
-	local pos = {Logic.GetEntityPosition(entityID)}
+	local posX,posY = Logic.GetEntityPosition(entityID)
+	local pos = {X = posX, Y = posY}
 	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then     
 		table.insert(gvTower.PositionTable,pos)
 		if gvTower.AmountOfTowers[playerID] then
@@ -68,7 +71,8 @@ function OnTowerDestroyed()
 	local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = GetPlayer(entityID)
-	local pos = {Logic.GetEntityPosition(entityID)}
+	local posX,posY = Logic.GetEntityPosition(entityID)
+	local pos = {X = posX, Y = posY}
 	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then     
 		removetablekeyvalue(gvTower.PositionTable,pos)
 		if gvTower.AmountOfTowers[playerID] then
