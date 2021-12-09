@@ -4,9 +4,15 @@
 	gvTower = gvTower or {}
 
 	-- Blockreichweite in Siedler-cm, abhängig von der Fläche der Map
-	gvTower.BlockRange = 500 + math.floor(((Logic.WorldGetSize()/100)^2)/500)
-	-- max. Anzahl erlaubter Türme
-	gvTower.TowerLimit = 15
+	if gvEMSFlag then
+		gvTower.BlockRange = 500 + math.floor(((Logic.WorldGetSize()/100)^2)/500)
+		-- max. Anzahl erlaubter Türme
+		gvTower.TowerLimit = 15
+	else
+	-- auf Koop-Karten Reichweite kleiner und mehr Türme erlaubt
+		gvTower.BlockRange = 200 + math.floor(((Logic.WorldGetSize()/100)^2)/1500)
+		gvTower.TowerLimit = 30
+	end
 	gvTower.StartTowersIDTable = {}
 	gvTower.PositionTable = {}
 	gvTower.AmountOfTowers = {}
