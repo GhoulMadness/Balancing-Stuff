@@ -256,4 +256,10 @@ Der Zeitintervall zwischen zwei Siedlern, die die Siedlung betreten, wurde von 2
 
 Es wurde ein Fehler behoben, durch den Türme unter bestimmten Umständen näher als geplant aneinander gebaut werden konnten.
 
-		
+--- Version 0.700
+
+Auf Kooperations-Karten können nun 30 Türme maximal gebaut werden (auf PvP-Karten nach wie vor 15).
+
+Auf Kooperations-Karten ist nun der Mindestabstand, der zwischen zwei Türmen eingehalten werden muss, um etwa 70% kleiner (auf PvP-Karten unverändert).	
+
+Das Design von Schlössern wurde überarbeitet.	
