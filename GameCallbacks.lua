@@ -133,6 +133,9 @@ function GameCallback_GUI_SelectionChanged()
 			
 			elseif 	UpgradeCategory == UpgradeCategories.VillageHall then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("VillageHall"),1)		
+			
+			elseif 	UpgradeCategory == UpgradeCategories.Archers_Tower then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Archers_Tower"),1)		
 				
 			--Is EntityType the Market?
 			elseif 	UpgradeCategory == UpgradeCategories.Market then
@@ -373,142 +376,305 @@ function GameCallback_ConstructBuilding(_csite, _nserfs, _amount)
     end;
 end;
 function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _isBuildOn)
+
     local allowed = true;
+	
     if GameCallback_PlaceBuildingAdditionalCheckOrig then
+	
         allowed = GameCallback_PlaceBuildingAdditionalCheckOrig(_eType, _x, _y, _rotation, _isBuildOn)
+		
         if allowed ~= false then
+		
             allowed = true;
+			
         end;
+		
     end
-	if _eType == Entities.PB_Castle1 then
+	
+	if _eType == Entities.PB_Archers_Tower and not gvXmas2021ExpFlag and not gvXmasEventFlag then
+	
+		local checkorientation = true
+		
+		if _rotation == 0 or _rotation == 90 or _rotation == 180 or _rotation == 270 or _rotation == 360 then
+		
+			checkorientation = true
+			
+		else
+		
+			checkorientation = false
+			
+		end
+		
+		return allowed and checkorientation and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		
+	elseif _eType == Entities.PB_Castle1 then
+	
 		local checkpos = true
+		
 		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
 		for i,_ in pairs(gvCastle.PositionTable) do
+		
 			if math.sqrt((_x - gvCastle.PositionTable[i].X)^2+(_y - gvCastle.PositionTable[i].Y)^2) <= gvCastle.BlockRange then
+			
 				checkpos = false
+				
 			end
+			
 		end
+		
 		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag then
+		
+	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag and not gvXmasEventFlag then
+	
 		local checkpos = true
+		
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
-		for i,_ in pairs(gvTower.PositionTable) do			
+		for i,_ in pairs(gvTower.PositionTable) do		
+		
 			if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
+			
 				checkpos = false
+				
 			end
+			
 		end
+		
 		return allowed and checkpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		
 	else
+	
 		if not gvXmasEventFlag and not gvXmas2021ExpFlag then
+		
 			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+			
 		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
 		elseif gvXmasEventFlag and gvPresent then
+		
 			local checktree1 
-			local checktree2			
+				
+			local checktree2
+			
 			if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+				
 				checktree1 = true
+					
 			else
+				
 				checktree1 = false
+					
 			end
+				
 			if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
+				
 				checktree2 = true
+					
 			else
+				
 				checktree2 = false
-			end			
-			return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+					
+			end		
+		
+			if _eType == Entities.PB_Tower1 then							
+				
+				local checktowerpos = true
+				
+				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Weihnachtsbaum-Karte auch nicht nahe der Bäume)
+				for i,_ in pairs(gvTower.PositionTable) do		
+				
+					if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
+					
+						checktowerpos = false
+						
+					end
+					
+				end
+				
+				return allowed and checktowerpos and (checktree1 == checktree2) and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				
+			elseif _eType == Entities.PB_Archers_Tower then
+				
+				return allowed and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit) and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				
+			else	
+				
+				return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				
+			end
 			
 		-- Auf der Experimente-Karte dürfen in der Mitte nur Dario-Statuen errichtet werden
 		elseif gvXmas2021ExpFlag and WT21 then
+		
 			local checkpos = true
+			
 			local pos = GetPosition("center")
-			if _eType ~= Entities.PB_Beautification01 and _eType ~= Entities.PB_Tower1 then				
+			
+			if _eType ~= Entities.PB_Beautification01 and _eType ~= Entities.PB_Tower1 then		
+			
 				if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
+				
 					checkpos = false
+					
 				end
-				return allowed and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-			elseif _eType == Entities.PB_Tower1 then
-				local checktowerpos = true
-				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
-				for i,_ in pairs(gvTower.PositionTable) do					
-					if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
-						checktowerpos = false
+				
+				if _eType == Entities.PB_Archers_Tower then
+				
+					local checktower = (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)
+					
+					return allowed and checktower and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				
+				elseif _eType == Entities.PB_Tower1 then
+				
+					local checktowerpos = true
+					
+					-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
+					for i,_ in pairs(gvTower.PositionTable) do			
+					
+						if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
+						
+							checktowerpos = false
+							
+						end
+						
+						if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
+						
+							checkpos = false
+							
+						end
+						
 					end
-					if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
-						checkpos = false
-					end
+					
+					return allowed and checkpos and checktowerpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+					
+				else
+				
+					return allowed and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+					
 				end
-				return allowed and checkpos and checktowerpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-			end			
+				
+			end	
+			
 		end
+		
 	end 
+	
 end
+
 function GameCallback_ResearchProgress(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)	
 	
 	local playerID = _player
+	
 	if _technology == Technologies.T_CityGuard then
+	
 		_research_amount = math.floor((_max + 0.5)/120) or _research_amount
+		
 	end
 	
 	if Logic.GetTechnologyState(playerID, Technologies.T_TownGuard) == 4 then
+	
 		_research_amount = math.ceil(_research_amount *1.2) or _research_amount
+		
 	end
 			
 	if GameCallback_ResearchProgressOrig then
+	
 		return GameCallback_ResearchProgressOrig(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max);
+		
 	else
+	
 		return  _research_amount
+		
 	end;
+	
 end
+
 function GameCallback_PaydayPayed(_player,_amount)
 
 	if _amount ~= nil then
 	
 		if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then		
+		
 			local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
-			CUtil.Payday_SetFrequency(_player, frequency)		
+			
+			CUtil.Payday_SetFrequency(_player, frequency)
+			
 		end
+		
 		-- Zahltag pro Münzstätte um 1.5% erhöht, max 15%
 		local factor = 1
+		
 		local workers 
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
+		
 			if Logic.IsConstructionComplete(eID) == 1 then
+			
 				workers = {Logic.GetAttachedWorkersToBuilding(eID)}
+				
 				if workers[1] >= 3 then
+				
 					factor = factor + 0.015
+					
 				else
+				
 				end
+				
 			else
+			
 			end
+			
 		end
 			
 		if factor > 1.15 then 
+		
 			factor = 1.15
+			
 		end
+		
 		_amount = math.floor(_amount*factor)
+		
 		--KI bekommt 5fachen Zahltag
-		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 then
+		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 then
+		
 			if _amount > 0 then
+			
 				_amount = _amount * 5
+				
 			else
+			
 				--KI kann keinen negativen Zahltag haben
 				_amount = 0
+				
 			end
+			
 		else
 		-- Sudden Death auf der Weihnachtsmap
+		
 			if gvXmasEventFlag then
-				if gvPresent.SDPaydayFactor then			
+			
+				if gvPresent.SDPaydayFactor then		
+				
 					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
+					
 				end
+				
 			end
+			
 		end
+		
 		return _amount
+		
 	else
+	
 		LuaDebugger.Log(_player)
+		
 		return 0
+		
 	end
+	
 end	
 
 function HeroWidgetUpdate_ShowHeroWidget(EntityId)
+
 	local EntityType = Logic.GetEntityType(EntityId)
 	
 	if Logic.IsEntityInCategory(EntityId,EntityCategories.Hero13) == 1 then
@@ -520,11 +686,15 @@ function HeroWidgetUpdate_ShowHeroWidget(EntityId)
 		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)	
 		
 		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)
+		
 		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)
 		
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero13" ) ,1)
 	
 	else
+	
 		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
+		
 	end
+	
 end

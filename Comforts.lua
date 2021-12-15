@@ -603,14 +603,15 @@ function Unmuting()
 	Music.SetVolumeAdjustment(Music.GetVolumeAdjustment() * 2)
 end
 function QuickTest()
-	AddGold(1,1000000)
-	AddStone(1,1000000)
-	AddIron(1,1000000)
-	AddWood(1,1000000)
-	AddSulfur(1,1000000)
-	AddClay(1,1000000)
-	Logic.AddToPlayersGlobalResource(1,ResourceType.SilverRaw,1000000)
-	ResearchAllUniversityTechnologiesExtra(1)
+	local player = GUI.GetPlayerID()
+	AddGold(player,1000000)
+	AddStone(player,1000000)
+	AddIron(player,1000000)
+	AddWood(player,1000000)
+	AddSulfur(player,1000000)
+	AddClay(player,1000000)
+	Logic.AddToPlayersGlobalResource(player,ResourceType.SilverRaw,1000000)
+	ResearchAllUniversityTechnologiesExtra(player)
 	Game.GameTimeSetFactor(6)
 	Display.SetRenderFogOfWar(0)
 	GUI.MiniMap_SetRenderFogOfWar(0)
@@ -998,7 +999,61 @@ function GetEntityTypeBaseAttackRange(_entityType)
 		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8][23]:GetFloat()
 	end
 end
+function GetEntityTypeMaxAttackRange(_entity,_player)
+
+	local entityType = Logic.GetEntityType(_entity)
+	
+	local RangeTechBonus = 0
+	
+	--Check auf Technologie Modifikatoren
+	if Logic.IsEntityInCategory(_entity, EntityCategories.Bow) == 1 or Logic.IsEntityInCategory(_entity, EntityCategories.CavalryLight) == 1 then
+	
+		if Logic.GetTechnologyState(_player,Technologies.T_Fletching) == 4 then
+		
+			RangeTechBonus = 300
+			
+		else
+		
+			RangeTechBonus = 0
+			
+		end
+		
+	elseif  Logic.IsEntityInCategory(_entity, EntityCategories.Rifle) == 1 then
+	
+		if Logic.GetTechnologyState(_player,Technologies.T_Sights) == 4 then
+		
+			RangeTechBonus = 300
+			
+		else
+		
+			RangeTechBonus = 0
+			
+		end		
+		
+	else
+	
+		RangeTechBonus = 0
+		
+	end
+	
+	local pos = GetPosition(_entity)
+	
+	local num,towerID = Logic.GetPlayerEntitiesInArea(_player, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)
+	
+	if not gvArchers_Tower.SlotData[towerID] then
+	
+		return GetEntityTypeBaseAttackRange(entityType) + RangeTechBonus
+		
+	else
+	
+		return GetEntityTypeBaseAttackRange((entityType) + RangeTechBonus)*gvArchers_Tower.MaxRangeFactor
+		
+	end
+
+end
 -- Rundungs-Comfort
 function round( _n )
+
 	return math.floor( _n + 0.5 );
+	
 end

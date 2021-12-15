@@ -22,149 +22,7 @@ function GUITooltip_Outpost_Serf()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 50")
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
 end
---[[deprecated: not used anymore; now defined in the respective string-tables
-function GUITooltip_Taxation()
 
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Steuereintreibung @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Festung, Bildung @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Die Steuereintreibung ermöglicht das Erheben von Zusatzsteuern!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 100")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Banking()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Bankwesen @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Steuereintreibung, Universität @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Das Bankwesen ermöglicht den Bau von Banken, um Eure Taler zu vermehren!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 500")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Laws()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Gesetzbücher @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Bankwesen, Zitadelle @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Die Gesetzbücher ermöglichen den Ausbau der Bank zur Schatzkammer sowie den Bau von  Au\195\159enposten!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 300 @cr Schwefel: 100")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Gilds()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Schatzmeistergilden @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Gesetzbücher, mindestens 20 Forschungen an der Uni @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Die Schatzmeistergilden ermöglichen den Ausbau der Schatzkammer zur Münzstätte!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 700")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_TownGuard()
-	
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Bessere Studien @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Stadtzentrum, Universität, Hochwertige Schuhe @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Durch bessere Studien wird die Forschungsdauer reduziert!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 400 ")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_PickAxe()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Spitzhacke @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Lehmbergwerk @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Die Spitzhacke ermöglicht Euren Bergwerken, effektiver zu arbeiten!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Lehm: 800")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")	
-end
-function GUITooltip_LightBricks()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Verbesserte Ziegel @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Ziegelbrennerei @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Dank der Verbesserten Ziegel könnt ihr Eure Gebäude schneller bauen!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 200 @cr Lehm: 400 @cr Holz: 100")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Debenture()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Schuldscheine @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Schatzkammer @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Stellt Schuldscheine aus und erhöht so die Zahltag-Frequenz.")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 300")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Coinage()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Münzprägung @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Münzstätte, Maß @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Effizienteren Handel durch Münzprägung.")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 300 @cr Eisen: 400")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Scale()
-	
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Maß @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Schatzkammer @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Erforscht das Maß um den Warentausch am Markt zu verbessern.")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 200 @cr Holz: 50")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_BookKeeping()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Buchhaltung @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Münzstätte, Schuldscheine @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255  Die Buchhaltung ermöglicht Euch, Taler effektiver zu vermehren!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 400")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Printing()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Buchdruck @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Handelswesen, Universität @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Uhr. Ausbau von Kapellen!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 200 @cr Eisen: 200")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_Library()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Büchereien @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Buchdruck, Zitadelle, Universität @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Teleskop. Ausbau von Kirchen!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 500 @cr Holz: 300")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_UpgradeBank1()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Ausbau zur Schatzkammer @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Gesetzbücher @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Baut Eure Bank mit einem sicheren Tresor aus und macht sie zur Schatzkammer!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 200 @cr Steine: 300")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-function GUITooltip_UpgradeBank2()
-
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Ausbau zur Münzstätte @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Schatzmeistergilden @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Bessere Veredlung von Talern sowie die Erforschung von Buchhaltung und Münzprägung!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 600 @cr Steine: 800")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
-
-function GUITooltip_Built_Bank()
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Bank @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Bankwesen @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Verzinsung der Stadtkasse!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Holz: 500 @cr Steine: 500")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut,"  ")
-end
-function GUITooltip_Built_Outpost()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Au\195\159enposten @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Gesetzbücher  @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255 Errichtet einen Au\195\159enposten an der angegebenen Stelle. Er funktioniert wie eine Burg. Erweitert Euer Siedlerlimit zudem um 30 Pl\195\164tze." )
-    XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomCosts, "Holz: 8000 @cr Stein: 8000  @cr Lehm: 8000" )
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_Built_Mercenary()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 S\195\182ldnerturm @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Taktiken @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255 Anwerben von S\195\182ldnern aus fernen Landen." )
-    XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomCosts, "Holz: 400 @cr Stein: 400 " )
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end 
-function GUITooltip_Built_Lighthouse()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Leuchtturm @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Fernglas, Architektur @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255 Der Leuchtturm verf\195\188gt \195\188ber die h\195\182chste Sichtreichweite aller Gebäude. Später könnt Ihr hier Signalfeuer entzünden, um Verstärkungen anzufordern. Muss auf einem Leuchtturm-Fundament platziert werden!" )
-    XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomCosts, "Holz: 500 @cr Stein: 2000 @cr Lehm: 300" )
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_Built_Weathermachine()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Wettermaschine @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Wettervorhersage, Chemie @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255 Die Wettermaschine ermöglicht Forschungen zur Manipulation von Unwettern!" )
-    XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomCosts, "Holz: 200 @cr Stein: 600 @cr Schwefel: 600" )
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_Built_Dome()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Dom @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Alle Technologien in der Uni @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255 Wer einen fertig gebauten Dom zu seiner Stadt zählen kann, ist wahrlich gesegnet. Wenn der Dom mindestens 10 Minuten lang steht, hat das Team das Spiel automatisch gewonnen!" )
-    XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomCosts, "Stein: 100000 @cr Silber: 2000" )
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_ThunderStorm()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Unwettererforschung @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Wetterwechsel auf Unwetter, um mehr Blitzeinschläge zu provozieren!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 300 @cr Schwefel: 300")
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_HeavyThunder()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Schweres Unwetter @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Unwettererforschung @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Mehr Blitzeinschläge beim Unwetter!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 500 @cr Schwefel: 500")
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_TotalDestruction()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Zerstörerische Wetterphänomene @cr @color:255,204,51,255 benötigt: @color:255,255,255,255  @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Blitzeinschläge fügen mehr Schaden an Gebäuden zu!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Eisen: 400 @cr Schwefel: 200")
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-function GUITooltip_LightningInsurance()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Blitzschlag-Versicherung @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Zerstörerische Wetterphänomene @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Wenn eines Eurer Gebäude vom Blitz getroffen wird, erhaltet ihr abhängig vom Schaden am Gebäude Taler!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 700 ")
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
-end
-]]
 function GUITooltip_UpgradeMarket2()
 	local TooltipName = ""
 	local TooltipCosts = ""
@@ -539,4 +397,82 @@ function GUITooltip_AOFindHero()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end
+
+function GUITooltip_Archers_Tower_AddSlot()
+
+	local CostString = " "
+	
+	local ShortCutToolTip = " "	
+	
+	local Text = ""
+	
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
+	
+		Text = "@color:180,180,180 Truppen einlagern @cr @color:255,255,255,255 Klickt hier, um ein nahestehendes Trupp Schützen den Turm hochklettern zu lassen."
+		
+	else
+	
+		Text = "@color:180,180,180 Fill with troops @cr @color:255,255,255,255 Click here to let nearby bowman or rifleman climb up the tower."
+		
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+	
+end
+
+function GUITooltip_Archers_Tower_RemoveSlot()
+
+	local CostString = " "
+	
+	local ShortCutToolTip = " "	
+	
+	local Text = ""
+	
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
+	
+		Text = "@color:180,180,180 Truppen auslagern @cr @color:255,255,255,255 Klickt hier, um ein stationiertes Trupp den Turm herunterklettern zu lassen."
+		
+	else
+	
+		Text = "@color:180,180,180 Fill with troops @cr @color:255,255,255,255 Click here to let a occupied troop climb down the tower."
+		
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+	
+end
+
+function GUITooltip_Archers_Tower_Slot(_slot)
+
+	local CostString = " "
+	
+	local ShortCutToolTip = " "	
+	
+	local Text = ""
+	
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
+	
+		Text = "@color:180,180,180 Truppenslot ".._slot.." @cr @color:255,255,255,255 Klickt hier, um dieses Trupp den Turm herunterklettern zu lassen."
+		
+	else
+	
+		Text = "@color:180,180,180 troop slot ".._slot.." @cr @color:255,255,255,255 Click here to let this troop climb down the tower."
+		
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+
 end

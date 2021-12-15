@@ -263,3 +263,24 @@ Auf Kooperations-Karten können nun 30 Türme maximal gebaut werden (auf PvP-Kar
 Auf Kooperations-Karten ist nun der Mindestabstand, der zwischen zwei Türmen eingehalten werden muss, um etwa 70% kleiner (auf PvP-Karten unverändert).	
 
 Das Design von Schlössern wurde überarbeitet.	
+
+--- Version 0.701
+
+Es ist nun ein weiteres Gebäude verfügbar: Der Schützenturm.
+
+In diesen könnt ihr Eure Bogenschützen und Scharfschützen stationieren. Solange sich diese auf den Turm befinden, können sie nicht von Nahkämpfer angegriffen werden und verfügen über erhöhte Angriffs- und Rüstungswerte, sowie eine erhöhte Angriffsreichweite.
+
+Der Schützenturm benötigt die Technologien Architektur und Taktiken.
+
+Truppen können in den Turm stationiert werden, indem ihr Eure zu stationierenden Truppen vor die Tür des Gebäudes postiert, das Gebäude auswählt und das Plus klickt. Truppen benötigen eine gewisse Zeit, um die Treppenstufen im Inneren des Turmes hochlaufen zu können.
+
+Truppen können aus dem Turm wieder entfernt werden, indem ihr den Schützenturm auswählt und entweder direkt auf das Icon des Truppenslots (Hier kann erkannt werden, ob ihr Bogenschützen oder Scharfschützen auf diesen Slot gesetzt habt) oder auf das Minus klickt. 
+Durch das Minus wird präferiert zuerst der zweite Slot und dann der erste Slot geleert. Wie auch beim Stationieren wird auch beim Entleeren eine gewisse Zeit benötigt, bis die Truppen wieder unten angekommen sind.
+
+Wird der Schützenturm zerstört, sterben alle im Turm stationierten Truppen sowie auch alle Truppen, die aktuell den Turm verlassen bzw. betreten wollten.
+
+Aus technischen Gründen kann der Schützenturm neben der Standardrotation nur um ein Vielfaches von 90° gedreht werden.
+
+Jeder Spieler kann maximal 10 Schützentürme errichten. In jeden Turm können zur gleichen Zeit maximal 2 Truppen stationiert werden.
+
+Es wurde ein Fehler behoben, durch den auf Karten mit Weihnachtsbäumen Türme in der Nähe der Bäume platziert werden konnten.

@@ -51,8 +51,8 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 			constructing			=	true,
 			--------------------------------------------------
 			rebuild = {
-				delay				=	20*(4-_strength),
-				randomTime			=	15*(4-_strength)
+				delay				=	30*(5-_strength),
+				randomTime			=	15*(5-_strength)
 			},
 		}
 		

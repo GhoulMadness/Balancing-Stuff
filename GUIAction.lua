@@ -279,51 +279,242 @@ function GUIAction_ChangeToSpecialWeather(_weathertype,_EntityID)
 	
 end
 function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
+
 	if Logic.GetEntityType(_EntityID) ~= Entities.PB_WeatherTower1 then
+	
 		return
+		
 	end
+	
 	Logic.AddWeatherElement(2,120,0,11,5,15)
+	
 	Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetEnergyRequiredForWeatherChange()))
+	
 	--in case the player still has energy left, bring him down to zero!
 	if Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy ) > Logic.GetEnergyRequiredForWeatherChange() then
+	
 		Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy )))
+		
 	end
+	
 	if EMS then
+	
 		EMS.RF.WLT.LockWeatherChange()
+		
 	end
+	
 	GUI.DeselectEntity(_EntityID)
+	
 	GUI.SelectEntity(_EntityID)
+	
 end	
 -----------------------------------------------------------------------------------------------------------------------------
 gvHero13 = {LastTimeStoneArmorUsed = - 6000,LastTimeDivineJudgmentUsed = - 6000}
+
 function GUIAction_Hero13StoneArmor()
+
 	local heroID = GUI.GetSelectedEntity()
+	
 	local player = Logic.EntityGetPlayer(heroID)
+	
 	local starttime = Logic.GetTimeMs()
+	
 	gvHero13.LastTimeStoneArmorUsed = starttime/1000
+	
 	if CNetwork then
+	
 		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID);
+		
 	else
+	
 		_G["Hero13TriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_"..player, 1, nil, {heroID,starttime})
+		
 	end
+	
 end
 function GUIAction_Hero13RegenAura()
+
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
+	
 end
+
 function GUIAction_Hero13DivineJudgment()
+
 	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero13,1)})[2]
+	
 	if heroID ~= nil then
+	
 		local player = Logic.EntityGetPlayer(heroID)
+		
 		local basedmg = Logic.GetEntityDamage(heroID)
+		
 		local starttime = Logic.GetTimeMs()
+		
 		local posX,posY = Logic.GetEntityPosition(heroID)
+		
 		gvHero13.LastTimeDivineJudgmentUsed = starttime/1000
+		
 		if CNetwork then
+		
 			CNetwork.SendCommand("Ghoul_Hero13DivineJudgment",GUI.GetPlayerID(),heroID);
+			
 		else
+		
 			Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
+			
 			_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
+			
 			_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
+			
 		end
+		
 	end
+	
 end
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+function GUIAction_Archers_Tower_RemoveSlot(_slot)
+
+	local entity = GUI.GetSelectedEntity()
+	
+	local player = Logic.EntityGetPlayer(entity) or GUI.GetPlayerID()
+	
+	if not _slot then
+	
+		if gvArchers_Tower.SlotData[entity][2] ~= nil then
+		
+			_slot = 2
+			
+		elseif gvArchers_Tower.SlotData[entity][1] ~= nil then
+		
+			_slot = 1 
+			
+		else
+		
+			return
+			
+		end
+		
+	end
+	
+	if gvArchers_Tower.SlotData[entity][_slot] == nil then
+	
+		return
+		
+	end
+	
+	local soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entity][_slot])}
+	
+	local soldiers = soldierstable[1]
+	
+	if not _G["Archers_Tower_RemoveTroopTriggerID_"..entity.."_".._slot] then
+	
+		if CNetwork then
+		
+			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop",player,entity,_slot,soldierstable)
+		
+		else
+	
+			_G["Archers_Tower_RemoveTroopTriggerID_"..entity.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop_"..player.."_".._slot, 1, nil, {_slot,entity,soldiers,player})
+	
+			Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][_slot])
+			
+			Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][_slot],-30,257)
+			
+			table.remove(soldierstable,1)
+							
+			for i = 1,table.getn(soldierstable) do
+
+				Logic.SuspendEntity(soldierstable[i])
+
+				Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
+			
+			end
+		
+		end
+		
+	end
+	
+	GUI.DeselectEntity(entity)
+	
+end
+
+function GUIAction_Archers_Tower_AddSlot()
+
+	local entity = GUI.GetSelectedEntity()
+	
+	local player = Logic.EntityGetPlayer(entity) or GUI.GetPlayerID()
+	
+	if gvArchers_Tower.CurrentlyUsedSlots[entity] >= gvArchers_Tower.MaxSlots then
+	
+		return
+		
+	end
+	
+	local pos = GetPosition(entity)
+				
+	local offset = gvArchers_Tower.GetOffset_ByOrientation(entity)
+	
+	local position = {X = pos.X - offset.X, Y = pos.Y - offset.Y}
+	
+	local freeslot = gvArchers_Tower.GetFirstFreeSlot(entity)
+	
+	if freeslot then
+	
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.LongRange), CEntityIterator.InCircleFilter(position.X, position.Y, gvArchers_Tower.Troop_SearchRadius)) do
+		
+			if Logic.IsHero(eID) ~= 1 then
+			
+				if Logic.IsLeader(eID) == 1 then
+					
+					local soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}
+					
+					local soldiers = soldierstable[1]
+					
+					if not _G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] then
+					
+						if CNetwork then
+		
+							CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop",player,entity,freeslot,soldierstable,eID)
+							
+							break
+							
+						else
+							
+							gvArchers_Tower.SlotData[entity][freeslot] = eID
+					
+							_G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_"..player.."_"..freeslot, 1, nil, {freeslot,soldiers,player,entity})
+					
+							gvArchers_Tower.CurrentlyUsedSlots[entity] = gvArchers_Tower.CurrentlyUsedSlots[entity] + 1
+							
+							Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][freeslot])
+			
+							Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][freeslot],-30,257)
+							
+							table.remove(soldierstable,1)
+							
+							for i = 1,table.getn(soldierstable) do
+
+								Logic.SuspendEntity(soldierstable[i])
+			
+								Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
+							
+							end
+					
+							break
+							
+						end
+							
+					end
+					
+				end
+				
+			end
+			
+		end
+		
+	end
+	
+	GUI.DeselectEntity(entity)
+	
+end
+

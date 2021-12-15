@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.700
+	BS.Version = 0.701
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -203,6 +203,7 @@
 			"AI",
 			"Castle",
 			"Tower",
+			"Archers_Tower",
 			"Scaremonger",
 			"Trigger",
 			"Comforts",
@@ -242,6 +243,9 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
 	--Trigger für Heldentod
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
+	--Trigger für Schützentürme
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_TowerDestroyed", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnArchers_TowerCreated", 1)
 	--Trigger für Leibeigene
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)

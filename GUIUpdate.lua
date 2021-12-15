@@ -1,27 +1,10 @@
 function GUIUpdate_AttackRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local EntityID = GUI.GetSelectedEntity()
-	local EntityType = Logic.GetEntityType(EntityID)
 	local PID = GUI.GetPlayerID()
-	local RangeTechBonus = 0
-	local BaseRange = round(GetEntityTypeBaseAttackRange(EntityType))
-	--Check auf Technologie Modifikatoren
-	if Logic.IsEntityInCategory(EntityID, EntityCategories.Bow) == 1 or Logic.IsEntityInCategory(EntityID, EntityCategories.CavalryLight) == 1 then
-		if Logic.GetTechnologyState(PID,Technologies.T_Fletching) == 4 then
-			RangeTechBonus = 300
-		else
-			RangeTechBonus = 0
-		end
-	elseif  Logic.IsEntityInCategory(EntityID, EntityCategories.Rifle) == 1 then
-		if Logic.GetTechnologyState(PID,Technologies.T_Sights) == 4 then
-			RangeTechBonus = 300
-		else
-			RangeTechBonus = 0
-		end		
-	else
-		RangeTechBonus = 0
-	end
-	XGUIEng.SetText( CurrentWidgetID," @ra "..BaseRange + RangeTechBonus )	
+	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))
+	
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
 end
 function GUIUpdate_VisionRange()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
@@ -854,3 +837,58 @@ function GUIUpdate_HeroButton()
 	
 	
 end
+-------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------ Archers Tower ----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------
+function GUIUpdate_Archers_Tower_AddSlot()
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	
+	local EntityID = GUI.GetSelectedEntity()
+	
+	if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots then
+	
+		XGUIEng.DisableButton(CurrentWidgetID, 1)
+		
+	else
+		
+		XGUIEng.DisableButton(CurrentWidgetID, 0)
+		
+	end
+	
+end
+
+function GUIUpdate_Archers_Tower_RemoveSlot(_slot)
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	
+	local EntityID = GUI.GetSelectedEntity()
+	
+	if _slot then
+	
+		if gvArchers_Tower.SlotData[EntityID][_slot] ~= nil then
+			
+			XGUIEng.DisableButton(CurrentWidgetID, 0)
+			
+		else
+			
+			XGUIEng.DisableButton(CurrentWidgetID, 1)
+			
+		end
+		
+	else
+	
+		if gvArchers_Tower.SlotData[EntityID][1] == nil and gvArchers_Tower.SlotData[EntityID][2] == nil then
+		
+			XGUIEng.DisableButton(CurrentWidgetID, 1)
+			
+		else
+		
+			XGUIEng.DisableButton(CurrentWidgetID, 0)
+			
+		end
+							
+	end
+	
+end
+
