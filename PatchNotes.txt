@@ -268,7 +268,7 @@ Das Design von Schlössern wurde überarbeitet.
 
 Es ist nun ein weiteres Gebäude verfügbar: Der Schützenturm.
 
-In diesen könnt ihr Eure Bogenschützen und Scharfschützen stationieren. Solange sich diese auf den Turm befinden, können sie nicht von Nahkämpfer angegriffen werden und verfügen über erhöhte Angriffs- und Rüstungswerte, sowie eine erhöhte Angriffsreichweite.
+In diesen könnt ihr Eure Bogenschützen und Scharfschützen stationieren. Solange sich diese auf den Turm befinden, können sie nicht von Nahkämpfern angegriffen werden und verfügen über erhöhte Angriffs- und Rüstungswerte sowie eine erhöhte Angriffsreichweite.
 
 Der Schützenturm benötigt die Technologien Architektur und Taktiken.
 
