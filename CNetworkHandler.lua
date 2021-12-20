@@ -297,15 +297,27 @@
 		); 
 		
 		CNetwork.SetNetworkHandler("Ghoul_Archers_Tower_RemoveTroop", 
-			function(name,_playerID,_entityID,_slot,_soldierstable) 
+			function(name,_playerID,_entityID,_slot) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_slot,_soldierstable); 
+					CLogger.Log("Ghoul_Archers_Tower_RemoveTroop", name, _playerID,_entityID,_slot); 
     
 					-- execute stuff
 					
-					local soldiers = _soldierstable[1]
+					local soldiers,_soldierstable
+					
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
+					
+						_soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entityID][_slot])}
+					
+						soldiers = _soldierstable[1]
+						
+					else
+						
+						soldiers = 0
+						
+					end
 					
 					_G["Archers_Tower_RemoveTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop_".._playerID.."_".._slot, 1, nil, {_slot,_entityID,soldiers,_playerID})
 	
@@ -313,14 +325,18 @@
 					
 					Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[_entityID][_slot],-30,257)
 					
-					table.remove(_soldierstable,1)
-									
-					for i = 1,table.getn(_soldierstable) do
-
-						Logic.SuspendEntity(_soldierstable[i])
-
-						Logic.SetEntityScriptingValue(_soldierstable[i],-30,257)
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
 					
+						table.remove(_soldierstable,1)
+										
+						for i = 1,table.getn(_soldierstable) do
+
+							Logic.SuspendEntity(_soldierstable[i])
+
+							Logic.SetEntityScriptingValue(_soldierstable[i],-30,257)
+						
+						end
+						
 					end
 					
 				end; 
@@ -330,17 +346,31 @@
 		); 
 		
 		CNetwork.SetNetworkHandler("Ghoul_Archers_Tower_AddTroop", 
-			function(name,_playerID,_entityID,_slot,_soldierstable,_leaderID) 
+			function(name,_playerID,_entityID,_leaderID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_slot,_soldierstable,_leaderID); 
+					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_leaderID); 
     
 					-- execute stuff
 					
-					local soldiers = _soldierstable[1]
+					local _slot = gvArchers_Tower.GetFirstFreeSlot(_entityID)
 					
 					gvArchers_Tower.SlotData[_entityID][_slot] = _leaderID
+										
+					local soldiers,_soldierstable
+					
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
+					
+						_soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entityID][_slot])}
+					
+						soldiers = _soldierstable[1]
+						
+					else
+					
+						soldiers = 0
+						
+					end										
 					
 					_G["Archers_Tower_AddTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_".._playerID.."_".._slot, 1, nil, {_slot,soldiers,_playerID,_entityID})
 			
@@ -350,14 +380,18 @@
 	
 					Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[_entityID][_slot],-30,257)
 					
-					table.remove(_soldierstable,1)
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
 					
-					for i = 1,table.getn(_soldierstable) do
+						table.remove(_soldierstable,1)
+						
+						for i = 1,table.getn(_soldierstable) do
 
-						Logic.SuspendEntity(_soldierstable[i])
-	
-						Logic.SetEntityScriptingValue(_soldierstable[i],-30,257)
-					
+							Logic.SuspendEntity(_soldierstable[i])
+		
+							Logic.SetEntityScriptingValue(_soldierstable[i],-30,257)
+						
+						end
+						
 					end
 					
 				end; 

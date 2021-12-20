@@ -589,16 +589,20 @@ for i = 1,12 do
 		
 			if Counter.Tick2("Archers_Tower_RemoveTroop_Counter_".._entity.."_".._slot,gvArchers_Tower.ClimbUpTime) then
 			
-				local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entity][_slot])}
-				
-				table.remove(soldiers,1)
-				
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[_entity][_slot])
-				
-				for i = 1,table.getn(soldiers) do
-				
-					Logic.ResumeEntity(soldiers[i])
-				
+			
+				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) ~= 1 then
+			
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entity][_slot])}
+					
+					table.remove(soldiers,1)
+					
+					for i = 1,table.getn(soldiers) do
+					
+						Logic.ResumeEntity(soldiers[i])
+					
+					end
+					
 				end
 				
 				if IsExisting(_entity) then
@@ -607,7 +611,17 @@ for i = 1,12 do
 					
 					local offset = gvArchers_Tower.GetOffset_ByOrientation(_entity)
 					
-					local newLeaderID = CreateGroup(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),_soldiers,pos.X - offset.X, pos.Y - offset.Y,0)
+					local newLeaderID
+					
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) == 1 then
+					
+						newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),{X = pos.X - offset.X, Y = pos.Y - offset.Y})
+					
+					else
+						
+						newLeaderID = CreateGroup(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),_soldiers,pos.X - offset.X, pos.Y - offset.Y,0)
+						
+					end
 					
 					Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_entity][_slot])
 					
@@ -646,16 +660,20 @@ for i = 1,12 do
 		_G["Archers_Tower_AddTroop_"..i.."_"..k] = function(_slot,_soldiers,_player,_towerID)
 			
 			if Counter.Tick2("Archers_Tower_AddTroop_Counter_".._towerID.."_".._slot,gvArchers_Tower.ClimbUpTime) then
-			
-				local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_towerID][_slot])}
 				
-				table.remove(soldiers,1)
-			
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[_towerID][_slot])
 				
-				for i = 1,table.getn(soldiers) do
-				
-					Logic.ResumeEntity(soldiers[i])
+				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) ~= 1 then
+			
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_towerID][_slot])}
+					
+					table.remove(soldiers,1)
+					
+					for i = 1,table.getn(soldiers) do
+					
+						Logic.ResumeEntity(soldiers[i])
+					
+					end
 				
 				end
 				
@@ -667,24 +685,46 @@ for i = 1,12 do
 					
 					Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])
 					
-					local newLeaderID = CreateGroup(_player,entityType,_soldiers,pos.X,pos.Y,0)
+					local newLeaderID
+					
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) == 1 then
+					
+						newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot]),{X = pos.X - offset.X, Y = pos.Y - offset.Y})
+						
+					else
+					
+						newLeaderID = CreateGroup(_player,entityType,_soldiers,pos.X,pos.Y,0)
+					
+					end
 					
 					gvArchers_Tower.SlotData[_towerID][_slot] = newLeaderID
 					
-					local TroopIDs = {Logic.GetSoldiersAttachedToLeader(newLeaderID)}
+					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) ~= 1 then
 					
-					table.remove(TroopIDs,1)
-					
-					table.insert(TroopIDs,newLeaderID)
-					
-					for i = 1,table.getn(TroopIDs) do
+						local TroopIDs = {Logic.GetSoldiersAttachedToLeader(newLeaderID)}
 						
-						CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
+						table.remove(TroopIDs,1)
 						
-						CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
+						table.insert(TroopIDs,newLeaderID)
 						
-						CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),_player)*gvArchers_Tower.MaxRangeFactor)
+						for i = 1,table.getn(TroopIDs) do
+							
+							CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
+							
+							CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
+							
+							CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),_player)*gvArchers_Tower.MaxRangeFactor)
+						
+						end
+						
+					else
 					
+						CEntity.SetDamage(newLeaderID,Logic.GetEntityDamage(newLeaderID)*gvArchers_Tower.DamageFactor)
+						
+						CEntity.SetArmor(newLeaderID,Logic.GetEntityArmor(newLeaderID)*gvArchers_Tower.ArmorFactor)
+						
+						CEntity.SetAttackRange(newLeaderID,GetEntityTypeMaxAttackRange(newLeaderID,_player)*gvArchers_Tower.MaxRangeFactor)
+						
 					end
 				
 					for i = 1,4 do
@@ -730,16 +770,20 @@ function OnArchers_TowerDestroyed()
 		for i = 1,gvArchers_Tower.MaxSlots do
 		
 			if gvArchers_Tower.SlotData[entityID][i] ~= nil then
-				
-				local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entityID][i])}
-				
-				table.remove(soldiers,1)
 			
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[entityID][i])
+			
+				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entityID][i], EntityCategories.Cannon) ~= 1 then
 				
-				for k = 1,table.getn(soldiers) do
-				
-					Logic.ResumeEntity(soldiers[k])
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entityID][i])}
+					
+					table.remove(soldiers,1)					
+					
+					for k = 1,table.getn(soldiers) do
+					
+						Logic.ResumeEntity(soldiers[k])
+					
+					end
 				
 				end
 				
@@ -788,4 +832,43 @@ function OnArchers_TowerCreated()
 		
 	end
 
+end
+
+function OnArchers_Tower_OccupiedTroopDied()
+
+	local entityID = Event.GetEntityID()
+	
+	local playerID = Logic.EntityGetPlayer(entityID)
+	
+	if playerID ~= 0 then
+	
+		if Logic.IsLeader(entityID) == 1 then
+	
+			if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
+			
+				for k,v in pairs(gvArchers_Tower.SlotData) do
+				
+					local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+			
+					if  slot ~= nil then
+					
+						gvArchers_Tower.SlotData[k][slot] = nil
+							
+						gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
+						
+						if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
+						
+							Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])
+						end
+						
+					end
+					
+				end
+				
+			end
+			
+		end
+		
+	end
+	
 end

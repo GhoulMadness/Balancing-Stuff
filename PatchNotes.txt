@@ -284,3 +284,14 @@ Aus technischen Gründen kann der Schützenturm neben der Standardrotation nur u
 Jeder Spieler kann maximal 10 Schützentürme errichten. In jeden Turm können zur gleichen Zeit maximal 2 Truppen stationiert werden.
 
 Es wurde ein Fehler behoben, durch den auf Karten mit Weihnachtsbäumen Türme in der Nähe der Bäume platziert werden konnten.
+
+--- Version 0.702
+
+Es wurde ein Fehler behoben, durch den Gold- und Silberminen auf Stufe 2 und 3 nicht repariert werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit den Schützentürmen behoben.
+
+Es können neben Bogen- und Scharfschützen nun auch Bombarden, Eisenkanonen, Speerwerfer und Bogenschützen-Banditen den Schützenturm betreten.
+
+Die Changelog-Textdatei wurde auf den neuesten Stand gebracht.
+

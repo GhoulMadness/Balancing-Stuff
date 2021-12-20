@@ -16,13 +16,33 @@
 	-- Reichweiten-Multiplikator für Truppen auf Türmen
 	gvArchers_Tower.MaxRangeFactor = 1.2
 	-- In dieser Reichweite werden Truppen zum stationieren gesucht
-	gvArchers_Tower.Troop_SearchRadius = 300
+	gvArchers_Tower.Troop_SearchRadius = 500
 	
 	gvArchers_Tower.AmountOfTowers = {}
 	
 	gvArchers_Tower.CurrentlyUsedSlots = {}
 	
 	gvArchers_Tower.SlotData = {}
+	
+	gvArchers_Tower.AllowedTypes = {Entities.PU_LeaderBow1,
+	
+									Entities.PU_LeaderBow2,
+									
+									Entities.PU_LeaderBow3,
+									
+									Entities.PU_LeaderBow4,
+									
+									Entities.PU_LeaderRifle1,
+									
+									Entities.PU_LeaderRifle2,
+									
+									Entities.PV_Cannon1,
+									
+									Entities.PV_Cannon3,
+									
+									Entities.CU_Evil_LeaderSkirmisher1,
+									
+									Entities.CU_BanditLeaderBow1}
 				
 	if CNetwork then
 	
@@ -92,7 +112,11 @@
 	
 	gvArchers_Tower.Icon_ByEntityCategory = {	[EntityCategories.Bow]	 = "Data\\Graphics\\Textures\\GUI\\b_select_bowman",
 	
-												[EntityCategories.Rifle]  = "Data\\Graphics\\Textures\\GUI\\b_select_rifleman"
+												[EntityCategories.Rifle]  = "Data\\Graphics\\Textures\\GUI\\b_select_rifleman",
+												
+												[EntityCategories.Cannon] = "Data\\Graphics\\Textures\\GUI\\b_select_cannon",
+												
+												[EntityCategories.EvilLeader] = "Data\\Graphics\\Textures\\GUI\\b_select_skirmisher"
 												
 											}
 	
@@ -100,7 +124,7 @@
 											
 	function gvArchers_Tower.GetIcon_ByEntityCategory(_entity)
 	
-		if Logic.IsEntityInCategory(_entity, EntityCategories.Bow) == 1 then
+		if Logic.IsEntityInCategory(_entity, EntityCategories.Bow) == 1 and Logic.IsEntityInCategory(_entity, EntityCategories.EvilLeader) ~= 1 then
 		
 			return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.Bow]
 			
@@ -108,6 +132,14 @@
 		
 			return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.Rifle]
 			
+		elseif Logic.IsEntityInCategory(_entity, EntityCategories.Cannon) == 1 then
+		
+			return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.Cannon]
+			
+		elseif Logic.IsEntityInCategory(_entity, EntityCategories.EvilLeader) == 1 then
+		
+			return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.EvilLeader]
+				
 		else
 		
 			return false

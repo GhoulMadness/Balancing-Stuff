@@ -19,7 +19,7 @@ function GUIAction_ForceSettlersToWork()
 	local BuildingType =  Logic.GetEntityType( BuildingID )
 	local BuildingCategory = Logic.GetUpgradeCategoryByBuildingType( BuildingType )
 	if BuildingCategory == UpgradeCategories.Silversmith then
-		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine \195\156berstunden verrichten!")
+		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine Überstunden verrichten!")
 	else
 		GUIAction_ForceSettlersToWorkOrig()
 	end
@@ -402,15 +402,27 @@ function GUIAction_Archers_Tower_RemoveSlot(_slot)
 		
 	end
 	
-	local soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entity][_slot])}
+	local soldierstable,soldiers
 	
-	local soldiers = soldierstable[1]
+	if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entity][_slot], EntityCategories.Cannon) ~= 1 then
+	
+		soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entity][_slot])}
+		
+		soldiers = soldierstable[1]
+		
+	else
+	
+		soldierstable = 0
+		
+		soldiers = 0
+		
+	end
 	
 	if not _G["Archers_Tower_RemoveTroopTriggerID_"..entity.."_".._slot] then
 	
 		if CNetwork then
 		
-			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop",player,entity,_slot,soldierstable)
+			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop",player,entity,_slot)
 		
 		else
 	
@@ -420,14 +432,18 @@ function GUIAction_Archers_Tower_RemoveSlot(_slot)
 			
 			Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][_slot],-30,257)
 			
-			table.remove(soldierstable,1)
-							
-			for i = 1,table.getn(soldierstable) do
-
-				Logic.SuspendEntity(soldierstable[i])
-
-				Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
+			if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entity][_slot], EntityCategories.Cannon) ~= 1 then
 			
+				table.remove(soldierstable,1)
+								
+				for i = 1,table.getn(soldierstable) do
+
+					Logic.SuspendEntity(soldierstable[i])
+
+					Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
+				
+				end
+				
 			end
 		
 		end
@@ -458,57 +474,63 @@ function GUIAction_Archers_Tower_AddSlot()
 	
 	local freeslot = gvArchers_Tower.GetFirstFreeSlot(entity)
 	
-	if freeslot then
+	local soldierstable,soldiers
 	
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.LongRange), CEntityIterator.InCircleFilter(position.X, position.Y, gvArchers_Tower.Troop_SearchRadius)) do
-		
-			if Logic.IsHero(eID) ~= 1 then
+	if freeslot then
 			
-				if Logic.IsLeader(eID) == 1 then
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(gvArchers_Tower.AllowedTypes)), CEntityIterator.InCircleFilter(position.X, position.Y, gvArchers_Tower.Troop_SearchRadius)) do
 					
-					local soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}
-					
-					local soldiers = soldierstable[1]
-					
-					if not _G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] then
-					
-						if CNetwork then
-		
-							CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop",player,entity,freeslot,soldierstable,eID)
-							
-							break
-							
-						else
-							
-							gvArchers_Tower.SlotData[entity][freeslot] = eID
-					
-							_G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_"..player.."_"..freeslot, 1, nil, {freeslot,soldiers,player,entity})
-					
-							gvArchers_Tower.CurrentlyUsedSlots[entity] = gvArchers_Tower.CurrentlyUsedSlots[entity] + 1
-							
-							Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][freeslot])
+			if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
 			
-							Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][freeslot],-30,257)
-							
-							table.remove(soldierstable,1)
-							
-							for i = 1,table.getn(soldierstable) do
+				soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}
+				
+				soldiers = soldierstable[1]
+				
+			else
+				
+				soldierstable = 0
+				
+				soldiers = 0
+				
+			end
+				
+			if not _G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] then
+			
+				if CNetwork then
 
-								Logic.SuspendEntity(soldierstable[i])
-			
-								Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
-							
-							end
+					CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop",player,entity,eID)
 					
-							break
-							
+				else
+					
+					gvArchers_Tower.SlotData[entity][freeslot] = eID
+			
+					_G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_"..player.."_"..freeslot, 1, nil, {freeslot,soldiers,player,entity})
+			
+					gvArchers_Tower.CurrentlyUsedSlots[entity] = gvArchers_Tower.CurrentlyUsedSlots[entity] + 1
+					
+					Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][freeslot])
+	
+					Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][freeslot],-30,257)
+					
+					if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
+					
+						table.remove(soldierstable,1)
+						
+						for i = 1,table.getn(soldierstable) do
+
+							Logic.SuspendEntity(soldierstable[i])
+		
+							Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
+						
 						end
-							
+						
 					end
 					
 				end
-				
+					
 			end
+			
+			break
 			
 		end
 		

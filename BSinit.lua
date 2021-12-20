@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.701
+	BS.Version = 0.702
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -247,6 +247,7 @@
 	--Trigger für Schützentürme
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_TowerDestroyed", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnArchers_TowerCreated", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_Tower_OccupiedTroopDied", 1)
 	--Trigger für Leibeigene
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)

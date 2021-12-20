@@ -11,6 +11,7 @@ technische Infos:
 
 	Der Mod funktioniert NUR über Kimichuras Updater (SP EXT Extra2 für Singleplayer, MP Extra2 für Multiplayer)
 	Die neuen Texturen werden nur angezeigt, wenn ihr die Textureinstellungen auf HOCH habt.
+	Es wird empfohlen, die BS-Modifikation mit deutscher Spielsprache zu spielen.
 
 Änderungen im Balancing Stuff 						- 				"normales" Spiel:
 
@@ -26,7 +27,7 @@ technische Infos:
 			
 			DZ Plätze:		70									75
 
-			Rüstung:		6									4
+			Rüstung:		7									4
 	
 			HP:			1500									1000
 
@@ -44,7 +45,7 @@ technische Infos:
 
 			DZ Plätze:		90									100
 
-			Rüstung:		7									4
+			Rüstung:		9									4
 
 			HP:			2000									1200
 
@@ -84,10 +85,12 @@ technische Infos:
 			Sichtweite:		6000									3300
 
 			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
+			
+			Besonderheiten: Aussichtstürme können nicht nahe anderer Aussichtstürme gebaut werden.
 
 		Ballistaturm:
 
-			Kosten:	Holz:		200							Holz:		200
+			Kosten:	Holz:		350							Holz:		200
 				Stein:		500							Stein:		300
 
 			benötigt:		Flaschenzug								Zahnrad
@@ -100,7 +103,7 @@ technische Infos:
 
 			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
 
-			Max.Range:		2400									2800
+			Max.Range:		2200									2800
 		
 			Min.Range:		800									800
 		
@@ -110,9 +113,9 @@ technische Infos:
 
 		Kanonenturm:
 
-			Kosten:	Taler:		1000							
-				Stein:		800							Stein:		200
-				Schwefel:	800							Schwefel:	200			
+			Kosten:	Taler:		800							
+				Stein:		1000							Stein:		200
+				Schwefel:	1250							Schwefel:	200			
 
 			benötigt:		Chemie									Metallurgie
 
@@ -124,13 +127,13 @@ technische Infos:
 
 			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
 
-			Max.Range:		2600									2800
+			Max.Range:		2400									2800
 		
 			Min.Range:		800									800
 		
-			DMG-Range:		480									700
+			DMG-Range:		460									700
 
-			DMG:			56									40
+			DMG:			52									40
 
 			Anmerkungen:		Diese Änderungen betreffen gleichermaßen die "dunklen" Versionen der Türme. Diese haben jedoch im Schnitt etwa 50% mehr HP.
 
@@ -197,7 +200,7 @@ technische Infos:
 
 			Sichtweite:		3000									3000
 
-			Veredlung/Tick:		3									2
+			Veredlung/Tick:		2									2
 
 			Arbeiter:		6									6
 
@@ -207,6 +210,8 @@ technische Infos:
 				Stein:		300									100
 
 			MotiEffekt:		12%									4%
+			
+			HP:			600									300
 
 		Brunnen:
 
@@ -214,6 +219,8 @@ technische Infos:
 				Stein:		300									100
 
 			MotiEffekt:		12%									4%
+			
+			HP:			600									300
 
 		Reiter:
 
@@ -221,6 +228,8 @@ technische Infos:
 				Stein:		1000									200
 
 			MotiEffekt:		30%									6%
+			
+			HP:			600									300
 
 		Kameraden:
 
@@ -228,6 +237,8 @@ technische Infos:
 				Lehm:		300									100
 
 			MotiEffekt:		6%									2%
+			
+			HP:			600									300
 		
 		Obelisk:
 
@@ -235,6 +246,8 @@ technische Infos:
 				Stein:		500									100
 
 			MotiEffekt:		25%									5%
+			
+			HP:			600									300
 
 		Astrolabium:
 
@@ -242,6 +255,8 @@ technische Infos:
 				Eisen:		500									100
 
 			MotiEffekt:		8%									2%
+			
+			HP:			600									300
 
 		Uhr:
 
@@ -249,6 +264,8 @@ technische Infos:
 				Holz:		300									100
 
 			MotiEffekt:		15%									5%
+			
+			HP:			600									300
 
 		Zugbrunnen:
 
@@ -256,6 +273,8 @@ technische Infos:
 				Stein:		300									100
 
 			MotiEffekt:		15%									5%
+			
+			HP:			600									300
 
 		Blumen:
 
@@ -263,6 +282,8 @@ technische Infos:
 				Holz:		400									100
 
 			MotiEffekt:		5%									2%
+			
+			HP:			600									300
 
 		Teleskop:
 
@@ -270,6 +291,8 @@ technische Infos:
 				Eisen:		1000									200
 
 			MotiEffekt:		30%									6%
+			
+			HP:			600									300
 
 		Pavillon:
 
@@ -277,6 +300,8 @@ technische Infos:
 				Stein:		1000									200
 
 			MotiEffekt:		30%									6%
+			
+			HP:			600									300
 
 		Windrad:
 
@@ -284,6 +309,8 @@ technische Infos:
 				Eisen:		500									100
 
 			MotiEffekt:		20%									4%
+			
+			HP:			600									300
 
 		Grobschmiede:
 
@@ -478,7 +505,7 @@ technische Infos:
 
 			HP:			9000									4100
 
-			Sichtweite:		3000									3000
+			Sichtweite:		5000									3000
 
 			Max Leibis:		300									1000
 
@@ -591,13 +618,15 @@ technische Infos:
 
 			Sichtweite:		1500									2000
 
-			HPReg[1/s]:		8/6									-
+			HPReg[1/s]:		1/4									-
 
-			Res.SuchRadius:		6500									4500
+			Res.SuchRadius:		6000									4500
 
 			DMG:			1									5
 
 			RandomDMGBonus		0									2
+			
+			Leibeigene können nicht an Minen Ressourcen hacken.
 
 		Miliz:
 
@@ -615,45 +644,45 @@ technische Infos:
 
 		Dario:
 
-			Rüstung:		9									3
+			Rüstung:		6									3
 
-			HP:			1200									600
-
-			Sichtweite:		2200									2200
-
-			Lauftempo:		440									400
-
-			HPReg[1/s]:		14/2									8/2
-
-			DMG:			26									16
-
-			RandomDMGBonus		5									4
-
-			Reichweite:		280									250
-
-			Falken-MinReichw.:	5000									4000
-
-			Falken-MaxReichw.	12000									8000
-
-			Falken-Sichtw.:		2200									1500
-
-			Falken-Lauftempo:	550									500
-
-			Falken-CD[s]:		40									60
-
-			Beschützen-CD[s]:	130									120
-
-		Pilgrim:
-
-			Rüstung:		8									4
-
-			HP:			1000									600
+			HP:			1100									600
 
 			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		10/2									8/2
+
+			DMG:			23									16
+
+			RandomDMGBonus		5									3
+
+			Reichweite:		280									250
+
+			Falken-MinReichw.:	4000									4000
+
+			Falken-MaxReichw.	13000									8000
+
+			Falken-Sichtw.:		2200									1500
+
+			Falken-Lauftempo:	550									500
+
+			Falken-CD[s]:		50									60
+
+			Beschützen-CD[s]:	140									120
+
+		Pilgrim:
+
+			Rüstung:		6									4
+
+			HP:			900									600
+
+			Sichtweite:		2200									2200
+
+			Lauftempo:		400									400
+
+			HPReg[1/s]:		10/2									8/2
 
 			DMG:			24									22
 
@@ -661,7 +690,49 @@ technische Infos:
 
 			Reichweite:		250									250
 
-			Bombe legen-CD[s]:	25									60
+			Bombe legen-CD[s]:	30									60
+			
+			Selbsts.-Kanone-CD[s]: 	240									180
+			
+			Selbsts.-Kanone Schüsse: 7									5
+			
+			Selbsts.-Kanone Schaden: 37									15
+			
+			Selbsts.-K. DMGReichw:	 400									800
+			
+		Salim:
+
+			Rüstung:		5									3
+
+			HP:			850									600
+
+			Sichtweite:		2200									2200
+
+			Lauftempo:		480									400
+
+			HPReg[1/s]:		14/2									8/2
+
+			DMG:			26									16
+
+			RandomDMGBonus		4									4
+
+			Reichweite:		250									250
+
+			Falle legen-CD[s]:	90									180
+			
+			Falle Sichtweite:	2200									2000
+			
+			Falle Aktiv.-Reichw: 	600									1000
+			
+			Falle Schaden:		95									40
+			
+			Falle Schadensreichw: 	1200									3000
+			
+			Die Falle ist für Gegner erschwert sichtbar (keine Namensanzeige und kein Lebensbalken über der Falle, kein sichtbarer Effekt)
+			
+			Heilung-CD[s]:		90									120
+			
+			Heilungsmenge:		70%									30%
 
 		Erec:
 
@@ -673,9 +744,9 @@ technische Infos:
 
 			Lauftempo:		400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		10/2									8/2
 
-			DMG:			18									16
+			DMG:			20									16
 
 			RandomDMGBonus		4									4
 
@@ -689,13 +760,13 @@ technische Infos:
 					
 			Rundumschlag-CD[s]:	140									120	
 				
-			Rundumschlag-DMG:	65									80
+			Rundumschlag-DMG:	75									80
 
 			Rundumschlag Reichw.:	600									400
 
 		Ari:
 
-			Rüstung:		4									2
+			Rüstung:		2									2
 
 			HP:			500									600
 
@@ -705,45 +776,45 @@ technische Infos:
 
 			HPReg[1/s]:		8/2									8/2
 
-			DMG:			18									16
+			DMG:			23									16
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		6									4
 
 			Reichweite:		3100									2700
 
 			Fehltreffer-Chance:	2									5
 
-			Banditen herbeir.-CD[s]:210									180
+			Banditen herbeir.-CD[s]:180									180
 
-			Banditen herbeir.Anz.	5									3
+			Banditen herbeir.Anz.	6									3
 
 			Banditen Sichtw.:	1400									1000
 		
-			Banditen Rüstung:	7									4
+			Banditen Rüstung:	4									4
 
 			Banditen Lauftempo:	440									400
 
-			B. Schaden:		18									10
+			B. Schaden:		14									10
 
 			B. Reichweite:		290									250
 
-			B. Lebensdauer[s]:	90									60
+			B. Lebensdauer[s]:	60									60
 		
 		Helias:
 
-			Rüstung:		3									2
+			Rüstung:		4									2
 
-			HP:			600									600
+			HP:			666									600
 
 			Sichtweite:		2800									2800
 
-			Lauftempo:		400									400
+			Lauftempo:		430									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		25/2									8/2
 
-			DMG:			16									16
+			DMG:			25									16
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		20									4
 
 			Reichweite:		250									250
 
@@ -751,41 +822,43 @@ technische Infos:
 
 			Segnen-CD[s]:		180									120
 
-			Segnen Rüst.-Buff:	60%									40%
+			Segnen Rüst.-Buff:	70%									40%
 
-			Segnen Dauer[s]:	30									60
+			Segnen Dauer[s]:	45									60
 					
 		Drake:
 
-			Rüstung:		3									4
+			Rüstung:		1									4
 
 			HP:			500									600
 
 			Sichtweite:		2900									2800
 
-			Lauftempo:		360									400
+			Lauftempo:		320									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		5/3									8/2
 
-			DMG:			23									28
+			DMG:			25									28
 
-			RandomDMGBonus		2									2
+			RandomDMGBonus		7									2
 
 			Reichweite:		2800									2800
 
-			sicher zielen-CD[s]:	240									120
+			sicher zielen-CD[s]:	210									120
 
-			sicher zielen.-Buff:	55%									100%
+			sicher zielen.-Buff:	65%									100%
 
 			sicher zielen Dauer[s]:	30									60
 
-			sicher zielen Reichw.:	1200									1500
+			sicher zielen Reichw.:	900									1500
 
 			Meisterschuss-CD[s]:	150									90
 
-			Meisterschuss-DMG:	88%									100%
+			Meisterschuss-DMG:	36% der HP des Ziels + 480% von Drakes DMG,				100% der HP des Ziels
+						im Nahkampf reduziert auf
+						12% der HP des Ziels + 160% von Drakes DMG
 
-			Meisterschuss-Reichw.:	4500									5500
+			Meisterschuss-Reichw.:	4000									5500
 
 		Yuki:
 
@@ -799,59 +872,69 @@ technische Infos:
 
 			HPReg[1/s]:		10/2									8/2
 
-			DMG:			22									20
+			DMG:			25									20
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		7									4
 
 			Reichweite:		250									250
 
 			Feuerw. d. Furcht-CD[s]:180									120
+			
+			Fr.Feuerw.-CD[s]: 90										120
 
-			Fr.Feuerw.ArbeiterBuff:	200 Worktime								100 Worktime
+			Fr.Feuerw.ArbeiterBuff:	300 Worktime								200 Worktime
+			
+			Shuriken-CD[s]:		100									90
+			
+			Shuriken-Anzahl:	6									4
 
-			Shuriken DMG:		68									38
+			Shuriken DMG:		88									38
 
 		Kala:
 
-			Rüstung:		6									5
+			Rüstung:		1									5
 
-			HP:			600									600
+			HP:			450									600
 
 			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		16/2									8/2
 
-			DMG:			22									20
+			DMG:			29									20
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		9									4
 
 			Reichweite:		240									200
 
-			Giftpfeile-CD[s]:	50									30
+			Giftpfeile-CD[s]:	38									30
+			
+			Giftpfeile Anzahl:	12									10
 
-			Giftpfeile DMG:		55									20	
+			Giftpfeile DMG:		72									20	
 
-			Giftnebel-CD[s]:	110									110
+			Giftnebel-CD[s]:	27									110
 
-			Giftnebel DMG:		38									25	
+			Giftnebel DMG:		50									25	
+			
+			Giftnebel Reichw:	500									1200
 
 		Mary de Morfichet:
 
-			Rüstung:		3									3
+			Rüstung:		2									3
 
-			HP:			600									600
+			HP:			500									600
 
 			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		12/2									8/2
 
-			DMG:			19									16
+			DMG:			28									16
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		8									4
 
 			Reichweite:		250									250
 
@@ -860,26 +943,30 @@ technische Infos:
 			Demoralisieren DMG-Eff.	-70%									-50%	
 
 			Demoralisieren Dauer[s]	30									60
+			
+			Gift-CD[S]:		150									120
+			
+			Gift-DMG:		70									45
 
 		Kerberos:
 
 			Rüstung:		7									5
 
-			HP:			800									600
+			HP:			850									600
 
 			Sichtweite:		2200									2200
 
 			Lauftempo:		400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:		12/2									8/2
 
-			DMG:			25									22
+			DMG:			27									22
 
-			RandomDMGBonus		4									4
+			RandomDMGBonus		7									4
 
-			Reichweite:		200									200
+			Reichweite:		220									200
 
-			Angst einfl.-CD[s]:	120									120
+			Angst einfl.-CD[s]:	100									120
 
 			Angst einfl. Rüs.-Eff.	-40%									-20%	
 
@@ -887,7 +974,7 @@ technische Infos:
 
 		Varg:
 
-			Rüstung:		5									4
+			Rüstung:		4									4
 
 			HP:			600									600
 
@@ -903,7 +990,7 @@ technische Infos:
 
 			Reichweite:		200									200
 
-			Berserkerwut-CD[s]:	300									300
+			Berserkerwut-CD[s]:	120									300
 
 			Berserkerwut DMG-Eff.	60%									100%	
 
@@ -915,7 +1002,7 @@ technische Infos:
 
 			Wölfe rufen-CD[s]:	300									180
 
-			Wölfe rufen Anzahl:	6									2
+			Wölfe rufen Anzahl:	5									2
 
 			Wölfe Rüstungsklasse:	Eisen									keine
 
@@ -923,11 +1010,13 @@ technische Infos:
 
 			Wölfe Lauftempo:	540									360
 
-			Wölfe Schaden:		17									14
+			Wölfe Schaden:		15									14
 
 			Wölfe ATK-Tempo[1/s]:	0.91									0.67
 
 			Wölfe Sold:		-									20/Zahltag
+			
+			Wölfe Lebensdauer	90									180
 
 		Armbrustschütze*:
 
@@ -951,8 +1040,6 @@ technische Infos:
 			(Sold.)	Eisen:		50									50
 				Holz:		50									-	
 
-			Schaden:		14									12
-
 			Sichtweite:		3100									2900
 
 			Rüstung:		5									3
@@ -973,7 +1060,7 @@ technische Infos:
 
 			Sichtweite:		2500									2300
 
-			eing. DZ-Plätze:		1									2
+			eing. DZ-Plätze:	1									2
 
 			Lauftempo:		550									500
 
@@ -999,7 +1086,7 @@ technische Infos:
 
 			Sichtweite:		2900									2700
 
-			eing. DZ-Plätze:		1									2
+			eing. DZ-Plätze:	1									2
 
 			Lauftempo:		550									500
 
@@ -1037,21 +1124,21 @@ technische Infos:
 
 		Hellebardier:
 
-			Kosten:	Taler:		200									200
+			Kosten:	Taler:		220									200
 			(HM)	Eisen:		50									-
 				Holz:		80									80
 
-			Kosten:	Taler:		60									60
+			Kosten:	Taler:		70									60
 			(Sold.)	Eisen:		30									-
 				Holz:		50									50
 
-			Rüstung:		7									4
+			Rüstung:		6									4
 
 			Lauftempo:		400									360
 
 			Schaden:		21									18
 
-			RandomDMG-Bonus:	4									2			
+			RandomDMG-Bonus:	2									2			
 
 			Reichweite:		390									300
 
@@ -1187,19 +1274,19 @@ technische Infos:
 
 			HP:			150									190
 
-			Sichtweite:		2100									2400
+			Sichtweite:		2200									2400
 
 			Plätze im DZ:		3									5
 
 			Lauftempo:		270									240	
 	
-			Schaden:		40									30	
+			Schaden:		42									30	
 
 			Schadensreichweite:	410									150
 
-			Angriffstempo:		1.11									0.29
+			Angriffstempo:		0.83									0.29
 
-			Reichweite:		2050									2400
+			Reichweite:		2100									2400
 
 		Bronzekanone
 
@@ -1226,8 +1313,8 @@ technische Infos:
 		
 		Eisenkanone:
 			
-			Kosten:	Taler:		700									300
-				Eisen:		850									100
+			Kosten:	Taler:		750									300
+				Eisen:		1000									100
 				Schwefel:	250									150
 
 			Rüstung:		0									2
@@ -1242,13 +1329,13 @@ technische Infos:
 
 			Schadensklasse:		Stich	(gut gegen Einheiten)						Belagerung	(gut gegen Gebäude)
 	
-			Schaden:		65									65	
+			Schaden:		60									65	
 
-			Schadensreichweite:	490									300
+			Schadensreichweite:	480									300
 
-			Angriffstempo:		1.54									2.00
+			Angriffstempo:		1.00									2.00
 
-			Reichweite:		2300									2700
+			Reichweite:		2250									2700
 
 		Belagerungskanone:
 			
@@ -1264,11 +1351,11 @@ technische Infos:
 
 			Lauftempo:		100									180	
 	
-			Schaden:		132									75	
+			Schaden:		142									75	
 
 			Schadensreichweite:	300									400
 
-			Reichweite:		3500									3300
+			Reichweite:		3400									3300
 
 
 	Technologien:
@@ -1331,6 +1418,8 @@ Neuerungen im Balancing Stuff:
 				Holz:		150
 
 			benötigt:		-
+			
+			Res/Tick:		4
 
 			Besonderheiten: wird wie eine "normale" Mine über dem entsprechenden Schacht platziert.
 
@@ -1342,20 +1431,51 @@ Neuerungen im Balancing Stuff:
 				Holz:		150
 
 			benötigt:		-
+			
+			Res/Tick:		1
 
 			Besonderheiten: wird wie eine "normale" Mine über dem entsprechenden Schacht platziert.
 	
-		Außenposten:
+		Landsitz:
 			
-			Im Außenposten könnt ihr Leibeigene anheuern sowie Sonderabgaben verlangen. Erhöht außerdem euer Siedlungslimit um 30.
+			Im Landsitz könnt ihr Leibeigene anheuern sowie Sonderabgaben verlangen. Erhöht außerdem euer Siedlungslimit um 15.
 			
-			Kosten: Steine: 	8000
-				Holz: 		8000
-				Lehm: 		8000
+			Kosten: Steine: 	2500
+				Holz: 		1800
+				Lehm: 		1200
 
 			benötigt: 		Gesetzbücher
+			
+			Max. Landsitze: 2
 
-			Besonderheiten:	neue Siedler können ananalog zu Dorfzentren von hier zu ihren Arbeitsplätzen laufen. 
+			Besonderheiten:	neue Siedler können ananalog zu Dorfzentren von hier zu ihren Arbeitsplätzen laufen. Kann insgesamt vier weitere Male ausgebaut werden, um die erhaltenen
+					Siedlungsplätze auf bis zu 140 zu erhöhen.
+							
+					Landsitze können nicht in die Nähe andererer Landsitze und Burgen gebaut werden.
+							
+					Solange ihr einen Landsitz (oder höhere Stufen) besitzt, werdet ihr durch den Verlust Eurer Burg das Spiel nicht verlieren.
+							
+		Schützenturm:
+		
+			Im Schützenturm könnt ihr Eure Bogenschützen, Scharfschützen, Bombarden, Eisenkanonen, Speerwerfer und Bogenschützen-Banditen stationieren. Sie erhalten erhöhte Offensiv- und Defensivwerte auf dem Turm und können nicht
+			von Nahkämpfern angegriffen werden.
+			
+			Kosten:	Steine:		750
+				Holz:		500
+					
+			benötigt:		Architektur, Taktiken
+			
+			Bonus-DMG:		30%
+			
+			Bonus-Rüstung:		30%
+			
+			Bonus-Reichw:		20%
+			
+			Maximum Türme:		10
+			
+			Max Truppen/Turm:	 2
+			
+			Besonderheiten:	Wird der Schützenturm zerstört, sterben alle im Turm stationierten Truppen sowie auch alle Truppen, die aktuell den Turm verlassen bzw. betreten wollten.
 
 		Leuchtturm-Fundament:
 
@@ -1403,6 +1523,28 @@ Neuerungen im Balancing Stuff:
 				Holz:		350
 				
 			benötigt: 		Metallurgie
+			
+			Veredlung/Tick:		1
+			
+			Arbeiter:		4
+			
+		Münzstätte:
+			
+			Die Münzstätte veredelt Eure Taler. Erhöht außerdem Euren Zahltag.
+
+			Kosten: Lehm: 		200
+				Steine:		750
+				Holz:		400
+				
+			benötigt: 		Münzprägung
+			
+			Veredlung/Tick:		2
+			
+			Arbeiter:		6
+			
+			Zahltag-Bonus:		1,5% (maximal 15%)
+			
+			Besonderheiten:	Der Zahltag-Bonus wirkt nur, wenn min. 3 der Arbeiter in der Münzstätte vorhanden sind.
 
 		Wettermaschine:
 			
@@ -1427,69 +1569,83 @@ Neuerungen im Balancing Stuff:
 
 			Reduziert die Beliebtheit aller Feinde.
 
-			Kosten: Silber:		300
-				Steine:		500
+			Kosten: Silber:		150
+				Steine:		800
 
 			benötigt:		Taktiken
+			
+			MotiEffekt:		-14%
 
 		Hängekäfig:
 
 			Reduziert die Beliebtheit aller Feinde.
 
-			Kosten: Silber:		250
-				Taler:		100
+			Kosten: Silber:		125
+				Taler:		350
 				Holz:		600
 
 			benötigt:		Gesetzbücher
+			
+			MotiEffekt:		-12%
 
 		Drachenstatue:
 
 			Reduziert die Beliebtheit aller Feinde.
 
-			Kosten: Silber:		400
+			Kosten: Silber:		200
 				Schwefel:	100
-				Taler:		100
+				Taler:		500
 				Steine:		200
 
 			benötigt:		Architektur
+			
+			MotiEffekt:		-19%
 
 		Vergifteter Brunnenschacht:
 
 			Reduziert die Beliebtheit aller Feinde.
 	
-			Kosten: Silber:		450
-				Steine:		300
+			Kosten: Silber:		225
+				Steine:		750
 
 			benötigt:		Metallurgie
+			
+			MotiEffekt:		-22%
 
 		Kerberos Statue:
 
 			Reduziert die Beliebtheit aller Feinde.
 	
-			Kosten: Silber:		300
-				Taler:		300
+			Kosten: Silber:		150
+				Taler:		600
 				Steine:		200
 
 			benötigt:		Kulturaustausch (Raubritter)
+			
+			MotiEffekt:		-18%
 
 		Statue des Peinigers:
 
 			Reduziert die Beliebtheit aller Feinde.
 	
-			Kosten: Silber:		800
-				Taler:		200
-				Steine:		900
+			Kosten: Silber:		400
+				Taler:		800
+				Steine:		1200
 
 			benötigt:		Architektur
+			
+			MotiEffekt: 		-40%
 
 		Statue des Bündnis:
 
-			Erhöht die Motivation aller Arbeiter.
+			Erhöht die Motivation aller Arbeiter (auch Verbündeter, Motivation geht über das 300%-Limit hinaus).
 	
 			Kosten: Silber:		500
 				Steine:		1000
 
 			benötigt:		Schatzmeistergilden
+			
+			MotiEffekt:		25%
 
 		Verfallener Siedlungsplatz:
 
@@ -1505,7 +1661,65 @@ Neuerungen im Balancing Stuff:
 			benötigt:		mapspezifische Anforderungen
 
 			
+	Einheiten:
+	
+		Dovbar:
 
+			Rüstung:		5									
+
+			HP:			800									
+
+			Sichtweite:		2200									
+
+			Lauftempo:		420									
+
+			HPReg[1/s]:		12/2									
+
+			DMG:			22									
+
+			RandomDMGBonus		8									
+
+			Reichweite:		250									
+
+			Göttl. Segen-CD[s]:	150		
+
+			Göttl. Segen Eff.:	Macht Dovbar immun gegen Schaden, 
+						dann erhält Dovbar anteilig
+						den "geblockten" Schaden
+			
+			Göttl. Segen Dauer[s]:	5 
+			
+			Göttl. Segen DMG-Faktor: 70%
+
+			Schl.Ruf der Zähigk.-CD[s]:120
+
+			Schl.Ruf der Zähigk.-Eff.: Erhöht den Schaden und die Rüstung
+						   naher verb. Einheiten leicht
+									   
+			Schl.Ruf der Zähigk.-Dauer[s]: 90
+			
+			Schl.Ruf der Zähigk.-DMG-Buff:	+10%
+			
+			Schl.Ruf der Zähigk.-Rüs-Buff:	+10%
+
+			Götterdämmerung-CD[s]	60		
+
+			Götterdämmerung Eff.: Der nächste Angriff verursacht mehr DMG.
+					      Stirbt Dovbar unmittelbar nach Aktivierung,
+					      erleiden alle Einheiten in der Nähe (Freund+
+					      Feind) massiven DMG
+								  
+			Götterdämmerung DMG-Buff:	+300% (1 Angriff)
+			
+			Götterdämmerung Zeitfenster[s]: 3
+			
+			Götterdämmerung Reichw.:	800
+			
+			Götterdämmerung DMG:		1200% Dovbar DMG (Soldaten + Hauptmänner)
+							1800% Dovbar DMG (Helden)
+							2400% Dovbar DMG (Gebäude+Kanonen+Diebe+Scouts)
+			
+			
 	Technologien:
 		
 		Steuereintreibung:
@@ -1530,7 +1744,7 @@ Neuerungen im Balancing Stuff:
 
 		Gesetzbücher:
 
-			ermöglicht den Bau von Außenposten sowie den Ausbau von Banken zu Schatzkammern.
+			ermöglicht den Bau von Landsitzen sowie den Ausbau von Banken zu Schatzkammern.
 
 			Kosten: Taler: 		400
 				Holz:		250
@@ -1762,7 +1976,7 @@ Neuerungen im Balancing Stuff:
 
 			Verbessert den Schaden von Kanonen.
 
-			Kosten:	Silber:		2500
+			Kosten:	Silber:		1200
 				Eisen:		1500
 				Schwefel:	1250
 
@@ -1874,6 +2088,8 @@ Neuerungen im Balancing Stuff:
 				Stein:		250
 
 			benötigt:		Zahnräder
+			
+			Res/Tick:		6
 
 		Ausbau zum Golderzbergwerk:
 
@@ -1884,6 +2100,8 @@ Neuerungen im Balancing Stuff:
 				Stein:		650
 
 			benötigt:		Chemie
+			
+			Res/Tick:		8
 
 		Ausbau zum Silberstollen:
 
@@ -1893,6 +2111,8 @@ Neuerungen im Balancing Stuff:
 				Stein:		350
 
 			benötigt:		Zahnräder
+			
+			Res/Tick:		1
 
 		Ausbau zum Silberbergwerk:
 
@@ -1903,6 +2123,8 @@ Neuerungen im Balancing Stuff:
 				Stein:		800
 
 			benötigt:		Chemie
+			
+			Res/Tick:		2
 
 		Ausbau zum Münztresor:
 			
@@ -1912,6 +2134,10 @@ Neuerungen im Balancing Stuff:
 				Stein:		800
 
 			benötigt:		Schatzmeistergilden
+			
+			Veredlung/Tick:	3
+			
+			Arbeiter:	 	8
 
 		Ausbau zum Handelsposten:
 
@@ -1934,6 +2160,60 @@ Neuerungen im Balancing Stuff:
 				Stein:		700
 
 			benötigt:		Chemie
+			
+			Veredlung/Tick:	2
+			
+		Ausbau zum Herrenhaus:
+
+			Baut Euren Landsitz zum Herrenhaus aus.
+
+			Kosten:	Taler:		2500
+				Lehm:		1750
+				Holz:		2250
+				Stein:		3800
+
+			benötigt:		Architektur
+			
+			DZ-Plätze:		35
+			
+		Ausbau zur Villa:
+
+			Baut Euer Herrenhaus zur Villa aus.
+
+			Kosten:	Taler:		10000
+				Lehm:		8000
+				Holz:		9500
+				Stein:		12000
+
+			benötigt:		Schatzmeistergilden
+			
+			DZ-Plätze:		60
+			
+		Ausbau zum Schloss:
+
+			Baut Eure Villa zum Schloss aus.
+
+			Kosten:	Taler:		20000
+				Lehm:		16000
+				Holz:		18000
+				Stein:		24000
+
+			benötigt:		Schatzmeistergilden
+			
+			DZ-Plätze:		90
+			
+		Ausbau zur Königsfeste:
+
+			Baut Euer Schloss zur Königsfeste aus.
+
+			Kosten:	Taler:		40000
+				Lehm:		32000
+				Holz:		36000
+				Stein:		48000
+
+			benötigt:		Schatzmeistergilden
+			
+			DZ-Plätze:		140
 
 	Buttons:
 
@@ -1945,9 +2225,11 @@ Neuerungen im Balancing Stuff:
 
 			benötigt:		Steuereintreibung
 
-			Gebäude:		Burg, Festung, Zitadelle, Außenposten
+			Gebäude:		Burg, Festung, Zitadelle, Landsitz, Herrenhaus, Villa, Schloss, Königsfeste
 
 			Abklingzeit:		240 Sekunden
+			
+			MotiEffekt:			-12%
 
 		Unwetter (Wetterwechsel):
 
@@ -2077,6 +2359,24 @@ Neuerungen im Balancing Stuff:
 			Gebäude:		Söldnerturm
 
 			Abklingzeit:		8 Sekunden
+			
+		Dunklen Schwertkämpfer anheuern:
+
+			Bildet ein Trupp dunkle Schwertkämpfer aus.
+
+			Kosten:	Taler:		320
+			(HM)	Eisen:		140
+
+			Kosten:	Taler:		110
+			(Sol)	Eisen:		70
+
+			Max.Sol:		6
+
+			benötigt:		Kulteraustausch (Raubritter)
+
+			Gebäude:		Söldnerturm
+
+			Abklingzeit:		50 Sekunden
 
 		Bärenmenschen anheuern:
 
@@ -2100,10 +2400,10 @@ Neuerungen im Balancing Stuff:
 
 			Bildet ein Trupp Speerwerfer aus.
 
-			Kosten:	Taler:		150
-			(HM)	Holz:		60
+			Kosten:	Taler:		180
+			(HM)	Holz:		70
 
-			Kosten:	Taler:		30
+			Kosten:	Taler:		40
 			(Sol)	Holz:		30
 
 			Max.Sol:		16
@@ -2195,7 +2495,7 @@ Neuerungen im Balancing Stuff:
 Maps:
 
 	Nicht alle neuen Entitäten des BS sind auch auf allen Maps verfügbar. Im Folgenden findet sich eine kurze Auflistung der Besonderheiten der Maps in Hinsicht auf diese Entitäten.
-	Bei mit * markierten Karten handelt es sich um Koop-Karten.
+	Bei mit * markierten Karten handelt es sich um Koop-Karten. Aufgrund der massiven Anzahl an BS-Karten (über 80) wird hier nur ein kleiner Auszug beschrieben.
 
 
 		BS Tutorial:
