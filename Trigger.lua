@@ -842,23 +842,28 @@ function OnArchers_Tower_OccupiedTroopDied()
 	
 	if playerID ~= 0 then
 	
-		if Logic.IsLeader(entityID) == 1 then
+		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) ~= 0 then
 	
-			if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
-			
-				for k,v in pairs(gvArchers_Tower.SlotData) do
+			if Logic.IsLeader(entityID) == 1 then
+		
+				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
 				
-					local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
-			
-					if  slot ~= nil then
+					for k,v in pairs(gvArchers_Tower.SlotData) do
 					
-						gvArchers_Tower.SlotData[k][slot] = nil
+						local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+				
+						if  slot ~= nil then
+						
+							gvArchers_Tower.SlotData[k][slot] = nil
+								
+							gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
 							
-						gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
-						
-						if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
-						
-							Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])
+							if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
+							
+								Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])
+								
+							end
+							
 						end
 						
 					end
@@ -867,6 +872,40 @@ function OnArchers_Tower_OccupiedTroopDied()
 				
 			end
 			
+		else
+		
+			if playerID == 1 then
+			
+				if Logic.IsLeader(entityID) == 1 then
+		
+					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
+					
+						for k,v in pairs(gvArchers_Tower.SlotData) do
+						
+							local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+					
+							if  slot ~= nil then
+							
+								gvArchers_Tower.SlotData[k][slot] = nil
+									
+								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
+								
+								if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
+								
+									Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])
+									
+								end
+								
+							end
+							
+						end
+						
+					end
+					
+				end
+				
+			end
+		
 		end
 		
 	end
