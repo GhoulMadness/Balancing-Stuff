@@ -2,6 +2,7 @@ GameCallback_GUI_SelectionChangedOrig = GameCallback_GUI_SelectionChanged;
 GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;	
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
 HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
+GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged;
 
 -- 3 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
@@ -673,6 +674,8 @@ function GameCallback_PaydayPayed(_player,_amount)
 	
 end	
 
+
+-- this maybe should be placed rather into the GUIUpdate.lua
 function HeroWidgetUpdate_ShowHeroWidget(EntityId)
 
 	local EntityType = Logic.GetEntityType(EntityId)
@@ -696,5 +699,45 @@ function HeroWidgetUpdate_ShowHeroWidget(EntityId)
 		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
 		
 	end
+	
+end
+
+--------------------------------------------------------------------------------
+-- Function that is called when an entity ID changes (upgrade, ...)
+--------------------------------------------------------------------------------
+function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
+
+	-- needed when troop on top of the archers tower is upgraded
+	for k,v in pairs(gvArchers_Tower.SlotData) do
+						
+		local slot = table.findvalue(gvArchers_Tower.SlotData[k],_OldID)
+		
+		if slot ~= nil then
+		
+			gvArchers_Tower.SlotData[k][slot] = _NewID
+			
+			gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] + 1
+			
+			local TroopIDs = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[k][slot])}
+						
+			table.remove(TroopIDs,1)
+			
+			table.insert(TroopIDs,gvArchers_Tower.SlotData[k][slot])
+			
+			for i = 1,table.getn(TroopIDs) do
+				
+				CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
+				
+				CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
+				
+				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),Logic.EntityGetPlayer(TroopIDs[i]))*gvArchers_Tower.MaxRangeFactor)
+			
+			end
+			
+		end
+	
+	end
+	
+	GameCallback_GUI_EntityIDChangedOrig(_OldID,_NewID)
 	
 end

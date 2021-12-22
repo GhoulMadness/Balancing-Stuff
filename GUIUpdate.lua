@@ -8,7 +8,24 @@ function GUIUpdate_AttackRange()
 	
 	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))
 	
-	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
+	local pos = GetPosition(EntityID)
+	
+	local num,towerID = Logic.GetPlayerEntitiesInArea(PID, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)
+	
+	local factor = 1
+	
+	if not gvArchers_Tower.SlotData[towerID] then
+	
+		factor = 1
+		
+	else
+	
+		factor = gvArchers_Tower.MaxRangeFactor
+		
+	end
+	
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range * factor )	
+	
 end
 
 function GUIUpdate_VisionRange()

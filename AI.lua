@@ -25,7 +25,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		--	set up default information
 		local description = {
 		
-			serfLimit				=	(_strength-1)*3,
+			serfLimit				=	(_strength^2)+2,
 			--------------------------------------------------
 			extracting				=	false,
 			--------------------------------------------------

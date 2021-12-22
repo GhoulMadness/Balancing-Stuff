@@ -17,6 +17,14 @@
 	gvArchers_Tower.MaxRangeFactor = 1.2
 	-- In dieser Reichweite werden Truppen zum stationieren gesucht
 	gvArchers_Tower.Troop_SearchRadius = 500
+	-- Kategorien von feindlichen Fernkampf-Truppen, die nicht nahe des Turms stehen dürfen, wenn er befüllt werden soll
+	gvArchers_Tower.RangedEnemySearchCategories = {EntityCategories.LongRange,EntityCategories.EvilLeader,EntityCategories.Cannon,EntityCategories.CavalryLight,EntityCategories.Hero5,EntityCategories.Hero10}
+	-- Kritische Reichweite, in der sich keine Fernkampf-Feinde in der Nähe des Turmes befinden dürfen
+	gvArchers_Tower.RangedEnemySearchRange = 3500
+	-- Kategorien von feindlichen Nahkampf-Truppen, die nicht nahe des Turms stehen dürfen, wenn er befüllt werden soll
+	gvArchers_Tower.MeleeEnemySearchCategories = {EntityCategories.Melee}
+	-- Kritische Reichweite, in der sich keine Nahkampf-Feinde in der Nähe des Turmes befinden dürfen
+	gvArchers_Tower.MeleeEnemySearchRange = 600
 	
 	gvArchers_Tower.AmountOfTowers = {}
 	

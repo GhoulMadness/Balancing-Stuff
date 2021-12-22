@@ -332,6 +332,7 @@ function GUIAction_Hero13StoneArmor()
 	end
 	
 end
+
 function GUIAction_Hero13RegenAura()
 
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
@@ -467,6 +468,14 @@ function GUIAction_Archers_Tower_AddSlot()
 	end
 	
 	local pos = GetPosition(entity)
+	
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.RangedEnemySearchCategories, pos, gvArchers_Tower.RangedEnemySearchRange, Diplomacy.Hostile ) or AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.MeleeEnemySearchCategories, pos, gvArchers_Tower.MeleeEnemySearchRange, Diplomacy.Hostile ) then
+	
+		Message("Der Feind ist Euch bereits zu nahe. Truppen können nicht den Turm hinauf, solange Feinde in der Nähe sind!")
+		
+		return
+		
+	end
 				
 	local offset = gvArchers_Tower.GetOffset_ByOrientation(entity)
 	
@@ -478,56 +487,62 @@ function GUIAction_Archers_Tower_AddSlot()
 	
 	if freeslot then
 			
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(gvArchers_Tower.AllowedTypes)), CEntityIterator.InCircleFilter(position.X, position.Y, gvArchers_Tower.Troop_SearchRadius)) do
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(player), CEntityIterator.OfAnyTypeFilter(unpack(gvArchers_Tower.AllowedTypes)), CEntityIterator.InCircleFilter(position.X, position.Y, gvArchers_Tower.Troop_SearchRadius)) do
+			
+			local slot = table.findvalue(gvArchers_Tower.SlotData[entity],eID)
+				
+			if  slot == nil then							
+			
+				if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
+				
+					soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}
 					
-			if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
-			
-				soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}
-				
-				soldiers = soldierstable[1]
-				
-			else
-				
-				soldierstable = 0
-				
-				soldiers = 0
-				
-			end
-				
-			if not _G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] then
-			
-				if CNetwork then
-
-					CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop",player,entity,eID)
+					soldiers = soldierstable[1]
 					
 				else
 					
-					gvArchers_Tower.SlotData[entity][freeslot] = eID
-			
-					_G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_"..player.."_"..freeslot, 1, nil, {freeslot,soldiers,player,entity})
-			
-					gvArchers_Tower.CurrentlyUsedSlots[entity] = gvArchers_Tower.CurrentlyUsedSlots[entity] + 1
+					soldierstable = 0
 					
-					Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][freeslot])
-	
-					Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][freeslot],-30,257)
-					
-					if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
-					
-						table.remove(soldierstable,1)
-						
-						for i = 1,table.getn(soldierstable) do
-
-							Logic.SuspendEntity(soldierstable[i])
-		
-							Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
-						
-						end
-						
-					end
+					soldiers = 0
 					
 				end
 					
+				if not _G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] then
+				
+					if CNetwork then
+
+						CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop",player,entity,eID)
+						
+					else
+						
+						gvArchers_Tower.SlotData[entity][freeslot] = eID
+				
+						_G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_"..player.."_"..freeslot, 1, nil, {freeslot,soldiers,player,entity})
+				
+						gvArchers_Tower.CurrentlyUsedSlots[entity] = gvArchers_Tower.CurrentlyUsedSlots[entity] + 1
+						
+						Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][freeslot])
+		
+						Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][freeslot],-30,257)
+						
+						if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
+						
+							table.remove(soldierstable,1)
+							
+							for i = 1,table.getn(soldierstable) do
+
+								Logic.SuspendEntity(soldierstable[i])
+			
+								Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
+							
+							end
+							
+						end
+						
+					end
+						
+				end
+				
 			end
 			
 			break

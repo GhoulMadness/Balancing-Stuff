@@ -832,6 +832,140 @@ function AreEntitiesOfDiplomacyStateInArea( _player, _position, _range, _state )
 	
 end
 
+function AreEntitiesOfCategoriesAndDiplomacyStateInArea( _player, _entityCategories, _position, _range, _state )
+
+	assert(type(_entityCategories) == "table")
+	
+	local i
+	
+	if CNetwork then
+	
+		i = XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()
+		
+	else
+	
+		i = 8
+	
+	end
+
+	for i = 1,i do 
+	
+		if Logic.GetDiplomacyState( _player, i) == _state then
+		
+			local amount,bool = AreEntitiesOfTypeAndCategoryInArea( i, 0, _entityCategories, _position, _range, 1)
+		
+			if bool then
+			
+				return true
+				
+			end
+			
+		end
+		
+	end
+	
+	return false
+	
+end
+
+function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCategories, _position, _range, _amount)
+		
+	local Data = {}
+	
+	local Counter = 0
+	
+	assert(type(_entityCategories) == "table")
+	
+	if type(_entityTypes) == "table" then
+	
+		for i = 1,table.getn(_entityTypes) do	
+		
+			Data[i] = {	Logic.GetPlayerEntitiesInArea(	_player,
+														_entityType[i],
+														_position.X,
+														_position.Y,
+														_range,
+														_amount)}
+
+		
+			for j=2, Data[i][1]+1 do
+			
+				for k = 1,table.getn(_entityCategories) do
+
+					if Logic.IsBuilding(Data[i][j]) == 1 then
+
+						if Logic.IsConstructionComplete(Data[i][j]) == 1 then
+						
+							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
+
+								Counter = Counter + 1
+								
+							end
+
+						end
+
+					else
+					
+						if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
+						
+							Counter = Counter + 1
+							
+						end
+
+					end
+					
+				end
+
+			end
+			
+		end
+	
+	else
+		
+		Data = {	Logic.GetPlayerEntitiesInArea(	_player,
+													_entityType,
+													_position.X,
+													_position.Y,
+													_range,
+													_amount)}
+
+	
+		for j=2, Data[1]+1 do
+		
+			for k = 1,table.getn(_entityCategories) do
+
+				if Logic.IsBuilding(Data[j]) == 1 then
+
+					if Logic.IsConstructionComplete(Data[j]) == 1 then
+					
+						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
+
+							Counter = Counter + 1
+							
+						end
+
+					end
+
+				else
+				
+					if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
+					
+						Counter = Counter + 1
+						
+					end
+
+				end
+				
+			end
+
+		end
+		
+	end
+
+	return Counter,(Counter >= _amount)
+
+end
+
 function Unmuting()
 
 	GUI.SetFeedbackSoundOutputState(1)
@@ -1481,29 +1615,53 @@ BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
 -- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackSpeed(_entityType)
 
-	if not BehaviorExceptionEntityTypeTable[_entityType] then
+	local behavior_pos
 	
-		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][21]:GetInt()
+	if not BehaviorExceptionEntityTypeTable[_entityType] then
+		
+		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then
+		
+			behavior_pos = 4
+			
+		else
+		
+			behavior_pos = 6
+			
+		end
 		
 	else
 	
-		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8][21]:GetInt()
+		behavior_pos = 8
 		
 	end
+	
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][21]:GetInt()
 	
 end
 -- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackRange(_entityType)
 
+	local behavior_pos
+
 	if not BehaviorExceptionEntityTypeTable[_entityType] then
 	
-		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][6][23]:GetFloat() 
+		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then
+		
+			behavior_pos = 4
+			
+		else
+		
+			behavior_pos = 6
+			
+		end
 		
 	else
 	
-		return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8][23]:GetFloat()
+		behavior_pos = 8		
 		
 	end
+	
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][23]:GetFloat()
 	
 end
 
@@ -1544,19 +1702,7 @@ function GetEntityTypeMaxAttackRange(_entity,_player)
 		
 	end
 	
-	local pos = GetPosition(_entity)
-	
-	local num,towerID = Logic.GetPlayerEntitiesInArea(_player, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)
-	
-	if not gvArchers_Tower.SlotData[towerID] then
-	
-		return GetEntityTypeBaseAttackRange(entityType) + RangeTechBonus
-		
-	else
-	
-		return GetEntityTypeBaseAttackRange((entityType) + RangeTechBonus)*gvArchers_Tower.MaxRangeFactor
-		
-	end
+	return GetEntityTypeBaseAttackRange(entityType) + RangeTechBonus
 
 end
 -- Rundungs-Comfort

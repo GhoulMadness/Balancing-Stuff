@@ -689,11 +689,11 @@ for i = 1,12 do
 					
 					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) == 1 then
 					
-						newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot]),{X = pos.X - offset.X, Y = pos.Y - offset.Y})
+						newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot]),{X = pos.X - 5*math.random(10), Y = pos.Y - 5*math.random(10)})
 						
 					else
 					
-						newLeaderID = CreateGroup(_player,entityType,_soldiers,pos.X,pos.Y,0)
+						newLeaderID = CreateGroup(_player,entityType,_soldiers,pos.X-5*math.random(10),pos.Y-5*math.random(10),0)
 					
 					end
 					
@@ -840,6 +840,8 @@ function OnArchers_Tower_OccupiedTroopDied()
 	
 	local playerID = Logic.EntityGetPlayer(entityID)
 	
+	local pos = GetPosition(entityID)
+	
 	if playerID ~= 0 then
 	
 		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) ~= 0 then
@@ -847,16 +849,20 @@ function OnArchers_Tower_OccupiedTroopDied()
 			if Logic.IsLeader(entityID) == 1 then
 		
 				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
-				
-					for k,v in pairs(gvArchers_Tower.SlotData) do
 					
+					for k,v in pairs(gvArchers_Tower.SlotData) do
+						
 						local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
 				
 						if  slot ~= nil then
 						
 							gvArchers_Tower.SlotData[k][slot] = nil
+							
+							if gvArchers_Tower.CurrentlyUsedSlots[k] ~= nil then
 								
-							gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
+								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
+								
+							end
 							
 							if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
 							
@@ -887,8 +893,12 @@ function OnArchers_Tower_OccupiedTroopDied()
 							if  slot ~= nil then
 							
 								gvArchers_Tower.SlotData[k][slot] = nil
+								
+								if gvArchers_Tower.CurrentlyUsedSlots[k] then
 									
-								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
+									gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
+									
+								end
 								
 								if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
 								
