@@ -906,9 +906,13 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 
 					else
 					
-						if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
+						if Logic.IsEntityAlive(Data[i][j]) then
+					
+							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then							
 						
-							Counter = Counter + 1
+								Counter = Counter + 1
+								
+							end
 							
 						end
 
@@ -948,9 +952,13 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 
 				else
 				
-					if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
-					
-						Counter = Counter + 1
+					if Logic.IsEntityAlive(Data[j]) then
+				
+						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
+										
+							Counter = Counter + 1
+							
+						end
 						
 					end
 

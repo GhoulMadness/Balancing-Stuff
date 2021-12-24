@@ -473,6 +473,8 @@ function GUIAction_Archers_Tower_AddSlot()
 	
 		Message("Der Feind ist Euch bereits zu nahe. Truppen können nicht den Turm hinauf, solange Feinde in der Nähe sind!")
 		
+		Sound.PlayFeedbackSound( Sounds.Leader_LEADER_NO_rnd_01, 0 )
+		
 		return
 		
 	end

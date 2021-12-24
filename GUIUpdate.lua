@@ -993,7 +993,7 @@ function GUIUpdate_Archers_Tower_AddSlot()
 	
 	local EntityID = GUI.GetSelectedEntity()
 	
-	if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots then
+	if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots or table.getn(gvArchers_Tower.SlotData[EntityID]) >= 2 then
 	
 		XGUIEng.DisableButton(CurrentWidgetID, 1)
 		
