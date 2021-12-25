@@ -1,6 +1,9 @@
 --------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------- Blitzeinschläge & Unwetter ---------------------------------------
 --------------------------------------------------------------------------------------------------------------------
+if not gvLastTimeLightningRodUsed then
+	gvLastTimeLightningRodUsed = -240000
+end
 Mapsize = Logic.WorldGetSize()
 gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStrikes = 0, 
 	--Menge an Blitzen pro Sekunde abhängig von der Fläche der Map

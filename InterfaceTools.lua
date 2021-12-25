@@ -112,7 +112,7 @@ function InterfaceTool_HasPlayerEnoughResources_Feedback( _Costs )
 		GUI.AddNote( Message )
 		--überprüfen, ob die neuen Sounds im Sounds Table vorhanden sind
 		if Sounds.VoicesMentor_LEAVE_Silversmith == nil then
-			Stream.Start("Sounds\\VoicesMentor\\INFO_notenoughsilver_rnd_0"..math.random(2)..".wav", 262)
+			Stream.Start("Sounds\\VoicesMentor\\INFO_notenoughsilver_rnd_0"..XGUIEng.GetRandom(1)+1 ..".wav", 262)
 		else
 		GUI.SendNotEnoughResourcesFeedbackEvent( ResourceType.Silver, _Costs[ ResourceType.Silver ] - Silver )
 		end

@@ -152,6 +152,7 @@
 		end
 		
 	end
+	-- close game if map not validated
 	function BS.ValidateMap()
 		if XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() > 0 then
 			return BS.MapList[XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()][Framework.GetCurrentMapName()]
@@ -164,6 +165,7 @@
 			Framework.CloseGame()
 		end
 	end
+	--additionaly load this script if there are any presents to steal on the map
 	if gvXmasEventFlag == 1 then
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
 	end															   
@@ -208,20 +210,25 @@
 			"Scaremonger",
 			"Trigger",
 			"Comforts",
+			"CMod_Additions",
 			"InterfaceTools",
 			"GameCallbacks",
 			"GUITooltips",
 			"GUIUpdate",
 			"GUIAction",
+			"LocalMusic",
 			"VersionCheck"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end);
 	end
 	
+	--disables the creation of fow (needed for minimap)
 	CUtil.DisableFoW()
+	--larger zoom factor (default 1.0)
 	Camera.ZoomSetFactorMax(2)
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
+	--cooldown handling levy taxes
 	gvLastTimeButtonPressed = -240000 	
 	
 	--zusätzliche Taunts hinzugefügt
@@ -259,10 +266,17 @@
 			CUtil.Payday_SetActive(i, true) 
 		end 
 	end
+	--Winter and Night sounds (wolfs howling, snowbird, etc.)
 	StartSimpleJob("WinterTheme")
+	--calculating ingame time (used for mechanical clock gui)
 	StartSimpleJob("IngameTimeJob")
+	--calculating player military score points (allow bloodrush if enough)
 	StartSimpleJob("BloodRushCheck")
+	--initializing lightning
 	StartSimpleJob("Lightning_Job")
+	--Control Siversmith Grievance
+	StartSimpleJob("ControlSiversmithGrievance")
+	--initializing dz trade punishment
 	DZTrade_Init()
 	StartCountdown(5*60,BeautiAnimCheck,false)
 	----------------------------------- GUI und spezielle Scripte laden (verschiedene für EMS und Koop Karten ----------------------------------
