@@ -68,8 +68,7 @@ function GUIUpdate_MoveSpeed()
 	local PID = GUI.GetPlayerID()
 	
 	local Speed = round(GetSettlerCurrentMovementSpeed(EntityID,PID))
-		
-	
+			
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..round((BaseSpeed+SpeedTechBonus)*SpeedWeatherFactor) )	
 	
 end
