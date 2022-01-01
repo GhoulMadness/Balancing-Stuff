@@ -590,7 +590,17 @@ end
 
 function GetEntityHealth( _entity )
 
-	local entityID = Logic.GetEntityIDByName(_entity)
+	local entityID
+	
+	if type(_entity) ~= "number" then
+
+		entityID = Logic.GetEntityIDByName(_entity)
+		
+	else
+	
+		entityID = _entity
+		
+	end
 	
     if not Tools.IsEntityAlive( entityID ) then
 	

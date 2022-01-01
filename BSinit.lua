@@ -247,8 +247,10 @@
 	--Trigger für Türme
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnTowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnTowerDestroyed", 1)
-	--Trigger für Drake
+	--Trigger für Drake (Kopfschuss)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
+	--Trigger für Gift (Mary,Kala)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "PoisonDamageCreateDoT", 1);
 	--Trigger für Heldentod
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
 	--Trigger für Schützentürme

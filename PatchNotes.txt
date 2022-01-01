@@ -295,3 +295,11 @@ Es können neben Bogen- und Scharfschützen nun auch Bombarden, Eisenkanonen, Sp
 
 Die Changelog-Textdatei wurde auf den neuesten Stand gebracht.
 
+--- Version 0.703
+
+Der Schaden sowie die Schadensreichweite von Kanonentürmen wurde erhöht.
+
+Marys und Kalas Gift verursacht nun kontinuierlichen zusätzlichen Schaden an alle Gegner, die sich nach dem Zünden der Fähigkeiten weiterhin im visuellen Gift-Effekt aufhalten.
+
+Es wurden einige Anpassungen am Schützenturm vorgenommen.
+

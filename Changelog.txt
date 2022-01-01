@@ -131,9 +131,9 @@ technische Infos:
 		
 			Min.Range:		800									800
 		
-			DMG-Range:		460									700
+			DMG-Range:		480									700
 
-			DMG:			52									40
+			DMG:			60									40
 
 			Anmerkungen:		Diese Änderungen betreffen gleichermaßen die "dunklen" Versionen der Türme. Diese haben jedoch im Schnitt etwa 50% mehr HP.
 
@@ -919,8 +919,11 @@ technische Infos:
 			Giftnebel DMG:		50									25	
 			
 			Giftnebel Reichw:	500									1200
+			
+			Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
+			(Schadensberechnung 10mal pro Sekunde)
 
-		Mary de Morfichet:
+		Mary de Mortfichet:
 
 			Rüstung:		2									3
 
@@ -947,6 +950,9 @@ technische Infos:
 			Gift-CD[S]:		150									120
 			
 			Gift-DMG:		70									45
+			
+			Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
+			(Schadensberechnung 10mal pro Sekunde)
 
 		Kerberos:
 
@@ -1495,7 +1501,7 @@ Neuerungen im Balancing Stuff:
 
 		Söldnerturm:
 			
-			Im Söldnerturm könnt ihr Söldner aus fernen Landen anheuern.
+			Im Söldnerturm könnt ihr Söldner aus fernen Landen anheuern. Ihr müsst Euch jedoch für eine der Kulturen entscheiden.
 
 			Kosten: Steine: 	500
 				Holz:		500
@@ -1512,7 +1518,7 @@ Neuerungen im Balancing Stuff:
 			
 			benötigt: 		Fruchtfolge
 
-			Besonderheiten:	neue Siedler können ananalog zu Dorfzentren von hier zu ihren Arbeitsplätzen laufen. 
+			Besonderheiten:	neue Siedler können ananalog zu Dorfzentren von hier aus zu ihren Arbeitsplätzen laufen. 
 
 		Silberschmelze:
 			
