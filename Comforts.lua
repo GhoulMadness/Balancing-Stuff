@@ -1649,3 +1649,98 @@ function round( _n )
 	return math.floor( _n + 0.5 );
 	
 end
+
+function GetPlayerEntities(_playerID, _entityType)
+	local playerEntities = {};
+	if _entityType ~= nil then
+		local n,eID = Logic.GetPlayerEntities(_playerID, _entityType, 1);
+		if (n > 0) then
+			local firstEntity = eID;
+			repeat
+				table.insert(playerEntities,eID);
+				eID = Logic.GetNextEntityOfPlayerOfType(eID);
+			until (firstEntity == eID);
+		end
+		return playerEntities;
+	else
+		for k,v in pairs(Entities) do
+			if not string.find(tostring(k), "XD_", 1, true) and
+			not string.find(tostring(k), "XA_", 1, true) and
+			not string.find(tostring(k), "XS_", 1, true) then
+			local n,eID = Logic.GetPlayerEntities(_playerID, v, 1);
+				if (n > 0) then
+					local firstEntity = eID;
+					repeat
+						table.insert(playerEntities,eID);
+						eID = Logic.GetNextEntityOfPlayerOfType(eID);
+					until (firstEntity == eID);
+				end
+			end
+		end
+		return playerEntities;
+	end
+end
+
+function RemoveVillageCenters()
+	StartVillageCenters = {{},{},{}};
+	local vcId;
+	local entities;
+	for i = 1,3 do
+		for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+			entities = GetPlayerEntities(k, Entities["PB_VillageCenter"..i]);
+			for x = 1, table.getn(entities) do
+				table.insert(StartVillageCenters[i], entities[x]);
+			end
+		end
+		for j = 1, table.getn(StartVillageCenters[i]) do
+			vcId = StartVillageCenters[i][j];
+			StartVillageCenters[i][j] = {
+				EntityType = Logic.GetEntityType(vcId),
+				Position = GetPosition(vcId),
+				playerId = GetPlayer(vcId),
+				Rotation = Logic.GetEntityOrientation(vcId),
+				Name = Logic.GetEntityName(vcId),
+			};
+			DestroyEntity(vcId);
+		end
+	end
+end
+
+function RecreateVillageCenters()
+	local vcdata, eId;
+	for i = 1,3 do
+		for j = 1, table.getn(StartVillageCenters[i]) do
+			vcdata = StartVillageCenters[i][j];
+			SetEntityName(Logic.CreateEntity(vcdata.EntityType, vcdata.Position.X, vcdata.Position.Y, vcdata.Rotation, vcdata.PlayerId), vcdata.Name);
+		end
+	end
+end
+
+function SetPlayerEntitiesNonSelectable()
+	StartAllPlayerEntities = {};
+	local eId;
+	local IsHeadquarter = function(_eId)
+		local eType = Logic.GetEntityType(_eId);
+		return eType == Entities.PB_Headquarters1 or
+			   eType == Entities.PB_Headquarters2 or
+			   eType == Entities.PB_Headquarters3;
+	end
+	for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+		StartAllPlayerEntities[k] = GetPlayerEntities(k);
+		for i = 1, table.getn(StartAllPlayerEntities[k]) do
+			eId = StartAllPlayerEntities[k][i];
+			if not IsHeadquarter(eId) then
+				Logic.SetEntitySelectableFlag(StartAllPlayerEntities[k][i], 0);
+			end
+		end
+	end
+end
+
+function SetPlayerEntitiesSelectable()
+	for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+		StartAllPlayerEntities[k] = GetPlayerEntities(k);
+		for i = 1, table.getn(StartAllPlayerEntities[k]) do
+			Logic.SetEntitySelectableFlag(StartAllPlayerEntities[k][i], 1);
+		end
+	end
+end
