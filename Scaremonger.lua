@@ -20,15 +20,15 @@ Scaremonger.MotiDebuff = function(_PlayerID,_eType)
 					CEntity.SetMotivation(eID, math.min(0.4,motivation - amount ))
 				end
 			end			
-			if	GetPlayersMotivationHardcap(j) >= (0.4 + amount) then
+			if	CUtil.GetPlayersMotivationHardcap(j) >= (0.4 + amount) then
 				CUtil.AddToPlayersMotivationHardcap(j, - amount)
 			else
-				CUtil.AddToPlayersMotivationHardcap(j, - (GetPlayersMotivationHardcap(j)-0.4))
+				CUtil.AddToPlayersMotivationHardcap(j, - (CUtil.GetPlayersMotivationHardcap(j)-0.4))
 			end
-			if GetPlayersMotivationSoftcap(j) >= (0.4 + amount) then
+			if CUtil.GetPlayersMotivationSoftcap(j) >= (0.4 + amount) then
 				CUtil.AddToPlayersMotivationSoftcap(j, - amount)
 			else
-				CUtil.AddToPlayersMotivationSoftcap(j, - (GetPlayersMotivationSoftcap(j)-0.4))
+				CUtil.AddToPlayersMotivationSoftcap(j, - (CUtil.GetPlayersMotivationSoftcap(j)-0.4))
 			end
 		end
 	end

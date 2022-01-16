@@ -60,7 +60,7 @@ gvPoisonDoT.GetNeededTaskByEntityType = function(_type)
 
 	local task = ""
 	
-	if _type == Entities.CU_Mary_De_Mortfichet then
+	if _type == Entities.CU_Mary_de_Mortfichet then
 	
 		task = "TL_BATTLE_POISON"
 		

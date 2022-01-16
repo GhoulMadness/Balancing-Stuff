@@ -56,7 +56,9 @@ function gvDZTradeCheck.PunishmentProtected(_playerID)
 	for i = 1,table.getn(DZTable) do 
 		HPTable[i] = GetEntityHealth(DZTable[i]) 
 		local minHP = math.min(HPTable[i],100)
-		if minHP <= 80 or AreEntitiesOfDiplomacyStateInArea(_playerID,Logic.GetEntityPosition(DZTable[i]),3200,Diplomacy.Hostile) == true then
+		local posX,posY = Logic.GetEntityPosition(DZTable[i])
+		local pos = {X = posX,Y = posY}
+		if minHP <= 80 or AreEntitiesOfDiplomacyStateInArea(_playerID,pos,3200,Diplomacy.Hostile) == true then
 			return 1
 		else
 			return 0

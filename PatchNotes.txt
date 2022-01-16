@@ -303,3 +303,11 @@ Marys und Kalas Gift verursacht nun kontinuierlichen zusätzlichen Schaden an al
 
 Es wurden einige Anpassungen am Schützenturm vorgenommen.
 
+--- Version 0.704
+
+Es wird nun (ingame) angezeigt, wenn ein Spieler die Texturqualität nicht auf hoch gestellt hat und diese dadurch in BS nicht angezeigt werden können.
+
+Es wurde ein Fehler behoben, durch den Eisenkanonen durch Abbrechen der Kampfanimation nach einem Schuss schneller als geplant schießen konnten.
+
+Es wurden diverse Fehler behoben.
+

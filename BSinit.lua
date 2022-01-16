@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.703
+	BS.Version = 0.704
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -160,11 +160,57 @@
 			return true
 		end
 	end
-	if CNetwork then
-		if BS.ValidateMap() ~= true then
-			Framework.CloseGame()
+	
+	function BS.ValidateTextureQuality()
+	
+		if GDB.IsKeyValid( "Config\\Display\\TextureResolution" ) then
+		
+			return GDB.GetValue( "Config\\Display\\TextureResolution" ) == 0
+			
+		else
+		
+			return false
+			
 		end
+		
 	end
+	
+	if CNetwork then
+	
+		if BS.ValidateTextureQuality() ~= true then
+		
+			local text
+		
+			if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
+			
+				text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"
+				
+			else
+			
+				text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"
+				
+			end
+			
+			GUI.AddNote(text)
+			
+		end
+			
+		if BS.ValidateMap() ~= true then
+		
+			Framework.CloseGame()
+			
+		end
+		
+	else
+	
+		if BS.ValidateTextureQuality() ~= true then
+		
+			GUI.AddNote("Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!")
+			
+		end
+		
+	end
+	
 	--additionaly load this script if there are any presents to steal on the map
 	if gvXmasEventFlag == 1 then
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
@@ -237,7 +283,7 @@
 	------------------------------------ Trigger initialisieren -----------------------------------------------------
 	--Trigger für Handel
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
-	--Trigger für Spez-Gebäude (Schreckensgebäude/Dom etc.)
+	--Trigger für Spez-Entities (Dom/Silberschmied etc.)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SpezEntityPlaced", 1)
 	--Trigger für Salim-Falle
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SalimTrapPlaced", 1)

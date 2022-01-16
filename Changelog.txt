@@ -1286,11 +1286,11 @@ technische Infos:
 
 			Lauftempo:		270									240	
 	
-			Schaden:		42									30	
+			Schaden:		52									30	
 
 			Schadensreichweite:	410									150
 
-			Angriffstempo:		0.83									0.29
+			Angriffstempo:		0.29									0.29
 
 			Reichweite:		2100									2400
 
@@ -1335,11 +1335,11 @@ technische Infos:
 
 			Schadensklasse:		Stich	(gut gegen Einheiten)						Belagerung	(gut gegen Gebäude)
 	
-			Schaden:		60									65	
+			Schaden:		68									65	
 
 			Schadensreichweite:	480									300
 
-			Angriffstempo:		1.00									2.00
+			Angriffstempo:		0.42									2.00
 
 			Reichweite:		2250									2700
 
