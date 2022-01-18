@@ -932,7 +932,9 @@ StartCountdown = function (_Limit, _Callback, _Show)
 
 	if _Show and CountdownIsVisisble() then
 	
-		assert(false, "StartCountdown: A countdown is already visible")
+		LuaDebugger.Log("StartCountdown: A countdown is already visible. Countdown ticking to "..string.dump(_Callback).."is running but not shown!")
+		
+		_Show = false
 		
 	end
 

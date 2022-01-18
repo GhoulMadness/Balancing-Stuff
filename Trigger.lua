@@ -479,11 +479,9 @@ function SpezEntityPlaced()
 	
 	local pos = {Logic.GetEntityPosition(entityID)}
 	
-    if entityType == Entities.PB_Dome then       
-		
-		DomeVision(pos[1],pos[2])
-		
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "DomeFallen", 1)
+    if entityType == Entities.PB_Dome then     
+
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "DomePlaced", 1,{},{pos[1],pos[2]})	
 		
 	end
 	
@@ -569,17 +567,13 @@ function DomeVision(_posX,_posY)
 	
 end
 
-function DomePlaced(_pID,_eID,_posX,_posY)
+function DomePlaced(_posX,_posY)
 
-	if Logic.IsConstructionComplete(_eID) == 1 then
+	DomeVision(_posX,_posY)
+		
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "DomeFallen", 1)
 	
-		StartCountdown(10*60,DomeVictory,true)
-		
-		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(_pID)
-		
-		CUtil.AddToPlayersMotivationHardcap(_pID, 1)
-		
-	end
+	return true
 	
 end
 
@@ -924,13 +918,19 @@ for i = 1,12 do
 					
 					local newLeaderID
 					
+					local expLVL
+					
 					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) == 1 then
 					
 						newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),{X = pos.X - offset.X, Y = pos.Y - offset.Y})
 					
 					else
 						
+						expLVL = Logic.GetLeaderExperienceLevel(gvArchers_Tower.SlotData[_entity][_slot])
+						
 						newLeaderID = CreateGroup(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),_soldiers,pos.X - offset.X, pos.Y - offset.Y,0)
+						
+						
 						
 					end
 					

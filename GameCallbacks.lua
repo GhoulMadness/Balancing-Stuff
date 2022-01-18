@@ -26,9 +26,6 @@ if gvXmasEventFlag == 1 then
 		return true;
 	end;
 end
---++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Selection 
---++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	GameCallback_OnBuildingConstructionCompleteOrig(_BuildingID,_PlayerID)
@@ -59,6 +56,9 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 		end
 	end
 end
+--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- Selection 
+--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function GameCallback_GUI_SelectionChanged()
 	GameCallback_GUI_SelectionChangedOrig()
 	
