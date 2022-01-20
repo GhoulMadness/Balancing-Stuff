@@ -875,13 +875,21 @@ function GUIUpdate_Archers_Tower_AddSlot()
 	
 	local EntityID = GUI.GetSelectedEntity()
 	
-	if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots or table.getn(gvArchers_Tower.SlotData[EntityID]) >= 2 then
-	
+	if gvArchers_Tower.CurrentlyClimbing[EntityID] then
+				
 		XGUIEng.DisableButton(CurrentWidgetID, 1)
-		
+
 	else
+	
+		if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots or table.getn(gvArchers_Tower.SlotData[EntityID]) >= 2 then
 		
-		XGUIEng.DisableButton(CurrentWidgetID, 0)
+			XGUIEng.DisableButton(CurrentWidgetID, 1)
+			
+		else
+			
+			XGUIEng.DisableButton(CurrentWidgetID, 0)
+			
+		end
 		
 	end
 	
@@ -893,36 +901,44 @@ function GUIUpdate_Archers_Tower_RemoveSlot(_slot)
 	
 	local EntityID = GUI.GetSelectedEntity()
 	
-	if _slot then
-	
-		if gvArchers_Tower.SlotData[EntityID][_slot] ~= nil then
-			
-			XGUIEng.DisableButton(CurrentWidgetID, 0)
-			
-		else
-			
-			XGUIEng.DisableButton(CurrentWidgetID, 1)
-			
-			for i = 1,4 do
-					
-				XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.EmptySlot_Icon)
-						
-			end
-			
-		end
-		
+	if gvArchers_Tower.CurrentlyClimbing[EntityID] then
+				
+		XGUIEng.DisableButton(CurrentWidgetID, 1)
+
 	else
 	
-		if gvArchers_Tower.SlotData[EntityID][1] == nil and gvArchers_Tower.SlotData[EntityID][2] == nil then
+		if _slot then
 		
-			XGUIEng.DisableButton(CurrentWidgetID, 1)
+			if gvArchers_Tower.SlotData[EntityID][_slot] ~= nil then
+				
+				XGUIEng.DisableButton(CurrentWidgetID, 0)
+				
+			else
+				
+				XGUIEng.DisableButton(CurrentWidgetID, 1)
+				
+				for i = 1,4 do
+						
+					XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.EmptySlot_Icon)
+							
+				end
+				
+			end
 			
 		else
 		
-			XGUIEng.DisableButton(CurrentWidgetID, 0)
+			if gvArchers_Tower.SlotData[EntityID][1] == nil and gvArchers_Tower.SlotData[EntityID][2] == nil then
 			
+				XGUIEng.DisableButton(CurrentWidgetID, 1)
+				
+			else
+			
+				XGUIEng.DisableButton(CurrentWidgetID, 0)
+				
+			end
+								
 		end
-							
+		
 	end
 	
 end

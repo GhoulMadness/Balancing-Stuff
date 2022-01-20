@@ -35,7 +35,7 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	if eType == Entities.PB_Dome then
 		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(_PlayerID)
 		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 1)
-		StartCountdown(10*60,DomeVictory,true)
+		StartCountdown(10*60,DomeVictory,true,"Dome_Victory")
 		
 	elseif Scaremonger.MotiEffect[eType] then
 	

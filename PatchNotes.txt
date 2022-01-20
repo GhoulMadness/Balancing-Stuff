@@ -311,3 +311,10 @@ Es wurde ein Fehler behoben, durch den Eisenkanonen durch Abbrechen der Kampfani
 
 Es wurden diverse Fehler behoben.
 
+--- Version 0.705
+
+QoL für den Schützenturm: Die Sterne der Truppen werden beim hochklettern übernommen. Es ist nun besser sichtbar, dass nur 1 Trupp gleichzeitig den Turm hochklettern kann.
+
+Die Bauplätze für die Leibeigenen für den Dom wurden angepasst. Sie passen nun visuell besser. Die maximalen Leibeigenen, die einen Dom bauen können, wurden von 63 auf 100 erhöht.
+
+

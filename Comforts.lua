@@ -924,7 +924,7 @@ function IstDrin(_wert, _table)
 end
 ------------------------------------------ Countdown Comfort --------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
-StartCountdown = function (_Limit, _Callback, _Show)
+StartCountdown = function (_Limit, _Callback, _Show, _Name)
 
 	assert(type(_Limit) == "number")
 
@@ -932,7 +932,15 @@ StartCountdown = function (_Limit, _Callback, _Show)
 
 	if _Show and CountdownIsVisisble() then
 	
-		LuaDebugger.Log("StartCountdown: A countdown is already visible. Countdown ticking to "..string.dump(_Callback).."is running but not shown!")
+		if _Name then
+		
+			LuaDebugger.Log("StartCountdown: A countdown is already visible. Countdown ticking to ".._Name.." is running but not shown!")
+		
+		else
+	
+			LuaDebugger.Log("StartCountdown: A countdown is already visible. Countdown ticking to "..string.dump(_Callback).." is running but not shown!")
+			
+		end
 		
 		_Show = false
 		
@@ -1746,3 +1754,4 @@ function SetPlayerEntitiesSelectable()
 		end
 	end
 end
+

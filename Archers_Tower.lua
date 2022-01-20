@@ -30,6 +30,8 @@
 	
 	gvArchers_Tower.CurrentlyUsedSlots = {}
 	
+	gvArchers_Tower.CurrentlyClimbing = {}
+	
 	gvArchers_Tower.SlotData = {}
 	
 	gvArchers_Tower.AllowedTypes = {Entities.PU_LeaderBow1,

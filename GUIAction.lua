@@ -449,6 +449,8 @@ function GUIAction_Archers_Tower_RemoveSlot(_slot)
 		
 		end
 		
+		gvArchers_Tower.CurrentlyClimbing[entity] = true
+		
 	end
 	
 	GUI.DeselectEntity(entity)
@@ -542,6 +544,8 @@ function GUIAction_Archers_Tower_AddSlot()
 						end
 						
 					end
+					
+					gvArchers_Tower.CurrentlyClimbing[entity] = true
 						
 				end
 				

@@ -895,6 +895,8 @@ for i = 1,12 do
 			if Counter.Tick2("Archers_Tower_RemoveTroop_Counter_".._entity.."_".._slot,gvArchers_Tower.ClimbUpTime) then
 			
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[_entity][_slot])
+				
+				gvArchers_Tower.CurrentlyClimbing[_entity] = nil
 			
 				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) ~= 1 then
 			
@@ -918,7 +920,7 @@ for i = 1,12 do
 					
 					local newLeaderID
 					
-					local expLVL
+					local expLVL = Logic.GetLeaderExperienceLevel(gvArchers_Tower.SlotData[_entity][_slot])
 					
 					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) == 1 then
 					
@@ -926,11 +928,7 @@ for i = 1,12 do
 					
 					else
 						
-						expLVL = Logic.GetLeaderExperienceLevel(gvArchers_Tower.SlotData[_entity][_slot])
-						
-						newLeaderID = CreateGroup(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),_soldiers,pos.X - offset.X, pos.Y - offset.Y,0)
-						
-						
+						newLeaderID = AI.Entity_CreateFormation(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), 0, _soldiers, pos.X - offset.X, pos.Y - offset.Y, 0, 0, expLVL, 0)
 						
 					end
 					
@@ -974,6 +972,8 @@ for i = 1,12 do
 				
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[_towerID][_slot])
 				
+				gvArchers_Tower.CurrentlyClimbing[_towerID] = nil
+				
 				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) ~= 1 then
 			
 					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_towerID][_slot])}
@@ -994,17 +994,19 @@ for i = 1,12 do
 					
 					local entityType = Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot])
 					
+					local expLVL = Logic.GetLeaderExperienceLevel(gvArchers_Tower.SlotData[_towerID][_slot])
+					
 					Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])
 					
-					local newLeaderID
+					local newLeaderID					
 					
 					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) == 1 then
 					
 						newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot]),{X = pos.X - 5*math.random(10), Y = pos.Y - 5*math.random(10)})
 						
-					else
-					
-						newLeaderID = CreateGroup(_player,entityType,_soldiers,pos.X-5*math.random(10),pos.Y-5*math.random(10),0)
+					else						
+						
+						newLeaderID = AI.Entity_CreateFormation(_player, entityType, 0, _soldiers, pos.X, pos.Y, 0, 0, expLVL, 0)
 					
 					end
 					
@@ -1109,6 +1111,12 @@ function OnArchers_TowerDestroyed()
 				
 					Trigger.UnrequestTrigger(_G["Archers_Tower_AddTroopTriggerID_"..entityID.."_"..i])
 				
+				end
+				
+				if gvArchers_Tower.CurrentlyClimbing[entityID] then
+				
+					gvArchers_Tower.CurrentlyClimbing[entityID] = nil
+					
 				end
 				
 				gvArchers_Tower.SlotData[entityID][i] = nil
