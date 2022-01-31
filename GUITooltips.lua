@@ -8,7 +8,7 @@ function GUITooltip_ExtraDuties()
 		TaxName = "Taler"
 		TextString = "@color:180,180,180,255 Sonderabgaben  @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Steuereintreibung  @cr @color:255,204,51,255 ermöglicht: @color:255,255,255,255  Verlangt Sonderabgaben von Euren Siedlern. Das füllt Euren Staatssäckel, jedoch werden Eure Arbeiter nicht sonderlich begeistert sein und ihre Motivation wird sinken."
 	else
-		TaxName = "Money"
+		TaxName = "Thalers"
 		TextString = "@color:180,180,180,255 Levy Taxes  @cr @color:255,204,51,255 requires: @color:255,255,255,255 Taxation  @cr @color:255,204,51,255 allows: @color:255,255,255,255  Demand special taxes from your settlers. That fills your state purse, but your workers will not be very enthusiastic and their motivation will decrease."
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TextString)
@@ -31,7 +31,7 @@ function GUITooltip_UpgradeMarket2()
 		TooltipCosts = "@color:255,255,255,255 Taler: 200 @cr Steine: 300 @cr Holz: 150 @cr Lehm: 100"
 	else
 		TooltipName = "@color:180,180,180,255 Expansion to a trading post @cr @color:255,204,51,255 requires: @color:255,255,255,255 Coinage @cr 			@color:255,204,51,255 allows: @color:255,255,255,255 Faster trading"
-		TooltipCosts = "@color:255,255,255,255 Money: 200 @cr Stone: 300 @cr Wood: 150 @cr Clay: 100"
+		TooltipCosts = "@color:255,255,255,255 Thalers: 200 @cr Stone: 300 @cr Wood: 150 @cr Clay: 100"
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,TooltipName)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,TooltipCosts)
@@ -68,14 +68,30 @@ function GUITooltip_Outpost_VeryHighTaxes()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_LightningRod()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Blitzableiter @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Der Blitzableiter sorgt dafür, dass Eure Siedlung kurzzeitig immun gegen Blitzeinschläge ist!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Eisen: 600 @cr Schwefel: 400")
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
+	local TooltipName = ""
+	local TooltipCosts = ""
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
+		TooltipName = "@color:180,180,180 Blitzableiter @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 @cr 	@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Der Blitzableiter sorgt dafür, dass Eure Siedlung kurzzeitig immun gegen Blitzeinschläge ist!"
+		TooltipCosts = "@color:255,255,255,255 Eisen: 600 @cr Schwefel: 400"
+	else
+		TooltipName = "@color:180,180,180 Lightning Rod @cr @color:255,204,51,255 requires: @color:255,255,255,255 @cr 	@color:255,204,51,255 allows: @color:255,255,255,255 The lightning rod makes your buildings temporarily immune to thunder strikes."
+		TooltipCosts = "@color:255,255,255,255 Iron: 600 @cr Sulfur: 400"
+	end
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,TooltipName)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,TooltipCosts)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
 end
 function GUITooltip_MakeThunderStorm()
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Unwetter @cr @color:255,255,255,255 Eure Ingenieure wechseln das Wetter zum Unwetter, sobald Sie die Maschine komplett ausgerichtet haben!")
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts," ")
-	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
+	local TooltipName = ""
+	local TooltipCosts = ""
+	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
+	TooltipName = "@color:180,180,180 Unwetter @cr @color:255,255,255,255 Eure Ingenieure wechseln das Wetter zum Unwetter, sobald Sie die Maschine komplett ausgerichtet haben!"
+	else
+	TooltipName = "@color:180,180,180 Thunder Storm @cr @color:255,255,255,255 Your engineers change the weather to thunder storm as soon as they completed their work."
+	end
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,TooltipName)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,TooltipCosts)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
 end
 function GUITooltip_UpgradeLighthouse()
 	local TooltipName = ""
@@ -85,7 +101,7 @@ function GUITooltip_UpgradeLighthouse()
 		TooltipCosts = "@color:255,255,255,255 Taler: 200 @cr Holz: 500"
 	else
 		TooltipName = "@color:180,180,180 Expansion to a lighthouse @cr @color:255,204,51,255 requires: @color:255,255,255,255 @cr 	@color:255,204,51,255 allows: @color:255,255,255,255 Equip the lighthouse with a lighted beacon. So you can request reinforcements."
-		TooltipCosts = "@color:255,255,255,255 Money: 200 @cr Wood: 500"
+		TooltipCosts = "@color:255,255,255,255 Thalers: 200 @cr Wood: 500"
 	end
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText,TooltipName)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,TooltipCosts)
@@ -363,7 +379,7 @@ function GUITooltip_MoveSpeed()
 	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Lauftempo @cr @color:255,255,255,255 Dies zeigt das aktuelle Lauftempo dieser Einheit an."
 	else	
-		Text = "@color:180,180,180 Running pace @cr @color:255,255,255,255 This shows the current movement pace of that unit."
+		Text = "@color:180,180,180 Movement speed @cr @color:255,255,255,255 This shows the current movement speed of this unit."
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
@@ -439,7 +455,7 @@ function GUITooltip_Archers_Tower_RemoveSlot()
 		
 	else
 	
-		Text = "@color:180,180,180 Fill with troops @cr @color:255,255,255,255 Click here to let a occupied troop climb down the tower."
+		Text = "@color:180,180,180 Outsource troops @cr @color:255,255,255,255 Click here to let a occupied troop climb down the tower."
 		
 	end
 	

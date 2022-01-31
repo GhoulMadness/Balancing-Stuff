@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------- Lighthouse Comforts ----------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------
-gvLighthouse = { delay = 60 + Logic.GetRandom(30) , troopamount = 2 + Logic.GetRandom(4) , techlevel = 2 + Logic.GetRandom(1) , troops = {
+gvLighthouse = { delay = 60 + Logic.GetRandom(30) , troopamount = 3 + Logic.GetRandom(4) , techlevel = 2 + Logic.GetRandom(1) , troops = {
 	Entities.PU_LeaderSword1,
 	Entities.PU_LeaderPoleArm1,
 	Entities.PU_LeaderBow1,

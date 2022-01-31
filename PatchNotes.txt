@@ -317,4 +317,12 @@ QoL für den Schützenturm: Die Sterne der Truppen werden beim hochklettern übe
 
 Die Bauplätze für die Leibeigenen für den Dom wurden angepasst. Sie passen nun visuell besser. Die maximalen Leibeigenen, die einen Dom bauen können, wurden von 63 auf 100 erhöht.
 
+--- Version 0.706
 
+Die Mindestanzahl von Truppen, die als Verstärkung vom Leuchtturm eintreffen, wurde von 2 auf 3 erhöht.
+
+Einige Texturen in der Silbergießerei wurden verbessert und passen nun visuell besser zum jeweiligen Effekt. Ein großer Dank geht hierbei an den Ersteller der Texturen - MSTVD
+
+Goldminen auf höheren Stufen produzieren nun mehr Taler. 
+
+Die Sprachkompatibilität für englische Spielversionen wurde verbessert. US-amerikanisch, Polnisch und Russisch werden an die englischen Lokalizationen weitergeleitet.

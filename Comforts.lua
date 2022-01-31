@@ -1318,7 +1318,7 @@ function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
 	
 end
 
-function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X , _Y ,_Orientation )
+function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X , _Y ,_Orientation ,_Experience)
 		
 	if _LeaderType == nil or _LeaderType == 0 then
 	
@@ -1343,6 +1343,15 @@ function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X , _Y ,_Orientati
 		
 	end
 	
+	if _Experience then
+	
+		if _Experience > 0 then
+	
+			CEntity.SetLeaderExperience(LeaderID,_Experience)
+			
+		end
+		
+	end
 	
 	CreateSoldiersForLeader( LeaderID, _SoldierAmount )
 	

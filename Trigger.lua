@@ -920,7 +920,7 @@ for i = 1,12 do
 					
 					local newLeaderID
 					
-					local expLVL = Logic.GetLeaderExperienceLevel(gvArchers_Tower.SlotData[_entity][_slot])
+					local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_entity][_slot])
 					
 					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) == 1 then
 					
@@ -928,7 +928,7 @@ for i = 1,12 do
 					
 					else
 						
-						newLeaderID = AI.Entity_CreateFormation(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), 0, _soldiers, pos.X - offset.X, pos.Y - offset.Y, 0, 0, expLVL, 0)
+						newLeaderID = CreateGroup(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), _soldiers, pos.X , pos.Y , 0 , experience)
 						
 					end
 					
@@ -994,7 +994,7 @@ for i = 1,12 do
 					
 					local entityType = Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot])
 					
-					local expLVL = Logic.GetLeaderExperienceLevel(gvArchers_Tower.SlotData[_towerID][_slot])
+					local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_entity][_slot])
 					
 					Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])
 					
@@ -1006,7 +1006,7 @@ for i = 1,12 do
 						
 					else						
 						
-						newLeaderID = AI.Entity_CreateFormation(_player, entityType, 0, _soldiers, pos.X, pos.Y, 0, 0, expLVL, 0)
+						newLeaderID = CreateGroup(_player, entityType, _soldiers, pos.X , pos.Y , 0 , experience)
 					
 					end
 					

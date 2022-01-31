@@ -93,8 +93,8 @@ if CUtil then
 	
 	gained_resource_gold = {
 		[Entities.PB_GoldMine1] = 5;
-		[Entities.PB_GoldMine2] = 7;
-		[Entities.PB_GoldMine3] = 9;
+		[Entities.PB_GoldMine2] = 10;
+		[Entities.PB_GoldMine3] = 15;
 	};
 
 end
