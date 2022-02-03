@@ -193,6 +193,7 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the Silversmith?
 			elseif 	UpgradeCategory == UpgradeCategories.Silversmith then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silversmith"),1)	
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("OvertimesButtonEnable"),0)
 				ButtonStem =  "Upgrade_Silversmith"
 			end
 			--Update Upgrade Buttons
@@ -228,44 +229,46 @@ local Speed = _Speed * 1000
 end
 
 function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
+
 	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
 	
-	if _TechnologyType == Technologies.T_HeavyThunder 
-	then
-	gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
+	if _TechnologyType == Technologies.T_HeavyThunder then
+	
+		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
 		
-	elseif _TechnologyType == Technologies.T_TotalDestruction 
-	then
-	gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
-	--
-	elseif _TechnologyType == Technologies.T_BarbarianCulture 
-	then
-		--GUIAction_BarbarianCultureResearched(PlayerID)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
+	elseif _TechnologyType == Technologies.T_TotalDestruction then
+	
+		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
 		
-	elseif _TechnologyType == Technologies.T_KnightsCulture 
-	then
-		--GUIAction_KnightsCultureResearched(_PlayerID)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
-		
-	elseif _TechnologyType == Technologies.T_BearmanCulture 
-	then
-		--GUIAction_BearmanCultureResearched(_PlayerID)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
-		
-	elseif _TechnologyType == Technologies.T_BanditCulture 
-	then
-		--GUIAction_BanditCultureResearched(_PlayerID)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
-		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
-		
+	end
+	
+	if not gvMercTechsCheated then
+	
+		if _TechnologyType == Technologies.T_BarbarianCulture then
+
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
+			
+		elseif _TechnologyType == Technologies.T_KnightsCulture then
+			
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
+			
+		elseif _TechnologyType == Technologies.T_BearmanCulture then
+			
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
+			
+		elseif _TechnologyType == Technologies.T_BanditCulture then
+			
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
+			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
+					
+		end
 		
 	end
 	
@@ -273,23 +276,33 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
 	
 end
+
 function GameCallback_RefinedResource(_entityID, _type, _amount)
         
     local playerID = Logic.EntityGetPlayer(_entityID);
         
     if _type == ResourceType.Gold then
+	
         if Logic.GetTechnologyState(playerID, Technologies.T_BookKeeping) == 4 then
                 
             local work = Logic.GetSettlersWorkBuilding(_entityID);
+			
             _amount = (refined_resource_gold[Logic.GetEntityType(work)] or _amount)
+			
         end;
+		
     end;
         
     if GameCallback_RefinedResourceOrig then
+	
         return GameCallback_RefinedResourceOrig(_entityID, _type, _amount);
+		
     else
+	
         return _entityID, _type, _amount;
+		
     end;
+	
 end;
 
 function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)

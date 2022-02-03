@@ -804,7 +804,7 @@ function QuickTest()
 	
 	Logic.AddToPlayersGlobalResource(player,ResourceType.SilverRaw,1000000)
 	
-	ResearchAllUniversityTechnologiesExtra(player)
+	ResearchAllTechnologies(player,1,1,1)
 	
 	Game.GameTimeSetFactor(6)
 	
@@ -820,69 +820,121 @@ function QuickTest()
 	
 end
 
-function ResearchAllUniversityTechnologiesExtra(_PlayerID)
+function ResearchAllTechnologies(_PlayerID,_UniTechsFlag,_MercTechsFlag,_SpecTechsFlag)
 
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Mercenaries,3)
+	if not _UniTechsFlag then
+		
+		_UniTechsFlag = 0
+		
+	end
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_StandingArmy,3)
+	if not _MercTechsFlag then
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Tactics,3)
+		_MercTechsFlag = 0
+		
+	else 
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Strategies,3)
+		if _MercTechsFlag == 1 then
+			--needed to unlock all the techs properly
+			gvMercTechsCheated = 1
+		
+		end
+		
+	end
+
+	if not _SpecTechsFlag then
+	
+		_SpecTechsFlag = 0
+		
+	end
+	
+	if _UniTechsFlag == 1 then
+	
+		-- University Techs	
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Mercenaries,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_StandingArmy,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Tactics,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Strategies,3)
 
 
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Construction,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_ChainBlock,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_GearWheel,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Architecture,3)
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Construction,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_ChainBlock,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_GearWheel,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Architecture,3)
 
 
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Alchemy,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Alloying,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Metallurgy,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Chemistry,3)
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Alchemy,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Alloying,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Metallurgy,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Chemistry,3)
 
 
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Literacy,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Trading,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Printing,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Library,3)
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Literacy,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Trading,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Printing,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Library,3)
 
 
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Mathematics,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Binocular,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Matchlock,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_PulledBarrel,3)
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Mathematics,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Binocular,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Matchlock,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_PulledBarrel,3)
 
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Taxation,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Banking,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Laws,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.GT_Gilds,3)
+		
+	end
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Taxation,3)
+	if _MercTechsFlag == 1 then
+		
+		--MercenaryTower Techs
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,3)
+		
+	end
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Banking,3)
+	if _SpecTechsFlag == 1 then
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Laws,3)
+		--Special Techs
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_Coinage,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_Scale,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_WeatherForecast,3)
+		
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_ChangeWeather,3)
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.GT_Gilds,3)
+		Logic.SetTechnologyState(_PlayerID,Technologies.T_CropCycle,3)
+		
+	end
 	
-	Logic.SetTechnologyState(_PlayerID,Technologies.T_Coinage,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.T_Scale,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.T_WeatherForecast,3)
-	
-	Logic.SetTechnologyState(_PlayerID,Technologies.T_ChangeWeather,3)
-	
+	--ToDo: add troop upgrades and defensive and offensive tech upgrades & silver techs (3 categories?)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function HideGUI()

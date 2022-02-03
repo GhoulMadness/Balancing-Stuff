@@ -121,61 +121,70 @@ function GUITooltip_LighthouseHireTroops()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,TooltipCosts)
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
+gvGUITooltipNames = {}
+gvGUITooltipNames.NameGold = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameMoney")
+gvGUITooltipNames.NameWood = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameWood")
+gvGUITooltipNames.NameClay = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameClay")
+gvGUITooltipNames.NameStone = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameStone")
+gvGUITooltipNames.NameIron = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameIron")
+gvGUITooltipNames.NameSulfur = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameSulfur")
+gvGUITooltipNames.NameSilver = XGUIEng.GetStringTableText("Ingamemessages/GUI_NameSilver")
+
 function GUITooltip_MercenaryTowerRecruitBarbarian()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderBarbarian_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 160 @cr Eisen: 55 @cr Holz: 20")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 160 @cr "..gvGUITooltipNames.NameIron.." : 55 @cr "..gvGUITooltipNames.NameWood.." : 20")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitBanditSword()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderBanditSword_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 160 @cr Eisen: 85")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 160 @cr "..gvGUITooltipNames.NameIron.." : 85")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitBanditBow()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderBanditBow_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 250 @cr Holz: 80")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 250 @cr "..gvGUITooltipNames.NameWood.." : 80")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitBlackKnight()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderBlackKnight_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 250 @cr Eisen: 60")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 250 @cr "..gvGUITooltipNames.NameIron.." : 60")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitBlackSword()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderBlackSword_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 320 @cr Eisen: 140")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 320 @cr "..gvGUITooltipNames.NameIron.." : 140")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitElite()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderElite_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 1000 @cr Eisen: 320 @cr Silber: 80")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 1000 @cr "..gvGUITooltipNames.NameIron.." : 320 @cr "..gvGUITooltipNames.NameSilver.." : 80")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitBearman()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderEvilBear_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 150 @cr Eisen: 30")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 150 @cr "..gvGUITooltipNames.NameIron.." : 30")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerRecruitSkirmisher()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BuyLeaderEvilSkir_disabled"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 150 @cr Holz: 60")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 150 @cr "..gvGUITooltipNames.NameWood.." : 60")
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomShortCut, " ")
 end
 function GUITooltip_MercenaryTowerBearmanCulture()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BearmanCulture_normal"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 600 @cr Eisen: 400")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 600 @cr "..gvGUITooltipNames.NameIron.." : 400")
 end
 function GUITooltip_MercenaryTowerBanditCulture()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BanditCulture_normal"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 600 @cr Eisen: 400")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 600 @cr "..gvGUITooltipNames.NameIron.." : 400")
 end
 function GUITooltip_MercenaryTowerBarbarianCulture()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/BarbarianCulture_normal"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 600 @cr Eisen: 400")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 600 @cr "..gvGUITooltipNames.NameIron.." : 400")
 end
 function GUITooltip_MercenaryTowerKnightsCulture()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, XGUIEng.GetStringTableText("MenuMercenaryTower/KnightsCulture_normal"))
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 600 @cr Eisen: 400")
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 "..gvGUITooltipNames.NameGold.." : 600 @cr "..gvGUITooltipNames.NameIron.." : 400")
 end
 function GUITooltip_ResourceSilver()
 	local CostString = " "
