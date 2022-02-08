@@ -398,6 +398,12 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
     local allowed = true;
 	
+	while _rotation < 0 do
+		
+		_rotation = _rotation + 360
+		
+	end
+	
     if GameCallback_PlaceBuildingAdditionalCheckOrig then
 	
         allowed = GameCallback_PlaceBuildingAdditionalCheckOrig(_eType, _x, _y, _rotation, _isBuildOn)
@@ -420,6 +426,8 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			
 		else
 		
+			LuaDebugger.Log(_rotation)
+			
 			checkorientation = false
 			
 		end

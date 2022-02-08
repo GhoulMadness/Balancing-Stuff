@@ -326,3 +326,15 @@ Einige Texturen in der Silbergießerei wurden verbessert und passen nun visuell 
 Goldminen auf höheren Stufen produzieren nun mehr Taler. 
 
 Die Sprachkompatibilität für englische Spielversionen wurde verbessert. US-amerikanisch, Polnisch und Russisch werden an die englischen Lokalizationen weitergeleitet.
+
+--- Version 0.707
+
+Die Baumenüs der Leibeigenen wurden angepasst, sodass das "normale" Baumenü nicht mehr so überladen ist. Sämtliche Militärgebäude haben nun eine eigene Seite erhalten. 
+Auf jeder Seite könnt ihr nun Leibeigene zu den Waffen rufen, sie entlassen oder die Massenentlassung verwenden.
+
+Hat eine Bronze- oder Belagerungskanone einen Schützenturm angegriffen, erhielten auf dem Turm stationierte Truppen denselben Schaden, den der Turm erlitten hat 
+(dadurch waren sie i.d.R. direkt alle tot). Sie erhalten nun den Schaden, den sie bei einem direkten Treffer erhalten hätten.
+
+Der Schützenturm kann nun korrekt gedreht werden.
+
+Spielt ihr im SP, wird nun Eure präferierte Farbe aus dem MP verwendet (falls vorhanden).

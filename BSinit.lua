@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.706
+	BS.Version = 0.707
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -35,7 +35,8 @@
 					["(2) emsbs fort nogersund"] = true,
 					["(2) emsbs grabenkampf"] = true,
 					["(2) emsbs der taktiker"] = true,
-					["(2) emsbs die alten imperien"] = true
+					["(2) emsbs die alten imperien"] = true,
+					["(2) emsbs hasenjagd"] = true
 					},
 				[3] =	{
 					["(3) bs koop kalas zorn"] = true,
@@ -79,7 +80,8 @@
 					["(4) emsbs verschneites moor"] = true,
 					["(4) emsbs glc battlestar"] = true,
 					["(4) emsbs im graben der verdammnis"] = true,
-					["(4) emsbs tal rasha"] = true
+					["(4) emsbs tal rasha"] = true,
+					["(4) emsbs hasenjagd"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
@@ -303,6 +305,7 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_TowerDestroyed", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnArchers_TowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_Tower_OccupiedTroopDied", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnArchers_Tower_OccupiedTroopAttacked", 1);
 	--Trigger für Leibeigene
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)
@@ -346,3 +349,10 @@
 	BS.VersionCheck.Setup()
 	--Simis Rotation Widget nach links schieben, damit es visuell besser in die größere GUI passt
 	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 
+	--Spieler die favorisierte Farbe geben (wenn auf Simis Server eingestellt)
+	if not CNetwork then
+		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
+			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer");
+			Display.SetPlayerColorMapping(1, PlayerColor);
+		end
+	end;	

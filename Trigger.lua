@@ -431,7 +431,7 @@ function TransactionDetails()
 		
 		if GUI.GetPlayerID() == PID then
 		
-			GUI.AddNote("Durch das Ma\195\159 erhaltet ihr "..Bonus.." zus\195\164tzliche/s "..Text.."!")
+			GUI.AddNote("Durch das Maß erhaltet ihr "..Bonus.." zusätzliche/s "..Text.."!")
 			
 		else
 		
@@ -994,7 +994,7 @@ for i = 1,12 do
 					
 					local entityType = Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot])
 					
-					local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_entity][_slot])
+					local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_towerID][_slot])
 					
 					Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])
 					
@@ -1240,3 +1240,60 @@ function OnArchers_Tower_OccupiedTroopDied()
 	end
 	
 end
+
+function OnArchers_Tower_OccupiedTroopAttacked()
+
+	local attacker = Event.GetEntityID1()
+	
+	if Logic.GetEntityType(attacker) == Entities.PV_Cannon2 or Logic.GetEntityType(attacker) == Entities.PV_Cannon4 then
+		
+		local target = Event.GetEntityID2();
+		
+		local playerID = Logic.EntityGetPlayer(target)
+		
+		if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
+		
+			local posX,posY = Logic.GetEntityPosition(target)
+			
+			local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]
+			
+			local soldiers = {}
+			
+			if towerID then
+			
+				for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do
+				
+					soldiers[k] = {Logic.GetSoldiersAttachedToLeader(v)}
+
+					table.remove(soldiers[k],1)
+					
+					for n,m in pairs(soldiers[k]) do
+					
+						if target == soldiers[k][n] then
+						
+							local dmg = CEntity.TriggerGetDamage();
+							
+							if dmg > gvArchers_Tower.OccupiedTroop.DamageTreshold then
+							
+								local attack = Logic.GetEntityDamage(attacker)
+								
+								local armor = Logic.GetEntityArmor(target)
+								
+								CEntity.TriggerSetDamage(math.max(math.ceil(attack*gvArchers_Tower.OccupiedTroop.AverageDamageFactor-armor),1))
+								
+							end
+							
+						end
+						
+					end
+					
+				end
+				
+			end
+				
+		end
+		
+	end
+		
+end
+
