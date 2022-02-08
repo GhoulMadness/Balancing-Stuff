@@ -338,3 +338,5 @@ Hat eine Bronze- oder Belagerungskanone einen Schützenturm angegriffen, erhielt
 Der Schützenturm kann nun korrekt gedreht werden.
 
 Spielt ihr im SP, wird nun Eure präferierte Farbe aus dem MP verwendet (falls vorhanden).
+
+Vorbereitungen für's kommende Osterturnier.
