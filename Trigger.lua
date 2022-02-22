@@ -1248,38 +1248,42 @@ function OnArchers_Tower_OccupiedTroopAttacked()
 	if Logic.GetEntityType(attacker) == Entities.PV_Cannon2 or Logic.GetEntityType(attacker) == Entities.PV_Cannon4 then
 		
 		local target = Event.GetEntityID2();
-		
+				
 		local playerID = Logic.EntityGetPlayer(target)
 		
-		if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
-		
-			local posX,posY = Logic.GetEntityPosition(target)
+		if gvArchers_Tower.AmountOfTowers[playerID] then
 			
-			local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]
+			if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
 			
-			local soldiers = {}
-			
-			if towerID then
-			
-				for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do
+				local posX,posY = Logic.GetEntityPosition(target)
 				
-					soldiers[k] = {Logic.GetSoldiersAttachedToLeader(v)}
+				local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]
+				
+				local soldiers = {}
+				
+				if towerID then
+				
+					for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do
+					
+						soldiers[k] = {Logic.GetSoldiersAttachedToLeader(v)}
 
-					table.remove(soldiers[k],1)
-					
-					for n,m in pairs(soldiers[k]) do
-					
-						if target == soldiers[k][n] then
+						table.remove(soldiers[k],1)
 						
-							local dmg = CEntity.TriggerGetDamage();
+						for n,m in pairs(soldiers[k]) do
+						
+							if target == soldiers[k][n] then
 							
-							if dmg > gvArchers_Tower.OccupiedTroop.DamageTreshold then
-							
-								local attack = Logic.GetEntityDamage(attacker)
+								local dmg = CEntity.TriggerGetDamage();
 								
-								local armor = Logic.GetEntityArmor(target)
+								if dmg > gvArchers_Tower.OccupiedTroop.DamageTreshold then
 								
-								CEntity.TriggerSetDamage(math.max(math.ceil(attack*gvArchers_Tower.OccupiedTroop.AverageDamageFactor-armor),1))
+									local attack = Logic.GetEntityDamage(attacker)
+									
+									local armor = Logic.GetEntityArmor(target)
+									
+									CEntity.TriggerSetDamage(math.max(math.ceil(attack*gvArchers_Tower.OccupiedTroop.AverageDamageFactor-armor),1))
+									
+								end
 								
 							end
 							
@@ -1288,9 +1292,9 @@ function OnArchers_Tower_OccupiedTroopAttacked()
 					end
 					
 				end
-				
+					
 			end
-				
+			
 		end
 		
 	end
