@@ -340,3 +340,18 @@ Der Schützenturm kann nun korrekt gedreht werden.
 Spielt ihr im SP, wird nun Eure präferierte Farbe aus dem MP verwendet (falls vorhanden).
 
 Vorbereitungen für's kommende Osterturnier.
+
+--- Version 0.708
+
+Bei Dovbar wird nun unten rechts das korrekte Vorschauvideo angezeigt.
+
+Es wurden einige GUI-Texturen angepasst, sodass diese nun grafisch besser zu den übrigen passen.
+
+Das Design der Drachenstatue wurde überarbeitet.
+
+Überstunden wurden angepasst. Ihr benötigt nun die Technologie >>Gesetzbücher<<, um Überstunden anordnen zu können. 
+Außerdem senkt jedes Mal Anordnen von Überstunden die Motivation aller Arbeiter um 8% sowie Euer Gesamtlimit permanent um 2%.
+
+Sämtliche neuen Gebäude verfügen nun über Shortcuts im entsprechenden Baumenü. Auch Gebäude die vorher keine Shortcuts hatten (wie Ziergebäude), verfügen nun über Shortcuts.
+
+Es wurde ein Fehler im Zusammenhang mit den Schützenturmen behoben.

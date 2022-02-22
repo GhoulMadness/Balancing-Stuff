@@ -959,6 +959,18 @@ function GetCurrentWeatherGfxSet()
 	
 end
 
+function SetInternalClippingLimitMax(_val)
+
+	CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[0]:SetFloat(_val)
+	
+end
+
+function SetInternalClippingLimitMin(_val)
+
+	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
+	
+end
+
 function IstDrin(_wert, _table)
 
 	for i = 1, table.getn(_table) do

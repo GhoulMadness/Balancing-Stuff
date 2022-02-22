@@ -13,18 +13,7 @@ if gvXmasEventFlag == 1 then
 		end
 	end
 end
-	GUIAction_ForceSettlersToWorkOrig = GUIAction_ForceSettlersToWork
-function GUIAction_ForceSettlersToWork()
-	local BuildingID = GUI.GetSelectedEntity()
-	local BuildingType =  Logic.GetEntityType( BuildingID )
-	local BuildingCategory = Logic.GetUpgradeCategoryByBuildingType( BuildingType )
-	if BuildingCategory == UpgradeCategories.Silversmith then
-		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine Überstunden verrichten!")
-	else
-		GUIAction_ForceSettlersToWorkOrig()
-	end
 
-end
 function GUIAction_ChangeView(_mode)
 	if _mode == 0 then
 		--normale Sicht anzeigen
@@ -168,6 +157,104 @@ function GUIAction_LevyTaxes()
     else
         GUI.LevyTax()
     end
+end
+
+--------------------------------------------------------------------------------
+-- Force Settlers to work
+--------------------------------------------------------------------------------
+function GUIAction_ForceSettlersToWork()
+		
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	
+	local BuildingID = GUI.GetSelectedEntity()
+	
+	if Logic.IsAlarmModeActive(BuildingID) == true then
+	
+		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_StoptAlarmFirst"))	
+		
+		return
+		
+	end
+	
+	if Logic.GetRemainingUpgradeTimeForBuilding(BuildingID) ~= Logic.GetTotalUpgradeTimeForBuilding (BuildingID) then
+	
+		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_BuildingUnderConstruction"))
+		
+		return
+		
+	end
+		
+	local BuildingType =  Logic.GetEntityType( BuildingID )
+	
+	local BuildingCategory = Logic.GetUpgradeCategoryByBuildingType( BuildingType )
+	
+	local SettlersTable = {}
+		
+	--Force Settlers 
+	if BuildingCategory == UpgradeCategories.Residence then
+	
+		SettlersTable = {Logic.GetAttachedResidentsToBuilding(BuildingID)}	
+		
+		for i= 1, SettlersTable[1], 1 
+		
+		do
+		
+			GUI.ForceSettlerToWork(SettlersTable[i+1])
+			
+		end
+		
+	elseif BuildingCategory == UpgradeCategories.Farm then
+	
+		SettlersTable = {Logic.GetAttachedEaterToBuilding(BuildingID)}
+		
+		for i= 1, SettlersTable[1], 1
+		
+		do
+		
+			GUI.ForceSettlerToWork(SettlersTable[i+1])
+			
+		end
+		
+	elseif BuildingCategory == UpgradeCategories.Silversmith then
+	
+		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine Überstunden verrichten!")
+		
+		return
+			
+	else
+	
+		GUI.ToggleOvertimeAtBuilding(BuildingID)
+		
+		if Logic.IsOvertimeActiveAtBuilding(BuildingID) ~= 1 then
+		
+			if CNetwork then
+			
+				CNetwork.SendCommand("Ghoul_ForceSettlersToWorkPenalty", GUI.GetPlayerID());
+				
+			else
+			
+				GUIAction_ForceSettlersToWorkPenalty(GUI.GetPlayerID())
+				
+			end
+			
+		end
+		
+	end
+				
+end
+
+function GUIAction_ForceSettlersToWorkPenalty(_playerID)
+	
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
+					
+		local motivation = Logic.GetSettlersMotivation(eID) 
+		
+		CEntity.SetMotivation(eID, motivation - 0.08) 
+		
+	end; 
+	
+	CUtil.AddToPlayersMotivationHardcap(_playerID, - 0.02)
+					
 end
 
 function GUIAction_LighthouseHireTroops()
@@ -379,6 +466,12 @@ function GUIAction_Archers_Tower_RemoveSlot(_slot)
 	
 	local player = Logic.EntityGetPlayer(entity) or GUI.GetPlayerID()
 	
+	if gvArchers_Tower.CurrentlyClimbing[entity] then
+	
+		return
+		
+	end
+	
 	if not _slot then
 	
 		if gvArchers_Tower.SlotData[entity][2] ~= nil then
@@ -464,6 +557,12 @@ function GUIAction_Archers_Tower_AddSlot()
 	local player = Logic.EntityGetPlayer(entity) or GUI.GetPlayerID()
 	
 	if gvArchers_Tower.CurrentlyUsedSlots[entity] >= gvArchers_Tower.MaxSlots then
+	
+		return
+		
+	end
+	
+	if gvArchers_Tower.CurrentlyClimbing[entity] then
 	
 		return
 		

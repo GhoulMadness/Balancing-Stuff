@@ -335,8 +335,10 @@ function GUITooltip_ExpelAll()
 	local Text = ""
 	if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
 		Text = "@color:180,180,180 Massenentlassung @cr @color:255,255,255,255 Klickt hier, um alle selektierten Einheiten zu entlassen."
+		ShortCutToolTip = "Taste: [Y]"
 	else
 		Text = "@color:180,180,180 Mass layoffs @cr @color:255,255,255,255 Click here to dismiss all selected units."
+		ShortCutToolTip = "Key: [Y]"
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)

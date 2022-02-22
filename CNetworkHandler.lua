@@ -42,6 +42,29 @@
 			
 		); 
 		
+		CNetwork.SetNetworkHandler("Ghoul_ForceSettlersToWorkPenalty", 
+			function(name, _playerID) 
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
+				
+					CLogger.Log("Ghoul_ForceSettlersToWorkPenalty", name, _playerID); 
+					
+					for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
+					
+						local motivation = Logic.GetSettlersMotivation(eID) 
+						
+						CEntity.SetMotivation(eID, motivation - 0.08) 
+						
+					end; 
+					
+					CUtil.AddToPlayersMotivationHardcap(_playerID, - 0.02)
+					
+				end; 
+				
+			end 
+			
+		); 
+		
 		CNetwork.SetNetworkHandler("Ghoul_LightningRod_Protected", 
 			function(name, _playerID) 
 			

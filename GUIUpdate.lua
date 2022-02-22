@@ -327,6 +327,56 @@ function GUIUpdate_LevyTaxes()
 	
 end
 
+function GUIUpdate_OvertimesButtons()
+	
+	local BuildingID = GUI.GetSelectedEntity()
+	
+	local RemainingOvertimeTimeInPercent = Logic.GetOvertimeRechargeTimeAtBuilding(BuildingID)
+	
+	local ProgressBarWidget = XGUIEng.GetWidgetID( "OvertimesButton_Recharge" );
+
+	if Logic.IsOvertimeActiveAtBuilding(BuildingID) == 1 then
+	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes, 1)	
+		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes, 0)	
+		
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, 0, 0, 0, 0)	
+		
+	else
+	
+		if Logic.GetTechnologyState(GUI.GetPlayerID(),Technologies.GT_Laws) == 4 then
+		
+			XGUIEng.DisableButton(XGUIEng.GetCurrentWidgetID(),0)
+		
+			XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes  ,0)	
+			
+			XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes  ,1)	
+			
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)		
+			
+			if RemainingOvertimeTimeInPercent == 0 then
+			
+				XGUIEng.DisableButton(gvGUI_WidgetID.ActivateOvertimes, 0)
+				
+			else
+			
+				XGUIEng.DisableButton(gvGUI_WidgetID.ActivateOvertimes, 1)
+				
+			end
+		
+		else
+		
+			XGUIEng.DisableButton(XGUIEng.GetCurrentWidgetID(),1)
+		
+		end
+				
+	end
+
+	XGUIEng.SetProgressBarValues(ProgressBarWidget, RemainingOvertimeTimeInPercent, 100)
+	
+end
+
 function GUIUpdate_LighthouseTroops()
 	
 	local eID = GUI.GetSelectedEntity()

@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.707
+	BS.Version = 0.708
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -24,6 +24,7 @@
 					["(2) bs koop silbertal"] = true,
 					["(2) bs koop trockenzeit"] = true,
 					["(2) bs koop winterplateau"] = true,
+					["(2) bs koop erste pruefung - kampfgeschick"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
