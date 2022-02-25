@@ -288,8 +288,28 @@ function GameCallback_RefinedResource(_entityID, _type, _amount)
             local work = Logic.GetSettlersWorkBuilding(_entityID);
 			
             _amount = (refined_resource_gold[Logic.GetEntityType(work)] or _amount)
+		
+		else
+		
+			if gvChallengeFlag then
+			
+				local work = Logic.GetSettlersWorkBuilding(_entityID);
+			
+				_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
+				
+			end
 			
         end;
+		
+	else
+	
+		if gvChallengeFlag then
+			
+			local work = Logic.GetSettlersWorkBuilding(_entityID);
+			
+			_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
+				
+		end
 		
     end;
         
@@ -373,6 +393,31 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 		
 		end;   
        
+	else
+
+		if gvChallengeFlag then
+		
+			if 		_type == ResourceType.ClayRaw then
+				_amount = (gained_resource_clay[Logic.GetEntityType(work)]-1 or _amount)
+							
+			elseif 	_type == ResourceType.IronRaw then
+				_amount = (gained_resource_iron[Logic.GetEntityType(work)]-1 or _amount)
+							
+			elseif 	_type == ResourceType.StoneRaw then
+				_amount = (gained_resource_stone[Logic.GetEntityType(work)]-1 or _amount)
+							
+			elseif 	_type == ResourceType.SulfurRaw then
+				_amount = (gained_resource_sulfur[Logic.GetEntityType(work)]-1 or _amount)
+				
+			elseif 	_type == ResourceType.SilverRaw then
+				_amount = (gained_resource_silver[Logic.GetEntityType(work)]-1 or _amount)
+				
+			elseif 	_type == ResourceType.GoldRaw then
+				_amount = ((gained_resource_gold[Logic.GetEntityType(work)]/2.5)+2 or _amount)
+							
+			end
+			
+		end
 		
     end;
 	if GameCallback_GainedResourcesFromMineOrig then

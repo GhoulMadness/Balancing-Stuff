@@ -1726,6 +1726,12 @@ function GetEntityTypeMaxAttackRange(_entity,_player)
 	return GetEntityTypeBaseAttackRange(entityType) + RangeTechBonus
 
 end
+-- get the current task, logic cant return animal tasks, returns number, not string
+function GetEntityCurrentTask(_entityID)
+
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
+	
+end
 -- Rundungs-Comfort
 function round( _n )
 

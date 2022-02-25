@@ -96,7 +96,28 @@ if CUtil then
 		[Entities.PB_GoldMine2] = 10;
 		[Entities.PB_GoldMine3] = 15;
 	};
-
+	
+	-- base values; needed for challenge maps
+	basevalue_refined_resources = {
+        [Entities.PB_Bank1] = 3;
+        [Entities.PB_Bank2] = 3;
+        [Entities.PB_Bank3] = 4;
+		[Entities.CB_Mint1] = 3;
+		[Entities.PB_Brickworks1] = 4;
+		[Entities.PB_Brickworks2] = 5;
+		[Entities.PB_StoneMason1] = 4;
+		[Entities.PB_StoneMason2] = 5;
+		[Entities.PB_Sawmill1] = 4;
+		[Entities.PB_Sawmill2] = 6;
+		[Entities.PB_Blacksmith1] = 4;
+		[Entities.PB_Blacksmith2] = 5;
+		[Entities.PB_Blacksmith3] = 6;
+		[Entities.PB_Alchemist1] = 4;
+		[Entities.PB_Alchemist2] = 5;
+		[Entities.PB_GunsmithWorkshop1] = 4;
+		[Entities.PB_GunsmithWorkshop2] = 5;
+		}
+	
 end
 --Silver added to resource window
 if CNetwork then
