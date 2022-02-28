@@ -355,3 +355,11 @@ Außerdem senkt jedes Mal Anordnen von Überstunden die Motivation aller Arbeite
 Sämtliche neuen Gebäude verfügen nun über Shortcuts im entsprechenden Baumenü. Auch Gebäude die vorher keine Shortcuts hatten (wie Ziergebäude), verfügen nun über Shortcuts.
 
 Es wurde ein Fehler im Zusammenhang mit den Schützenturmen behoben.
+
+--- Version 0.709
+
+Weitere Vorbereitungen für die kommende Osterkarte.
+
+Die erste Version der Osterkarte wird voraussichtlich am 01.03.2022 erscheinen.
+
+Erste Vorbereitungen für geplante Herausforderungs-Karten.

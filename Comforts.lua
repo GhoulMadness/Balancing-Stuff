@@ -1485,6 +1485,8 @@ end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
 
+	assert( IsValid(_entityID), "invalid entityID" );
+
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
 	
 end
@@ -1636,6 +1638,8 @@ BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
 -- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackSpeed(_entityType)
 
+	assert( _entityType ~= 0 , "invalid entityType" );
+
 	local behavior_pos
 	
 	if not BehaviorExceptionEntityTypeTable[_entityType] then
@@ -1661,6 +1665,8 @@ function GetEntityTypeBaseAttackSpeed(_entityType)
 end
 -- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackRange(_entityType)
+
+	assert( _entityType ~= 0 , "invalid entityType" );
 
 	local behavior_pos
 
@@ -1729,7 +1735,25 @@ end
 -- get the current task, logic cant return animal tasks, returns number, not string
 function GetEntityCurrentTask(_entityID)
 
+	assert( IsValid(_entityID) , "invalid entityID" );
+
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
+	
+end
+
+function GetEntitySize(_entityID)
+
+	assert( IsValid(_entityID) , "invalid entityID" );
+
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
+	
+end
+
+function SetEntitySize(_entityID,_size)
+
+	assert( IsValid(_entityID) , "invalid entityID" );
+
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
 	
 end
 -- Rundungs-Comfort
