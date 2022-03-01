@@ -343,6 +343,17 @@
 			end
 		end
 		Sync.Init()
+		-- register AI in statistics
+		local PIDs = GetAllAIs()
+		for i = 1,table.getn(PIDs) do
+			if gvPlayerName[PIDs[i]] then
+				Logic.SetPlayerRawName(PIDs[i], gvPlayerName[PIDs[i]])
+			else
+				Logic.SetPlayerRawName(PIDs[i], "AI"..i)
+			end
+			Logic.PlayerSetIsHumanFlag(PIDs[i], 1)
+			Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
+		end
 	else
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	

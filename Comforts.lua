@@ -150,6 +150,30 @@ function VC_Deathmatch()
 
 end 
 
+if not gvPlayerName then
+
+	gvPlayerName = {}
+	
+end
+
+function SetPlayerName(_playerId, _name)
+
+	local name = XGUIEng.GetStringTableText(_name)
+
+	if name == nil then
+
+		Logic.SetPlayerRawName(_playerId, _name)
+
+	else
+
+		Logic.SetPlayerName(_playerId, _name)
+
+	end
+	
+	gvPlayerName[_playerId] = _name
+
+end
+
 function table.findvalue(_tid,_value)
 
 	local tpos
@@ -953,24 +977,6 @@ function ShowGUI()
 	
 end
 
-function GetCurrentWeatherGfxSet()
-
-	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()
-	
-end
-
-function SetInternalClippingLimitMax(_val)
-
-	CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[0]:SetFloat(_val)
-	
-end
-
-function SetInternalClippingLimitMin(_val)
-
-	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
-	
-end
-
 function IstDrin(_wert, _table)
 
 	for i = 1, table.getn(_table) do
@@ -1229,6 +1235,44 @@ function GetPlayerStartPosition()
 	return GetPosition(t[1])	
 	
 end
+
+function GetAllAIs()
+
+	local AITable = {}
+
+	if CNetwork then
+	
+		for i = 2,16 do
+	
+			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 0 then
+			
+				if Score.Player[i].all > 0 then
+			
+					table.insert(AITable,i)
+					
+				end
+				
+			end
+			
+		end
+		
+	else
+	
+		for i = 2,8 do
+		
+			if Score.Player[i].all > 0 then
+			
+				table.insert(AITable,i)
+			
+			end
+			
+		end
+	
+	end
+	
+	return AITable
+
+end
 -- comfort to let a group of given player IDs share the same diplomacy state
 -- param1: table with player IDs
 -- param2: diplomacy state
@@ -1480,6 +1524,24 @@ function CreateSoldiersForLeader( _LeaderID, _SoldierAmount )
 	
 	-- Return number of soldiers
 	return _SoldierAmount
+	
+end
+-- returns the current weather gfx 
+function GetCurrentWeatherGfxSet()
+
+	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()
+	
+end
+
+function SetInternalClippingLimitMax(_val)
+
+	CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[0]:SetFloat(_val)
+	
+end
+
+function SetInternalClippingLimitMin(_val)
+
+	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
 	
 end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
