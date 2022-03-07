@@ -109,12 +109,16 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.XD_DarkWallStraightGate_Closed] = true,
 		[Entities.XD_OSO_Wall_Straight1] = true,
 		[Entities.XD_OSO_Wall_Straight2] = true,
+		[Entities.XD_OSO_Wall_Straight2_90] = true,
+		[Entities.XD_OSO_Wall_Straight2_180] = true,
+		[Entities.XD_OSO_Wall_Straight2_270] = true,
 		[Entities.XD_OSO_Wall_Distorted1] = true,
 		[Entities.XD_OSO_Wall_Distorted2] = true,
 		[Entities.XD_OSO_Wall_Corner1] = true,
 		[Entities.XD_OSO_Wall_Corner2] = true,
 		[Entities.XD_OSO_Wall_Corner_Small1] = true,
 		[Entities.XD_OSO_Wall_Corner_Small2] = true,
+		[Entities.XD_OSO_Wall_Tower2] = true,
 		[Entities.ZB_ConstructionSite1] = true, 
 		[Entities.ZB_ConstructionSite2] = true,
 		[Entities.ZB_ConstructionSite3] = true, 
@@ -159,9 +163,10 @@ function Lightning_Job()
 		for i = 1,amount do	
 			x = Logic.GetRandom(Mapsize)
 			y = Logic.GetRandom(Mapsize)
-		
-			Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,x,y)
-			gvLightning.Damage(x,y,range,damage,buildingdamage)
+			if GetDistance({X = x, Y = y},{X = Mapsize/2, Y = Mapsize/2}) <= Mapsize/2 then
+				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,x,y)
+				gvLightning.Damage(x,y,range,damage,buildingdamage)
+			end
 		end		
 		
 		local pID = GUI.GetPlayerID()
@@ -175,7 +180,7 @@ function Lightning_Job()
 		end
     end	
 end
--- besser als HiResJob (10 mal so oft, 10 mal weniger Blitze/Performance verteilt sich auf Ticks nicht auf Sekunden)
+
 function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
     for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
