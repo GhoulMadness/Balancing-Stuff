@@ -992,4 +992,14 @@ function GUIUpdate_Archers_Tower_RemoveSlot(_slot)
 	end
 	
 end
+------------------------------------- Army Creator ---------------------------------------------
+function GUIUpdate_ArmyCreatorPoints(_playerID)
 
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), " @center "..ArmyCreator.PlayerPoints.." / "..ArmyCreator.BasePoints * (gvDiffLVL) )
+
+end
+function GUIUpdate_ArmyCreatorTroopAmount(_playerID,_entityType)
+	
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), " @center "..ArmyCreator.PlayerTroops[_entityType])
+	
+end

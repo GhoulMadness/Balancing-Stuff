@@ -503,3 +503,15 @@ function GUITooltip_Archers_Tower_Slot(_slot)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 
 end
+-- Army Creator Tooltips
+function GUITooltip_ArmyCreator(_name,_modifier)
+	
+	local pretext
+	if _modifier > 0 then
+		pretext = "Erhöht die Anzahl von"
+	elseif _modifier < 0 then
+		pretext = "Reduziert die Anzahl von"
+	end
+	XGUIEng.SetText("BS_ArmyCreator_Tooltip", " @center "..pretext.." "..XGUIEng.GetStringTableText("names/".._name))
+	
+end

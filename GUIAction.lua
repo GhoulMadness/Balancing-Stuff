@@ -659,4 +659,78 @@ function GUIAction_Archers_Tower_AddSlot()
 	GUI.DeselectEntity(entity)
 	
 end
+------------------------------------------------- Army Creator ---------------------------------------------------
+function GUIAction_ArmyCreatorChangeAmount(_EntityType,_Modifier)
 
+	if ArmyCreator.PlayerTroops[_EntityType] + _Modifier >= 0 then
+	
+		if ArmyCreator.PlayerPoints >= (ArmyCreator.PointCosts[_EntityType] * _Modifier) then
+	
+			if ArmyCreator.TroopException[_EntityType] then
+			
+				if ArmyCreator.PlayerTroops[_EntityType] + _Modifier <= 1 then
+		
+					ArmyCreator.PlayerPoints = ArmyCreator.PlayerPoints - (ArmyCreator.PointCosts[_EntityType] * _Modifier)
+
+					ArmyCreator.PlayerTroops[_EntityType] = ArmyCreator.PlayerTroops[_EntityType] + _Modifier 
+					
+				end
+				
+			else
+			
+				if ArmyCreator.PlayerTroops[_EntityType] + _Modifier <= ArmyCreator.TroopLimit then
+				
+					ArmyCreator.PlayerPoints = ArmyCreator.PlayerPoints - (ArmyCreator.PointCosts[_EntityType] * _Modifier)
+
+					ArmyCreator.PlayerTroops[_EntityType] = ArmyCreator.PlayerTroops[_EntityType] + _Modifier 
+					
+				end
+				
+			end
+			
+		end
+		
+	end
+	
+end
+
+function GUIAction_ArmyCreatorCheckForFinish()
+
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished",0)
+
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_Yes",1)
+	
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_No",1)
+	
+end
+
+function GUIAction_ArmyCreatorBackToSetup()
+
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_Yes",0)
+	
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_No",0)
+	
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished",1)
+	
+end
+
+function GUIAction_ArmyCreatorFinishSetup()
+	
+	XGUIEng.ShowWidget("BS_ArmyCreator",0)
+	
+	if CNetwork then
+	
+		local toUnpack = {}
+		for k,v in pairs(ArmyCreator.PlayerTroops) do 
+			table.insert(toUnpack,k)
+			table.insert(toUnpack,v)
+		end
+		CNetwork.SendCommand("Ghoul_ArmyCreator_SpawnTroops",GUI.GetPlayerID(),unpack(toUnpack))
+		
+	else
+	
+		ArmyCreator.CreateTroops(GUI.GetPlayerID(), ArmyCreator.PlayerTroops)
+		
+	end
+	XGUIEng.ShowWidget("Normal",1)
+end

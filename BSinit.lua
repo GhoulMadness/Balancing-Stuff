@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.709
+	BS.Version = 0.710
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -25,6 +25,7 @@
 					["(2) bs koop trockenzeit"] = true,
 					["(2) bs koop winterplateau"] = true,
 					["(2) bs koop erste pruefung - kampfgeschick"] = true,
+					["(2) bs koop zweite pruefung - taktische finesse"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
@@ -179,6 +180,69 @@
 		
 	end
 	
+	BS.DateRestrictions = 	{ MapName = {	["(4) emsbs hasenjagd"] =  	{
+																		},
+											["(4) emsbs imperium"] = 	{
+																		}													
+										},
+							TechnologyForbidden = {	[1] = Technologies.B_VictoryStatue1,
+													[2] = Technologies.B_VictoryStatue2
+													}
+							}
+	for i = 1,8 do
+		BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-0"..i+1
+		BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-0"..i+1
+	end
+	for i = 9,14 do
+		BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-"..i+1
+		BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-"..i+1
+	end
+	
+	function BS.CheckForDateRestrictions(_datestring)
+			
+		if BS.DateRestrictions.MapName[Framework.GetCurrentMapName()] ~= nil then
+			
+			for k,v in pairs(BS.DateRestrictions.MapName[Framework.GetCurrentMapName()]) do
+				
+				if string.find(_datestring, v, 0, string.len(v)) ~= nil then
+				
+					for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+					
+						for x = 1,table.getn(BS.DateRestrictions.TechnologyForbidden) do
+						
+							ForbidTechnology(BS.DateRestrictions.TechnologyForbidden[x],i)
+							
+						end
+						
+					end
+					
+				end
+				
+			end
+			
+		end
+			
+	end
+	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
+							["Build_VictoryStatue2"] = "challenge_map2_won"
+		
+						}
+
+	function BS.CheckForAchievements(_pID)
+	
+		for i = 1,12 do
+			if _pID == i then
+				for k,v in pairs(BS.AchievementNames) do
+					if GDB.GetValue(v) == 1 then
+						XGUIEng.ShowWidget(k,1)
+					else
+						XGUIEng.ShowWidget(k,0)
+					end
+				end
+			end
+		end
+	end
+	
 	if CNetwork then
 	
 		if BS.ValidateTextureQuality() ~= true then
@@ -281,39 +345,42 @@
 	--cooldown handling levy taxes
 	gvLastTimeButtonPressed = -240000 	
 	
-	--zusätzliche Taunts hinzugefügt
+	--additional chat taunts added
 	BonusKeys()
 	
-	------------------------------------ Trigger initialisieren -----------------------------------------------------
-	--Trigger für Handel
+	------------------------------------ initializing triggers -------------------------------------------------------
+	--Trigger for trading
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
-	--Trigger für Spez-Entities (Dom/Silberschmied etc.)
+	--Trigger for special buildings (e.g. dome, silversmith, ...)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SpezEntityPlaced", 1)
-	--Trigger für Salim-Falle
+	--Trigger for salims trap
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SalimTrapPlaced", 1)
-	--Trigger für Schlösser
+	--Trigger for castles
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnCastleCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCastleDestroyed", 1)
-	--Trigger für Türme
+	--Trigger for scaremongers
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnScaremongerDestroyed", 1)
+	--Trigger for towers
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnTowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnTowerDestroyed", 1)
-	--Trigger für Drake (Kopfschuss)
+	--Trigger for drakes headshot
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
-	--Trigger für Gift (Mary,Kala)
+	--Trigger für poison damage (kala, mary)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "PoisonDamageCreateDoT", 1);
-	--Trigger für Heldentod
+	--Trigger for hero death
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
-	--Trigger für Schützentürme
+	--Trigger for archers towers
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_TowerDestroyed", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnArchers_TowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_Tower_OccupiedTroopDied", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnArchers_Tower_OccupiedTroopAttacked", 1);
-	--Trigger für Leibeigene
+	--Trigger for serfs
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SerfCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "SerfDestroyed", 1)
 	StartCountdown(5,SerfHPRegen,false)
+	--internal payday activation (for treasury technology - debenture)
 	if CUtil then 
 		for i = 1,16 do 
 			CUtil.Payday_SetActive(i, true) 
@@ -329,10 +396,11 @@
 	StartSimpleJob("Lightning_Job")
 	--Control Siversmith Grievance
 	StartSimpleJob("ControlSiversmithGrievance")
+	---------------------------------------------------------------------------------------------------------------------------------------------
 	--initializing dz trade punishment
 	DZTrade_Init()
 	StartCountdown(5*60,BeautiAnimCheck,false)
-	----------------------------------- GUI und spezielle Scripte laden (verschiedene für EMS und Koop Karten ----------------------------------
+	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------
 	if not gvEMSFlag then
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")	
@@ -360,9 +428,13 @@
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	
 	end
 	BS.VersionCheck.Setup()
-	--Simis Rotation Widget nach links schieben, damit es visuell besser in die größere GUI passt
+	-- asynchronous check for achievements
+	BS.CheckForAchievements(GUI.GetPlayerID())
+	-- check for temporarily disabled technologies
+	BS.CheckForDateRestrictions(Framework.GetSystemTimeDateString())
+	--Simis Rotation Widget pushed to the left side, so it visually fits better in the upscaled GUI
 	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 
-	--Spieler die favorisierte Farbe geben (wenn auf Simis Server eingestellt)
+	--give players their respective favorite color (if given/set in simis mp QoL)
 	if not CNetwork then
 		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
 			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer");

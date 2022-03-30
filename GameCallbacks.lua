@@ -54,6 +54,15 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 				end				
 			end
 		end
+		
+	elseif eType == Entities.PB_VictoryStatue1 then
+		if CUtil.GetPlayersMotivationSoftcap(_PlayerID) < (2.0) then
+			CUtil.AddToPlayersMotivationSoftcap(_PlayerID, 2.0 - CUtil.GetPlayersMotivationSoftcap(_PlayerID))
+		
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_PlayerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
+				CEntity.SetMotivation(eID, 2.0 )
+			end				
+		end
 	end
 end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -461,7 +470,11 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		
     end
 	
-	if _eType == Entities.PB_Archers_Tower and not gvXmas2021ExpFlag and not gvXmasEventFlag then
+	if _eType == Entities.PB_VictoryStatue2 then
+	
+		return allowed and (Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(), _eType) < 1) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		
+	elseif _eType == Entities.PB_Archers_Tower and not gvXmas2021ExpFlag and not gvXmasEventFlag then
 	
 		local checkorientation = true
 		

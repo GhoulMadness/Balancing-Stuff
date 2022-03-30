@@ -363,3 +363,41 @@ Weitere Vorbereitungen für die kommende Osterkarte.
 Die erste Version der Osterkarte wird voraussichtlich am 01.03.2022 erscheinen.
 
 Erste Vorbereitungen für geplante Herausforderungs-Karten.
+
+--- Version 0.710
+
+Ab sofort sind die ersten zwei Herausforderungs-Karten verfügbar.
+Auf diesen könnt Ihr Euer Können beweisen. Es winken fantastische Belohnungen für alle, die die Prüfungen dieser Karten bestehen!
+
+	(2) BS Koop Erste Prüfung - Kampfgeschick
+
+	Auf dieser Karte gilt es, sich mit limitierendem Bauplatz, Ressourcen und Technologien allen einfallenden Feinden zu erwehren.
+	Schafft Ihr es, Eure Burgen 60 Minuten lang erfolgreich zu verteidigen?
+	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Siegessäule" frei. 
+	Diese setzt Eure aktuelle Motivation auf 200%, benötigt die Technologie Taktiken sowie Taler und Steine als Baumaterialien.
+	
+	Besonderheiten:
+		Einige Technologien sind bereits zu Beginn verfügbar. Andere sind im gesamten Spielverlauf verboten.
+		Weitere Technologien werden durch das Besiegen von Feinden freigeschaltet. Dabei zählen besiegte Feinde von Euch sowie Eurem Verbündeten.
+		Feindliche Truppen sind nahe ihrer Sammelpunkte unverwundbar. Es wird Euch also nicht viel nützen, Euch an diesen Punkten aufzustellen.
+		Nach dem Ablauf der 60 Minuten müsst ihr alle verbliebenen Feinde besiegen, um die Siegmeldung zu erhalten.
+		Fällt die Burg eines Spielers, hat der andere automatisch auch verloren.
+		Eure Soldaten verlangen auf dieser Karte keinen Sold.
+	
+	(2) BS Koop Zweite Prüfung - Taktische Finesse
+	
+	Auf dieser Karte gilt es, mit einer begrenzten Anzahl von Starttruppen die gegnerische Burg zu vernichten.
+	Die Anzahl und der Typ der Starttruppen muss der Spieler selbst entscheiden. 
+	So hat jeder Spieler eine gewisse Anzahl von Kommandopunkten zum Spielstart (abhängig vom Schwierigkeitsgrad) und kann damit seine Armee selbst aufbauen.
+	Schafft Ihr es, die Burg Eures Feindes innerhalb von 60 Minuten zu zerstören?
+	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Bestienstatue" frei.
+	Diese reduziert die aktuelle Motivation sowie das Gesamtlimit aller Feinde um 20%. 
+	Die "Bestienstatue" benötigt die Technologie "Kulturaustausch (Barbaren)" sowie Taler, Steine und Holz als Baumaterialien. Jeder Spieler kann nur eine Bestienstatue errichten.
+	
+Um auf diesen Karten die Belohnungen zu erhalten, ist in der Multiplayer-Lobby lediglich das Anschalten des CC (Chain Construction) erlaubt.
+Jegliche andere Änderung macht einen Erhalt der Belohnungen unmöglich. Auch solltet ihr ohne LuaDebugger spielen. Verschiebt hierzu vor dem Spielen
+die entsprechende .dll in ein anderes Spielverzeichnis.
+Der Erhalt der Belohnungen ist nur im Multiplayer möglich. 
+Sollte es berechtigten Zweifel daran geben, ob ein Spieler die Belohnungen regulär oder doch unter unlauteren Bedingungen erhalten hat, so sollte dieser bereitstehen zu einer Prüfung durch ein Replay der Partie.
+Jeglicher Versuch, sich diese Belohnungen zu erschummeln, führt zu einem Ausschluss aus dem Spielmodus. 
+Im Turnier sind beide Gebäude in den Qualifiern zulässig, in der KO-Runde hingegen nicht verfügbar.

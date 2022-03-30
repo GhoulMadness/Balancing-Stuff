@@ -423,6 +423,31 @@
 			
 		); 
 		
+		CNetwork.SetNetworkHandler("Ghoul_ArmyCreator_SpawnTroops", 
+			function(name, _playerID, ...) 
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+				
+					CLogger.Log("Ghoul_ArmyCreator_SpawnTroops", name, _playerID, arg); 
+    
+					-- execute stuff
+					
+					local trooptable = {}
+					
+					for i = 1, (arg.n - 1), 2 do
+					
+						trooptable[arg[i]] = arg[i + 1]
+						
+					end
+					
+					ArmyCreator.CreateTroops(_playerID, trooptable)
+					
+				end
+				
+			end
+			
+		)
+		
 	end
 
 --

@@ -150,6 +150,28 @@ function VC_Deathmatch()
 
 end 
 
+function GetNumberOfPlayingHumanPlayer()
+
+	if not CNetwork then
+	
+		return 1
+	
+	end
+	local count = 0
+
+	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+	
+		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) ~= 0 then
+		
+			count = count + 1
+			
+		end
+		
+	end
+	
+	return count 
+	
+end
 if not gvPlayerName then
 
 	gvPlayerName = {}

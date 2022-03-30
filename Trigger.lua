@@ -602,6 +602,22 @@ function DomeVictory()
 	end
 	
 end
+-- Trigger for scaremonger buildings destroyed
+function OnScaremongerDestroyed()
+
+    local entityID = Event.GetEntityID()
+	
+    local entityType = Logic.GetEntityType(entityID)
+	
+    local playerID = GetPlayer(entityID)
+	
+    if Scaremonger.MotiEffect[entityType] then
+	
+		Scaremonger.MotiReset(playerID, entityType)
+		
+	end
+	
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------- Beautification Animation Trigger -------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------
