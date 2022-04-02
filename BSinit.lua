@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.710
+	BS.Version = 0.711
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -244,36 +244,10 @@
 	end
 	
 	if CNetwork then
-	
-		if BS.ValidateTextureQuality() ~= true then
-		
-			local text
-		
-			if XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "de" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "DE" or XNetworkUbiCom.Tool_GetCurrentLanguageShortName() == "De" then
-			
-				text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"
-				
-			else
-			
-				text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"
-				
-			end
-			
-			GUI.AddNote(text)
-			
-		end
 			
 		if BS.ValidateMap() ~= true then
 		
 			Framework.CloseGame()
-			
-		end
-		
-	else
-	
-		if BS.ValidateTextureQuality() ~= true then
-		
-			GUI.AddNote("Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!")
 			
 		end
 		
@@ -380,12 +354,6 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SerfCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "SerfDestroyed", 1)
 	StartCountdown(5,SerfHPRegen,false)
-	--internal payday activation (for treasury technology - debenture)
-	if CUtil then 
-		for i = 1,16 do 
-			CUtil.Payday_SetActive(i, true) 
-		end 
-	end
 	--Winter and Night sounds (wolfs howling, snowbird, etc.)
 	StartSimpleJob("WinterTheme")
 	--calculating ingame time (used for mechanical clock gui)
@@ -397,10 +365,17 @@
 	--Control Siversmith Grievance
 	StartSimpleJob("ControlSiversmithGrievance")
 	---------------------------------------------------------------------------------------------------------------------------------------------
+	--internal payday activation (for treasury technology - debenture)
+	if CUtil then 
+		for i = 1,16 do 
+			CUtil.Payday_SetActive(i, true) 
+		end 
+	end
 	--initializing dz trade punishment
 	DZTrade_Init()
+	--initializing animations for beautifications
 	StartCountdown(5*60,BeautiAnimCheck,false)
-	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------
+	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------		
 	if not gvEMSFlag then
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")	
@@ -426,6 +401,24 @@
 	else
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	
+	end
+	-- check for valid texture quality settings
+	if BS.ValidateTextureQuality() ~= true then
+		
+		local text
+	
+		if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
+		
+			text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"
+			
+		else
+		
+			text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"
+			
+		end
+		
+		GUI.AddStaticNote(text)
+			
 	end
 	BS.VersionCheck.Setup()
 	-- asynchronous check for achievements

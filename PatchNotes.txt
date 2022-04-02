@@ -389,7 +389,7 @@ Auf diesen könnt Ihr Euer Können beweisen. Es winken fantastische Belohnungen 
 	Auf dieser Karte gilt es, mit einer begrenzten Anzahl von Starttruppen die gegnerische Burg zu vernichten.
 	Die Anzahl und der Typ der Starttruppen muss der Spieler selbst entscheiden. 
 	So hat jeder Spieler eine gewisse Anzahl von Kommandopunkten zum Spielstart (abhängig vom Schwierigkeitsgrad) und kann damit seine Armee selbst aufbauen.
-	Schafft Ihr es, die Burg Eures Feindes innerhalb von 60 Minuten zu zerstören?
+	Schafft Ihr es, die Burg Eures Feindes innerhalb eines Zeitlimits zu zerstören?
 	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Bestienstatue" frei.
 	Diese reduziert die aktuelle Motivation sowie das Gesamtlimit aller Feinde um 20%. 
 	Die "Bestienstatue" benötigt die Technologie "Kulturaustausch (Barbaren)" sowie Taler, Steine und Holz als Baumaterialien. Jeder Spieler kann nur eine Bestienstatue errichten.
@@ -401,3 +401,9 @@ Der Erhalt der Belohnungen ist nur im Multiplayer möglich.
 Sollte es berechtigten Zweifel daran geben, ob ein Spieler die Belohnungen regulär oder doch unter unlauteren Bedingungen erhalten hat, so sollte dieser bereitstehen zu einer Prüfung durch ein Replay der Partie.
 Jeglicher Versuch, sich diese Belohnungen zu erschummeln, führt zu einem Ausschluss aus dem Spielmodus. 
 Im Turnier sind beide Gebäude in den Qualifiern zulässig, in der KO-Runde hingegen nicht verfügbar.
+
+--- Version 0.711
+
+Es wurde ein Fehler behoben, durch den das Spiel gecrasht ist, wenn auf mittlerer oder niedriger Texturqualität gespielt wurde.
+
+Ihr könnt den Modus auf niedrigerer Texturqualität spielen, jedoch ist es empfehlenswert, die Texturqualität auf hoch zu stellen.
