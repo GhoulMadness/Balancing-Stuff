@@ -407,3 +407,9 @@ Im Turnier sind beide Gebäude in den Qualifiern zulässig, in der KO-Runde hing
 Es wurde ein Fehler behoben, durch den das Spiel gecrasht ist, wenn auf mittlerer oder niedriger Texturqualität gespielt wurde.
 
 Ihr könnt den Modus auf niedrigerer Texturqualität spielen, jedoch ist es empfehlenswert, die Texturqualität auf hoch zu stellen.
+
+--- Version 0.712
+
+Die Fähigkeit der Kundschafter "Ressourcen finden" wird nun nicht mehr angezeigt, da deren Benutzung Spielabstürze zur Folge hatte.
+
+Der Fehler wird weiter untersucht und wird wenn möglich im Laufe einer späteren Version gefixt.

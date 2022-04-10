@@ -734,3 +734,7 @@ function GUIAction_ArmyCreatorFinishSetup()
 	end
 	XGUIEng.ShowWidget("Normal",1)
 end
+
+function GUIAction_ScoutFindResources()
+	--GUI.ScoutPointToResources(GUI.GetSelectedEntity())
+end
