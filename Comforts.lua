@@ -1328,6 +1328,16 @@ function SetHumanPlayerDiplomacyToAllAIs(_PlayerID,_Diplomacy)
 
 	assert(type(_PlayerID) ~= "string","Argument must be either a valid player ID or a table filled with valid player IDs");
 	
+	if not CNetwork then
+		
+		for i = 2,8 do
+	
+			Logic.SetDiplomacyState(1, i, (_Diplomacy or Diplomacy.Hostile))
+		
+		end
+		
+	end
+	
 	if not _PlayerID then
 	
 		_PlayerID = {}

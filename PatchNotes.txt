@@ -413,3 +413,9 @@ Ihr könnt den Modus auf niedrigerer Texturqualität spielen, jedoch ist es empf
 Die Fähigkeit der Kundschafter "Ressourcen finden" wird nun nicht mehr angezeigt, da deren Benutzung Spielabstürze zur Folge hatte.
 
 Der Fehler wird weiter untersucht und wird wenn möglich im Laufe einer späteren Version gefixt.
+
+--- Version 0.713
+
+Einige Tooltips wurden überarbeitet.
+
+Es wurden neue Entitäten hinzugefügt.
