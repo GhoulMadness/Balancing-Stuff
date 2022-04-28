@@ -738,3 +738,69 @@ end
 function GUIAction_ScoutFindResources()
 	--GUI.ScoutPointToResources(GUI.GetSelectedEntity())
 end
+
+--------------------------------------------------------------------------------
+-- Buy a Leader
+--------------------------------------------------------------------------------
+function GUIAction_BuyMilitaryUnit(_UpgradeCategory)
+
+	
+	local BarracksID = GUI.GetSelectedEntity()
+	
+	if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID ) ~= Logic.GetTotalUpgradeTimeForBuilding (BarracksID) then		
+		return
+	end
+	
+	local PlayerID = GUI.GetPlayerID()
+
+	-- Maximum number of settlers attracted?
+	if Logic.GetPlayerAttractionUsage( PlayerID ) >= Logic.GetPlayerAttractionLimit( PlayerID ) then
+		GUI.SendPopulationLimitReachedFeedbackEvent( PlayerID )
+		return
+	end
+	
+	
+	--currently researching
+	if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
+		return
+	end	
+	
+	Logic.FillSoldierCostsTable( PlayerID, _UpgradeCategory, InterfaceGlobals.CostTable )
+	
+	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then	
+		-- Yes		
+		
+		GUI.BuyLeader(BarracksID, _UpgradeCategory)
+	end
+		
+end
+
+--------------------------------------------------------------------------------
+-- Buy a cannon
+--------------------------------------------------------------------------------
+function GUIAction_BuyCannon(_CannonType, _UpgradeCategory)
+
+	-- Get barrack
+	local FoundryID = GUI.GetSelectedEntity()		
+	
+	if InterfaceTool_IsBuildingDoingSomething( FoundryID ) == true then		
+		return
+	end
+	
+	local PlayerID = GUI.GetPlayerID()
+
+	-- Maximum number of settlers attracted?
+	if Logic.GetPlayerAttractionUsage( PlayerID ) >= Logic.GetPlayerAttractionLimit( PlayerID ) then
+		GUI.SendPopulationLimitReachedFeedbackEvent( PlayerID )
+		return
+	end
+	
+	Logic.FillSoldierCostsTable( PlayerID, _UpgradeCategory, InterfaceGlobals.CostTable )
+	
+	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then	
+		-- Yes
+		
+		GUI.BuyCannon(FoundryID, _CannonType)		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.CannonInProgress,1)
+	end
+end

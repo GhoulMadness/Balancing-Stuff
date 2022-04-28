@@ -1593,6 +1593,8 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 	
 	local SpeedWeatherFactor = 1
 	
+	local SpeedHeroMultiplier = 1
+	
 	--Check auf Wetter
 	if Logic.GetWeatherState() == 1 then
 	
@@ -1701,13 +1703,27 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 			
 		end
 		
+	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.Hero) == 1 then
+	
+		if Logic.GetTechnologyState(_player,Technologies.T_HeroicShoes) == 4 then
+		
+			SpeedHeroMultiplier = 1.2
+			
+		else
+			
+			SpeedHeroMultiplier = 1
+			
+		end
+		
+		SpeedTechBonus = 0
+		
 	else
 	
 		SpeedTechBonus = 0
 	
 	end
 	
-	return (BaseSpeed + SpeedTechBonus) * SpeedWeatherFactor
+	return (BaseSpeed + SpeedTechBonus) * SpeedWeatherFactor * (SpeedHeroMultiplier or 1)
 	
 end
 -- table with entityTypes with leaderBehavior two places further (index 8 instead of 6)

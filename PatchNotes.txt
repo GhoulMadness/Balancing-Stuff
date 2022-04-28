@@ -419,3 +419,15 @@ Der Fehler wird weiter untersucht und wird wenn möglich im Laufe einer spätere
 Einige Tooltips wurden überarbeitet.
 
 Es wurden neue Entitäten hinzugefügt.
+
+--- Version 0.714
+
+Es wurde ein Fehler behoben, durch den die Silbergießerei nicht repariert werden konnte.
+
+Ihr könnt nun unabhängig von Eurer Motivation Soldaten/Kanonen/Leibeigene ausbilden. Dies betrifft insbesondere die Bestrafung, wenn ihr mehr Siedler als DZ-Plätze besitzt. 
+Eure Siedler werden Eure Siedlung jedoch weiterhin verlassen, wenn Eure Motivation unter 26% sinkt.
+
+Silbertechnologien wirkten bei Schwertkämpfern und Lanzenträgern nur auf ihre jeweiligen Stufe 4 Hauptmänner und Soldaten. 
+Sie bewirken nun Bonis bei allen Stufen gleichermaßen.
+
+In der Königsfeste sind nun drei neue Technologien verfügbar.

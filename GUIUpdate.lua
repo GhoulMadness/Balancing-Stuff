@@ -82,7 +82,7 @@ function GUIUpdate_Time()
 	
 	local daytimefactor = secondsperday/86400
 	
-	local GameTime = gvIngameTimeSec - gvSecondsDuringBreak --besser GUI.GetTime() oder XGUIEng.GetSystemTime(); beide laufen während Spielpause weiter..?
+	local GameTime = Logic.GetTime() - (gvDayCycleStartTime or 0)
 	
 	if gvTutorialFlag ~= nil then
 	

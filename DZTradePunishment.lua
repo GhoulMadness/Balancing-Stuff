@@ -23,7 +23,7 @@ function DZTrade_PunishmentJob()
 			gvDZTradeCheck.PlayerDelay[player] = gvDZTradeCheck.PlayerDelay[player] - 1	
 			if gvDZTradeCheck.PlayerDelay[player] == 0 then
 				local r,g,b = GUI.GetPlayerColor(player)
-				GUI.AddNote(" @color:"..r..","..g..","..b.." "..UserTool_GetPlayerName(player).." @color:255,255,255 verf\195\188gt \195\188ber zu wenig Platz f\195\188r seine Siedler." )
+				GUI.AddNote(" @color:"..r..","..g..","..b.." "..UserTool_GetPlayerName(player).." @color:255,255,255 verfügt über zu wenig Platz für seine Siedler." )
 				GUI.AddNote( "Dies wird den Siedlern nicht gefallen und sie werden die Siedlung bald verlassen!")
 				if GUI.GetPlayerID() == player then
 					Stream.Start("Sounds\\voicesmentor\\comment_badplay_rnd_06.wav",150)
@@ -42,8 +42,8 @@ function gvDZTradeCheck.Punishment(_playerID)
 	local timepassed = math.floor((Logic.GetTime() - gvDZTradeCheck.PlayerTime[_playerID])/4)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 		local motivation = Logic.GetSettlersMotivation(eID) 
-		if motivation >= 0.29 then
-			CEntity.SetMotivation(eID, motivation - math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100,0.08) )
+		if motivation >= 0.29 or Logic.GetAverageMotivation(_playerID) >= 0.26 then
+			CEntity.SetMotivation(eID, motivation - math.max(math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100, 0.06), 0.2))
 		elseif motivation < 0.24 then
 			CEntity.SetMotivation(eID, 0.24 )
 		end

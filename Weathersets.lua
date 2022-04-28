@@ -338,6 +338,7 @@ function TagNachtZyklus(_duration,_rainflag,_snowflag,_bonuscount,_randomflag)
 		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
 	
 	end
+	gvDayCycleStartTime = Logic.GetTime()
 end	
 --daytypes: 1 = Nacht, 2 = Sonnenauf-/-untergang, 3 = Sonnenauf-/-untergangs-Übergang, 4 = Tag
 --weathertypes: 1 = Sommer, 2 = Regen, 3 = Winter
