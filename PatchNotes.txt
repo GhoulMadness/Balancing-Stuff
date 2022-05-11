@@ -431,3 +431,17 @@ Silbertechnologien wirkten bei Schwertkämpfern und Lanzenträgern nur auf ihre 
 Sie bewirken nun Bonis bei allen Stufen gleichermaßen.
 
 In der Königsfeste sind nun drei neue Technologien verfügbar.
+
+--- Version 0.715
+
+Der Rüstungswert von Mary wurde von 2 auf 0 gesenkt. Die Reduzierung des Schadens durch Marys Demoralisierung wurde von 70% auf 60% gesenkt.
+
+Der Rüstungswert von Kala wurde von 1 auf 0 gesenkt. Der Schaden von Kalas Giftpfeilen wurde von 72 auf 80 erhöht.
+
+Der Schadenswert von Drake wurde von 25 auf 27 erhöht.
+
+Der Schaden von Yukis Shuriken wurde von 88 auf 100 erhöht.
+
+Weitere Entitäten wurden hinzugefügt.
+
+Die GUI der Selektions-Namensanzeige wurde überarbeitet und passt nun besser.

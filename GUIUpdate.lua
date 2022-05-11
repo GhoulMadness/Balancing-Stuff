@@ -1003,3 +1003,22 @@ function GUIUpdate_ArmyCreatorTroopAmount(_playerID,_entityType)
 	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), " @center "..ArmyCreator.PlayerTroops[_entityType])
 	
 end
+function GUIUpdate_SelectionName()
+	
+	local EntityId = GUI.GetSelectedEntity()
+	
+	local EntityType = Logic.GetEntityType( EntityId )
+	local EntityTypeName = Logic.GetEntityTypeName( EntityType )
+	if EntityTypeName == nil then
+		return
+	end
+	local StringKey = "names/" .. EntityTypeName
+		
+	local String = XGUIEng.GetStringTableText( StringKey )
+	if string.len(String) >= 25 then
+		XGUIEng.SetTextKeyName(gvGUI_WidgetID.SelectionName, StringKey)
+	else
+		XGUIEng.SetText(gvGUI_WidgetID.SelectionName, "@center " .. string.gsub(String, " @bs ", "")	)
+	end	
+	
+end
