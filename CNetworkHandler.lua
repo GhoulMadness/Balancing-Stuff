@@ -440,7 +440,7 @@
 						
 					end
 					
-					ArmyCreator.CreateTroops(_playerID, trooptable)
+					ArmyCreator.ReadyForTroopCreation(_playerID, trooptable)
 					
 				end
 				

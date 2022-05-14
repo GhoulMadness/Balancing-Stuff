@@ -102,7 +102,8 @@
 					["(6) emsbs inseln der ahnen"] = true,
 					["(6) emsbs tropensturm"] = true,
 					["(6) emsbs schneetage"] = true,
-					["(6) emsbs riffe"] = true
+					["(6) emsbs riffe"] = true,
+					["(6) emsbs schlacht von standrock"] = true
 					},
 				[7] = 	{
 					["(7) bs koop vargs raubzug"] = true,

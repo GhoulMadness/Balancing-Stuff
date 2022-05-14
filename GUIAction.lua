@@ -729,7 +729,7 @@ function GUIAction_ArmyCreatorFinishSetup()
 		
 	else
 	
-		ArmyCreator.CreateTroops(GUI.GetPlayerID(), ArmyCreator.PlayerTroops)
+		ArmyCreator.ReadyForTroopCreation(GUI.GetPlayerID(), ArmyCreator.PlayerTroops)
 		
 	end
 	XGUIEng.ShowWidget("Normal",1)

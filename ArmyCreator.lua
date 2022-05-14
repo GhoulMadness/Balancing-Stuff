@@ -128,6 +128,46 @@ if not CNetwork then
 	ArmyCreator.BasePoints = ArmyCreator.BasePoints * 2
 end
 ArmyCreator.PlayerPoints = ArmyCreator.BasePoints * (gvDiffLVL or 1)
+
+ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
+
+	ArmyCreator.Finished[_playerID] = true
+	
+	if ArmyCreator.OnSetupFinished then
+	
+		if CNetwork then 
+		
+			local count = 0
+		
+			for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+			
+				if ArmyCreator.Finished[i] then
+				
+					count = count + 1
+					
+				end
+				
+			end
+			
+			if count == GetNumberOfPlayingHumanPlayer() then
+			
+				ArmyCreator.CreateTroops(_playerID, _trooptable)
+			
+				ArmyCreator.OnSetupFinished()
+			
+			end
+			
+		else
+			
+			ArmyCreator.CreateTroops(_playerID, _trooptable)
+		
+			ArmyCreator.OnSetupFinished()
+			
+		end
+	
+	end
+	
+end
 ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 
 	for k,v in pairs(_trooptable) do
@@ -167,38 +207,6 @@ ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 				CreateMilitaryGroup(_playerID, k, 16, ArmyCreator.SpawnPos[_playerID])
 			
 			end
-			
-		end
-	
-	end
-	
-	ArmyCreator.Finished[_playerID] = true
-	
-	if ArmyCreator.OnSetupFinished then
-	
-		if CNetwork then 
-		
-			local count = 0
-		
-			for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-			
-				if ArmyCreator.Finished[i] then
-				
-					count = count + 1
-					
-				end
-				
-			end
-			
-			if count == GetNumberOfPlayingHumanPlayer() then
-			
-				ArmyCreator.OnSetupFinished()
-			
-			end
-			
-		else
-		
-			ArmyCreator.OnSetupFinished()
 			
 		end
 	
