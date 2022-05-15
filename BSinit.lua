@@ -135,7 +135,8 @@
 					["(12) emsbs goldrausch"] = true,
 					["(12) emsbs grabraeuber"] = true,
 					["(12) emsbs tropensturm"] = true,
-					["(12) emsbs wilde horden"] = true
+					["(12) emsbs wilde horden"] = true,
+					["(12) emsbs voelkerschlacht"] = true
 					}
 					
 				
