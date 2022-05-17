@@ -179,6 +179,108 @@ for i = 1,12 do
 	end
 	
 end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Yukis Shuriken -----------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function YukiShurikenBonusDamage() 
+
+	local attacker = Event.GetEntityID1()
+	
+    local target = Event.GetEntityID2()
+	
+	local attype = Logic.GetEntityType(attacker)
+	
+	local rotattacker = Logic.GetEntityOrientation(attacker)
+	
+	local rottarget = Logic.GetEntityOrientation(target)
+	
+	local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear)
+	
+	local maxhp = Logic.GetEntityHealth(target)
+	
+    local dmg = CEntity.TriggerGetDamage()
+	
+	local ampdmg 
+	
+	local dmgtype = CEntity.HurtTrigger.GetDamageSourceType()
+	
+	if attype == Entities.PU_Hero11 and dmgtype ~= 0 then
+	
+		if cooldown <= 10 then
+		
+			if math.abs(rotattacker - rottarget) <= 45 then
+			
+				ampdmg = math.floor(dmg * 3)				
+					
+			else
+			
+				ampdmg = math.floor(dmg * 1.5)				
+					
+			end
+			
+			CEntity.TriggerSetDamage(ampdmg)
+				
+			if ampdmg >= maxhp then
+			
+				Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + 10, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))
+			
+			end
+			
+		end
+		
+	end
+	
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Kerberos attacks ---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function KerberosAttackAdditions() 
+
+	local attacker = Event.GetEntityID1()
+	
+    local target = Event.GetEntityID2()
+	
+	local attype = Logic.GetEntityType(attacker)
+	
+	local defattacker = Logic.GetEntityArmor(attacker)
+	
+	local deftarget	= Logic.GetEntityArmor(target)
+	
+	local defdiff = defattacker - math.max(deftarget, 0)
+	
+	local dmg = CEntity.TriggerGetDamage()
+	
+	local ampdmg 
+	
+	if attype == Entities.CU_BlackKnight and defattacker > deftarget then
+	
+		ampdmg = dmg * (1 + (0.2 * defdiff))
+	
+		if Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear) ~= Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityInflictFear) then
+		
+			Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityInflictFear, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear) + defdiff, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityInflictFear)))
+			
+		end
+		
+		if Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityRangedEffect) ~= Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityRangedEffect) then
+		
+			Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityRangedEffect, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityRangedEffect) + (3 * defdiff), Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityRangedEffect)))
+			
+		end
+		
+		if Logic.GetEntityHealth(attacker) < Logic.GetEntityMaxHealth(attacker) then
+		
+			Logic.HealEntity(attacker, ampdmg - dmg)
+			
+			Logic.CreateEffect(GGL_Effects.FXSalimHeal,Logic.GetEntityPosition(attacker))
+			
+		end
+		
+		CEntity.TriggerSetDamage(ampdmg)
+		
+	end
+	
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------- Trigger for Castles (global variables to be find in Castle.lua) --------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -445,3 +445,36 @@ Der Schaden von Yukis Shuriken wurde von 88 auf 100 erhöht.
 Weitere Entitäten wurden hinzugefügt.
 
 Die GUI der Selektions-Namensanzeige wurde überarbeitet und passt nun besser.
+
+--- Version 0.716
+
+Auf Karten mit dem System der selbsterstellbaren Armeen erscheinen die Truppen nun erst, wenn alle Spieler ihre Auswahl getroffen haben. Dadurch können Spieler mit schnellerer Auswahl nun
+nicht mehr im Voraus ihre Truppen besser aufstellen.
+
+Ähnlich wie bereits Dovbar, Drake, Mary und Kala haben nun auch Yuki und Kerberos einige Können-basierte Anpassungen erhalten.
+
+Skillupdate Yuki:
+Yukis Shuriken haben einige Anpassungen erfahren: Sie verursachen nun 50% mehr Schaden, wenn sie in den letzten 10 Sekunden das >>Feuerwerk der Furcht<< eingesetzt hat.
+Dieser Schadensbonus erhöht sich auf 200%, wenn die vorherige Bedingung erfüllt ist und die Shuriken das Ziel von hinten treffen.
+
+Die Abklingzeit von Yukis Shuriken wurde von 100 auf 180 Sekunden erhöht. 
+Jeden Gegner, den sie mit den Shuriken tötet, während einer der beiden oben genannten Schadensbonis aktiv ist, verringert diese Abklingzeit um 10 Sekunden.
+
+Der Grundschaden der Shuriken wurde von 100 auf 120 erhöht. Die maximale Reichweite, in der die Shuriken eingesetzt werden können, wurde von 3000 auf 1500 reduziert.
+
+Die Anzahl der Shuriken wurde von 6 auf 16 erhöht.
+
+Der Rüstungswert von Yuki wurde von 6 auf 4 reduziert.
+
+Skillupdate Kerberos:
+Wann immer Kerberos einen Gegner angreift, der weniger Rüstung als er selbst besitzt, reduzieren sich die Abklingzeiten seiner Fähigkeiten Höllenschrei um die Rüstungs-Differenz sowie 
+der Aura der Furcht um das dreifache der Rüstungs-Differenz. Außerdem erhöht sich der Schaden an Gegnern mit niedrigerer Rüstung um 20% pro Rüstungsdifferenz von 1.
+Kerberos heilt sich um die Menge des verursachten Bonus-Schadens.
+
+Die Lebensregeneration von Kerberos wurde von 12 alle 2 Sekunden auf 4 alle 2 Sekunden reduziert.
+
+Die Rüstungssenkung der Aura der Furcht wurde von 40% auf 50% erhöht.
+
+Der Schadenswert von Kerberos wurde von 27 auf 24 reduziert.
+
+Die maximalen Lebenspunkte von Kerberos wurden von 850 auf 700 reduziert.

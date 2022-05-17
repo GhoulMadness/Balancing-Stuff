@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.715
+	BS.Version = 0.716
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -341,8 +341,12 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnTowerDestroyed", 1)
 	--Trigger for drakes headshot
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
-	--Trigger für poison damage (kala, mary)
+	--Trigger for poison damage (kala, mary)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "PoisonDamageCreateDoT", 1);
+	--Trigger for yuki's shuriken damage
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "YukiShurikenBonusDamage", 1);
+	--Trigger for kerberos attacks
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "KerberosAttackAdditions", 1);
 	--Trigger for hero death
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
 	--Trigger for archers towers
