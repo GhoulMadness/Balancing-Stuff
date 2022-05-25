@@ -43,11 +43,11 @@ function DrakeHeadshotDamage()
 	
 end;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------- Trigger for Marys/Kalas Gift ----------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Marys/Kalas Poison ----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 gvPoisonDoT = {}
 
---Helden, die Gift benutzen (und für den DoT infrage kommen)
+--Heroes that are using poison (so these are relevant for the DoT effect)
 gvPoisonDoT.PoisonUsers = {
 						
 							[Entities.CU_Mary_de_Mortfichet] = true,
@@ -79,16 +79,16 @@ gvPoisonDoT.GetNeededTaskByEntityType = function(_type)
 	return task
 	
 end
---Reichweite des Gifts
+--Range of poison
 gvPoisonDoT.Range = 600
 
---Schaden des Gifts (Anteil der HP des Ziels pro Tick)
+--Damage of poison (part of the max hp of the target per tick)
 gvPoisonDoT.MaxHPDamagePerTick = 0.01
 
---maximale Anzahl der Ticks (entspricht der Dauer des Gifts *10[s])
+--maximum ticks (equals duration of the poison divided by 10[s])
 gvPoisonDoT.MaxNumberOfTicks = 50
 
---aktuelle Anzahl an Ticks 
+--current tick time
 gvPoisonDoT.CurrentTick = {}
 
 function PoisonDamageCreateDoT() 
@@ -135,12 +135,12 @@ for i = 1,12 do
 			
 			if Logic.GetDiplomacyState(_player,Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile then
 			
-				-- wenn Leader, dann...
+				-- if leader then...
 				if Logic.IsLeader(eID) == 1 then
 				
 					local soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
 					
-					-- Leader wird nur verwundet, wenn keine Soldaten (mehr)
+					-- leader only gets hurt when no more soldiers attached
 					if soldiers[1] == 0 then
 					
 						if GetEntityHealth(eID) <= gvPoisonDoT.MaxHPDamagePerTick and Logic.IsHero(eID) ~= 1 then
@@ -155,7 +155,7 @@ for i = 1,12 do
 						
 					end
 					
-				-- wenn Soldier, Arbeiter, etc., dann...
+				-- when soldier, worker, etc., then...
 				else 
 				
 					Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
@@ -210,11 +210,11 @@ function YukiShurikenBonusDamage()
 		
 			if math.abs(rotattacker - rottarget) <= 45 then
 			
-				ampdmg = math.floor(dmg * 3)				
+				ampdmg = math.floor(dmg * 5)				
 					
 			else
 			
-				ampdmg = math.floor(dmg * 1.5)				
+				ampdmg = math.floor(dmg * 2)				
 					
 			end
 			
@@ -222,7 +222,7 @@ function YukiShurikenBonusDamage()
 				
 			if ampdmg >= maxhp then
 			
-				Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + 10, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))
+				Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + 15, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))
 			
 			end
 			
@@ -281,6 +281,36 @@ function KerberosAttackAdditions()
 	end
 	
 end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Catapult Stones ----------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CatapultStoneOnHitEffects = {	[1] = GGL_Effects.FXFireTemp,
+								[2] = GGL_Effects.FXFireMediumTemp,
+								[3] = GGL_Effects.FXFireSmallTemp,
+								[4] = GGL_Effects.FXFireLoTemp,
+								[5] = GGL_Effects.FXCrushBuildingLarge,
+								[6] = GGL_Effects.FXExplosion,
+								[7] = GGL_Effects.FXExplosionPilgrim,
+								[8] = GGL_Effects.FXExplosionShrapnel
+							}
+
+function CatapultStoneHitEffects() 
+
+	local attacker = Event.GetEntityID1()
+	
+    local target = Event.GetEntityID2();
+	
+	local targetpos = GetPosition(target)
+	
+	local attype = Logic.GetEntityType(attacker)
+	
+	if attype == Entities.PV_Catapult then
+	
+		Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,8)],targetpos.X,targetpos.Y)
+		
+	end;
+	
+end;
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------- Trigger for Castles (global variables to be find in Castle.lua) --------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -941,7 +971,7 @@ for i = 1,12 do
 			else
 				Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY)
 				
-				for i = 1,8 do
+				for i = 1,10 do
 				
 					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX-(100*i),_posY-(100*i))
 					
@@ -952,7 +982,7 @@ for i = 1,12 do
 				end
 				
 				-- Reichweite der Fähigkeit (in S-cm)
-				local range = 800
+				local range = 1000
 				
 				local damage = _origdmg * 12
 				
@@ -979,12 +1009,12 @@ for i = 1,12 do
 					-- wenn Held, dann...
 					elseif Logic.IsHero(eID) == 1 then		
 					
-						Logic.HurtEntity(eID, damage*1.5)
+						Logic.HurtEntity(eID, damage*2)
 						
 					-- wenn alles andere (Leibi, Kanone, Gebäude), dann...
 					else
 					
-						Logic.HurtEntity(eID, damage*2)
+						Logic.HurtEntity(eID, damage*4)
 						
 					end
 					

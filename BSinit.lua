@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.716
+	BS.Version = 0.717
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -347,6 +347,8 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "YukiShurikenBonusDamage", 1);
 	--Trigger for kerberos attacks
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "KerberosAttackAdditions", 1);
+	--Trigger for catapult stones effects
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "CatapultStoneHitEffects", 1);
 	--Trigger for hero death
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
 	--Trigger for archers towers

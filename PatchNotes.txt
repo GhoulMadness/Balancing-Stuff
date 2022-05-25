@@ -478,3 +478,28 @@ Die Rüstungssenkung der Aura der Furcht wurde von 40% auf 50% erhöht.
 Der Schadenswert von Kerberos wurde von 27 auf 24 reduziert.
 
 Die maximalen Lebenspunkte von Kerberos wurden von 850 auf 700 reduziert.
+
+--- Version 0.717
+
+Kanonen erhalten nun durch das Sammeln von Erfahrungspunkten Bonus-Werte.
+Die betrifft erhöhte Werte auf dem zufälligen Bonusschaden, dem Grundschaden, sowie der Sichtweite und der Angriffsreichweite.
+
+Die Anzahl von Yuki verschossenen Shuriken wurde von 16 auf 12 gesenkt.
+Der Schaden pro Shuriken wurde von 120 auf 100 gesenkt.
+Gesamtschaden: 1920 -> 1200
+
+Der Schadensbonus der Shuriken, wenn das Feuerwerk der Furcht kürzlich gezündet wurde, wurde von 50% auf 100% erhöht. 
+Der Schadensbonus, wenn der Gegner zudem von hinten getroffen wird, wurde von 200% auf 400% erhöht.
+Gesamtschaden Feuerwerk-DMG-Bonus: 2880 -> 2400
+Gesamtschaden Treffer von hinten: 5760 -> 6000
+
+Die Abklingzeitreduktion pro tödlichem Treffer, während der Feuerwerk-DMG-Bonus aktiv ist, wurde von 10 Sekunden auf 15 Sekunden erhöht.
+Maximale Abklingzeit-Reduktion, wenn jeder Treffer tödlich ist: 160 Sekunden -> 180 Sekunden
+
+Die Schadens-Reichweite von Dovbars Götterdämmerung wurde von 800 auf 1000 erhöht.
+
+Auf Karten mit dem Armee-Erstellungs-Tool sind nun zusätzlich auch Kundschafter und Katapulte verfügbar.
+
+Truppen und Technologien im Söldnerturm verfügen nun über Shortcuts. Die Tooltips wurden ebenfalls angepasst.
+
+Die Siegerstatue des Osterturniers 2022 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Zork/Manu und Mikeastro!
