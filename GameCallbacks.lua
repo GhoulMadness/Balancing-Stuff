@@ -208,6 +208,16 @@ function GameCallback_GUI_SelectionChanged()
 			--Update Upgrade Buttons
 			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)								
 		end
+	
+	elseif EntityType == Entities.PU_BattleSerf then
+			XGUIEng.ShowWidget("Commands_Leader", 1)
+			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 0)
+
+	elseif Logic.IsLeader( EntityId ) == 1 then
+		if Logic.IsEntityInCategory(EntityId,EntityCategories.CavalryHeavy) == 1
+		or Logic.IsEntityInCategory(EntityId,EntityCategories.CavalryLight) == 1 then
+			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 1)
+		end
 	end
 			
 	--Update all buttons in the visible container

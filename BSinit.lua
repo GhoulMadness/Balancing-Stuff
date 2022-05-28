@@ -26,6 +26,7 @@
 					["(2) bs koop winterplateau"] = true,
 					["(2) bs koop erste pruefung - kampfgeschick"] = true,
 					["(2) bs koop zweite pruefung - taktische finesse"] = true,
+					["(2) bs koop eisiger fjord (remastered)"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
