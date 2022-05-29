@@ -503,3 +503,11 @@ Auf Karten mit dem Armee-Erstellungs-Tool sind nun zusätzlich auch Kundschafter
 Truppen und Technologien im Söldnerturm verfügen nun über Shortcuts. Die Tooltips wurden ebenfalls angepasst.
 
 Die Siegerstatue des Osterturniers 2022 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Zork/Manu und Mikeastro!
+
+--- Version 0.718
+
+Die Formations-Änderungs-Buttons werden nun auch bei Kavallerie angezeigt.
+
+Es wurden einige Änderungen am Schadenssystem vorgenommen. Am stärksten betroffen: Speerträger. 
+Sie sind nun stark gegen Kavallerie (noch etwas stärker als vorher) und Schwertkämpfer und schwach gegen Schützen und Nebelvolk.
+Leichte Kavallerie ist nun nicht mehr stark gegen Speerträger und Schützen, dafür stark gegen Kavallerie, Schwertkämpfer und Scharfschützen.
