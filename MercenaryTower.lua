@@ -2,14 +2,14 @@
 -------------------------------------------------- Mercenary Tower Table -----------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 gvMercenaryTower = { LastTimeUsed = 0, Cooldown = {
-	["BuyLeaderBarbarian"] = 22,
-	["BuyLeaderElite"] = 180,
-	["BuyLeaderBanditSword"] = 30,
-	["BuyLeaderBanditBow"] = 10,
+	["BuyLeaderBarbarian"] = 18,
+	["BuyLeaderElite"] = 120,
+	["BuyLeaderBanditSword"] = 12,
+	["BuyLeaderBanditBow"] = 15,
 	["BuyLeaderBlackKnight"] = 8,
-	["BuyLeaderBlackSword"] = 50,
-	["BuyLeaderEvilBear"] = 25,
-	["BuyLeaderEvilSkir"] = 40
+	["BuyLeaderBlackSword"] = 40,
+	["BuyLeaderEvilBear"] = 15,
+	["BuyLeaderEvilSkir"] = 25
 	}	, TechReq = {
 	["BuyLeaderBarbarian"] = Technologies.T_BarbarianCulture,
 	["BuyLeaderElite"] = Technologies.T_BarbarianCulture,

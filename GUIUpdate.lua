@@ -1000,7 +1000,7 @@ function GUIUpdate_ArmyCreatorPoints(_playerID)
 end
 function GUIUpdate_ArmyCreatorTroopAmount(_playerID,_entityType)
 	
-	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), " @center "..ArmyCreator.PlayerTroops[_entityType])
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), " @center "..ArmyCreator.PlayerTroops[_playerID][_entityType])
 	
 end
 function GUIUpdate_SelectionName()

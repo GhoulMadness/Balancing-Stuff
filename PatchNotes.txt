@@ -511,3 +511,19 @@ Die Formations-Änderungs-Buttons werden nun auch bei Kavallerie angezeigt.
 Es wurden einige Änderungen am Schadenssystem vorgenommen. Am stärksten betroffen: Speerträger. 
 Sie sind nun stark gegen Kavallerie (noch etwas stärker als vorher) und Schwertkämpfer und schwach gegen Schützen und Nebelvolk.
 Leichte Kavallerie ist nun nicht mehr stark gegen Speerträger und Schützen, dafür stark gegen Kavallerie, Schwertkämpfer und Scharfschützen.
+
+--- Version 0.719
+
+Infolge der vorherigen Version unterschieden sich leichte und schwere Kavallerie nur noch in Basiswerten wie Reichweite, Schaden und Rüstung sowie den Kostentypen.
+Damit beide Truppentypen unterschiedliche Rollen einnehmen können, verursacht leichte Kavallerie nun einen anderen Schadenstypen als schwere Kavallerie.
+Die grundsätzlichen Stärken und Schwächen bleiben gleich, jedoch verursacht leichte Kavallerie nun etwas weniger Schaden an Schwertkämpfern, Scharfschützen und Gebäuden,
+dafür mehr Schaden an Kavallerie und etwas mehr Schaden an Helden und Nebelvolk.
+
+An den Verstärkungstruppen des Leuchtturms wurden Verbesserungen vorgenommen. So erscheinen nun bei längerer Spieldauer mehr Truppen mit mehr Soldaten.
+Außerdem steigt die Wahrscheinlichkeit auf höher aufgewertete Truppen stetig, wenn Verstärkungen angefordert werden.
+
+Der Schaden von Blitzeinschlägen wurde überarbeitet.
+
+Es gab auf Karten mit dem Armee-Erstellungs-Tool Fehler bei der Truppenerstellung. Dies wurde nun behoben.
+
+Die Abklingzeiten im Söldnerturm wurden überarbeitet.

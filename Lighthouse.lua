@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------- Lighthouse Comforts ----------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------
-gvLighthouse = { delay = 60 + Logic.GetRandom(30) , troopamount = 3 + Logic.GetRandom(4) , techlevel = 2 + Logic.GetRandom(1) , troops = {
+gvLighthouse = { delay = 60 + math.random(30) , troopamount = 2 + math.random(4) , techlevel = 1 + math.random(2) , troops = {
 	Entities.PU_LeaderSword1,
 	Entities.PU_LeaderPoleArm1,
 	Entities.PU_LeaderBow1,
@@ -21,7 +21,16 @@ gvLighthouse = { delay = 60 + Logic.GetRandom(30) , troopamount = 3 + Logic.GetR
 	Entities.PU_LeaderCavalry2,
 	Entities.PU_LeaderHeavyCavalry2
 									} 
-, soldieramount = 2 + Logic.GetRandom(10), soldiercavamount = 1 + Logic.GetRandom(5) , starttime = {}, cooldown = 300
+, soldieramount = 1 + math.random(6), soldiercavamount = 1 + math.random(5) , starttime = {}, cooldown = 300, villageplacesneeded = 10 + math.random(5),
+	UpdateTroopQuality = function(_time)
+		gvLighthouse.troopamount = math.max(gvLighthouse.troopamount, math.min(round(3 ^ (1 + _time / 10000)), 10))
+		gvLighthouse.soldieramount = math.max(gvLighthouse.soldieramount, math.min(round(2 ^ (1 + _time / 2000)), 12))
+		if table.getn(gvLighthouse.troops) > 14 then
+			table.remove(gvLighthouse.troops, math.random(1, table.getn(gvLighthouse.troops) - 14))
+		elseif table.getn(gvLighthouse.troops) > 6 and table.getn(gvLighthouse.troops) <= 14 then
+			table.remove(gvLighthouse.troops, math.random(1, table.getn(gvLighthouse.troops) - 6))
+		end
+	end
 	}
 if not CNetwork then
 	gvLighthouse.starttime[1] = 0
@@ -54,16 +63,25 @@ function Lighthouse_SpawnJob(_playerID,_eID)
 end
 function Lighthouse_SpawnTroops(_pID,_posX,_posY)
 	if Logic.GetTime() >= gvLighthouse.starttime[_pID] + gvLighthouse.delay then
+		gvLighthouse.UpdateTroopQuality(Logic.GetTime())
 		-- Maximum number of settlers attracted?
 		if Logic.GetPlayerAttractionUsage(_pID) >= Logic.GetPlayerAttractionLimit(_pID) then
 			GUI.SendPopulationLimitReachedFeedbackEvent(_pID)
 			return
 		end
+		if Logic.GetPlayerAttractionUsage(_pID) + gvLighthouse.villageplacesneeded >= Logic.GetPlayerAttractionLimit(_pID) then
+			CreateGroup(_pID,gvLighthouse.troops[math.random(table.getn(gvLighthouse.troops))],gvLighthouse.soldieramount,_posX ,_posY,0)
+			if _pID == GUI.GetPlayerID() then
+				GUI.AddNote("Euer Siedlungsplatz war begrenzt. Es konnten nicht alle Verstärkungstruppen eintreffen!")
+				Stream.Start("Voice\\cm_generictext\\supplytroopsarrive.mp3",110)
+			end
+			return true
+		end
 		for i = 1,gvLighthouse.troopamount do 
-			CreateGroup(_pID,gvLighthouse.troops[Logic.GetRandom(17)+1],gvLighthouse.soldieramount,_posX ,_posY,0)
+			CreateGroup(_pID,gvLighthouse.troops[math.random(table.getn(gvLighthouse.troops))],gvLighthouse.soldieramount,_posX ,_posY,0)
 		end
 		if _pID == GUI.GetPlayerID() then
-			GUI.AddNote("Verst\195\164rkungstruppen sind eingetroffen")
+			GUI.AddNote("Verstärkungstruppen sind eingetroffen")
 			Stream.Start("Voice\\cm_generictext\\supplytroopsarrive.mp3",110)
 		end
 		return true

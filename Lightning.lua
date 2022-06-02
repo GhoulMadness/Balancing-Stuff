@@ -183,38 +183,28 @@ end
 
 function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
-    for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
+    for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
 	
-		if Logic.IsHero(eID) == 1 or Logic.IsSerf(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
-			Logic.HurtEntity(eID, _damage)
-			if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) then
-				gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
-				GUI.ScriptSignal(_posX, _posY, 0)
+		-- wenn Serf, dann...
+		if Logic.IsSerf(eID) == 1 then
+			Logic.HurtEntity(eID, _damage)			
+		-- wenn Held oder Kanone, dann...
+		elseif Logic.IsHero(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
+			if Logic.IsEntityAlive(eID) then
+				Logic.HurtEntity(eID, _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.8))
 			end
-		end
-			
-			if Logic.IsLeader(eID) == 1 then
-				local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
-					if Soldiers[1] >= 8 then
-						for i = 2,4 do
-							ChangeHealthOfEntity(Soldiers[i],0)
-						end
-					elseif Soldiers[1] >= 4 and Soldiers[1] <=7 then
-						for i = 2,3 do
-							ChangeHealthOfEntity(Soldiers[i],0)
-						end
-					elseif Soldiers[1] <= 3 then
-						ChangeHealthOfEntity(Soldiers[2],0)
-					elseif Soldiers[1] == 0 then
-						Logic.HurtEntity(eID, _damage)
-					end
-				if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) then
-					gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
-					GUI.ScriptSignal(_posX, _posY, 0)
+		-- wenn Leader, dann...
+		elseif Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then		
+			local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
+			if Soldiers[1] > 0 then
+				for i = 2, math.floor(Soldiers[1]/2) do
+					ChangeHealthOfEntity(Soldiers[i],0)
 				end
+			else
+				Logic.HurtEntity(eID, _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.6))
 			end
-			
-		if Logic.IsBuilding(eID) == 1 then 
+		-- wenn Gebäude, dann...
+		elseif Logic.IsBuilding(eID) == 1 then 
 			if gvLightning.IsLightningProofBuilding(eID) ~= true then
 				if Logic.IsConstructionComplete(eID) == 1 then
 					local PID = Logic.EntityGetPlayer(eID)
@@ -225,17 +215,24 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 								local InsuranceCash = math.floor(_buildingdamage)
 								Logic.AddToPlayersGlobalResource(PID,ResourceType.GoldRaw,InsuranceCash)
 								if GUI.GetPlayerID() == PID then
-									GUI.AddNote("Durch die abgeschlossene Blitzschlag-Versicherung erhaltet ihr ".. InsuranceCash .." zus\195\164tzliche Taler")
+									GUI.AddNote("Durch die abgeschlossene Blitzschlag-Versicherung erhaltet ihr ".. InsuranceCash .." zusätzliche Taler")
 								end
 							end
-						end
-						if GUI.GetPlayerID() == PID then
-							gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
-							GUI.ScriptSignal(_posX, _posY, 0)							
 						end
 					end
 				end
 			end
-		end   	
+   	
+		-- wenn alles andere (Soldier), dann...
+		else
+			if Logic.IsEntityAlive(eID) then
+				Logic.HurtEntity(eID, _damage)
+			end
+		end
+		-- Signal für den Spieler + Begrenzung Ton nur 1/sek
+		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) then
+			gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
+			GUI.ScriptSignal(_posX, _posY, 0)
+		end				
 	end
 end

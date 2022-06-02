@@ -268,6 +268,10 @@ function GUIAction_LighthouseHireTroops()
 		GUI.SendPopulationLimitReachedFeedbackEvent(pID)
 		return
 	end
+	if Logic.GetPlayerAttractionUsage(pID) + gvLighthouse.villageplacesneeded >= Logic.GetPlayerAttractionLimit(pID) then
+		Message("Achtung: Ihr habt nur sehr wenig Plätze in Eurer Siedlung frei! @cr Die vollen Verstärkungstruppen treffen nur ein, wenn ihr über einige weitere freie Plätze verfügt!")
+	end
+	
 	if Iron >= 600 and Sulfur >= 400 then
 		GUI.DeselectEntity(eID)
 		GUI.SelectEntity(eID)
@@ -662,27 +666,29 @@ end
 ------------------------------------------------- Army Creator ---------------------------------------------------
 function GUIAction_ArmyCreatorChangeAmount(_EntityType,_Modifier)
 
-	if ArmyCreator.PlayerTroops[_EntityType] + _Modifier >= 0 then
+	local pID = GUI.GetPlayerID()
+
+	if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier >= 0 then
 	
 		if ArmyCreator.PlayerPoints >= (ArmyCreator.PointCosts[_EntityType] * _Modifier) then
 	
 			if ArmyCreator.TroopException[_EntityType] then
 			
-				if ArmyCreator.PlayerTroops[_EntityType] + _Modifier <= 1 then
+				if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier <= 1 then
 		
 					ArmyCreator.PlayerPoints = ArmyCreator.PlayerPoints - (ArmyCreator.PointCosts[_EntityType] * _Modifier)
 
-					ArmyCreator.PlayerTroops[_EntityType] = ArmyCreator.PlayerTroops[_EntityType] + _Modifier 
+					ArmyCreator.PlayerTroops[pID][_EntityType] = ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier 
 					
 				end
 				
 			else
 			
-				if ArmyCreator.PlayerTroops[_EntityType] + _Modifier <= ArmyCreator.TroopLimit then
+				if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier <= ArmyCreator.TroopLimit then
 				
 					ArmyCreator.PlayerPoints = ArmyCreator.PlayerPoints - (ArmyCreator.PointCosts[_EntityType] * _Modifier)
 
-					ArmyCreator.PlayerTroops[_EntityType] = ArmyCreator.PlayerTroops[_EntityType] + _Modifier 
+					ArmyCreator.PlayerTroops[pID][_EntityType] = ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier 
 					
 				end
 				
@@ -721,7 +727,7 @@ function GUIAction_ArmyCreatorFinishSetup()
 	if CNetwork then
 	
 		local toUnpack = {}
-		for k,v in pairs(ArmyCreator.PlayerTroops) do 
+		for k,v in pairs(ArmyCreator.PlayerTroops[GUI.GetPlayerID()]) do 
 			table.insert(toUnpack,k)
 			table.insert(toUnpack,v)
 		end
@@ -729,7 +735,7 @@ function GUIAction_ArmyCreatorFinishSetup()
 		
 	else
 	
-		ArmyCreator.ReadyForTroopCreation(GUI.GetPlayerID(), ArmyCreator.PlayerTroops)
+		ArmyCreator.ReadyForTroopCreation(GUI.GetPlayerID(), ArmyCreator.PlayerTroops[1])
 		
 	end
 	XGUIEng.ShowWidget("Normal",1)

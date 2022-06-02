@@ -70,7 +70,17 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.PU_Thief] = true,
 									[Entities.PU_BattleSerf] = true
 									},
-				PlayerTroops = {	[Entities.PU_LeaderSword1] = 0,
+				PlayerTroops = { },	
+				SpawnPos = { },
+				Finished = { }
+}
+for i = 1,12 do
+	ArmyCreator.SpawnPos[i] = {X = 1000, Y = 1000}
+	if IsValid("start_pos_p"..i) then
+		ArmyCreator.SpawnPos[i] = GetPosition("start_pos_p"..i)
+	end
+	ArmyCreator.Finished[i] = false
+	ArmyCreator.PlayerTroops[i] = {	[Entities.PU_LeaderSword1] = 0,
 									[Entities.PU_LeaderSword2] = 0,
 									[Entities.PU_LeaderSword3] = 0,
 									[Entities.PU_LeaderSword4] = 0,
@@ -117,16 +127,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.PU_Hero10] = 0,
 									[Entities.PU_Hero11] = 0,
 									[Entities.PU_Hero13] = 0
-									},
-				SpawnPos = { },
-				Finished = { }
-}
-for i = 1,12 do
-	ArmyCreator.SpawnPos[i] = {X = 1000, Y = 1000}
-	if IsValid("start_pos_p"..i) then
-		ArmyCreator.SpawnPos[i] = GetPosition("start_pos_p"..i)
-	end
-	ArmyCreator.Finished[i] = false
+									}
 end
 
 if not CNetwork then
@@ -137,6 +138,8 @@ ArmyCreator.PlayerPoints = ArmyCreator.BasePoints * (gvDiffLVL or 1)
 ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 
 	ArmyCreator.Finished[_playerID] = true
+	
+	ArmyCreator.PlayerTroops[_playerID] = _trooptable
 	
 	if ArmyCreator.OnSetupFinished then
 	
@@ -156,7 +159,25 @@ ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 			
 			if count == GetNumberOfPlayingHumanPlayer() then
 			
-				ArmyCreator.CreateTroops(_playerID, _trooptable)
+				local playersleft = GetNumberOfPlayingHumanPlayer()
+			
+				for i = 1, 12 do
+				
+					if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) ~= 0 then
+			
+						ArmyCreator.CreateTroops(i, ArmyCreator.PlayerTroops[i])
+						
+						playersleft = playersleft - 1
+						
+					end
+					
+					if playersleft == 0 then
+						
+						break
+						
+					end
+					
+				end
 			
 				ArmyCreator.OnSetupFinished()
 			
