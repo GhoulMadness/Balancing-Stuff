@@ -448,6 +448,108 @@
 			
 		)
 		
+		CNetwork.SetNetworkHandler("Ghoul_Hero14CallOfDarkness", 
+			function(name,_playerID,_heroID) 
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+				
+					CLogger.Log("Ghoul_Hero14CallOfDarkness", name, _playerID,_heroID)
+					
+					-- Cooldown handling
+					gvHero14.CallOfDarkness.NextCooldown = gvHero14.CallOfDarkness.NextCooldown or {}
+					
+					local starttime = Logic.GetTime()
+					
+					if gvHero14.CallOfDarkness.NextCooldown[_playerID] then
+					
+						if gvHero14.CallOfDarkness.NextCooldown[_playerID] > starttime then
+						
+							return
+							
+						end
+						
+					end
+					
+					-- update cooldown.
+					gvHero14.CallOfDarkness.NextCooldown[_playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown
+    
+					-- execute stuff
+					gvHero14.CallOfDarkness.SpawnTroops(_heroID)
+					
+				end
+				
+			end 
+			
+		)
+		
+		CNetwork.SetNetworkHandler("Ghoul_Hero14LifestealAura", 
+			function(name,_playerID,_heroID) 
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+				
+					CLogger.Log("Ghoul_Hero14LifestealAura", name, _playerID,_heroID)
+					
+					-- Cooldown handling
+					gvHero14.LifestealAura.NextCooldown = gvHero14.LifestealAura.NextCooldown or {}
+					
+					local starttime = Logic.GetTime()
+					
+					if gvHero14.LifestealAura.NextCooldown[_playerID] then
+					
+						if gvHero14.LifestealAura.NextCooldown[_playerID] > starttime then
+						
+							return
+							
+						end
+						
+					end
+					
+					-- update cooldown.
+					gvHero14.LifestealAura.NextCooldown[_playerID] = Logic.GetTime() + gvHero14.LifestealAura.Cooldown
+    
+					-- execute stuff
+					_G["Hero14LifestealTriggerID_".._playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger_".._playerID, 1, nil, {_heroID,starttime})
+					
+				end
+				
+			end 
+			
+		)
+		
+		CNetwork.SetNetworkHandler("Ghoul_Hero14RisingEvil", 
+			function(name,_playerID,_heroID) 
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+				
+					CLogger.Log("Ghoul_Hero14RisingEvil", name, _playerID,_heroID)
+					
+					-- Cooldown handling
+					gvHero14.RisingEvil.NextCooldown = gvHero14.RisingEvil.NextCooldown or {}
+					
+					local starttime = Logic.GetTime()
+					
+					if gvHero14.RisingEvil.NextCooldown[_playerID] then
+					
+						if gvHero14.RisingEvil.NextCooldown[_playerID] > starttime then
+						
+							return
+							
+						end
+						
+					end
+					
+					-- update cooldown.
+					gvHero14.RisingEvil.NextCooldown[_playerID] = Logic.GetTime() + gvHero14.RisingEvil.Cooldown
+    
+					-- execute stuff
+					gvHero14.RisingEvil.SpawnEvilTower(_heroID)
+					
+				end
+				
+			end 
+			
+		)
+		
 	end
 
 --

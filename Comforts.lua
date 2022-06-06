@@ -1565,6 +1565,14 @@ function GetCurrentWeatherGfxSet()
 	
 end
 
+function IsNighttime()
+
+	local NighttimeGFXSets = {9,13,14,19,20,21,28}
+	
+	return table.findvalue(NighttimeGFXSets, GetCurrentWeatherGfxSet()) ~= nil
+	
+end
+
 function SetInternalClippingLimitMax(_val)
 
 	CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[0]:SetFloat(_val)

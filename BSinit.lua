@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.719
+	BS.Version = 0.720
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -236,7 +236,7 @@
 		for i = 1,12 do
 			if _pID == i then
 				for k,v in pairs(BS.AchievementNames) do
-					if GDB.GetValue(v) == 1 then
+					if GDB.GetValue(v) == 2 then
 						XGUIEng.ShowWidget(k,1)
 					else
 						XGUIEng.ShowWidget(k,0)

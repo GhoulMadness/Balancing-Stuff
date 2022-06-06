@@ -808,6 +808,65 @@ function GUIUpdate_Hero13Ability(_Ability)
 	end	
 	
 end
+function GUIUpdate_Hero14Ability(_Ability)
+
+	local PlayerID = GUI.GetPlayerID()
+	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	
+	local ProgressBarWidget = 0
+	
+	local HeroID = GUI.GetSelectedEntity()
+	
+	local TimePassed = 0
+	
+	local cooldown = 0
+	
+	if _Ability == "CallOfDarkness" then
+	
+		cooldown = gvHero14.CallOfDarkness.Cooldown
+		
+		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeCallOfDarkness")
+		
+		TimePassed = math.floor(Logic.GetTime()- gvHero14.CallOfDarkness.LastTimeUsed)
+	
+	elseif _Ability == "LifestealAura" then
+	
+		cooldown = gvHero14.LifestealAura.Cooldown
+		
+		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeLifestealAura")
+		
+		TimePassed = math.floor(Logic.GetTime()- gvHero14.LifestealAura.LastTimeUsed)
+	
+	elseif _Ability == "RisingEvil" then
+	
+		cooldown = gvHero14.RisingEvil.Cooldown
+		
+		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeRisingEvil")
+		
+		TimePassed = math.floor(Logic.GetTime()- gvHero14.RisingEvil.LastTimeUsed)
+		
+	end
+		
+	if TimePassed < cooldown then
+	
+		XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)
+		
+		XGUIEng.HighLightButton(CurrentWidgetID,0)	
+		
+		XGUIEng.DisableButton(CurrentWidgetID,1)
+		
+	else
+	
+		XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
+		
+		XGUIEng.DisableButton(CurrentWidgetID,0)
+		
+	end
+	
+	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
+	
+end
 
 function GUIUpdate_HeroButton()
 
@@ -904,6 +963,10 @@ function GUIUpdate_HeroButton()
 		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero13) then
 		
 			SourceButton = "FindHeroSource13"
+			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero14) then
+		
+			SourceButton = "FindHeroSource14"
 		
 		else
 		

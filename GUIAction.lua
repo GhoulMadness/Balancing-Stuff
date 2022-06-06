@@ -463,6 +463,72 @@ function GUIAction_Hero13DivineJudgment()
 	end
 	
 end
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+function GUIAction_Hero14CallOfDarkness()
+	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
+	
+	local starttime = Logic.GetTime()
+	
+	gvHero14.CallOfDarkness.LastTimeUsed = starttime
+	
+	if CNetwork then
+		
+		CNetwork.SendCommand("Ghoul_Hero14CallOfDarkness",GUI.GetPlayerID(),heroID);
+			
+	else
+	
+		gvHero14.CallOfDarkness.SpawnTroops(heroID)
+		
+	end
+	
+end
+function GUIAction_Hero14LifestealAura()
+	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
+	
+	local player = Logic.EntityGetPlayer(heroID)
+	
+	local starttime = Logic.GetTime()
+	
+	gvHero14.LifestealAura.LastTimeUsed = starttime
+	
+	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
+	
+	if CNetwork then
+		
+		CNetwork.SendCommand("Ghoul_Hero14LifestealAura",GUI.GetPlayerID(),heroID);
+			
+	else
+	
+		_G["Hero14LifestealTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger_"..player, 1, nil, {heroID,starttime})
+	
+	end
+	
+end
+function GUIAction_Hero14RisingEvil()
+	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
+	
+	local pos = GetPosition(heroID)
+	
+	if ({Logic.GetPlayerEntitiesInArea(GUI.GetPlayerID(), Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[1] > 0 then
+	
+		gvHero14.RisingEvil.LastTimeUsed = starttime
+		
+		if CNetwork then
+			
+			CNetwork.SendCommand("Ghoul_Hero14RisingEvil",GUI.GetPlayerID(),heroID);
+				
+		else
+		
+			gvHero14.RisingEvil.SpawnEvilTower(heroID)
+			
+		end
+			
+	end
+	
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Archers_Tower_RemoveSlot(_slot)
 

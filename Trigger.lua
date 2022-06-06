@@ -935,7 +935,7 @@ for i = 1,12 do
 		local time = Logic.GetTimeMs()
 		
 		-- Dauer der Fähigkeit in Millisekunden
-		local duration = 1000*5
+		local duration = 1000 * 5
 		
 		local dmg = CEntity.TriggerGetDamage();
 		
@@ -962,22 +962,22 @@ for i = 1,12 do
 		local time = Logic.GetTimeMs()
 		
 		-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
-		local duration = 1000*3
+		local duration = 1000 * 3
 		
 		if time > (_starttime + duration) then
 		
 			if Logic.IsEntityAlive(_heroID) then
 				
 			else
-				Logic.CreateEffect(GGL_Effects.FXLightning,_posX,_posY)
+				Logic.CreateEffect(GGL_Effects.FXLightning, _posX, _posY)
 				
 				for i = 1,10 do
 				
-					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX-(100*i),_posY-(100*i))
+					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (100 * i), _posY - (100 * i))
 					
-					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX-(100*i),_posY)
+					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (100 * i), _posY)
 					
-					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,_posX,_posY-(100*i))
+					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY - (100 * i))
 					
 				end
 				
@@ -1025,6 +1025,86 @@ for i = 1,12 do
 			Trigger.UnrequestTrigger(_G["Hero13JudgmentTriggerID_".._heroID])
 			
 			return true
+			
+		end
+		
+	end
+	
+	_G["Hero14_Lifesteal_Trigger_"..i] = function(_heroID,_starttime)
+	
+		if not Logic.IsEntityAlive(_heroID) then
+		
+			Trigger.UnrequestTrigger(_G["Hero14LifestealTriggerID_"..heroplayer])
+			
+			return true
+		
+		else
+	
+			local attacker = Event.GetEntityID1()
+			
+			local heroplayer = Logic.EntityGetPlayer(_heroID)
+			
+			local attackerplayer = Logic.EntityGetPlayer(attacker)
+			
+			local heropos = GetPosition(_heroID)
+			
+			local attackerpos = GetPosition(attacker)
+			
+			local distance = GetDistance(heropos, attackerpos)
+			
+			local cat = Logic.IsEntityInCategory(attacker, EntityCategories.EvilLeader)
+			
+			local time = Logic.GetTime()
+		
+			local duration = gvHero14.LifestealAura.Duration
+			
+			local dmg = CEntity.TriggerGetDamage()
+			
+			local maxhp = Logic.GetEntityMaxHealth(_heroID)
+			
+			local currhp = Logic.GetEntityHealth(_heroID)
+			
+			local daytimefactor = 1
+			
+			if IsNighttime then
+			
+				daytimefactor = 1.5
+			
+			end
+			
+			if time <= (_starttime + duration) then
+		
+				if attackerplayer == heroplayer then
+				
+					if distance <= gvHero14.LifestealAura.Range then
+					
+						if currhp < maxhp then
+						
+							if cat == 1 then
+						
+								Logic.HealEntity(attacker, math.ceil(dmg * gvHero14.LifestealAura.LifestealAmount * 3 * daytimefactor))							
+								
+							else
+							
+								Logic.HealEntity(attacker, math.floor(dmg * gvHero14.LifestealAura.LifestealAmount))
+								
+							end
+							
+							Logic.CreateEffect(GGL_Effects.FXSalimHeal, attackerpos.X, attackerpos.Y)
+					
+						end
+					
+					end
+					
+				end
+				
+			else
+			
+				Trigger.UnrequestTrigger(_G["Hero14LifestealTriggerID_"..heroplayer])
+				
+				return true
+				
+			end
 			
 		end
 		
