@@ -52,6 +52,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			end},
 			NighttimeAura = {Range = 1000, Damage = 30, 
 			ApplyDamage = function(_heroID)
+				if not Logic.IsEntityAlive(_heroID) then
+					return
+				end
 				local pos = GetPosition(_heroID)
 				local pID = Logic.EntityGetPlayer(_heroID)
 				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(pos.X, pos.Y, gvHero14.NighttimeAura.Range)) do

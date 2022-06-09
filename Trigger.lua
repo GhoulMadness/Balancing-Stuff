@@ -1201,7 +1201,7 @@ for i = 1,12 do
 					
 					else
 						
-						newLeaderID = CreateGroup(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), _soldiers, pos.X , pos.Y , 0 , experience)
+						newLeaderID = CreateGroup(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), _soldiers, pos.X - offset.X, pos.Y - offset.Y, 0 , experience)
 						
 					end
 					
