@@ -3,6 +3,11 @@ if EMS then
 	EMS.RD.Rules["Dovbar"] = EMS.T.CopyTable(EMS.RD.Templates.StdHero)
 	EMS.RD.Rules["Dovbar"].HeroID = 13
 	EMS.RD.HeroKeys[13] = "Dovbar"
+	
+	EMS.GC.HeroKeys[Entities.PU_Hero14] = "Erebos"
+	EMS.RD.Rules["Erebos"] = EMS.T.CopyTable(EMS.RD.Templates.StdHero)
+	EMS.RD.Rules["Erebos"].HeroID = 14
+	EMS.RD.HeroKeys[14] = "Erebos"
 
 	EMS.L.MakeThunderstorm = "Unwetter"
 	EMS.L.Castle = "Landsitze"
@@ -39,6 +44,7 @@ if EMS then
 	EMS.L.Scaremonger = "Schreckensgebäude"
 	EMS.L.ScaremongerDescription = "Erlaubt oder verbietet den Bau von Schreckensgebäuden"
 	EMS.L.Heroes[13] = "Dovbar"
+	EMS.L.Heroes[14] = "Erebos"
 			
 
 	EMS.GL.GUIUpdate["CastleLevel"] = EMS.GL.GUIUpdate_Units
@@ -49,6 +55,7 @@ if EMS then
 	EMS.GL.GUIUpdate["Scaremonger"] = EMS.GL.GUIUpdate_Units
 	EMS.GL.GUIUpdate["MakeThunderstorm"] = EMS.GL.GUIUpdate_GfxToggleButton
 	EMS.GL.GUIUpdate["Dovbar"] = EMS.GL.GUIUpdate_GfxToggleButton
+	EMS.GL.GUIUpdate["Erebos"] = EMS.GL.GUIUpdate_GfxToggleButton
 
 	EMS.GL.MapRuleToGUIWidget["CastleLevel"] = {"EMSPU13Lvl",5}
 	EMS.GL.MapRuleToGUIWidget["LighthouseLevel"] = {"EMSPU14Lvl",2}
@@ -57,6 +64,7 @@ if EMS then
 	EMS.GL.MapRuleToGUIWidget["Mercenary"] = {"EMSPU17Lvl",1}
 	EMS.GL.MapRuleToGUIWidget["Scaremonger"] = {"EMSPU18Lvl",1}
 	EMS.GL.MapRuleToGUIWidget["Dovbar"] = "EMSPH13N"
+	EMS.GL.MapRuleToGUIWidget["Erebos"] = "EMSPH14N"
 	EMS.GL.MapRuleToGUIWidget["MakeThunderstorm"] = "EMSPUGF3Value4"
 
 	EMS.RD.Rules.MakeThunderstorm = EMS.T.CopyTable(EMS.RD.Templates.StdBool);
@@ -228,6 +236,7 @@ if EMS then
 	EMS.RD.Config.Scaremonger = 1
 	EMS.RD.Config.MakeThunderstorm = 1
 	EMS.RD.Config.Dovbar = 1
+	EMS.RD.Config.Erebos = 1
 	
 	EMS.RD.Rules.CastleLevel.value = 5
 	EMS.RD.Rules.LighthouseLevel.value = 2
@@ -237,6 +246,7 @@ if EMS then
 	EMS.RD.Rules.Scaremonger.value = 1
 	EMS.RD.Rules.MakeThunderstorm.value = 1
 	EMS.RD.Rules["Dovbar"].value = 1
+	EMS.RD.Rules["Erebos"].value = 1
 	
 	if EMS.QoL then
 	

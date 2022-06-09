@@ -812,11 +812,13 @@ function GUIUpdate_Hero14Ability(_Ability)
 
 	local PlayerID = GUI.GetPlayerID()
 	
+	local HeroID = GUI.GetSelectedEntity()
+	
+	local pos = GetPosition(HeroID)
+	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	
 	local ProgressBarWidget = 0
-	
-	local HeroID = GUI.GetSelectedEntity()
 	
 	local TimePassed = 0
 	
@@ -840,6 +842,20 @@ function GUIUpdate_Hero14Ability(_Ability)
 	
 	elseif _Ability == "RisingEvil" then
 	
+		if ({Logic.GetPlayerEntitiesInArea(PlayerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range)})[1] == 0 then
+		
+			XGUIEng.HighLightButton(CurrentWidgetID,0)	
+		
+			XGUIEng.DisableButton(CurrentWidgetID,1)
+			
+			ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeRisingEvil")
+			
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
+			
+			return
+			
+		end
+		
 		cooldown = gvHero14.RisingEvil.Cooldown
 		
 		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeRisingEvil")
@@ -960,11 +976,11 @@ function GUIUpdate_HeroButton()
 		
 			SourceButton = "FindHeroSource12"
 			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero13) then
+		elseif Logic.GetEntityType(EntityID) == Entities.PU_Hero13 then
 		
 			SourceButton = "FindHeroSource13"
 			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero14) then
+		elseif Logic.GetEntityType(EntityID) == Entities.PU_Hero14 then
 		
 			SourceButton = "FindHeroSource14"
 		

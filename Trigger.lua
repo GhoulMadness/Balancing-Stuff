@@ -873,7 +873,7 @@ function BloodRushCheck()
 	
 end
 ------------------------------------------------------------------------------------------------------------------------------
---------------------------------- Dovbar Trigger -----------------------------------------------------------------------------
+--------------------------------- Dovbar and Erebos Trigger ------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 for i = 1,12 do
 
@@ -1066,7 +1066,7 @@ for i = 1,12 do
 			
 			local daytimefactor = 1
 			
-			if IsNighttime then
+			if IsNighttime() then
 			
 				daytimefactor = 1.5
 			
@@ -1108,6 +1108,51 @@ for i = 1,12 do
 			
 		end
 		
+	end
+	
+end
+function OnErebos_Created()
+
+	local entityID = Event.GetEntityID()
+	
+    local entityType = Logic.GetEntityType(entityID)
+	
+    local playerID = GetPlayer(entityID)
+	
+	if entityType == Entities.PU_Hero14 then    
+	
+		_G["Hero14_MovementEffects_Player"..playerID.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player"..playerID,1,{},{entityID})
+		
+	end
+	
+end
+
+for i = 1,12 do
+
+	_G["Hero14_MovementEffects_Player"..i] = function(_EntityID)
+	
+		if IsNighttime() then
+		
+			if Logic.IsEntityAlive(_EntityID) then
+	
+				if Logic.GetCurrentTaskList(_EntityID) == "TL_HERO14_WALK" then
+				
+					Logic.CreateEffect(GGL_Effects.FXHero14_Lightning, Logic.GetEntityPosition(_EntityID))
+					
+					Logic.CreateEffect(gvHero14.MovementEffects[math.random(1,4)], Logic.GetEntityPosition(_EntityID))			
+					
+				elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" then
+				
+					Logic.CreateEffect(GGL_Effects.FXHero14_Fear, Logic.GetEntityPosition(_EntityID))
+				
+				end
+				
+				gvHero14.NighttimeAura.ApplyDamage(_EntityID)
+				
+			end
+			
+		end
+	
 	end
 	
 end

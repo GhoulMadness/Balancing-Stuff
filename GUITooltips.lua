@@ -459,3 +459,34 @@ function GUITooltip_ArmyCreator(_name,_modifier)
 	XGUIEng.SetText("BS_ArmyCreator_Tooltip", " @center "..pretext.." "..XGUIEng.GetStringTableText("names/".._name))
 	
 end
+function GUITooltip_AOFindHero()
+
+	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local EntityID = XGUIEng.GetBaseWidgetUserVariable(CurrentWidgetID, 0)
+	
+	local CostString = " "
+	local ShortCutToolTip = " "
+	local TooltipString = " "
+	
+	if EntityID  ~= 0 then
+		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then	
+			TooltipString = "AOMenuTop/Find_hero10"
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero11) == 1 then
+			TooltipString = "AOMenuTop/Find_hero11"		
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Evil_Queen then
+			TooltipString = "AOMenuTop/Find_hero12"		
+		elseif Logic.GetEntityType( EntityID )	== Entities.PU_Hero13 then
+			TooltipString = "AOMenuTop/Find_hero13"		
+		elseif Logic.GetEntityType( EntityID )	== Entities.PU_Hero14 then
+			TooltipString = "AOMenuTop/Find_hero14"		
+		else
+			GUITooltip_FindHero()
+			return
+		end
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end

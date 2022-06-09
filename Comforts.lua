@@ -1565,9 +1565,8 @@ function GetCurrentWeatherGfxSet()
 	
 end
 
+NighttimeGFXSets = {9,13,14,19,20,21,28}
 function IsNighttime()
-
-	local NighttimeGFXSets = {9,13,14,19,20,21,28}
 	
 	return table.findvalue(NighttimeGFXSets, GetCurrentWeatherGfxSet()) ~= nil
 	

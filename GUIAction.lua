@@ -512,6 +512,8 @@ function GUIAction_Hero14RisingEvil()
 	
 	local pos = GetPosition(heroID)
 	
+	local starttime = Logic.GetTime()
+	
 	if ({Logic.GetPlayerEntitiesInArea(GUI.GetPlayerID(), Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[1] > 0 then
 	
 		gvHero14.RisingEvil.LastTimeUsed = starttime

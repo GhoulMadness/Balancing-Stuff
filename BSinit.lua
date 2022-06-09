@@ -227,7 +227,8 @@
 			
 	end
 	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
-							["Build_VictoryStatue2"] = "challenge_map2_won"
+							["Build_VictoryStatue2"] = "challenge_map2_won",
+							["BuyHeroWindowBuyHero14"] = "challenge_map3_won"
 		
 						}
 
@@ -308,7 +309,8 @@
 			"GUIUpdate",
 			"GUIAction",
 			"LocalMusic",
-			"VersionCheck"
+			"VersionCheck",
+			"Hero14"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end);
 	end
@@ -348,6 +350,8 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "YukiShurikenBonusDamage", 1);
 	--Trigger for kerberos attacks
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "KerberosAttackAdditions", 1);
+	--Trigger for erebos movement effects
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnErebos_Created", 1)
 	--Trigger for catapult stones effects
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "CatapultStoneHitEffects", 1);
 	--Trigger for hero death

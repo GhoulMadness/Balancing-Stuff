@@ -774,7 +774,7 @@ function HeroWidgetUpdate_ShowHeroWidget(EntityId)
 
 	local EntityType = Logic.GetEntityType(EntityId)
 	
-	if Logic.IsEntityInCategory(EntityId,EntityCategories.Hero13) == 1 then
+	if EntityType == Entities.PU_Hero13 then
 	
 		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)
 	
@@ -788,6 +788,20 @@ function HeroWidgetUpdate_ShowHeroWidget(EntityId)
 		
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero13" ) ,1)
 	
+	elseif EntityType == Entities.PU_Hero14 then
+	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)
+	
+		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)
+	
+		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)	
+		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)
+		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)
+		
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero14" ) ,1)
+		
 	else
 	
 		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
