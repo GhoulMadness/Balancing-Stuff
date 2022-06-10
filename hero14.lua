@@ -33,6 +33,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			LifestealAura = {LastTimeUsed = - 6000, Cooldown = 90, Duration = 45, Range = 800, LifestealAmount = 0.2},
 			RisingEvil = {LastTimeUsed = - 6000, Cooldown = 300, Range = 1000, TowerTreshold = 5,
 			SpawnEvilTower = function(_heroID)
+				if not Logic.IsEntityAlive(_heroID) then
+					return
+				end			
 				local playerID = Logic.EntityGetPlayer(_heroID)
 				local pos = GetPosition(_heroID)
 				local towerID = ({Logic.GetPlayerEntitiesInArea(playerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[2]
