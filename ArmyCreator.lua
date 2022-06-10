@@ -44,7 +44,8 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.CU_Evil_Queen] = 20,
 												[Entities.PU_Hero10] = 28,
 												[Entities.PU_Hero11] = 20,
-												[Entities.PU_Hero13] = 26
+												[Entities.PU_Hero13] = 26,
+												[Entities.PU_Hero14] = 22
 												},
 				BasePoints = 100,
 				PlayerPoints = 0,
@@ -60,7 +61,8 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.CU_Evil_Queen] = true,
 									[Entities.PU_Hero10] = true,
 									[Entities.PU_Hero11] = true,
-									[Entities.PU_Hero13] = true
+									[Entities.PU_Hero13] = true,
+									[Entities.PU_Hero14] = true
 									},
 				TroopOnlyLeader = {	[Entities.PV_Cannon1] = true,
 									[Entities.PV_Cannon2] = true,
@@ -68,7 +70,8 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.PV_Cannon4] = true,
 									[Entities.PV_Catapult] = true,
 									[Entities.PU_Thief] = true,
-									[Entities.PU_BattleSerf] = true
+									[Entities.PU_BattleSerf] = true,
+									[Entities.PU_Scout] = true
 									},
 				PlayerTroops = { },	
 				SpawnPos = { },
@@ -126,7 +129,8 @@ for i = 1,12 do
 									[Entities.CU_Evil_Queen] = 0,
 									[Entities.PU_Hero10] = 0,
 									[Entities.PU_Hero11] = 0,
-									[Entities.PU_Hero13] = 0
+									[Entities.PU_Hero13] = 0,
+									[Entities.PU_Hero14] = 0
 									}
 end
 

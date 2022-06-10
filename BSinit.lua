@@ -26,6 +26,7 @@
 					["(2) bs koop winterplateau"] = true,
 					["(2) bs koop erste pruefung - kampfgeschick"] = true,
 					["(2) bs koop zweite pruefung - taktische finesse"] = true,
+					["(2) bs koop dritte pruefung - gesandter des himmels"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
@@ -39,7 +40,7 @@
 					["(2) emsbs grabenkampf"] = true,
 					["(2) emsbs der taktiker"] = true,
 					["(2) emsbs die alten imperien"] = true,
-					["(2) emsbs hasenjagd"] = true
+					["(2) emsbs hasenjagd"] = true					
 					},
 				[3] =	{
 					["(3) bs koop kalas zorn"] = true,
@@ -228,7 +229,8 @@
 	end
 	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 							["Build_VictoryStatue2"] = "challenge_map2_won",
-							["BuyHeroWindowBuyHero14"] = "challenge_map3_won"
+							["BuyHeroWindowBuyHero14"] = "challenge_map3_won",
+							["BS_ArmyCreator_Hero14"] = "challenge_map3_won"
 		
 						}
 

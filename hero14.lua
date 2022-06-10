@@ -36,7 +36,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				local towerpos = GetPosition(towerID)
 				Logic.CreateEffect(GGL_Effects.FXKalaPoison, towerpos.X, towerpos.Y)
 				Logic.CreateEffect(GGL_Effects.FXCrushBuilding, towerpos.X, towerpos.Y)
-				ReplaceEntity(towerID, Entities.CB_Evil_Tower1)
+				ReplaceEntity(towerID, Entities.PU_Hero14_EvilTower)
 				if IsNighttime() then
 					gvHero14.RisingEvil.LastTimeUsed = gvHero14.RisingEvil.LastTimeUsed - 120
 					if gvHero14.RisingEvil.NextCooldown then
@@ -45,17 +45,21 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 						end
 					end
 				else
-					if Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.CB_Evil_Tower1) >= gvHero14.RisingEvil.TowerTreshold then
+					if Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.PU_Hero14_EvilTower) >= gvHero14.RisingEvil.TowerTreshold then
 						Logic.AddWeatherElement(1, 300, 1, NighttimeGFXSets[math.random(1,7)], 5, 15)
 					end
 				end
 			end},
-			NighttimeAura = {Range = 1000, Damage = 30, 
-			ApplyDamage = function(_heroID)
+			NighttimeAura = {Range = 600, Damage = 30, 
+			ApplyDamage = function(_heroID, posX, posY)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
-				end
+				end				
 				local pos = GetPosition(_heroID)
+				if posX and posY then
+					pos.X = posX
+					pos.Y = posY
+				end
 				local pID = Logic.EntityGetPlayer(_heroID)
 				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(pos.X, pos.Y, gvHero14.NighttimeAura.Range)) do
 					if Logic.IsEntityInCategory(eID, EntityCategories.EvilLeader) ~= 1 then
@@ -80,7 +84,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 						elseif Logic.IsBuilding(eID) == 1 then 
 							if gvLightning.IsLightningProofBuilding(eID) ~= true then
 								if Logic.IsConstructionComplete(eID) == 1 then
-									if Logic.GetEntityType(eID) ~= Entities.CB_Evil_Tower1 then
+									if Logic.GetEntityType(eID) ~= Entities.CB_Evil_Tower1 and Logic.GetEntityType(eID) ~= Entities.PU_Hero14_EvilTower then
 										Logic.HurtEntity(eID, damage)
 										if _G["Hero14LifestealTriggerID_"..pID] then
 											Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount * 3)

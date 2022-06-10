@@ -842,25 +842,23 @@ function GUIUpdate_Hero14Ability(_Ability)
 	
 	elseif _Ability == "RisingEvil" then
 	
-		if ({Logic.GetPlayerEntitiesInArea(PlayerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range)})[1] == 0 then
-		
-			XGUIEng.HighLightButton(CurrentWidgetID,0)	
-		
-			XGUIEng.DisableButton(CurrentWidgetID,1)
-			
-			ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeRisingEvil")
-			
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
-			
-			return
-			
-		end
-		
 		cooldown = gvHero14.RisingEvil.Cooldown
 		
 		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeRisingEvil")
 		
 		TimePassed = math.floor(Logic.GetTime()- gvHero14.RisingEvil.LastTimeUsed)
+		
+		if TimePassed >= cooldown and ({Logic.GetPlayerEntitiesInArea(PlayerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range)})[1] == 0 then
+		
+			XGUIEng.HighLightButton(CurrentWidgetID,0)	
+		
+			XGUIEng.DisableButton(CurrentWidgetID,1)
+			
+			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
+			
+			return
+			
+		end		
 		
 	end
 		
