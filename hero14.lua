@@ -1,5 +1,8 @@
 gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			SpawnTroops = function(_heroID)
+				if not Logic.IsEntityAlive(_heroID) then
+					return
+				end
 				local xp = math.min(CEntity.GetLeaderExperience(_heroID), 1000)
 				local hppercent = GetEntityHealth(_heroID)
 				local calcvalue = xp/hppercent
