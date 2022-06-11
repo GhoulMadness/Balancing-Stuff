@@ -1128,7 +1128,11 @@ for i = 1,12 do
 					
 				elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" then
 				
-					Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)
+					if Counter.Tick2("Hero14_MovementEffects_Player"..i.."_CounterID", 3) then
+				
+						Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)
+						
+					end
 				
 				end
 				
