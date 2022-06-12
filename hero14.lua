@@ -40,7 +40,8 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				local pos = GetPosition(_heroID)
 				local towerID = ({Logic.GetPlayerEntitiesInArea(playerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[2]
 				local towerpos = GetPosition(towerID)
-				Logic.CreateEffect(GGL_Effects.FXKalaPoison, towerpos.X, towerpos.Y)
+				Logic.CreateEffect(GGL_Effects.FXHero14_Poison, towerpos.X, towerpos.Y)
+				Logic.CreateEffect(GGL_Effects.FXHero14_Fear, towerpos.X, towerpos.Y)
 				Logic.CreateEffect(GGL_Effects.FXCrushBuilding, towerpos.X, towerpos.Y)
 				ReplaceEntity(towerID, Entities.PU_Hero14_EvilTower)
 				if IsNighttime() then
@@ -51,7 +52,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 						end
 					end
 				else
-					if Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.PU_Hero14_EvilTower) >= gvHero14.RisingEvil.TowerTreshold then
+					if Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.PU_Hero14_EvilTower) + Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.CB_Evil_Tower1) >= gvHero14.RisingEvil.TowerTreshold then
 						Logic.AddWeatherElement(1, 300, 1, NighttimeGFXSets[math.random(1,7)], 5, 15)
 					end
 				end
