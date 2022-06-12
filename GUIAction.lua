@@ -474,7 +474,7 @@ function GUIAction_Hero14CallOfDarkness()
 	
 	if CNetwork then
 		
-		CNetwork.SendCommand("Ghoul_Hero14CallOfDarkness",GUI.GetPlayerID(),heroID);
+		CNetwork.SendCommand("Ghoul_Hero14CallOfDarkness", heroID);
 			
 	else
 	

@@ -449,20 +449,22 @@
 		)
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero14CallOfDarkness", 
-			function(name,_playerID,_heroID) 
+			function(name, _heroID) 
 			
-				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+				local playerID = Logic.EntityGetPlayer(_heroID)
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name, playerID) then 
 				
-					CLogger.Log("Ghoul_Hero14CallOfDarkness", name, _playerID,_heroID)
+					CLogger.Log("Ghoul_Hero14CallOfDarkness", name, _heroID)
 					
 					-- Cooldown handling
 					gvHero14.CallOfDarkness.NextCooldown = gvHero14.CallOfDarkness.NextCooldown or {}
 					
 					local starttime = Logic.GetTime()
 					
-					if gvHero14.CallOfDarkness.NextCooldown[_playerID] then
+					if gvHero14.CallOfDarkness.NextCooldown[playerID] then
 					
-						if gvHero14.CallOfDarkness.NextCooldown[_playerID] > starttime then
+						if gvHero14.CallOfDarkness.NextCooldown[playerID] > starttime then
 						
 							return
 							
@@ -471,7 +473,7 @@
 					end
 					
 					-- update cooldown.
-					gvHero14.CallOfDarkness.NextCooldown[_playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown
+					gvHero14.CallOfDarkness.NextCooldown[playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown
     
 					-- execute stuff
 					gvHero14.CallOfDarkness.SpawnTroops(_heroID)

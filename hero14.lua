@@ -12,22 +12,22 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 					calcvalue = calcvalue * 2
 				end
 				if calcvalue < 10 then					
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
 				elseif calcvalue >= 10 and calcvalue < 25 then
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Skirmisher1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Skirmisher1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
 				elseif calcvalue >= 25 and calcvalue < 45 then
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Bearman2, 0, 8, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Skirmisher1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman2, 0, 8, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Skirmisher1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
 				elseif calcvalue >= 45 and calcvalue < 70 then
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Bearman2, 0, 8, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Skirmisher1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_Skirmisher2, 0, 8, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman2, 0, 8, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Skirmisher1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Skirmisher2, 0, 8, pos.X, pos.Y, 0, 0, 0, 0)
 				elseif calcvalue > 70 then
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_BearmanElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_SkirmisherElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
-					AI.Entity_CreateFormation(playerId, Entities.PU_Hero14_SkirmisherElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_BearmanElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_SkirmisherElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
+					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_SkirmisherElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
 				end
 			end},
 			LifestealAura = {LastTimeUsed = - 6000, Cooldown = 90, Duration = 45, Range = 800, LifestealAmount = 0.2},
@@ -75,16 +75,17 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 							local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
 							if Soldiers[1] > 0 then
 								for i = 2, Soldiers[1] + 1 do
-									Logic.HurtEntity(Soldiers[i], damage)
+									local soldierdmg = math.max(damage - ((i - 2) * damage/10), damage/5)
+									Logic.HurtEntity(Soldiers[i], soldierdmg)
 									if _G["Hero14LifestealTriggerID_"..pID] then
-										Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount * 3)
+										Logic.HealEntity(_heroID, soldierdmg * gvHero14.LifestealAura.LifestealAmount)
 										Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 									end
 								end
 							else
 								Logic.HurtEntity(eID, damage)
 								if _G["Hero14LifestealTriggerID_"..pID] then
-									Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount * 3)
+									Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 									Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 								end
 							end
@@ -94,7 +95,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 									if Logic.GetEntityType(eID) ~= Entities.CB_Evil_Tower1 and Logic.GetEntityType(eID) ~= Entities.PU_Hero14_EvilTower then
 										Logic.HurtEntity(eID, damage)
 										if _G["Hero14LifestealTriggerID_"..pID] then
-											Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount * 3)
+											Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 											Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 										end
 									end
@@ -103,7 +104,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 						elseif Logic.IsSerf(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 							Logic.HurtEntity(eID, damage)
 							if _G["Hero14LifestealTriggerID_"..pID] then
-								Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount * 3)
+								Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 								Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 							end
 						end
