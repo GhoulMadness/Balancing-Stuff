@@ -456,7 +456,8 @@ function GUITooltip_ArmyCreator(_name,_modifier)
 			pretext = "Decreases the amount of"
 		end
 	end
-	XGUIEng.SetText("BS_ArmyCreator_Tooltip", " @center "..pretext.." "..XGUIEng.GetStringTableText("names/".._name))
+	local String = XGUIEng.GetStringTableText("names/".._name)
+	XGUIEng.SetText("BS_ArmyCreator_Tooltip", " @center "..pretext.." " .. string.gsub(String, " @bs ", " "))
 	
 end
 function GUITooltip_AOFindHero()

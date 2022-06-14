@@ -1032,14 +1032,16 @@ for i = 1,12 do
 	
 	_G["Hero14_Lifesteal_Trigger_"..i] = function(_heroID,_starttime)	
 	
+		local heroplayer = Logic.EntityGetPlayer(_heroID)
+	
 		if not Logic.IsEntityAlive(_heroID) then
+		
+			Trigger.UnrequestTrigger(_G["Hero14LifestealTriggerID_"..heroplayer])
 			
 			return true
 		
 		else
-	
-			local heroplayer = Logic.EntityGetPlayer(_heroID)
-			
+		
 			local attacker = Event.GetEntityID1()
 			
 			local attackerplayer = Logic.EntityGetPlayer(attacker)

@@ -229,8 +229,14 @@
 	end
 	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 							["Build_VictoryStatue2"] = "challenge_map2_won",
-							["BuyHeroWindowBuyHero14"] = "challenge_map3_won",
-							["BS_ArmyCreator_Hero14"] = "challenge_map3_won"
+							["BuyHeroWindowBuyHero14"] = {	[1] = "challenge_map1_won",
+															[2] = "challenge_map2_won",
+															[3] = "challenge_map3_won"
+														},
+							["BS_ArmyCreator_Hero14"] = {	[1] = "challenge_map1_won",
+															[2] = "challenge_map2_won",
+															[3] = "challenge_map3_won"
+														}
 		
 						}
 
@@ -239,10 +245,24 @@
 		for i = 1,12 do
 			if _pID == i then
 				for k,v in pairs(BS.AchievementNames) do
-					if GDB.GetValue(v) == 2 then
-						XGUIEng.ShowWidget(k,1)
-					else
-						XGUIEng.ShowWidget(k,0)
+					if type(v) == "string" then
+						if GDB.GetValue(v) == 2 then
+							XGUIEng.ShowWidget(k,1)
+						else
+							XGUIEng.ShowWidget(k,0)
+						end
+					elseif type(v) == "table" then
+						local value = 0
+						for j = 1, table.getn(v) do
+							if GDB.GetValue(v[j]) == 2 then
+								value = value + 1
+							end
+						end
+						if value == table.getn(v) then
+							XGUIEng.ShowWidget(k,1)
+						else
+							XGUIEng.ShowWidget(k,0)
+						end
 					end
 				end
 			end
