@@ -527,3 +527,14 @@ Der Schaden von Blitzeinschlägen wurde überarbeitet.
 Es gab auf Karten mit dem Armee-Erstellungs-Tool Fehler bei der Truppenerstellung. Dies wurde nun behoben.
 
 Die Abklingzeiten im Söldnerturm wurden überarbeitet.
+
+--- Version 0.720
+
+Ein Fehler im Zusammenhang mit den Schützentürmen wurde behoben.
+
+Es wurden zahlreiche GUI-Anpassungen vorgenommen.
+
+Es ist nun ein weiterer Held verfügbar. Ihr könnt diesen spielen, wenn ihr die ersten drei Prüfungs-Maps jeweils auf dem Herausforderungs-Modus absolviert habt.
+Die dritte Prüfungsmap wird voraussichtlich innerhalb der nächsten Wochen verfügbar sein.
+
+Ihr könnt nun auf der BS Testmap alle Gebäude und/oder Einheiten auswählen, die normalerweise an Siegen auf Prüfungs-Maps gebunden sind.
