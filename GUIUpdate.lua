@@ -73,6 +73,48 @@ function GUIUpdate_MoveSpeed()
 	
 end
 
+function GUIUpdate_Experience()
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	
+	local EntityID = GUI.GetSelectedEntity()
+	
+	local PID = GUI.GetPlayerID()
+	
+	local XP = math.min(CEntity.GetLeaderExperience(EntityID), 1000)
+	
+	local LVL
+	
+	if XP < 184 then
+		
+		LVL = 0
+		
+	elseif XP >= 184 and XP < 328 then
+	
+		LVL = 1 
+		
+	elseif XP >= 328 and XP < 470 then
+	
+		LVL = 2
+		
+	elseif XP >= 470 and XP < 629 then
+	
+		LVL = 3
+		
+	elseif XP >= 629 and XP < 846 then
+		
+		LVL = 4 
+		
+	elseif XP >= 846 then
+	
+		LVL = 5
+		
+	end
+			
+	XGUIEng.SetText( CurrentWidgetID, " @ra ".. XP .." (LVL ".. LVL ..")")	
+	
+end
+
 function GUIUpdate_Time()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	

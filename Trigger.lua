@@ -244,7 +244,7 @@ function KerberosAttackAdditions()
 	
 	local defattacker = Logic.GetEntityArmor(attacker)
 	
-	local deftarget	= Logic.GetEntityArmor(target)
+	local deftarget	= Logic.GetEntityArmor(target) or 0 
 	
 	local defdiff = defattacker - math.max(deftarget, 0)
 	
@@ -440,6 +440,10 @@ function OnHeroDied()
 	
 		_G["Hero13_ResurrectionCheck_Player"..playerID.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero13_ResurrectionCheck_Player"..playerID,1,{},{target})
 		
+	elseif targettype == Entities.PU_Hero14 and damage >= health then
+	
+		_G["Hero14_ResurrectionCheck_Player"..playerID.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_ResurrectionCheck_Player"..playerID,1,{},{target})
+		
 	end
 	
 end
@@ -483,6 +487,64 @@ for i = 1,12 do
 				end
 				
 				_G["Hero13_ResurrectionCheck_Player"..playerID.."_TriggerID"] = nil
+				
+				return true
+				
+			end	
+			
+		end
+		
+	end
+	
+	_G["Hero14_ResurrectionCheck_Player"..i] = function(_EntityID)
+	
+		local playerID = Logic.EntityGetPlayer(_EntityID)
+		
+		if Logic.IsEntityAlive(_EntityID) then
+		
+			if GUI.GetPlayerID() == playerID then
+			
+				gvHero14.CallOfDarkness.LastTimeUsed = Logic.GetTime()
+				
+				gvHero14.LifestealAura.LastTimeUsed = Logic.GetTime()
+				
+				gvHero14.RisingEvil.LastTimeUsed = Logic.GetTime()
+				
+				if CNetwork then
+				
+					if gvHero14.CallOfDarkness.NextCooldown then
+					
+						if gvHero14.CallOfDarkness.NextCooldown[playerID] then
+						
+							gvHero14.CallOfDarkness.NextCooldown[playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown
+							
+						end
+						
+					end
+					
+					if gvHero14.LifestealAura.NextCooldown then
+					
+						if gvHero14.LifestealAura.NextCooldown[playerID] then
+						
+							gvHero14.LifestealAura.NextCooldown[playerID] = Logic.GetTime() + gvHero14.LifestealAura.Cooldown
+							
+						end
+						
+					end
+					
+					if gvHero14.RisingEvil.NextCooldown then
+					
+						if gvHero14.RisingEvil.NextCooldown[playerID] then
+						
+							gvHero14.RisingEvil.NextCooldown[playerID] = Logic.GetTime() + gvHero14.RisingEvil.Cooldown
+							
+						end
+						
+					end
+					
+				end
+				
+				_G["Hero14_ResurrectionCheck_Player"..playerID.."_TriggerID"] = nil
 				
 				return true
 				
@@ -1036,7 +1098,7 @@ for i = 1,12 do
 	
 		if not Logic.IsEntityAlive(_heroID) then
 		
-			Trigger.UnrequestTrigger(_G["Hero14LifestealTriggerID_"..heroplayer])
+			_G["Hero14LifestealTriggerID_"..heroplayer] = nil
 			
 			return true
 		
@@ -1100,7 +1162,7 @@ for i = 1,12 do
 				
 			else
 			
-				Trigger.UnrequestTrigger(_G["Hero14LifestealTriggerID_"..heroplayer])
+				_G["Hero14LifestealTriggerID_"..heroplayer] = nil
 				
 				return true
 				

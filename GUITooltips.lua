@@ -332,6 +332,19 @@ function GUITooltip_MoveSpeed()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
+function GUITooltip_Experience()
+	local CostString = " "
+	local ShortCutToolTip = " "	
+	local Text = ""
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
+		Text = "@color:180,180,180 Erfahrungspunkte @cr @color:255,255,255,255 Dies zeigt die aktuellen Erfahrungspunkte dieser Einheit an."
+	else	
+		Text = "@color:180,180,180 Experience points @cr @color:255,255,255,255 This shows the current experience points of this unit."
+	end
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end
 function GUITooltip_AOFindHero()
 
 	

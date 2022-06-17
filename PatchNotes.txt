@@ -538,3 +538,9 @@ Es ist nun ein weiterer Held verfügbar. Ihr könnt diesen spielen, wenn ihr die
 Die dritte Prüfungsmap wird voraussichtlich innerhalb der nächsten Wochen verfügbar sein.
 
 Ihr könnt nun auf der BS Testmap alle Gebäude und/oder Einheiten auswählen, die normalerweise an Siegen auf Prüfungs-Maps gebunden sind.
+
+--- Version 0.721
+
+Die erweiterte Stats-Anzeige zeigt nun auch die aktuellen Erfahrungspunkte sowie die Erfahrungsstufe an.
+
+
