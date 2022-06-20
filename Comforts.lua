@@ -197,7 +197,46 @@ PrepareBriefing = function(_briefing)
 
 			XGUIEng.ShowWidget("CinematicMiniMapContainer",1)
 
-	end
+end
+StartCutscene = function(_Name, _Callback)
+
+	-- Remember callback
+	CutsceneCallback = _Callback
+
+	-- Invulnerability for all entities
+	Logic.SetGlobalInvulnerability(1)
+
+	--	forbid feedback sounds
+
+	GUI.SetFeedbackSoundOutputState(0)
+
+	-- no shapes during cutscene
+	Display.SetProgramOptionRenderOcclusionEffect(0)
+
+	-- cutscene input mode
+	Input.CutsceneMode()
+
+	-- Start cutscene
+	Cutscene.Start(_Name)
+
+	assert(cutsceneIsActive ~= true)
+	cutsceneIsActive = true
+
+	LocalMusic_UpdateMusic()
+
+	--	backup
+	Cutscene.Effect = Sound.GetVolumeAdjustment(3)
+	Cutscene.Ambient = Sound.GetVolumeAdjustment(5)
+	Cutscene.Music = Music.GetVolumeAdjustment()
+
+	--	half volume
+	Sound.SetVolumeAdjustment(3, Cutscene.Effect * 0.5)
+	Sound.SetVolumeAdjustment(5, Cutscene.Ambient * 0.5)
+	Music.SetVolumeAdjustment(Cutscene.Music * 0.5)
+
+	--	stop feedback sounds
+	Sound.PlayFeedbackSound(0,0)
+end
 function GetNumberOfPlayingHumanPlayer()
 
 	if not CNetwork then
