@@ -149,7 +149,55 @@ function VC_Deathmatch()
 	end
 
 end 
+PrepareBriefing = function(_briefing)
 
+
+	--	prepare camera
+		GUIAction_GoBackFromHawkViewInNormalView()
+		Interface_SetCinematicMode(1)
+		Camera.StopCameraFlight()
+		Camera.ScrollUpdateZMode(0)
+		Camera.RotSetAngle(-45)
+
+		-- toggle FoW
+		Display.SetRenderFogOfWar(0)
+		GUI.MiniMap_SetRenderFogOfWar(0)
+		--gvCamera.DefaultFlag = 1
+
+	--	sound
+
+		--	backup
+		briefingState.Effect = Sound.GetVolumeAdjustment(3)
+		briefingState.Ambient = Sound.GetVolumeAdjustment(5)
+		briefingState.Music = Music.GetVolumeAdjustment()
+
+		--	half volume
+		Sound.SetVolumeAdjustment(3, briefingState.Effect * 0.5)
+		Sound.SetVolumeAdjustment(5, briefingState.Ambient * 0.5)
+		Music.SetVolumeAdjustment(briefingState.Music * 0.5)
+
+		--	stop feedback sounds
+		Sound.PlayFeedbackSound(0,0)
+
+	--	set gui state
+
+		--	enable cutscene key mode
+			Input.CutsceneMode()
+
+		--	forbid feedback sounds
+
+			GUI.SetFeedbackSoundOutputState(0)
+
+		--	activate cinematic menu
+
+--			XGUIEng.ShowWidget("3dOnScreenDisplay",1)
+
+			--start briefing music
+			LocalMusic.SongLength = 0
+
+			XGUIEng.ShowWidget("CinematicMiniMapContainer",1)
+
+	end
 function GetNumberOfPlayingHumanPlayer()
 
 	if not CNetwork then
