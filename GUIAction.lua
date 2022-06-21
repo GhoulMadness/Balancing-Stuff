@@ -151,14 +151,37 @@ function LightningRod_UnProtected(_PID,_SpecialTimer)
 end
 
 function GUIAction_LevyTaxes()
+	if Logic.GetNumberOfAttractedWorker(GUI.GetPlayerID()) == 0 then
+		return 
+	end
     gvLastTimeButtonPressed = Logic.GetTimeMs()
-    GUIUpdate_LevyTaxes()
     Sound.PlayGUISound( Sounds.OnKlick_Select_dario, 627 )
     if CNetwork then
         CNetwork.SendCommand("Ghoul_LevyTaxes", GUI.GetPlayerID());
     else
-        GUI.LevyTax()
+		BS.LevyTax(GUI.GetPlayerID())
     end
+end
+function BS.LevyTax(_playerID)
+	
+	local TaxBonus = 1
+	
+	for i = 1, gvVictoryStatue3.Amount[_playerID] do
+	
+		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
+	
+	end
+
+	Logic.AddToPlayersGlobalResource(_playerID, ResourceType.GoldRaw, round(Logic.GetPlayerTaxIncome(_playerID) * TaxBonus))
+	
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
+	
+		local motivation = Logic.GetSettlersMotivation(eID) 
+		
+		CEntity.SetMotivation(eID, motivation - 0.12) 
+		
+	end
+	
 end
 
 --------------------------------------------------------------------------------

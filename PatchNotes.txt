@@ -545,19 +545,23 @@ Die erweiterte Stats-Anzeige zeigt nun auch die aktuellen Erfahrungspunkte sowie
 
 Die Kosten sowie die Forschungsdauer einiger Technologien wurden angepasst.
 
+Sonderabgaben können nun nicht mehr verlangt werden, wenn keine Arbeiter in der Siedlung vorhanden sind.
+
 Die dritte Prüfungsmap ist nun verfügbar:
 
 	(2) BS Koop Dritte Prüfung - Gesandter des Himmels
 
 	Auf dieser Karte gilt es, trotz aller Hürden einen Dom zu errichten.
 	Schafft Ihr es, innerhalb eines Zeitlimits (abhängig vom Schwierigkeitsgrad) diese Aufgabe zu erfüllen?
-	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue des edlen Kaisers" frei. 
+	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue des edlen Kaisers" frei (Model bereitgestellt von Roma).
 	Diese erhöht die durch "Sonderabgaben" erhaltene Talermenge um 50% (jede weitere Statue gewährt 10% weniger, bis zu einem Minimum von 10%),
 	benötigt die Technologie Gesetzbücher sowie Taler und Steine als Baumaterialien.
 	
 	Besonderheiten:
 		Große Teile der Karte entsprechen der Umgebung der Kampagnenkarten "Barmecia" und "Cleycourt".
 		Es gibt auf dieser Karte eine Vielzahl an Wegen, an Silber zu gelangen.
+		Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen. 
+		Die umliegenden Ufer des Doms sind Barmecia heilig. Hier dürft ihr keine Gebäude platzieren!
 		Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
 		Einige Dörfer und Siedlungen sind Euch anfangs neutral gesinnt, können im Laufe des Spiels jedoch zu Feinden oder aber auch Verbündeten werden. Entscheidungen im
 		Spielverlauf, Lösen von Aufgaben und gewisse Gegebenheiten sind hierbei ausschlaggebend.

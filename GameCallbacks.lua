@@ -63,6 +63,10 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 				CEntity.SetMotivation(eID, 2.0 )
 			end				
 		end
+		
+	elseif eType == Entities.PB_VictoryStatue3 then
+		gvVictoryStatue3.Amount[_PlayerID] = gvVictoryStatue3.Amount[_PlayerID] + 1
+		
 	end
 end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

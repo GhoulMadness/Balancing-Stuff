@@ -1656,3 +1656,18 @@ function OnArchers_Tower_OccupiedTroopAttacked()
 		
 end
 
+function OnVictoryStatue3Destroyed()
+
+	local entityID = Event.GetEntityID()
+	
+    local entityType = Logic.GetEntityType(entityID)
+	
+    local playerID = GetPlayer(entityID)
+	
+	if entityType == Entities.PB_VictoryStatue3 then    
+	
+		gvVictoryStatue3.Amount[playerID] = gvVictoryStatue3.Amount[playerID] - 1
+		
+	end
+	
+end

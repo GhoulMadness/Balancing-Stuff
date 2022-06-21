@@ -229,6 +229,7 @@
 	end
 	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 							["Build_VictoryStatue2"] = "challenge_map2_won",
+							["Build_VictoryStatue3"] = "challenge_map3_won",
 							["BuyHeroWindowBuyHero14"] = {	[1] = "challenge_map1_won",
 															[2] = "challenge_map2_won",
 															[3] = "challenge_map3_won"
@@ -332,7 +333,8 @@
 			"GUIAction",
 			"LocalMusic",
 			"VersionCheck",
-			"Hero14"
+			"Hero14",
+			"VictoryStatue3"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end);
 	end
@@ -389,6 +391,8 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SerfCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "SerfDestroyed", 1)
 	StartCountdown(5,SerfHPRegen,false)
+	--Trigger for victory statue3 destroyed
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnVictoryStatue3Destroyed", 1)
 	--Winter and Night sounds (wolfs howling, snowbird, etc.)
 	StartSimpleJob("WinterTheme")
 	--calculating ingame time (used for mechanical clock gui)

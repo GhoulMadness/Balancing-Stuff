@@ -2,6 +2,13 @@ function GUITooltip_ExtraDuties()
 				
 	local PlayerID = GUI.GetPlayerID()
 	local TaxAmount = Logic.GetPlayerTaxIncome( PlayerID )
+	local TaxBonus = 1
+	
+	for i = 1, gvVictoryStatue3.Amount[PlayerID] do
+	
+		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
+	
+	end
 	local TaxName = ""
 	local TextString = ""
 	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
@@ -12,7 +19,7 @@ function GUITooltip_ExtraDuties()
 		TextString = "@color:180,180,180,255 Levy Taxes  @cr @color:255,204,51,255 requires: @color:255,255,255,255 Taxation  @cr @color:255,204,51,255 allows: @color:255,255,255,255  Demand special taxes from your settlers. That fills your state purse, but your workers will not be very enthusiastic and their motivation will decrease."
 	end
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TextString)
- 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, "@color:255,255,255,255 "..TaxName.." : "..TaxAmount)
+ 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, "@color:255,255,255,255 "..TaxName.." : ".. round(TaxAmount * TaxBonus))
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, " ")
 	
 end

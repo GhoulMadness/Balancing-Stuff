@@ -25,16 +25,7 @@
 					-- update cooldown.
 					gvTaxes_NextCooldown[_playerID] = Logic.GetTimeMs() + 4 * 60 * 1000;
     
-					-- execute stuff
-					Logic.AddToPlayersGlobalResource(_playerID, ResourceType.GoldRaw, Logic.GetPlayerTaxIncome(_playerID)) 
-					
-					for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
-					
-						local motivation = Logic.GetSettlersMotivation(eID) 
-						
-						CEntity.SetMotivation(eID, motivation - 0.12) 
-						
-					end; 
+					BS.LevyTax(_playerID)
 					
 				end; 
 				
