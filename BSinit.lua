@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.721
+	BS.Version = 0.722
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -52,6 +52,7 @@
 					["(3) bs koop vargs bergfestung"] = true,
 					["(3) bs koop canyon"] = true,
 					["(3) bs koop die grossen drei"] = true,
+					["(3) bs koop barmecia"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
 					["(3) emsbs hochland"] = true,

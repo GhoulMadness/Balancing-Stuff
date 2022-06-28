@@ -568,4 +568,10 @@ Die dritte Prüfungsmap ist nun verfügbar:
 		Nachdem ihr dem Dom errichtet habt, müsst ihr diesen die üblichen zehn Minuten verteidigen, um das Spiel zu gewinnen. Die ein oder andere Partei wird erbitert versuchen,
 		den Dom niederzubrennen. Seid also besser auf hartnäckige Angreifer vorbereitet.
 
+--- Version 0.722
+
+Es wurden einige Anpassungen an der GUI vorgenommen.
+
+Das Kampfverhalten der KI wurde leicht verändert.
+
 

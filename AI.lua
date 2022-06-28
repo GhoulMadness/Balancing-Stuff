@@ -390,9 +390,25 @@ AITroopGenerator_Condition = function(_Name, _Index)
 
 	-- not enough troops
 	if AI.Army_GetNumberOfTroops(DataTable[_Index].player, DataTable[_Index].id) < DataTable[_Index].strength then
-
-		-- Connect unemployed leader
-		AI.Entity_ConnectUnemployedLeaderToArmy(DataTable[_Index].player, DataTable[_Index].id, 6)
+	
+		local numBarr, numArch, numStab, numFoun = AI.Village_GetNumberOfMilitaryBuildings(DataTable[_Index].player)
+		
+		if numBarr + numArch + numStab + numFoun ~= 0 then
+			-- Connect unemployed leader
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(DataTable[_Index].player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfCategoryFilter(EntityCategories.Leader)) do
+				if AI.Entity_GetConnectedArmy(eID) == -1 then
+					local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
+		
+					if MilitaryBuildingID ~= 0	then		
+						if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
+							AI.Entity_ConnectWithArmy(eID, DataTable[_Index].id)
+						end
+					end
+				end
+			end
+		else
+			AI.Entity_ConnectUnemployedLeader(DataTable[_Index].player, 6)
+		end
 
 	end
 	return AI.Army_GetNumberOfTroops(DataTable[_Index].player, DataTable[_Index].id) < DataTable[_Index].strength
