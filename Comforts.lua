@@ -200,6 +200,8 @@ PrepareBriefing = function(_briefing)
 end
 StartCutscene = function(_Name, _Callback)
 
+	GameCallback_EscapeOrig = GameCallback_Escape
+	GameCallback_Escape = function() end
 	-- Remember callback
 	CutsceneCallback = _Callback
 
@@ -236,6 +238,39 @@ StartCutscene = function(_Name, _Callback)
 
 	--	stop feedback sounds
 	Sound.PlayFeedbackSound(0,0)
+end
+CutsceneDone = function()
+	
+	GameCallback_Escape = GameCallback_EscapeOrig
+
+	-- Vulnerability for all entities
+	Logic.SetGlobalInvulnerability(0)
+
+	--	allow feedback sounds
+	
+	GUI.SetFeedbackSoundOutputState(1)
+
+	-- show shapes after cutscene
+	Display.SetProgramOptionRenderOcclusionEffect(1)
+
+	-- game input mode
+	Input.GameMode()
+
+	--	full volume
+	Sound.SetVolumeAdjustment(3, Cutscene.Effect)
+	Sound.SetVolumeAdjustment(5, Cutscene.Ambient)
+	Music.SetVolumeAdjustment(Cutscene.Music)
+
+	--	stop speech
+	Stream.Stop()
+
+	cutsceneIsActive = false
+
+	-- Back to game control
+	if CutsceneCallback ~= nil then
+		CutsceneCallback()
+	end
+
 end
 function GetNumberOfPlayingHumanPlayer()
 
