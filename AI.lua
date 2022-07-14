@@ -395,13 +395,15 @@ AITroopGenerator_Condition = function(_Name, _Index)
 		
 		if numBarr + numArch + numStab + numFoun ~= 0 then
 			-- Connect unemployed leader
-			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(DataTable[_Index].player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfCategoryFilter(EntityCategories.Leader)) do
-				if AI.Entity_GetConnectedArmy(eID) == -1 then
-					local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
-		
-					if MilitaryBuildingID ~= 0	then		
-						if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
-							AI.Entity_ConnectWithArmy(eID, DataTable[_Index].id)
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(DataTable[_Index].player), CEntityIterator.IsSettlerFilter()) do
+				if Logic.IsLeader(eID) == 1 then
+					if AI.Entity_GetConnectedArmy(eID) == -1 then
+						local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
+			
+						if MilitaryBuildingID ~= 0	then		
+							if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
+								AI.Entity_ConnectWithArmy(eID, DataTable[_Index].id)
+							end
 						end
 					end
 				end
