@@ -574,4 +574,12 @@ Es wurden einige Anpassungen an der GUI vorgenommen.
 
 Das Kampfverhalten der KI wurde leicht verändert.
 
+--- Version 0.723
+
+Es wurde ein Fehler behoben, durch den Kanonen der KI nicht die korrekten Befehle erhalten haben.
+
+Es wurde ein Fehler behoben, durch den der Blutrausch sich nicht auf die Banditen-Nahkämpfer auswirkte.
+
+BS-spezifische Gebäude schneien nun im Winter ein.
+
 
