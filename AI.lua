@@ -398,11 +398,18 @@ AITroopGenerator_Condition = function(_Name, _Index)
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(DataTable[_Index].player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Cannon)) do
 				if Logic.IsEntityInCategory(eID, EntityCategories.MilitaryBuilding) ~= 1 then
 					if AI.Entity_GetConnectedArmy(eID) == -1 then
-						local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
-			
-						if MilitaryBuildingID ~= 0	then		
-							if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
+						if string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(eID))), "cu") ~= nil then
+							local pos = GetPosition(eID)
+							if (({Logic.GetPlayerEntitiesInArea(DataTable[_Index].player, Entities.PB_Barracks1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(DataTable[_Index].player, Entities.PB_Barracks2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(DataTable[_Index].player, Entities.PB_Archery1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(DataTable[_Index].player, Entities.PB_Archery2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(DataTable[_Index].player, Entities.PB_MercenaryTower, pos.X, pos.Y, 1500, 1)})[1]) ~= 0 then
 								AI.Entity_ConnectWithArmy(eID, DataTable[_Index].id)
+							end
+						else
+							local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
+				
+							if MilitaryBuildingID ~= 0	then		
+								if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
+									AI.Entity_ConnectWithArmy(eID, DataTable[_Index].id)
+								end
 							end
 						end
 					end
