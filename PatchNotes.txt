@@ -582,4 +582,13 @@ Es wurde ein Fehler behoben, durch den der Blutrausch sich nicht auf die Bandite
 
 BS-spezifische Gebäude schneien nun im Winter ein.
 
+--- Version 0.724
+
+Verfügt ihr über mehr Siedler als ihr Siedlungsplatz habt, laufen Euch nun nicht mehr alle Arbeiter davon. 
+Die Anzahl betroffener Arbeiter ist abhängig von der Höhe des Siedlungsüberschusses.
+
+Ein neues Gebäude ist nun verfügbar: Das Forsthaus. In dieses wird sich ein Förster begeben, um die Umgebung aufzuforsten.
+Das Forsthaus benötigt die Technologie Konstruktion.
+Der Förster kann nur fruchtbares, nicht jedoch karges Land aufforsten.
+
 

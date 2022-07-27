@@ -511,3 +511,33 @@ function GUITooltip_AOFindHero()
 	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
+function GUITooltip_Forester_PauseWork()
+	local CostString = " "	
+	local ShortCutToolTip = " "		
+	local Text = ""
+	
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then	
+		Text = "@color:180,180,180 Arbeit pausieren @cr @color:255,255,255,255 Klickt hier, um den Förster seine Arbeit niederlegen zu lassen."		
+	else	
+		Text = "@color:180,180,180 pause work @cr @color:255,255,255,255 Click here to make the forester stop working."		
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end
+function GUITooltip_Forester_StartWork()
+	local CostString = " "	
+	local ShortCutToolTip = " "		
+	local Text = ""
+	
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then	
+		Text = "@color:180,180,180 Arbeit wieder aufnehmen @cr @color:255,255,255,255 Klickt hier, um den Förster seine Arbeit wieder aufnehmen zu lassen."		
+	else	
+		Text = "@color:180,180,180 resume work @cr @color:255,255,255,255 Click here to have the forester resume his work."		
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)	
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end

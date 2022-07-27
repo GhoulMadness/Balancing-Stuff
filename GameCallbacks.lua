@@ -36,7 +36,8 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(_PlayerID)
 		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 1)
 		StartCountdown(10*60,DomeVictory,true,"Dome_Victory")
-		
+	elseif eType == Entities.PB_ForestersHut1 then
+		OnForester_Created(_BuildingID)
 	elseif Scaremonger.MotiEffect[eType] then
 	
 		Scaremonger.MotiDebuff(_PlayerID,eType)
@@ -208,6 +209,9 @@ function GameCallback_GUI_SelectionChanged()
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silversmith"),1)	
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("OvertimesButtonEnable"),0)
 				ButtonStem =  "Upgrade_Silversmith"
+			--Is EntityType the Forester?
+			elseif 	UpgradeCategory == UpgradeCategories.Forester then				
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Forester"),1)	
 			end
 			--Update Upgrade Buttons
 			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)								
@@ -505,6 +509,22 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		end
 		
 		return allowed and checkorientation and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	
+	elseif _eType == Entities.PB_ForestersHut1 then
+	
+		local checkorientation = true
+		
+		if _rotation == 0 or _rotation == 360 then
+		
+			checkorientation = true
+			
+		else
+			
+			checkorientation = false
+			
+		end
+		
+		return allowed and checkorientation and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1) and (Logic.GetPlayerAttractionLimit(GUI.GetPlayerID()) > 0)
 		
 	elseif _eType == Entities.PB_Castle1 then
 	

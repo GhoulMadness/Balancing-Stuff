@@ -40,12 +40,19 @@ function DZTrade_PunishmentJob()
 end
 function gvDZTradeCheck.Punishment(_playerID)		
 	local timepassed = math.floor((Logic.GetTime() - gvDZTradeCheck.PlayerTime[_playerID])/4)
+	local count = 0
+	local maxvalue = (Logic.GetPlayerAttractionUsage(_playerID) - Logic.GetPlayerAttractionLimit(_playerID)) * 1.2
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
-		local motivation = Logic.GetSettlersMotivation(eID) 
-		if motivation >= 0.29 or Logic.GetAverageMotivation(_playerID) >= 0.26 then
-			CEntity.SetMotivation(eID, motivation - math.max(math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100, 0.06), 0.2))
-		elseif motivation < 0.24 then
-			CEntity.SetMotivation(eID, 0.24 )
+		if count < maxvalue then
+			local motivation = Logic.GetSettlersMotivation(eID) 
+			if motivation >= 0.29 or Logic.GetAverageMotivation(_playerID) >= 0.26 then
+				CEntity.SetMotivation(eID, motivation - math.max(math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100, 0.06), 0.2))
+			elseif motivation < 0.24 then
+				CEntity.SetMotivation(eID, 0.24 )
+			end
+			count = count + 1
+		else
+			break
 		end
 	end
 end

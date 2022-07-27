@@ -1224,3 +1224,44 @@ function GUIUpdate_MultiSelectionButton()
 		end	
 	end
 end
+function GUIUpdate_Forester_WorkChange(_flag)
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	
+	local EntityID = GUI.GetSelectedEntity()
+	
+	if _flag == 0 then
+	
+		if Forester.WorkActiveState[EntityID] == nil then
+				
+			XGUIEng.ShowWidget(CurrentWidgetID, 1)
+		
+		elseif Forester.WorkActiveState[EntityID] == 0 then
+		
+			XGUIEng.ShowWidget(CurrentWidgetID, 0)
+			
+		elseif Forester.WorkActiveState[EntityID] == 1 then
+		
+			XGUIEng.ShowWidget(CurrentWidgetID, 1)
+		
+		end
+	
+	elseif _flag == 1 then
+	
+		if Forester.WorkActiveState[EntityID] == nil then
+				
+			XGUIEng.ShowWidget(CurrentWidgetID, 0)
+		
+		elseif Forester.WorkActiveState[EntityID] == 0 then
+		
+			XGUIEng.ShowWidget(CurrentWidgetID, 1)
+			
+		elseif Forester.WorkActiveState[EntityID] == 1 then
+		
+			XGUIEng.ShowWidget(CurrentWidgetID, 0)
+		
+		end
+		
+	end
+	
+end

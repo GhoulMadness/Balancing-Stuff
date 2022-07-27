@@ -543,6 +543,23 @@
 			
 		)
 		
+		CNetwork.SetNetworkHandler("Ghoul_Forester_WorkChange", 
+			function(name, _playerID, _id, _flag) 
+			
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
+				
+					CLogger.Log("Ghoul_Forester_WorkChange", name, _playerID, _id, _flag)
+    
+					-- execute stuff
+					
+					Forester.WorkChange(_id, _flag)
+					
+				end
+				
+			end
+			
+		)
+		
 	end
 
 --

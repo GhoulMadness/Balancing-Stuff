@@ -334,9 +334,57 @@ function table.findvalue(_tid,_value)
 			
 		end	
 		
+	elseif type(_value) == "table" then
+	
+		if type(_tid[1]) == "table" then
+		
+			if _tid[1].X and _tid[1].Y then
+			
+				for i,_ in pairs(_tid) do
+				
+					if _tid[i].X == _value.X and _tid[i].Y == _value.Y then
+					
+						tpos = i
+						
+					end
+					
+				end	
+				
+			else
+			
+				for i,_ in pairs(_tid) do
+				
+					for k,_ in pairs(_tid[i]) do
+					
+						if _tid[i][k] == _value then
+						
+							tpos = i
+							
+						end
+						
+					end
+					
+				end	
+				
+			end
+				
+		else
+		
+			for i,_ in pairs(_tid) do
+			
+				if _tid[i] == _value then
+				
+					tpos = i
+					
+				end
+				
+			end	
+			
+		end	
+	
 	end
 	
-	return tpos
+	return tpos or 0
 
 end
 
@@ -1974,7 +2022,7 @@ end
 -- get the current task, logic cant return animal tasks, returns number, not string
 function GetEntityCurrentTask(_entityID)
 
-	assert( IsValid(_entityID) , "invalid entityID" );
+	assert( IsValid(_entityID) , "invalid entityID" )
 
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
 	
@@ -1982,7 +2030,7 @@ end
 
 function GetEntitySize(_entityID)
 
-	assert( IsValid(_entityID) , "invalid entityID" );
+	assert( IsValid(_entityID) , "invalid entityID" )
 
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
 	
@@ -1990,27 +2038,27 @@ end
 
 function SetEntitySize(_entityID,_size)
 
-	assert( IsValid(_entityID) , "invalid entityID" );
-
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_size) == "number", "size needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
 	
 end
 -- Rundungs-Comfort
 function round( _n )
 
-	return math.floor( _n + 0.5 );
+	return math.floor( _n + 0.5 )
 	
 end
 
 function GetPlayerEntities(_playerID, _entityType)
 	local playerEntities = {};
 	if _entityType ~= nil then
-		local n,eID = Logic.GetPlayerEntities(_playerID, _entityType, 1);
+		local n,eID = Logic.GetPlayerEntities(_playerID, _entityType, 1)
 		if (n > 0) then
 			local firstEntity = eID;
 			repeat
 				table.insert(playerEntities,eID);
-				eID = Logic.GetNextEntityOfPlayerOfType(eID);
+				eID = Logic.GetNextEntityOfPlayerOfType(eID)
 			until (firstEntity == eID);
 		end
 		return playerEntities;
@@ -2019,12 +2067,12 @@ function GetPlayerEntities(_playerID, _entityType)
 			if not string.find(tostring(k), "XD_", 1, true) and
 			not string.find(tostring(k), "XA_", 1, true) and
 			not string.find(tostring(k), "XS_", 1, true) then
-			local n,eID = Logic.GetPlayerEntities(_playerID, v, 1);
+			local n,eID = Logic.GetPlayerEntities(_playerID, v, 1)
 				if (n > 0) then
 					local firstEntity = eID;
 					repeat
-						table.insert(playerEntities,eID);
-						eID = Logic.GetNextEntityOfPlayerOfType(eID);
+						table.insert(playerEntities,eID)
+						eID = Logic.GetNextEntityOfPlayerOfType(eID)
 					until (firstEntity == eID);
 				end
 			end

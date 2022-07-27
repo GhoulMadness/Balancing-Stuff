@@ -903,3 +903,14 @@ function GUIAction_BuyCannon(_CannonType, _UpgradeCategory)
 		XGUIEng.ShowWidget(gvGUI_WidgetID.CannonInProgress,1)
 	end
 end
+-- Forester work pause/start button
+function GUIAction_Forester_WorkChange(_id, _flag)
+	if IsExisting(_id) then
+		GUI.DeselectEntity(_id)
+		if CNetwork then
+			CNetwork.SendCommand("Ghoul_Forester_WorkChange", GUI.GetPlayerID(), _id, _flag)
+		else
+			Forester.WorkChange(_id, _flag)
+		end
+	end
+end
