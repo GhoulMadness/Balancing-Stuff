@@ -591,4 +591,12 @@ Ein neues Gebäude ist nun verfügbar: Das Forsthaus. In dieses wird sich ein F�
 Das Forsthaus benötigt die Technologie Konstruktion.
 Der Förster kann nur fruchtbares, nicht jedoch karges Land aufforsten.
 
+--- Version 0.725
+
+Es wurde ein Fehler behoben, durch den der Förster im Winter auch Gebiete auf dem Eis aufforsten konnte.
+
+Es wurde ein Fehler in Zusammenhang mit den Schützentürmen behoben.
+
+Einige GUI-Texturen wurden überarbeitet. Vielen Dank dabei an MSTVD, der die Texturen zur Verfügung gestellt hat.
+
 

@@ -277,47 +277,48 @@ Forester.FindNextTreePos = function(_id)
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn, tempterrType, terrType	
 	local count, eID = Logic.GetEntitiesInArea(Entities.XD_TreeStump1, x, y, Forester.MaxRange, 1)	
-	local posX, posY = Logic.GetEntityPosition(eID)
 	
-	if count > 0 and Forester.LandscapeTypeBySoilTexture[CUtil.GetTerrainNodeType((posX or 0)/100, (posY or 0)/100)] ~= nil then
+	if count > 0 then
+		local posX, posY = Logic.GetEntityPosition(eID)
+		local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(posX, posY)
+		if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil and (height > CUtil.GetWaterHeight(x/100, y/100)) then
 		
-		Logic.DestroyEntity(eID)		
-		return posX, posY, CUtil.GetTerrainNodeType(posX/100, posY/100)
-		
-	else
+			Logic.DestroyEntity(eID)		
+			return posX, posY, tempterrType
+		end
+	end
 
-		for y_ = y - offset, y + offset, Forester.SearchForFreeSpotRange do
+	for y_ = y - offset, y + offset, Forester.SearchForFreeSpotRange do
+	
+		for x_ = x - offset, x + offset, Forester.SearchForFreeSpotRange do
 		
-			for x_ = x - offset, x + offset, Forester.SearchForFreeSpotRange do
-			
-				if 0 < x_ and 0 < y_ and x_ < xmax and y_ < ymax and (y_ ~= y and x_ ~= x) then				
+			if 0 < x_ and 0 < y_ and x_ < xmax and y_ < ymax and (y_ ~= y and x_ ~= x) then				
+				
+				local d = (x_ - x)^2 + (y_ - y)^2
+				local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)
+				
+				if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
 					
-					local d = (x_ - x)^2 + (y_ - y)^2
-					local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)
-					
-					if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil then
-						
-						if Forester.TreeGrowingBlockedPos[1] == nil or table.findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then		
-							if Forester.GetDistanceToNextPlantedTree(x_, y_) >= Forester.AllowedInferenceRange then
-								if not dmin or dmin > d then
-								
-									dmin = d
-									terrType = tempterrType
-									xspawn = x_
-									yspawn = y_																	
-								end		
-							end				
-						end						
-					end
+					if Forester.TreeGrowingBlockedPos[1] == nil or table.findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then		
+						if Forester.GetDistanceToNextPlantedTree(x_, y_) >= Forester.AllowedInferenceRange then
+							if not dmin or dmin > d then
+							
+								dmin = d
+								terrType = tempterrType
+								xspawn = x_
+								yspawn = y_																	
+							end		
+						end				
+					end						
 				end
 			end
 		end
-		if xspawn then
-			return xspawn, yspawn, terrType
-		else
-			return 0
-		end
-	end	
+	end
+	if xspawn then
+		return xspawn, yspawn, terrType
+	else
+		return 0
+	end
 end
 
 OnForester_Created = function(_id)  

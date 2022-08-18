@@ -324,9 +324,9 @@ function table.findvalue(_tid,_value)
 	
 	if type(_value) == "number" then
 	
-		for i,_ in pairs(_tid) do
+		for i,val in pairs(_tid) do
 		
-			if _tid[i] == _value then
+			if val == _value then
 			
 				tpos = i
 				

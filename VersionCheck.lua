@@ -20,7 +20,7 @@ function BS.VersionCheck.Setup()
 	end
 	
 	BS.VersionCheck.VersionOutdated = function(_playerName, _version)
-		return  " @center @color:255,255,255 " .. _playerName .. " - @color:255,72,53 " .. tostring(_version) .. " @cr ";
+		return  " @color:255,255,255 " .. _playerName .. " - @color:255,72,53 " .. tostring(_version) .. " @cr ";
 	end
 	
 	BS.VersionCheck.CheckVersion = function()
@@ -46,7 +46,7 @@ function BS.VersionCheck.Setup()
 		for PlayerIndex, VersionInfo in pairs(BS.VersionCheck.Players) do
 			versions = versions .. BS.VersionCheck.VersionOutdated(PlayerIndex, VersionInfo.BSVersion);
 		end
-		XGUIEng.SetText("BS_VersionCheck_Title", " @color:255,72,53 @center Unterschiedliche BS - Versionen!");
+		XGUIEng.SetText("BS_VersionCheck_Title", " @color:255,72,53 Unterschiedliche BS - Versionen!");
 		XGUIEng.SetText("BS_VersionCheck_Text", versions);
 		XGUIEng.ShowWidget("BS_VersionCheck",1);
 		XGUIEng.ShowWidget("SettlerServerInformation", 0)
