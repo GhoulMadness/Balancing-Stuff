@@ -8,6 +8,7 @@ GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;
 GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
 HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
 GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged;
+GameCallback_UnknownTaskOrig = GameCallback_UnknownTask
 
 -- 3 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
@@ -68,6 +69,8 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	elseif eType == Entities.PB_VictoryStatue3 then
 		gvVictoryStatue3.Amount[_PlayerID] = gvVictoryStatue3.Amount[_PlayerID] + 1
 		
+	elseif eType == Entities.PB_VictoryStatue4 then
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "VStatue4_CalculateDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
 	end
 end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -560,6 +563,22 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		
 		return allowed and checkpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 		
+	elseif _eType == Entities.PB_VictoryStatue4 then
+	
+		local checkpos = true
+		
+		for _,v in pairs(gvVStatue4.PositionTable) do		
+		
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvVStatue4.BlockRange then
+			
+				checkpos = false
+				
+			end
+			
+		end
+		
+		return allowed and checkpos and (gvVStatue4.Amount[GUI.GetPlayerID()] < gvVStatue4.Limit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		
 	else
 	
 		if not gvXmasEventFlag and not gvXmas2021ExpFlag then
@@ -872,4 +891,22 @@ function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
 	
 	GameCallback_GUI_EntityIDChangedOrig(_OldID,_NewID)
 	
+end
+
+GameCallback_UnknownTask = function(_id)
+
+--[[0: weiter sofort
+	1: weiter nächster Tick
+	2: bleiben
+]]	
+	if GetEntityCurrentTaskIndex(_id) == 3 then
+		if WCutter.FindNearestTree(_id) > 0 then
+			WCutter.StartWork(_id, WCutter.FindNearestTree(_id))
+			return 2
+		else			
+			SetEntityCurrentTaskIndex(_id, 1)
+			--[[ TODO: return param crucial?
+			return 0]]
+		end
+	end
 end

@@ -2027,6 +2027,22 @@ function GetEntityCurrentTask(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
 	
 end
+-- get entity current task sub-index
+function GetEntityCurrentTaskIndex(_entityID)
+
+	assert( IsValid(_entityID) , "invalid entityID" )
+
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()
+	
+end
+-- set entity current task sub-index
+function SetEntityCurrentTaskIndex(_entityID, _index)
+
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_index) == "number", "index needs to be a number")
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)
+	
+end
 
 function GetEntitySize(_entityID)
 
@@ -2145,3 +2161,18 @@ function SetPlayerEntitiesSelectable()
 	end
 end
 
+function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)	
+	if Logic.GetDiplomacyState(_attackerPID, _targetPID) == Diplomacy.Hostile then
+		if _scoretype == "Settler" then
+			GameCallback_SettlerKilled(_attackerPID, _targetPID)
+			if ExtendedStatistics then
+				if _attackerPID > 0 and _targetPID > 0 then
+					ExtendedStatistics.Players[_attackerPID].Kills = ExtendedStatistics.Players[_attackerPID].Kills + 1
+					ExtendedStatistics.Players[_targetPID].Losses = ExtendedStatistics.Players[_targetPID].Losses + 1
+				end
+			end
+		elseif _scoretype == "Building" then
+			GameCallback_BuildingDestroyed(_attackerPID, _targetPID)
+		end
+	end
+end

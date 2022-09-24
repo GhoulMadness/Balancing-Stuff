@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.725
+	BS.Version = 0.726
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -238,10 +238,16 @@
 							["BS_ArmyCreator_Hero14"] = {	[1] = "challenge_map1_won",
 															[2] = "challenge_map2_won",
 															[3] = "challenge_map3_won"
-														}
+														},
+							["Build_VictoryStatue4"] = "challenge_map4_won"
 		
 						}
 
+	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias"},
+								[2] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias", "Novator12", "ARK_ZorkManu", "RitterLeo", "DerEisenfresser", "ThePhoenix_2000"},
+								[3] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias"},
+								[4] = {}
+							}
 	function BS.CheckForAchievements(_pID)
 	
 		for i = 1,12 do
@@ -303,7 +309,7 @@
 	Score.BattleSettlersPoints = 3
 	Score.BattleBuildingPoints = 50
 	Score.SettlersPoints = 5 
-	Score.ResourcePoints  = 0.05
+	Score.ResourcePoints = 0.05
 	Score.ConstructionPoints = 5
 	-----------------------------------------------------------------------------------------------------------------------------
 	-------------------- important Balancing_Stuff... Stuff ^^ ; do not change or even delete -----------------------------------
@@ -336,9 +342,11 @@
 			"VersionCheck",
 			"Hero14",
 			"VictoryStatue3",
+			"VictoryStatue4",
+			"WCutter",
 			"Forester"
 		};
-		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end);
+		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
 	
 	--disables the creation of fow (needed for minimap)
@@ -368,25 +376,28 @@
 	--Trigger for towers
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnTowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnTowerDestroyed", 1)
+	--Trigger for victory statue4
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnVStatue4Created", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnVStatue4Destroyed", 1)
 	--Trigger for drakes headshot
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1)
 	--Trigger for poison damage (kala, mary)
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "PoisonDamageCreateDoT", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "PoisonDamageCreateDoT", 1)
 	--Trigger for yuki's shuriken damage
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "YukiShurikenBonusDamage", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "YukiShurikenBonusDamage", 1)
 	--Trigger for kerberos attacks
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "KerberosAttackAdditions", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "KerberosAttackAdditions", 1)
 	--Trigger for erebos movement effects
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnErebos_Created", 1)
 	--Trigger for catapult stones effects
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "CatapultStoneHitEffects", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "CatapultStoneHitEffects", 1)
 	--Trigger for hero death
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnHeroDied", 1)
 	--Trigger for archers towers
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_TowerDestroyed", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnArchers_TowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_Tower_OccupiedTroopDied", 1)
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnArchers_Tower_OccupiedTroopAttacked", 1);
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnArchers_Tower_OccupiedTroopAttacked", 1)
 	--Trigger for serfs
 	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
 	table.remove(SerfIDTable,1)

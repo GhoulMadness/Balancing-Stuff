@@ -7,38 +7,38 @@
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
-					CLogger.Log("Ghoul_LevyTaxes", name, _playerID); 
+					CLogger.Log("Ghoul_LevyTaxes", name, _playerID)  
 					
 					-- Cooldown handling
-					gvTaxes_NextCooldown = gvTaxes_NextCooldown or {};
+					gvTaxes_NextCooldown = gvTaxes_NextCooldown or {} 
 
 					if gvTaxes_NextCooldown[_playerID] then
 					
 						if gvTaxes_NextCooldown[_playerID] > Logic.GetTimeMs() then
 						
-							return;
+							return 
 							
-						end;
+						end 
 						
-					end;
+					end 
 					
 					-- update cooldown.
-					gvTaxes_NextCooldown[_playerID] = Logic.GetTimeMs() + 4 * 60 * 1000;
+					gvTaxes_NextCooldown[_playerID] = Logic.GetTimeMs() + 4 * 60 * 1000 
     
 					BS.LevyTax(_playerID)
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_ForceSettlersToWorkPenalty", 
 			function(name, _playerID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
-					CLogger.Log("Ghoul_ForceSettlersToWorkPenalty", name, _playerID); 
+					CLogger.Log("Ghoul_ForceSettlersToWorkPenalty", name, _playerID)  
 					
 					for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
 					
@@ -46,56 +46,56 @@
 						
 						CEntity.SetMotivation(eID, motivation - 0.08) 
 						
-					end; 
+					end  
 					
 					CUtil.AddToPlayersMotivationHardcap(_playerID, - 0.02)
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_LightningRod_Protected", 
 			function(name, _playerID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
-					CLogger.Log("Ghoul_LightningRod_Protected", name, _playerID); 
+					CLogger.Log("Ghoul_LightningRod_Protected", name, _playerID)  
 					
 					-- Cooldown handling
-					gvLightning.NextCooldown = gvLightning.NextCooldown or {};
+					gvLightning.NextCooldown = gvLightning.NextCooldown or {} 
 					
 					if gvLightning.NextCooldown[_playerID] then
 					
 						if gvLightning.NextCooldown[_playerID] > Logic.GetTimeMs() then
 						
-							return;
+							return 
 							
-						end;
+						end 
 						
-					end;
+					end 
 					
 					-- update cooldown.
-					gvLightning.NextCooldown[_playerID] = Logic.GetTimeMs() + 4 * 60 * 1000;
+					gvLightning.NextCooldown[_playerID] = Logic.GetTimeMs() + 4 * 60 * 1000 
     
 					-- execute stuff
 					gvLightning.RodProtected[_playerID] = true
 					
 					Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","LightningRod_UnProtected",1,{},{_playerID})
 
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_Lighthouse_SpawnJob", 
 			function(name, _playerID,_eID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
-					CLogger.Log("Ghoul_Lighthouse_SpawnJob", name, _playerID,_eID); 
+					CLogger.Log("Ghoul_Lighthouse_SpawnJob", name, _playerID,_eID)  
 					
 					if Logic.GetEntityType(_eID) ~= Entities.CB_LighthouseActivated then
 					
@@ -104,20 +104,20 @@
 					end
 					
 					-- Cooldown handling
-					gvLighthouse.NextCooldown = gvLighthouse.NextCooldown or {};
+					gvLighthouse.NextCooldown = gvLighthouse.NextCooldown or {} 
 					
 					if gvLighthouse.NextCooldown[_playerID] then
 					
 						if gvLighthouse.NextCooldown[_playerID] > Logic.GetTimeMs() then
 						
-							return;
+							return 
 							
-						end;
+						end 
 						
-					end;
+					end 
 					
 					-- update cooldown.
-					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + (5 * 60 * 1000);
+					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + (5 * 60 * 1000) 
     
 					-- execute stuff
 					local pos = {}
@@ -178,18 +178,18 @@
 						
 					end
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_ChangeWeatherToThunderstorm", 
 			function(name, _playerID,_eID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
-					CLogger.Log("Ghoul_ChangeWeatherToThunderstorm", name); 
+					CLogger.Log("Ghoul_ChangeWeatherToThunderstorm", name)  
 					
 					if Logic.GetPlayersGlobalResource(_playerID,ResourceType.WeatherEnergy) < Logic.GetEnergyRequiredForWeatherChange() then
 					
@@ -228,21 +228,21 @@
 						
 					end
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor", 
 			function(name,_playerID,_heroID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID); 
+					CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID)  
 					
 					-- Cooldown handling
-					gvHero13StoneArmor_NextCooldown = gvHero13StoneArmor_NextCooldown or {};
+					gvHero13StoneArmor_NextCooldown = gvHero13StoneArmor_NextCooldown or {} 
 					
 					local starttime = Logic.GetTimeMs()
 					
@@ -250,33 +250,33 @@
 					
 						if gvHero13StoneArmor_NextCooldown[_playerID] > starttime then
 						
-							return;
+							return 
 							
-						end;
+						end 
 						
-					end;
+					end 
 					
 					-- update cooldown.
-					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + 2.5 * 60 * 1000;
+					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + 2.5 * 60 * 1000 
     
 					-- execute stuff
 					_G["Hero13TriggerID_".._playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_".._playerID, 1, nil, {_heroID,starttime})
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero13DivineJudgment", 
 			function(name,_playerID,_heroID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_Hero13DivineJudgment", name, _playerID,_heroID); 
+					CLogger.Log("Ghoul_Hero13DivineJudgment", name, _playerID,_heroID)  
 					
 					-- Cooldown handling
-					gvHero13DivineJudgment_NextCooldown = gvHero13DivineJudgment_NextCooldown or {};
+					gvHero13DivineJudgment_NextCooldown = gvHero13DivineJudgment_NextCooldown or {} 
 					
 					local starttime = Logic.GetTimeMs()
 					
@@ -288,14 +288,14 @@
 					
 						if gvHero13DivineJudgment_NextCooldown[_playerID] > starttime then
 						
-							return;
+							return 
 							
-						end;
+						end 
 						
-					end;
+					end 
 					
 					-- update cooldown.
-					gvHero13DivineJudgment_NextCooldown[_playerID] = Logic.GetTimeMs() + 1 * 60 * 1000;
+					gvHero13DivineJudgment_NextCooldown[_playerID] = Logic.GetTimeMs() + 1 * 60 * 1000 
     
 					-- execute stuff
 					Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
@@ -304,18 +304,18 @@
 					
 					_G["Hero13JudgmentTriggerID_".._playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_".._playerID, 1, nil, {_heroID,basedmg,posX,posY,starttime})
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_Archers_Tower_RemoveTroop", 
 			function(name,_playerID,_entityID,_slot) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_Archers_Tower_RemoveTroop", name, _playerID,_entityID,_slot); 
+					CLogger.Log("Ghoul_Archers_Tower_RemoveTroop", name, _playerID,_entityID,_slot)  
     
 					-- execute stuff
 					
@@ -353,18 +353,18 @@
 						
 					end
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_Archers_Tower_AddTroop", 
 			function(name,_playerID,_entityID,_leaderID) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_leaderID); 
+					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_leaderID)  
     
 					-- execute stuff
 					
@@ -408,18 +408,18 @@
 						
 					end
 					
-				end; 
+				end  
 				
 			end 
 			
-		); 
+		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_ArmyCreator_SpawnTroops", 
 			function(name, _playerID, ...) 
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
-					CLogger.Log("Ghoul_ArmyCreator_SpawnTroops", name, _playerID, arg); 
+					CLogger.Log("Ghoul_ArmyCreator_SpawnTroops", name, _playerID, arg)  
     
 					-- execute stuff
 					
@@ -431,6 +431,16 @@
 						
 					end
 					
+					-- is player really using the intended points limit?
+					while ArmyCreator.CheckForPointsLimitExceeded(trooptable) ~= nil do
+						trooptable[ArmyCreator.CheckForPointsLimitExceeded(trooptable)] = trooptable[ArmyCreator.CheckForPointsLimitExceeded(trooptable)] - 1
+					end		
+					-- has player really completed the challenge maps properly?
+					if trooptable[Entities.PU_Hero14] > 0 then
+						if not ArmyCreator.CheckForAchievement(_playerID) then
+							trooptable[Entities.PU_Hero14] = 0
+						end
+					end
 					ArmyCreator.ReadyForTroopCreation(_playerID, trooptable)
 					
 				end
@@ -558,6 +568,172 @@
 				
 			end
 			
+		)
+		
+		CNetwork.SetNetworkHandler("BuyHero",
+			function(name, _playerID, _type, _buildingID)
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+					if _type == Entities.PU_Hero14 then
+						local count = 0
+						for i = 1,3 do
+							for k,v in pairs(BS.AchievementWhitelist[i]) do
+								if v == XNetwork.GameInformation_GetLogicPlayerUserName(_playerID) then
+									count = count + 1								
+								end
+							end
+						end
+						if count == 3 then
+							CLogger.Log("BuyHero", _playerID, _type, _buildingID)
+							SendEvent.BuyHero(_playerID, _type, _buildingID)
+						end
+					else
+						CLogger.Log("BuyHero", _playerID, _type, _buildingID)
+						SendEvent.BuyHero(_playerID, _type, _buildingID)
+					end
+				end
+			end
+		)
+		
+		CNetwork.SetNetworkHandler("PlaceBuilding",
+			function(name, _player, _upgradeCategory, _x, _y, _rotation, ...)
+
+				local selection = arg
+				
+				local type_func = type
+				
+				local type = Logic.GetBuildingTypeByUpgradeCategory(_upgradeCategory, _player) 
+				local isMine = false 
+				local isBridge = false 
+				local isVC = false 
+				
+				local buildOn = 0 
+				
+				if _upgradeCategory == UpgradeCategories.GenericBridge then
+					
+					local entity = GetBridgeSlotAtPosition(_x, _y) 
+					local bridges = {
+						[Entities.XD_Bridge1] = Entities.PB_Bridge1, 
+						[Entities.XD_Bridge2] = Entities.PB_Bridge2,
+						[Entities.XD_Bridge3] = Entities.PB_Bridge3, 
+						[Entities.XD_Bridge4] = Entities.PB_Bridge4, 
+					} 
+					if entity and (entity) ~= 0 then
+						local t = Logic.GetEntityType(entity) 
+						if bridges[t] then
+							type = bridges[t] 
+						else
+							return 
+						end 
+					else
+						return 
+					end 
+					
+					buildOn = entity
+				elseif _upgradeCategory == UpgradeCategories.GenericMine then
+					local entity = GetBuildOnEntityAtPosition(_x, _y) 
+					
+					if entity and entity ~= 0 then
+						
+						if CEntity.GetAttachedEntities(entity)[36] then
+							return 
+						end 
+						
+						type = BuildOnDefinitionsReverse[Logic.GetEntityType(entity)] 
+						
+						buildOn = entity 
+						
+						if not type then
+							return 
+						end 
+					else
+						return 
+					end 
+				elseif BuildOnDefinitions[type] then
+					local entity = GetBuildOnEntityAtPosition(_x, _y) 
+					if entity and entity ~= 0 then
+						if CEntity.GetAttachedEntities(entity)[36] then
+							return 
+						end 
+						
+						local t = Logic.GetEntityType(entity) 
+						
+						if not BuildOnDefinitions[type] then
+							return 
+						end 
+						
+						if type_func(BuildOnDefinitions[type]) == "number" then
+							-- old variant
+							if BuildOnDefinitions[type] ~= t then
+								return 
+							end 
+						else
+							-- new variant
+							if not BuildOnDefinitions[type][t] then
+								return 
+							end 
+						end 
+						
+						buildOn = entity 
+						
+					end 
+				else
+					for i = 1,4 do 
+						if _upgradeCategory == _G["UpgradeCategories"]["VictoryStatue"..i] then
+							local allowed
+							for k,v in pairs(BS.AchievementWhitelist[i]) do
+								if v == XNetwork.GameInformation_GetLogicPlayerUserName(_player) then
+									allowed = true							
+								end
+							end
+							if not allowed then
+								return
+							end
+						end
+					end
+				end 
+				
+				if CNetwork.IsAllowedToManipulatePlayer(name, _player)
+				and CPlaceBuilding.CanPlaceBuilding(type, _player, _x, _y, _rotation, buildOn)
+				then
+					
+					local e = {Logic.GetEntitiesInArea(0, _x, _y, 1, 64)} 
+					
+					for i = 2, e[1]+1 do
+						if Logic.IsBuilding(e[i]) then
+							return 
+						end 
+					end 
+					
+					
+					
+					if CheckResources(_upgradeCategory, _player) then
+						SubResources(_upgradeCategory, _player) 
+						
+						local id = Logic.CreateConstructionSite( _x, _y, _rotation, type, _player ) 
+						
+						CLogger.Log("PlaceBuilding_CreateConstructionSite", _x, _y, _rotation, type, _player, id, InputHandler_LastPlacedBuilding) 
+
+						id = InputHandler_LastPlacedBuilding 
+						
+
+						if isMine then
+							SetMine(_x, _y, id) 
+						elseif isBridge then
+							SetBridge(_x, _y, id) 
+						end 
+						
+						if Logic.IsEntityAlive(id) then
+							for i = 1,table.getn(selection) do
+								if Logic.IsEntityAlive(selection[i]) and Logic.EntityGetPlayer(selection[i]) == _player then
+									CLogger.Log("PlaceBuilding_SerfConstructBuilding", selection[i], id) 
+									SendEvent.SerfConstructBuilding(selection[i], id) 
+								end 
+							end 
+						end 
+					end 
+				end
+			end 
+		
 		)
 		
 	end
