@@ -76,6 +76,14 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 							if Soldiers[1] > 0 then
 								for i = 2, Soldiers[1] + 1 do
 									local soldierdmg = math.max(damage - ((i - 2) * damage/10), damage/5)
+									if soldierdmg >= Logic.GetEntityHealth(Soldiers[i]) then						
+										BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")							
+									end
+									if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
+										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
+										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
+										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+									end
 									Logic.HurtEntity(Soldiers[i], soldierdmg)
 									if _G["Hero14LifestealTriggerID_"..pID] then
 										Logic.HealEntity(_heroID, soldierdmg * gvHero14.LifestealAura.LifestealAmount)
@@ -83,6 +91,14 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 									end
 								end
 							else
+								if damage >= Logic.GetEntityHealth(eID) then						
+									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
+								end
+								if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+								end
 								Logic.HurtEntity(eID, damage)
 								if _G["Hero14LifestealTriggerID_"..pID] then
 									Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
@@ -93,15 +109,31 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 							if gvLightning.IsLightningProofBuilding(eID) ~= true then
 								if Logic.IsConstructionComplete(eID) == 1 then
 									if Logic.GetEntityType(eID) ~= Entities.CB_Evil_Tower1 and Logic.GetEntityType(eID) ~= Entities.PU_Hero14_EvilTower then
+										if damage >= Logic.GetEntityHealth(eID) then						
+											BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")							
+										end
+										if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+										end
 										Logic.HurtEntity(eID, damage)
 										if _G["Hero14LifestealTriggerID_"..pID] then
 											Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 											Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
-										end
+										end										
 									end
 								end
 							end
 						elseif Logic.IsSerf(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
+							if damage >= Logic.GetEntityHealth(eID) then						
+								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
+							end
+							if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+							end
 							Logic.HurtEntity(eID, damage)
 							if _G["Hero14LifestealTriggerID_"..pID] then
 								Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)

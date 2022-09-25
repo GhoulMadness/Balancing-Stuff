@@ -599,4 +599,10 @@ Es wurde ein Fehler in Zusammenhang mit den Schützentürmen behoben.
 
 Einige GUI-Texturen wurden überarbeitet. Vielen Dank dabei an MSTVD, der die Texturen zur Verfügung gestellt hat.
 
+--- Version 0.726
+
+Durch Dovbars Götterdämmerung, Erebos Aura sowie Marys und Kalas Gift-DoT getötete Feinde zählen nun in die Kampfstatistik hinein.
+
+Freischaltungen durch Herausforderungs-Maps sind nun nur noch im Zusammenspiel mit einer Whitelist wirkbar.
+Falls ihr eine dieser Karten auf der Herausforderungsstufe schafft, so gebt mir bitte Bescheid. Frühere Siege sind bereits berücksichtigt.
 

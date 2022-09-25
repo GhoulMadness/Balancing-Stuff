@@ -1753,6 +1753,10 @@ function SetInternalClippingLimitMin(_val)
 	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
 	
 end
+-- returns the technology raw speed modifier and the operation (+/*), both defined in the respective xml
+function GetTechnologySpeedModifier(_techID)
+	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][56]:GetFloat(), CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][58]:GetInt()-42
+end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
 
@@ -1761,6 +1765,17 @@ function GetSettlerBaseMovementSpeed(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
 	
 end
+BS.EntityCatSpeedModifierTechs = {	[EntityCategories.Hero] = {Technologies.T_HeroicShoes},
+									[EntityCategories.Serf] = {Technologies.T_Shoes, Technologies.T_Alacricity},
+									[EntityCategories.Bow] = {Technologies.T_BetterTrainingArchery},
+									[EntityCategories.Rifle] = {Technologies.T_BetterTrainingArchery},
+									[EntityCategories.Sword] = {Technologies.T_BetterTrainingBarracks},
+									[EntityCategories.Spear] = {Technologies.T_BetterTrainingBarracks},
+									[EntityCategories.CavalryHeavy] = {Technologies.T_Shoeing},
+									[EntityCategories.CavalryLight] = {Technologies.T_Shoeing},
+									[EntityCategories.Cannon] = {Technologies.T_BetterChassis},
+									[EntityCategories.Thief] = {Technologies.T_Agility, Technologies.T_Chest_ThiefBuff}								
+								}
 -- return settler movement speed
 function GetSettlerCurrentMovementSpeed(_entityID,_player)
 
@@ -1772,132 +1787,37 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 	
 	local SpeedHeroMultiplier = 1
 	
-	--Check auf Wetter
-	if Logic.GetWeatherState() == 1 then
+	--Check auf Wetter		
+	if Logic.GetWeatherState() == 2 then
 	
-		SpeedWeatherFactor = 1
-		
-	elseif Logic.GetWeatherState() == 2 then
-	
-		SpeedWeatherFactor = 1.05
+		SpeedWeatherFactor = CUtilMemory.GetMemory(8758240)[0][30]:GetFloat()
 		
 	elseif Logic.GetWeatherState() == 3 then
 	
-		SpeedWeatherFactor = 0.8
-		
-	else
-	
-		return
+		SpeedWeatherFactor = CUtilMemory.GetMemory(8758240)[0][27]:GetFloat()
 		
 	end
 	
-	--Check auf Technologie Modifikatoren
-	if Logic.IsSerf(_entityID) == 1 then
+	--Check auf Technologie Modifikatoren		
+	for k,v in pairs(BS.EntityCatSpeedModifierTechs) do
 	
-		if Logic.GetTechnologyState(_player,Technologies.T_Shoes) == 4 and Logic.GetTechnologyState(_player,Technologies.T_Alacricity) ~= 4 then
+		if Logic.IsEntityInCategory(_entityID, k) == 1 then
 		
-			SpeedTechBonus = 20
+			for i = 1,table.getn(v) do
 			
-		elseif Logic.GetTechnologyState(_player,Technologies.T_Alacricity) == 4 and Logic.GetTechnologyState(_player,Technologies.T_Shoes) ~= 4 then
-		
-			SpeedTechBonus = 40
-			
-		elseif Logic.GetTechnologyState(_player,Technologies.T_Alacricity) == 4 and Logic.GetTechnologyState(_player,Technologies.T_Shoes) == 4 then
-		
-			SpeedTechBonus = 60
-			
-		else
-		
-			SpeedTechBonus = 0
-			
-		end	
-		
-	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.Bow) == 1 or Logic.IsEntityInCategory(_entityID, EntityCategories.Rifle) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_BetterTrainingArchery) == 4 then
-		
-			SpeedTechBonus = 40
-			
-		else
-		
-			SpeedTechBonus = 0
-			
+				if Logic.GetTechnologyState(_player,v[i]) == 4 then
+				
+					local val, op = GetTechnologySpeedModifier(v[i])
+					if op == 0 then
+						SpeedHeroMultiplier = SpeedHeroMultiplier + val
+					elseif op == 1 then
+						SpeedTechBonus = SpeedTechBonus + val
+					end
+				end
+				
+			end	
 		end
 		
-	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.Sword) == 1 or Logic.IsEntityInCategory(_entityID, EntityCategories.Spear) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_BetterTrainingBarracks) == 4 then
-		
-			SpeedTechBonus = 30
-			
-		else
-		
-			SpeedTechBonus = 0
-			
-		end
-		
-	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.CavalryLight) == 1 or Logic.IsEntityInCategory(_entityID, EntityCategories.CavalryHeavy) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_Shoeing) == 4 then
-		
-			SpeedTechBonus = 50
-			
-		else
-		
-			SpeedTechBonus = 0
-			
-		end
-		
-	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.Cannon) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_BetterChassis) == 4 then
-		
-			SpeedTechBonus = 30
-			
-		else
-		
-			SpeedTechBonus = 0
-			
-		end	
-		
-	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.Thief) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_Agility) == 4 and Logic.GetTechnologyState(_player,Technologies.T_Chest_ThiefBuff) ~= 4 then
-		
-			SpeedTechBonus = 50
-			
-		elseif Logic.GetTechnologyState(_player,Technologies.T_Agility) ~= 4 and Logic.GetTechnologyState(_player,Technologies.T_Chest_ThiefBuff) == 4 then
-		
-			SpeedTechBonus = 100
-			
-		elseif Logic.GetTechnologyState(_player,Technologies.T_Agility) == 4 and Logic.GetTechnologyState(_player,Technologies.T_Chest_ThiefBuff) == 4 then
-		
-			SpeedTechBonus = 150	
-			
-		else
-		
-			SpeedTechBonus = 0
-			
-		end
-		
-	elseif Logic.IsEntityInCategory(_entityID, EntityCategories.Hero) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_HeroicShoes) == 4 then
-		
-			SpeedHeroMultiplier = 1.2
-			
-		else
-			
-			SpeedHeroMultiplier = 1
-			
-		end
-		
-		SpeedTechBonus = 0
-		
-	else
-	
-		SpeedTechBonus = 0
-	
 	end
 	
 	return (BaseSpeed + SpeedTechBonus) * SpeedWeatherFactor * (SpeedHeroMultiplier or 1)
@@ -2027,6 +1947,22 @@ function GetEntityCurrentTask(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
 	
 end
+-- get entity current task sub-index
+function GetEntityCurrentTaskIndex(_entityID)
+
+	assert( IsValid(_entityID) , "invalid entityID" )
+
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()
+	
+end
+-- set entity current task sub-index
+function SetEntityCurrentTaskIndex(_entityID, _index)
+
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_index) == "number", "index needs to be a number")
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)
+	
+end
 
 function GetEntitySize(_entityID)
 
@@ -2145,3 +2081,18 @@ function SetPlayerEntitiesSelectable()
 	end
 end
 
+function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)	
+	if Logic.GetDiplomacyState(_attackerPID, _targetPID) == Diplomacy.Hostile then
+		if _scoretype == "Settler" then
+			GameCallback_SettlerKilled(_attackerPID, _targetPID)
+			if ExtendedStatistics then
+				if _attackerPID > 0 and _targetPID > 0 then
+					ExtendedStatistics.Players[_attackerPID].Kills = ExtendedStatistics.Players[_attackerPID].Kills + 1
+					ExtendedStatistics.Players[_targetPID].Losses = ExtendedStatistics.Players[_targetPID].Losses + 1
+				end
+			end
+		elseif _scoretype == "Building" then
+			GameCallback_BuildingDestroyed(_attackerPID, _targetPID)
+		end
+	end
+end

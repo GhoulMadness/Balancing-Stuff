@@ -139,6 +139,24 @@ if not CNetwork then
 end
 ArmyCreator.PlayerPoints = ArmyCreator.BasePoints * (gvDiffLVL or 1)
 
+ArmyCreator.CheckForPointsLimitExceeded = function(_trooptable)
+	local count = 0
+	for k,v in pairs(_trooptable) do
+		count = count + (ArmyCreator.PointCosts[k] * v)
+	end
+	if count > (ArmyCreator.BasePoints * (gvDiffLVL)) then
+		return k
+	end
+end
+ArmyCreator.CheckForAchievement = function(_playerID)
+	local allowed 
+	for k,v in pairs(BS.AchievementWhitelist[i]) do
+		if v == XNetwork.GameInformation_GetLogicPlayerUserName(_playerID) then
+			allowed = true							
+		end
+	end
+	return allowed
+end
 ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 
 	ArmyCreator.Finished[_playerID] = true
