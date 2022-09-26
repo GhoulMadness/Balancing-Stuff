@@ -1779,13 +1779,8 @@ BS.EntityCatSpeedModifierTechs = {	[EntityCategories.Hero] = {Technologies.T_Her
 -- return settler movement speed
 function GetSettlerCurrentMovementSpeed(_entityID,_player)
 
-	local BaseSpeed = round(GetSettlerBaseMovementSpeed(_entityID))
-	
-	local SpeedTechBonus = 0
-	
-	local SpeedWeatherFactor = 1
-	
-	local SpeedHeroMultiplier = 1
+	local BaseSpeed = round(GetSettlerBaseMovementSpeed(_entityID))	
+	local SpeedTechBonus, SpeedWeatherFactor, SpeedHeroMultiplier	
 	
 	--Check auf Wetter		
 	if Logic.GetWeatherState() == 2 then
@@ -1800,16 +1795,17 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 	
 	--Check auf Technologie Modifikatoren		
 	for k,v in pairs(BS.EntityCatSpeedModifierTechs) do
-	
-		if Logic.IsEntityInCategory(_entityID, k) == 1 then
 		
+		if Logic.IsEntityInCategory(_entityID, k) == 1 then
+			SpeedTechBonus = 0
+			SpeedHeroMultiplier = 1
 			for i = 1,table.getn(v) do
 			
 				if Logic.GetTechnologyState(_player,v[i]) == 4 then
 				
 					local val, op = GetTechnologySpeedModifier(v[i])
 					if op == 0 then
-						SpeedHeroMultiplier = SpeedHeroMultiplier + val
+						SpeedHeroMultiplier = SpeedHeroMultiplier + (val -1)
 					elseif op == 1 then
 						SpeedTechBonus = SpeedTechBonus + val
 					end
@@ -1820,7 +1816,7 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 		
 	end
 	
-	return (BaseSpeed + SpeedTechBonus) * SpeedWeatherFactor * (SpeedHeroMultiplier or 1)
+	return (BaseSpeed + (SpeedTechBonus or 0)) * (SpeedWeatherFactor or 1) * (SpeedHeroMultiplier or 1)
 	
 end
 -- table with entityTypes with leaderBehavior two places further (index 8 instead of 6)

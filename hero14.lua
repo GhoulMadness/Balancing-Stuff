@@ -3,6 +3,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				if not Logic.IsEntityAlive(_heroID) then
 					return
 				end
+				if Logic.IsHero(_heroID) ~= 1 then
+					return
+				end
 				local xp = math.min(CEntity.GetLeaderExperience(_heroID), 1000)
 				local hppercent = GetEntityHealth(_heroID)
 				local calcvalue = xp/hppercent
@@ -36,6 +39,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				if not Logic.IsEntityAlive(_heroID) then
 					return
 				end			
+				if Logic.IsHero(_heroID) ~= 1 then
+					return
+				end
 				local playerID = Logic.EntityGetPlayer(_heroID)
 				local pos = GetPosition(_heroID)
 				local towerID = ({Logic.GetPlayerEntitiesInArea(playerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[2]
@@ -61,7 +67,10 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			ApplyDamage = function(_heroID, posX, posY)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
-				end				
+				end		
+				if Logic.IsHero(_heroID) ~= 1 then
+					return
+				end
 				local pos = GetPosition(_heroID)
 				if posX and posY then
 					pos.X = posX

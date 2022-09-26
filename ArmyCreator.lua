@@ -143,10 +143,10 @@ ArmyCreator.CheckForPointsLimitExceeded = function(_trooptable)
 	local count = 0
 	for k,v in pairs(_trooptable) do
 		count = count + (ArmyCreator.PointCosts[k] * v)
-	end
-	if count > (ArmyCreator.BasePoints * (gvDiffLVL)) then
-		return k
-	end
+		if count > (ArmyCreator.BasePoints * (gvDiffLVL)) then
+			return k
+		end
+	end	
 end
 ArmyCreator.CheckForAchievement = function(_playerID)
 	local allowed 

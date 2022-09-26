@@ -93,16 +93,15 @@
 		CNetwork.SetNetworkHandler("Ghoul_Lighthouse_SpawnJob", 
 			function(name, _playerID,_eID) 
 			
+				if Logic.GetEntityType(_eID) ~= Entities.CB_LighthouseActivated then
+					
+					return
+					
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
 					CLogger.Log("Ghoul_Lighthouse_SpawnJob", name, _playerID,_eID)  
-					
-					if Logic.GetEntityType(_eID) ~= Entities.CB_LighthouseActivated then
-					
-						return
-						
-					end
-					
+
 					-- Cooldown handling
 					gvLighthouse.NextCooldown = gvLighthouse.NextCooldown or {} 
 					
@@ -187,17 +186,16 @@
 		CNetwork.SetNetworkHandler("Ghoul_ChangeWeatherToThunderstorm", 
 			function(name, _playerID,_eID) 
 			
+				if Logic.GetEntityType(_eID) ~= Entities.PB_WeatherTower1 then
+					
+					return
+					
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
 					CLogger.Log("Ghoul_ChangeWeatherToThunderstorm", name)  
 					
 					if Logic.GetPlayersGlobalResource(_playerID,ResourceType.WeatherEnergy) < Logic.GetEnergyRequiredForWeatherChange() then
-					
-						return
-						
-					end
-					
-					if Logic.GetEntityType(_eID) ~= Entities.PB_WeatherTower1 then
 					
 						return
 						
@@ -236,7 +234,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor", 
 			function(name,_playerID,_heroID) 
-			
+				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
+					return
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID)  
@@ -270,7 +270,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero13DivineJudgment", 
 			function(name,_playerID,_heroID) 
-			
+				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
+					return
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Hero13DivineJudgment", name, _playerID,_heroID)  
@@ -312,7 +314,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Archers_Tower_RemoveTroop", 
 			function(name,_playerID,_entityID,_slot) 
-			
+				if not gvArchers_Tower.SlotData[_entityID] then
+					return
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Archers_Tower_RemoveTroop", name, _playerID,_entityID,_slot)  
@@ -361,7 +365,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Archers_Tower_AddTroop", 
 			function(name,_playerID,_entityID,_leaderID) 
-			
+				if not gvArchers_Tower.SlotData[_entityID] then
+					return
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_leaderID)  
@@ -451,7 +457,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero14CallOfDarkness", 
 			function(name, _heroID) 
-			
+				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
+					return
+				end
 				local playerID = Logic.EntityGetPlayer(_heroID)
 			
 				if CNetwork.IsAllowedToManipulatePlayer(name, playerID) then 
@@ -487,7 +495,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero14LifestealAura", 
 			function(name,_playerID,_heroID) 
-			
+				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
+					return
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Hero14LifestealAura", name, _playerID,_heroID)
@@ -521,7 +531,9 @@
 		
 		CNetwork.SetNetworkHandler("Ghoul_Hero14RisingEvil", 
 			function(name,_playerID,_heroID) 
-			
+				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
+					return
+				end
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Hero14RisingEvil", name, _playerID,_heroID)
@@ -594,148 +606,19 @@
 			end
 		)
 		
-		CNetwork.SetNetworkHandler("PlaceBuilding",
-			function(name, _player, _upgradeCategory, _x, _y, _rotation, ...)
-
-				local selection = arg
-				
-				local type_func = type
-				
-				local type = Logic.GetBuildingTypeByUpgradeCategory(_upgradeCategory, _player) 
-				local isMine = false 
-				local isBridge = false 
-				local isVC = false 
-				
-				local buildOn = 0 
-				
-				if _upgradeCategory == UpgradeCategories.GenericBridge then
-					
-					local entity = GetBridgeSlotAtPosition(_x, _y) 
-					local bridges = {
-						[Entities.XD_Bridge1] = Entities.PB_Bridge1, 
-						[Entities.XD_Bridge2] = Entities.PB_Bridge2,
-						[Entities.XD_Bridge3] = Entities.PB_Bridge3, 
-						[Entities.XD_Bridge4] = Entities.PB_Bridge4, 
-					} 
-					if entity and (entity) ~= 0 then
-						local t = Logic.GetEntityType(entity) 
-						if bridges[t] then
-							type = bridges[t] 
-						else
-							return 
-						end 
-					else
-						return 
-					end 
-					
-					buildOn = entity
-				elseif _upgradeCategory == UpgradeCategories.GenericMine then
-					local entity = GetBuildOnEntityAtPosition(_x, _y) 
-					
-					if entity and entity ~= 0 then
-						
-						if CEntity.GetAttachedEntities(entity)[36] then
-							return 
-						end 
-						
-						type = BuildOnDefinitionsReverse[Logic.GetEntityType(entity)] 
-						
-						buildOn = entity 
-						
-						if not type then
-							return 
-						end 
-					else
-						return 
-					end 
-				elseif BuildOnDefinitions[type] then
-					local entity = GetBuildOnEntityAtPosition(_x, _y) 
-					if entity and entity ~= 0 then
-						if CEntity.GetAttachedEntities(entity)[36] then
-							return 
-						end 
-						
-						local t = Logic.GetEntityType(entity) 
-						
-						if not BuildOnDefinitions[type] then
-							return 
-						end 
-						
-						if type_func(BuildOnDefinitions[type]) == "number" then
-							-- old variant
-							if BuildOnDefinitions[type] ~= t then
-								return 
-							end 
-						else
-							-- new variant
-							if not BuildOnDefinitions[type][t] then
-								return 
-							end 
-						end 
-						
-						buildOn = entity 
-						
-					end 
-				else
-					for i = 1,4 do 
-						if _upgradeCategory == _G["UpgradeCategories"]["VictoryStatue"..i] then
-							local allowed
-							for k,v in pairs(BS.AchievementWhitelist[i]) do
-								if v == XNetwork.GameInformation_GetLogicPlayerUserName(_player) then
-									allowed = true							
-								end
-							end
-							if not allowed then
-								return
-							end
+		CommandCallback_PlaceBuilding = function(_name, _player, _upgradeCategory, _x, _y, _rotation, ...)
+			for i = 1,4 do 
+				if _upgradeCategory == UpgradeCategories["VictoryStatue"..i] then
+					for k,v in pairs(BS.AchievementWhitelist[i]) do
+						if v == XNetwork.GameInformation_GetLogicPlayerUserName(_player) then
+							return true					
 						end
 					end
-				end 
-				
-				if CNetwork.IsAllowedToManipulatePlayer(name, _player)
-				and CPlaceBuilding.CanPlaceBuilding(type, _player, _x, _y, _rotation, buildOn)
-				then
-					
-					local e = {Logic.GetEntitiesInArea(0, _x, _y, 1, 64)} 
-					
-					for i = 2, e[1]+1 do
-						if Logic.IsBuilding(e[i]) then
-							return 
-						end 
-					end 
-					
-					
-					
-					if CheckResources(_upgradeCategory, _player) then
-						SubResources(_upgradeCategory, _player) 
-						
-						local id = Logic.CreateConstructionSite( _x, _y, _rotation, type, _player ) 
-						
-						CLogger.Log("PlaceBuilding_CreateConstructionSite", _x, _y, _rotation, type, _player, id, InputHandler_LastPlacedBuilding) 
-
-						id = InputHandler_LastPlacedBuilding 
-						
-
-						if isMine then
-							SetMine(_x, _y, id) 
-						elseif isBridge then
-							SetBridge(_x, _y, id) 
-						end 
-						
-						if Logic.IsEntityAlive(id) then
-							for i = 1,table.getn(selection) do
-								if Logic.IsEntityAlive(selection[i]) and Logic.EntityGetPlayer(selection[i]) == _player then
-									CLogger.Log("PlaceBuilding_SerfConstructBuilding", selection[i], id) 
-									SendEvent.SerfConstructBuilding(selection[i], id) 
-								end 
-							end 
-						end 
-					end 
+					return false
 				end
-			end 
-		
-		)
-		
+			end
+			return true
+		end 	
 	end
 
 --
