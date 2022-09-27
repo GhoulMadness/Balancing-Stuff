@@ -1732,7 +1732,7 @@ function GetTechnologySpeedModifier(_techID)
 end
 -- returns the technology raw attack range modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologyAttackRangeModifier(_techID)
-	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][84]:GetFloat(), math.mod(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][86]:GetInt(), 256)-42
+	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][88]:GetFloat(), math.mod(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][90]:GetInt(), 256)-42
 end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
