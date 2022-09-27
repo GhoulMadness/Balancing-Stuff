@@ -162,3 +162,52 @@ function gvArchers_Tower.GetIcon_ByEntityCategory(_entity)
 	end
 	
 end
+gvArchers_Tower.PrepareData = {}
+function gvArchers_Tower.PrepareData.AddTroop(_playerID, _entityID, _leaderID)
+	
+	local _slot = gvArchers_Tower.GetFirstFreeSlot(_entityID)					
+	gvArchers_Tower.SlotData[_entityID][_slot] = _leaderID						
+	local soldiers,_soldierstable
+	
+	if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then	
+		_soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entityID][_slot])}	
+		soldiers = _soldierstable[1]		
+	end								
+	
+	_G["Archers_Tower_AddTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_".._playerID.."_".._slot, 1, nil, {_slot, soldiers or 0, _playerID, _entityID})
+	gvArchers_Tower.CurrentlyUsedSlots[_entityID] = gvArchers_Tower.CurrentlyUsedSlots[_entityID] + 1	
+	Logic.SuspendEntity(gvArchers_Tower.SlotData[_entityID][_slot])
+	SetEntityVisibility(gvArchers_Tower.SlotData[_entityID][_slot], 0)
+	
+	if _soldierstable then	
+		table.remove(_soldierstable,1)
+		
+		for i = 1,table.getn(_soldierstable) do
+			Logic.SuspendEntity(_soldierstable[i])
+			SetEntityVisibility(_soldierstable[i], 0)		
+		end		
+	end
+end
+
+function gvArchers_Tower.PrepareData.RemoveTroop(_playerID, _entityID, _slot)
+	
+	local soldiers, _soldierstable	
+	
+	if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then	
+		_soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entityID][_slot])}	
+		soldiers = _soldierstable[1]		
+	end
+	
+	_G["Archers_Tower_RemoveTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop_".._playerID.."_".._slot, 1, nil, {_slot, _entityID, soldiers or 0, _playerID})
+	Logic.SuspendEntity(gvArchers_Tower.SlotData[_entityID][_slot])	
+	SetEntityVisibility(gvArchers_Tower.SlotData[_entityID][_slot], 0)
+	
+	if _soldierstable then	
+		table.remove(_soldierstable,1)
+		
+		for i = 1,table.getn(_soldierstable) do
+			Logic.SuspendEntity(_soldierstable[i])
+			SetEntityVisibility(_soldierstable[i], 0)		
+		end		
+	end
+end

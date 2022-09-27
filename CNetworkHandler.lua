@@ -91,23 +91,21 @@
 		)  
 		
 		CNetwork.SetNetworkHandler("Ghoul_Lighthouse_SpawnJob", 
-			function(name, _playerID,_eID) 
+			function(name, _playerID, _eID) 
 			
-				if Logic.GetEntityType(_eID) ~= Entities.CB_LighthouseActivated then
-					
-					return
-					
+				if Logic.GetEntityType(_eID) ~= Entities.CB_LighthouseActivated then					
+					return					
 				end
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
-					CLogger.Log("Ghoul_Lighthouse_SpawnJob", name, _playerID,_eID)  
+					CLogger.Log("Ghoul_Lighthouse_SpawnJob", name, _playerID, _eID)  
 
 					-- Cooldown handling
 					gvLighthouse.NextCooldown = gvLighthouse.NextCooldown or {} 
 					
 					if gvLighthouse.NextCooldown[_playerID] then
 					
-						if gvLighthouse.NextCooldown[_playerID] > Logic.GetTimeMs() then
+						if gvLighthouse.NextCooldown[_playerID] > Logic.GetTime() then
 						
 							return 
 							
@@ -116,67 +114,12 @@
 					end 
 					
 					-- update cooldown.
-					gvLighthouse.NextCooldown[_playerID] = Logic.GetTimeMs() + (5 * 60 * 1000) 
+					gvLighthouse.NextCooldown[_playerID] = Logic.GetTime() + gvLighthouse.cooldown
     
 					-- execute stuff
-					local pos = {}
-					
-					pos.X,pos.Y = Logic.GetEntityPosition(_eID)
-					
-					local rot = Logic.GetEntityOrientation(_eID)
-					
-					local posadjust = {}
-					
-					if rot == 0 or rot == 360 then
-					
-						posadjust.X = -700
-						
-						posadjust.Y = -100
-						
-					elseif rot == 90 then
-					
-						posadjust.X = 100
-						
-						posadjust.Y = -800
-						
-					elseif rot == 180 then
-					
-						posadjust.X = 600
-						
-						posadjust.Y = 100
-						
-					elseif rot == 270 then
-					
-						posadjust.X = -100
-						
-						posadjust.Y = 600
-						
+					if gvLighthouse.CheckForResources(_playerID) then
+						gvLighthouse.PrepareSpawn(_playerID, _eID)
 					end
-					
-					local Iron   = Logic.GetPlayersGlobalResource( _playerID, ResourceType.Iron ) + Logic.GetPlayersGlobalResource( _playerID, ResourceType.IronRaw)
-					
-					local Sulfur = Logic.GetPlayersGlobalResource( _playerID, ResourceType.Sulfur ) + Logic.GetPlayersGlobalResource( _playerID, ResourceType.SulfurRaw)
-	
-					if Iron >= 600 and Sulfur >= 400 then
-					
-						Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Iron,-600)
-						
-						Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Sulfur,-400)
-						
-						Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN,"", "Lighthouse_SpawnTroops",1,{},{_playerID,(pos.X + posadjust.X),(pos.Y + posadjust.Y)} )
-						
-						gvLighthouse.starttime[_playerID] = Logic.GetTime()
-						
-					else
-					
-						if GUI.GetPlayerID() == _playerID then
-							
-							Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)
-							
-						end
-						
-					end
-					
 				end  
 				
 			end 
@@ -321,41 +264,8 @@
 				
 					CLogger.Log("Ghoul_Archers_Tower_RemoveTroop", name, _playerID,_entityID,_slot)  
     
-					-- execute stuff
-					
-					local soldiers,_soldierstable
-					
-					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
-					
-						_soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entityID][_slot])}
-					
-						soldiers = _soldierstable[1]
-						
-					else
-						
-						soldiers = 0
-						
-					end
-					
-					_G["Archers_Tower_RemoveTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop_".._playerID.."_".._slot, 1, nil, {_slot,_entityID,soldiers,_playerID})
-	
-					Logic.SuspendEntity(gvArchers_Tower.SlotData[_entityID][_slot])
-					
-					Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[_entityID][_slot],-30,257)
-					
-					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
-					
-						table.remove(_soldierstable,1)
-										
-						for i = 1,table.getn(_soldierstable) do
-
-							Logic.SuspendEntity(_soldierstable[i])
-
-							Logic.SetEntityScriptingValue(_soldierstable[i],-30,257)
-						
-						end
-						
-					end
+					-- execute stuff					
+					gvArchers_Tower.PrepareData.RemoveTroop(_playerID, _entityID, _slot)
 					
 				end  
 				
@@ -372,47 +282,8 @@
 				
 					CLogger.Log("Ghoul_Archers_Tower_AddTroop", name, _playerID,_entityID,_leaderID)  
     
-					-- execute stuff
-					
-					local _slot = gvArchers_Tower.GetFirstFreeSlot(_entityID)
-					
-					gvArchers_Tower.SlotData[_entityID][_slot] = _leaderID
-										
-					local soldiers,_soldierstable
-					
-					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
-					
-						_soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entityID][_slot])}
-					
-						soldiers = _soldierstable[1]
-						
-					else
-					
-						soldiers = 0
-						
-					end										
-					
-					_G["Archers_Tower_AddTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_".._playerID.."_".._slot, 1, nil, {_slot,soldiers,_playerID,_entityID})
-			
-					gvArchers_Tower.CurrentlyUsedSlots[_entityID] = gvArchers_Tower.CurrentlyUsedSlots[_entityID] + 1
-					
-					Logic.SuspendEntity(gvArchers_Tower.SlotData[_entityID][_slot])
-	
-					Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[_entityID][_slot],-30,257)
-					
-					if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entityID][_slot], EntityCategories.Cannon) ~= 1 then
-					
-						table.remove(_soldierstable,1)
-						
-						for i = 1,table.getn(_soldierstable) do
-
-							Logic.SuspendEntity(_soldierstable[i])
-		
-							Logic.SetEntityScriptingValue(_soldierstable[i],-30,257)
-						
-						end
-						
-					end
+					-- execute stuff					
+					gvArchers_Tower.PrepareData.AddTroop(_playerID, _entityID, _leaderID)
 					
 				end  
 				

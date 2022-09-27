@@ -39,29 +39,38 @@ else
 		gvLighthouse.starttime[i] = 0
 	end
 end
-function Lighthouse_SpawnJob(_playerID,_eID)
+gvLighthouse.RotationOffsets = {	[0] = {X = -700, Y = -100},
+								[90] = {X = 100, Y = -800},
+								[180] = {X = 600, Y = 100},
+								[270] = {X = -100, Y = 600},
+								[360] = {X = -700, Y = -100}
+							}
+gvLighthouse.GetOffsetByOrientation = function(_rot)
+	return gvLighthouse.RotationOffsets[_rot]
+end
+gvLighthouse.HireCosts = {	[ResourceType.Iron] = 600,
+							[ResourceType.Sulfur] = 400
+						}
+gvLighthouse.CheckForResources = function(_playerID)
+	for k,v in pairs(gvLighthouse.HireCosts) do
+		if Logic.GetPlayersGlobalResource(_playerID, k) + Logic.GetPlayersGlobalResource(_playerID, k+1) < v then
+			return false
+		end
+	end
+	return true
+end
+gvLighthouse.PrepareSpawn = function(_playerID,_eID)
+	gvLighthouse.starttime[_playerID] = Logic.GetTime()
 	local _pos = {}
 	_pos.X,_pos.Y = Logic.GetEntityPosition(_eID)
 	local rot = Logic.GetEntityOrientation(_eID)
-	local posadjust = {}
-	if rot == 0 or rot == 360 then
-		posadjust.X = -700
-		posadjust.Y = -100
-	elseif rot == 90 then
-		posadjust.X = 100
-		posadjust.Y = -800
-	elseif rot == 180 then
-		posadjust.X = 600
-		posadjust.Y = 100
-	elseif rot == 270 then
-		posadjust.X = -100
-		posadjust.Y = 600
+	local posadjust = gvLighthouse.GetOffsetByOrientation(rot)
+	for k,v in pairs(gvLighthouse.HireCosts) do
+		Logic.AddToPlayersGlobalResource(_playerID, k, -v)
 	end
-	Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Iron,-600)
-	Logic.AddToPlayersGlobalResource(_playerID,ResourceType.Sulfur,-400)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,(_pos.X + posadjust.X),(_pos.Y + posadjust.Y)} )	
 end
-function Lighthouse_SpawnTroops(_pID,_posX,_posY)
+Lighthouse_SpawnTroops = function(_pID,_posX,_posY)
 	if Logic.GetTime() >= gvLighthouse.starttime[_pID] + gvLighthouse.delay then
 		gvLighthouse.UpdateTroopQuality(Logic.GetTime())
 		-- Maximum number of settlers attracted?
