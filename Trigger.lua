@@ -1137,7 +1137,6 @@ for i = 1,12 do
 								if soldierdmg >= health then						
 									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")	
 									if i == (Soldiers[1] + 1) then
-										LuaDebugger.Break()
 										hurtleader = true
 									end
 								end
