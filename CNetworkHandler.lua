@@ -193,7 +193,7 @@
 						end 						
 					end 					
 					-- update cooldown.
-					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + gvHero13.Cooldown.StoneArmor
+					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.StoneArmor * 1000)
 					-- execute stuff
 					if not gvHero13.TriggerIDs.StoneArmor[_playerID] then
 						gvHero13.TriggerIDs.StoneArmor[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger", 1, nil, {_heroID,starttime})
@@ -224,7 +224,7 @@
 						end 					
 					end 					
 					-- update cooldown.
-					gvHero13DivineJudgment_NextCooldown[_playerID] = Logic.GetTimeMs() + gvHero13.Cooldown.DivineJudgment
+					gvHero13DivineJudgment_NextCooldown[_playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.DivineJudgment * 1000)
 					-- execute stuff
 					if not gvHero13.TriggerIDs.DivineJudgment.DMGBonus[_playerID] then
 						gvHero13.TriggerIDs.DivineJudgment.DMGBonus[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger", 1, nil, {_heroID,starttime})

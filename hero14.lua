@@ -156,5 +156,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 								[2] = GGL_Effects.FXHero14_FireMedium,
 								[3] = GGL_Effects.FXHero14_FireSmall,
 								[4] = GGL_Effects.FXHero14_FireLo
-							  }
+							  },
+			AbilityNameRechargeButtons = {CallOfDarkness = "Hero14_RechargeCallOfDarkness", LifestealAura = "Hero14_RechargeLifestealAura", RisingEvil = "Hero14_RechargeRisingEvil"},				
+			GetRechargeButtonByAbilityName = function(_name)
+				return gvHero14.AbilityNameRechargeButtons[_name]
+			end
 			}

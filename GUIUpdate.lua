@@ -1,151 +1,111 @@
+BS.SpectatorPID = 17
+BS.DefaultColorValues = {RechargeButton = {r = 214, g = 44, b = 24, a = 189},
+						White = {r = 255, g = 255, b = 255, a = 255},
+						Red = {r = 255, g = 0, b = 0, a = 255},
+						BrightRed = {r = 255, g = 100, b = 100, a = 255},
+						BrightGreen = {r = 100, g = 255, b = 100, a = 255},
+						Space = {r = 0, g = 0, b = 0, a = 0},
+						GrayedOut = {r = 210, g = 210, b = 210, a = 210}
+						}
 function GUIUpdate_AttackRange()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
+	local EntityID = GUI.GetSelectedEntity()	
+	local PID = GUI.GetPlayerID()	
+	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))	
+	local pos = GetPosition(EntityID)	
+	local num,towerID = Logic.GetPlayerEntitiesInArea(PID, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)	
+	local factor
 	
-	local EntityID = GUI.GetSelectedEntity()
-	
-	local PID = GUI.GetPlayerID()
-	
-	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))
-	
-	local pos = GetPosition(EntityID)
-	
-	local num,towerID = Logic.GetPlayerEntitiesInArea(PID, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)
-	
-	local factor = 1
-	
-	if not gvArchers_Tower.SlotData[towerID] then
-	
-		factor = 1
-		
-	else
-	
-		factor = gvArchers_Tower.MaxRangeFactor
-		
+	if gvArchers_Tower.SlotData[towerID] then	
+		factor = gvArchers_Tower.MaxRangeFactor		
 	end
 	
-	XGUIEng.SetText( CurrentWidgetID," @ra "..Range * factor )	
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range * (factor or 1))	
 	
 end
 
 function GUIUpdate_VisionRange()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
-	local EntityID = GUI.GetSelectedEntity()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local EntityID = GUI.GetSelectedEntity()	
 	-- range in settlers centimeter (rounded due to uncertainties in rain)
-	local Range = round(Logic.GetEntityExplorationRange(EntityID)*100) 
-	
+	local Range = round(Logic.GetEntityExplorationRange(EntityID)*100) 	
 	XGUIEng.SetText( CurrentWidgetID," @ra "..Range )	
 	
 end
 
 function GUIUpdate_AttackSpeed()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
-	local EntityID = GUI.GetSelectedEntity()
-	
-	local EntityType = Logic.GetEntityType(EntityID)
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local EntityID = GUI.GetSelectedEntity()	
+	local EntityType = Logic.GetEntityType(EntityID)	
 	-- Angriffe pro 1000 Sek.
-	local BaseSpeed = round(1000000/GetEntityTypeBaseAttackSpeed(EntityType))
-	
+	local BaseSpeed = round(1000/GetEntityTypeBaseAttackSpeed(EntityType))	
 	-- Angriffe pro Sek.
-	local SpeedAsString = string.format("%.3f",BaseSpeed/1000)
-	
+	local SpeedAsString = string.format("%.3f",BaseSpeed)	
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..SpeedAsString )		
 	
 end
 
 function GUIUpdate_MoveSpeed()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
-	local EntityID = GUI.GetSelectedEntity()
-	
-	local PID = GUI.GetPlayerID()
-	
-	local Speed = round(GetSettlerCurrentMovementSpeed(EntityID,PID))
-			
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
+	local EntityID = GUI.GetSelectedEntity()	
+	local PID = GUI.GetPlayerID()	
+	local Speed = round(GetSettlerCurrentMovementSpeed(EntityID,PID))			
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..Speed)	
 	
 end
 
+BS.ExperienceLevels = {	[0] = 0,
+						[1] = 184,
+						[2] = 328,
+						[3] = 470,
+						[4] = 629,
+						[5] = 846
+						}
+						
 function GUIUpdate_Experience()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
-	local EntityID = GUI.GetSelectedEntity()
-	
-	local PID = GUI.GetPlayerID()
-	
-	local XP = math.min(CEntity.GetLeaderExperience(EntityID), 1000)
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
+	local EntityID = GUI.GetSelectedEntity()	
+	local PID = GUI.GetPlayerID()	
+	local XP = math.min(CEntity.GetLeaderExperience(EntityID), 1000)	
 	local LVL
 	
-	if XP < 184 then
-		
-		LVL = 0
-		
-	elseif XP >= 184 and XP < 328 then
-	
-		LVL = 1 
-		
-	elseif XP >= 328 and XP < 470 then
-	
-		LVL = 2
-		
-	elseif XP >= 470 and XP < 629 then
-	
-		LVL = 3
-		
-	elseif XP >= 629 and XP < 846 then
-		
-		LVL = 4 
-		
-	elseif XP >= 846 then
-	
-		LVL = 5
-		
+	for k,v in pairs(BS.ExperienceLevels) do
+		if XP >= v then		
+			LVL = k
+			break
+		end
 	end
 			
 	XGUIEng.SetText( CurrentWidgetID, " @ra ".. XP .." (LVL ".. LVL ..")")	
 	
 end
 
+BS.Time = {DefaultValues = {secondsperday = 1440, daytimebegin = 8, tutorialoffset = 34}, calculation = {dayinsec = 60*60*24, hourinminutes = 60*60}}
 function GUIUpdate_Time()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	--Spielzeit in sec
-	local secondsperday = gvDayTimeSeconds or 1440
-	
-	local daytimefactor = secondsperday/86400
-	
+	local secondsperday = gvDayTimeSeconds or BS.Time.DefaultValues.secondsperday	
+	local daytimefactor = secondsperday/BS.Time.calculation.dayinsec	
 	local GameTime = Logic.GetTime() - (gvDayCycleStartTime or 0)
 	
-	if gvTutorialFlag ~= nil then
-	
-		GameTime = gvIngameTimeSec - gvSecondsDuringBreak - 34
-		
+	if gvTutorialFlag ~= nil then	
+		GameTime = gvIngameTimeSec - gvSecondsDuringBreak - BS.Time.DefaultValues.tutorialoffset		
 	end
 	
-	local TimeMinutes = math.floor(GameTime/(3600*daytimefactor))
-	
-	--Tag startet um 8 Uhr morgens
-	
-	local TimeHours = 8		
-	
-	local TimeMinutesText = ""
-	
-	local TimeHoursText = ""
-	
+	local TimeMinutes = math.floor(GameTime/(BS.Time.calculation.hourinminutes*daytimefactor))	
+	--Tag startet um 8 Uhr morgens	
+	local TimeHours = daytimebegin			
+	local TimeMinutesText = ""	
+	local TimeHoursText = ""	
 	while TimeMinutes > 59 do 
 	
-		TimeMinutes = TimeMinutes-60
-		
+		TimeMinutes = TimeMinutes-60		
 		TimeHours = TimeHours + 1
 		
 	end
@@ -154,36 +114,23 @@ function GUIUpdate_Time()
 	
 		local TimeDif = TimeHours - 24
 		
-			if TimeDif ~= 0 then
-			
-				TimeHours = 0+TimeDif
-				
-			else
-			
-				TimeHours = 0
-				
-			end
-			
+		if TimeDif ~= 0 then			
+			TimeHours = 0 + TimeDif				
+		else			
+			TimeHours = 0				
+		end			
 	end
 	
-	if TimeMinutes <10 then
-	
-		TimeMinutesText = "0"..TimeMinutes
-		
-	else
-	
-		TimeMinutesText = TimeMinutes
-		
+	if TimeMinutes <10 then	
+		TimeMinutesText = "0"..TimeMinutes		
+	else	
+		TimeMinutesText = TimeMinutes		
 	end
 	
-	if TimeHours <10 then
-	
-		TimeHoursText = "0"..TimeHours
-		
-	else
-	
-		TimeHoursText = TimeHours
-		
+	if TimeHours <10 then	
+		TimeHoursText = "0"..TimeHours		
+	else	
+		TimeHoursText = TimeHours		
 	end
 	
 	XGUIEng.SetText( CurrentWidgetID, TimeHoursText..":"..TimeMinutesText, 1 )	
@@ -192,137 +139,85 @@ end
 
 function GUIUpdate_ResourceAmountRawAndRefined( _ResourceType )
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
 	
-	if PlayerID == 17 then
-	
-		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
-		
+	if PlayerID == BS.SpectatorPID then	
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())		
 	end
 	
-	local Amount = round(Logic.GetPlayersGlobalResource( PlayerID, _ResourceType ))	
-	
-	local RawResourceType = Logic.GetRawResourceType( _ResourceType )
-	
-	local RawResourceAmount = round(Logic.GetPlayersGlobalResource( PlayerID, RawResourceType ))
-	
-	local String = " "
-	
+	local Amount = round(Logic.GetPlayersGlobalResource( PlayerID, _ResourceType ))		
+	local RawResourceType = Logic.GetRawResourceType( _ResourceType )	
+	local RawResourceAmount = round(Logic.GetPlayersGlobalResource( PlayerID, RawResourceType ))	
+	local String = " "	
 	--local procent = math.floor((Amount/(Amount + RawResourceAmount))*100)
-	XGUIEng.SetText( CurrentWidgetID, "@color:255,0,0 "..RawResourceAmount.." @color:255,255,255 / @color:10,170,160 "..Amount.." ")	
+	XGUIEng.SetText( CurrentWidgetID, "@color:"..BS.DefaultColorValues.Red.r..","..BS.DefaultColorValues.Red.g..","..BS.DefaultColorValues.Red.b.." "..RawResourceAmount.." @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b.." / @color:10,170,160 "..Amount.." ")	
 	
 end
-
+BS.Faith = {MaxValue = 5000, colorsteps = {	[0] = {r = 255, g = 0, b = 0},
+											[20] = {r = 255, g = 165, b = 0},
+											[40] = {r = 255, g = 255, b = 0},
+											[60] = {r = 153, g = 225, b = 47},
+											[80] = {r = 50, g = 205, b = 50}
+											},
+							defaultcol = {r = 255, g = 255, b = 255}
+			}
 function GUIUpdate_SpecialResourceAmount(_ResourceType)
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
 	
-	if PlayerID == 17 then
-	
-		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
-		
+	if PlayerID == BS.SpectatorPID then	
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())		
 	end	
 	
-	local Amount = Logic.GetPlayersGlobalResource(PlayerID,_ResourceType)	
+	local Amount = Logic.GetPlayersGlobalResource(PlayerID,_ResourceType)		
+	local WeatherEnergyMax = Logic.GetEnergyRequiredForWeatherChange()	
+	local FaithMax = BS.Faith.MaxValue	
+	local procent, maxvalue
 	
-	local WeatherEnergyMax = Logic.GetEnergyRequiredForWeatherChange()
-	
-	local FaithMax = 5000
-	
-	local procent = 0
-	
-	if _ResourceType == ResourceType.Faith then
-	
-		procent = math.floor((Amount/FaithMax)*100)
-		
-		if procent > 100 then 
-		
-			procent = 100
-			
-		end
-		
-	else
-	
-		procent = math.floor((Amount/WeatherEnergyMax)*100)
-		
-		if procent > 100 then
-		
-			procent = 100
-			
-		end
-		
+	if _ResourceType == ResourceType.Faith then	
+		maxvalue = FaithMax		
+	else	
+		maxvalue = WeatherEnergyMax				
 	end
 	
-	if procent <= 20 then
+	procent = math.min(math.floor((Amount/maxvalue)*100), 100)
 	
-		XGUIEng.SetText( CurrentWidgetID, "@color:255,0,0 "..procent.." @color:255,255,255 % ")	
-		
-	elseif procent > 20 and procent <= 40 then
-	
-		XGUIEng.SetText( CurrentWidgetID, "@color:255,165,0 "..procent.." @color:255,255,255 % ")	
-		
-	elseif procent > 40 and procent <= 60 then
-	
-		XGUIEng.SetText( CurrentWidgetID, "@color:255,255,0 "..procent.." @color:255,255,255 % ")
-		
-	elseif procent > 60 and procent <= 80 then
-	
-		XGUIEng.SetText( CurrentWidgetID, "@color:153,225,47 "..procent.." @color:255,255,255 % ")	
-		
-	elseif procent > 80 then
-	
-		XGUIEng.SetText( CurrentWidgetID, "@color:50,205,50 "..procent.." @color:255,255,255 % ")	
-		
-	end	
+	for k,v in pairs(BS.Faith.colorsteps) do
+		if procent >= k then		
+			XGUIEng.SetText( CurrentWidgetID, "@color:"..v.r..","..v.g..","..v.b.." "..(procent or 0).." @color:"..BS.Faith.defaultcol.r..","..BS.Faith.defaultcol.g..","..BS.Faith.defaultcol.b.." % ")				
+			break
+		end
+	end
 	
 end
 
 function GUIUpdate_LightningRod()
 
-	local PlayerID = GUI.GetPlayerID()
-	
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
-	local BuildingID = GUI.GetSelectedEntity()
-	
-	local TimePassed = math.floor((Logic.GetTimeMs()- gvLastTimeLightningRodUsed)/2400)
-	
+	local PlayerID = GUI.GetPlayerID()	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local BuildingID = GUI.GetSelectedEntity()	
+	local TimePassed = math.floor((Logic.GetTimeMs()- gvLastTimeLightningRodUsed)/2400)	
 	local RechargeTime = 100
 
-	if	Logic.GetTechnologyState(PlayerID,Technologies.GT_Chemistry) ~= 4 then
-	
-		XGUIEng.DisableButton(CurrentWidgetID,1)
-		
-		XGUIEng.SetMaterialColor(CurrentWidgetID,1,210,210,210,210)
-		
-		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),1,210,210,210,210)
-		
+	if	Logic.GetTechnologyState(PlayerID,Technologies.GT_Chemistry) ~= 4 then	
+		XGUIEng.DisableButton(CurrentWidgetID,1)		
+		XGUIEng.SetMaterialColor(CurrentWidgetID,1,BS.DefaultColorValues.GrayedOut.r,BS.DefaultColorValues.GrayedOut.g,BS.DefaultColorValues.GrayedOut.b,BS.DefaultColorValues.GrayedOut.a)		
+		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),1,BS.DefaultColorValues.GrayedOut.r,BS.DefaultColorValues.GrayedOut.g,BS.DefaultColorValues.GrayedOut.b,BS.DefaultColorValues.GrayedOut.a)	
 	else
 		
-		if TimePassed >= RechargeTime then	
-		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),1,0,0,0,0)
-			
-			XGUIEng.DisableButton(CurrentWidgetID,0)
-	
-		else 
-		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),1,214,44,24,189)
-			
-			XGUIEng.HighLightButton(CurrentWidgetID,0)	
-			
-			XGUIEng.DisableButton(CurrentWidgetID,1)
-			
+		if TimePassed >= RechargeTime then			
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),1,BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)			
+			XGUIEng.DisableButton(CurrentWidgetID,0)	
+		else 		
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"), 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)			
+			XGUIEng.HighLightButton(CurrentWidgetID,0)				
+			XGUIEng.DisableButton(CurrentWidgetID,1)			
 		end
 	
-	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),TimePassed, RechargeTime)
-	
-	end
-	
+		XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),TimePassed, RechargeTime)	
+	end	
 end
 
 function GUIUpdate_LevyTaxes()
@@ -343,13 +238,13 @@ function GUIUpdate_LevyTaxes()
 		
 		XGUIEng.HighLightButton(CurrentWidgetID,0)	
 		
-		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"),1,0,0,0,0)
+		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 		
 	else
 
 		if TimePassed < RechargeTime then
 		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"),1,214,44,24,189)
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"), 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
 			
 			XGUIEng.HighLightButton(CurrentWidgetID,0)	
 			
@@ -357,7 +252,7 @@ function GUIUpdate_LevyTaxes()
 			
 		else
 		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"),1,0,0,0,0)
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 			
 			XGUIEng.DisableButton(CurrentWidgetID,0)
 			
@@ -383,7 +278,7 @@ function GUIUpdate_OvertimesButtons()
 		
 		XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes, 0)	
 		
-		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, 0, 0, 0, 0)	
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)	
 		
 	else
 	
@@ -395,7 +290,7 @@ function GUIUpdate_OvertimesButtons()
 			
 			XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes  ,1)	
 			
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)		
+			XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)		
 			
 			if RemainingOvertimeTimeInPercent == 0 then
 			
@@ -441,20 +336,20 @@ function GUIUpdate_LighthouseTroops()
 		
 		XGUIEng.HighLightButton(CurrentWidgetID,0)	
 		
-		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lighthouse_Recharge"),1,0,0,0,0)
+		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lighthouse_Recharge"), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 		
 	else
 	
 		if TimePassed < RechargeTime then
 		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lighthouse_Recharge"),1,214,44,24,189)
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lighthouse_Recharge"),1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
 			
 			XGUIEng.HighLightButton(CurrentWidgetID,0)	
 			
 			XGUIEng.DisableButton(CurrentWidgetID,1)
 			
 		else
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lighthouse_Recharge"),1,0,0,0,0)
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Lighthouse_Recharge"), BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 			
 			XGUIEng.DisableButton(CurrentWidgetID,0)
 			
@@ -484,13 +379,13 @@ function GUIUpdate_MercenaryTower(_button)
 		
 		XGUIEng.HighLightButton(CurrentWidgetID,0)	
 		
-		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),1,0,0,0,0)
+		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 
 	else
 	
 		if TimePassed < RechargeTime then
 		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),1,214,44,24,189)
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]), 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
 			
 			XGUIEng.HighLightButton(CurrentWidgetID,0)	
 			
@@ -498,7 +393,7 @@ function GUIUpdate_MercenaryTower(_button)
 			
 		else
 		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),1,0,0,0,0)
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 			
 			XGUIEng.DisableButton(CurrentWidgetID,0)
 			
@@ -509,129 +404,77 @@ function GUIUpdate_MercenaryTower(_button)
 	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),TimePassed, RechargeTime)
 	
 end
-
+BS.MintValues = {WorkersNeeded = 3, BonusPerMint = 0.015, MaxBonus = 0.15}
+BS.MintValues.MaxTotalFactor = 1 + BS.MintValues.MaxBonus
+BS.MintValues.MaxNumberOfMints = math.ceil(BS.MintValues.MaxBonus / BS.MintValues.BonusPerMint)
+BS.MintValues.BonusInPercent = BS.MintValues.BonusPerMint * 100
 function GUIUpdate_SumOfTaxes()
 	
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
-
-	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)	
-	
-	local factor = 1
-	
+	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)		
+	local factor = 1	
 	local workers 
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
-	
-		if Logic.IsConstructionComplete(eID) == 1 then
-		
-			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-			
-			if workers[1] >= 3 then
-			
-				factor = factor + 0.015
-				
-			else
-			
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then	
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}		
+			if workers[1] >= BS.MintValues.WorkersNeeded then			
+				factor = factor + BS.MintValues.BonusPerMint							
 			end
-			
-		else
-		
-		end
-		
+		end		
 	end
 	
-	if factor > 1.15 then 
+	factor = math.min(factor, BS.MintValues.MaxTotalFactor)		
 	
-		factor = 1.15
-		
+	if gvPresent and PlayerID ~= BS.SpectatorPID then	
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]		
 	end
 	
-	if gvPresent and PlayerID ~= 17 then
-	
-		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
-		
-	end
-	
-	local TotalPayday = math.floor(GrossPayday * factor)
-	
+	local TotalPayday = math.floor(GrossPayday * factor)	
 	XGUIEng.SetTextByValue( CurrentWidgetID, TotalPayday, 1 )
 	
 end
 
 function GUIUpdate_TaxPaydayIncome()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
 	
-	if PlayerID == 17 then
-	
-		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then
-		
-			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
-			
+	if PlayerID == BS.SpectatorPID then	
+		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then		
+			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())			
 		end
-		
-	else
-	
 	end
 	
-	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)
-	
-	local LeaderCosts = Logic.GetPlayerPaydayLeaderCosts(PlayerID)
-		
-	local TaxesPlayerWillGet = GrossPayday - LeaderCosts
-	
-	local factor = 1
-	
+	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)	
+	local LeaderCosts = Logic.GetPlayerPaydayLeaderCosts(PlayerID)		
+	local TaxesPlayerWillGet = GrossPayday - LeaderCosts	
+	local factor = 1	
 	local workers 
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
-	
-		if Logic.IsConstructionComplete(eID) == 1 then
-		
-			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-			
-			if workers[1] >= 3 then
-			
-				factor = factor + 0.015
-				
-			else
-			
-			end
-			
-		else
-		
-		end
-		
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then		
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}			
+			if workers[1] >= BS.MintValues.WorkersNeeded then			
+				factor = factor + BS.MintValues.BonusPerMint		
+			end			
+		end		
 	end
 	
-	if factor > 1.15 then
+	factor = math.min(factor, BS.MintValues.MaxTotalFactor)	
 	
-		factor = 1.15
-		
+	if gvPresent and PlayerID ~= BS.SpectatorPID then		
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]		
 	end
 	
-	if gvPresent and PlayerID ~= 17 then	
-	
-		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
-		
-	end
-	
-	local TotalPayday = math.floor(TaxesPlayerWillGet * factor)
-	
+	local TotalPayday = math.floor(TaxesPlayerWillGet * factor)	
 	local String
 		
-	if TaxesPlayerWillGet < 0 then
-	
-		String = "@color:255,100,100,255 @ra " .. TotalPayday
-		
-	else
-	
-		String = "@color:100,255,100,255 @ra +" .. TotalPayday
-		
+	if TaxesPlayerWillGet < 0 then	
+		String = "@color:"..BS.DefaultColorValues.BrightRed.r..","..BS.DefaultColorValues.BrightRed.g..","..BS.DefaultColorValues.BrightRed.b..","..BS.DefaultColorValues.BrightRed.a.." @ra " .. TotalPayday		
+	else	
+		String = "@color:"..BS.DefaultColorValues.BrightGreen.r..","..BS.DefaultColorValues.BrightGreen.g..","..BS.DefaultColorValues.BrightGreen.b..","..BS.DefaultColorValues.BrightRed.a.." @ra +" .. TotalPayday		
 	end
 			
 	XGUIEng.SetText(CurrentWidgetID, String)	
@@ -640,284 +483,137 @@ end
 
 function GUIUpdate_TaxSumOfTaxes()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
-
-	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)	
-	
-	local factor = 1
-	
+	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)		
+	local factor = 1	
 	local workers 
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
-	
-		if Logic.IsConstructionComplete(eID) == 1 then
-		
-			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-			
-			if workers[1] >= 3 then
-			
-				factor = factor + 0.015
-				
-			else
-			
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then		
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}			
+			if workers[1] >= BS.MintValues.WorkersNeeded then			
+				factor = factor + BS.MintValues.BonusPerMint				
 			end
-			
-		else
-		
-		end
-		
+		end		
 	end
 	
-	if factor > 1.15 then 
+	factor = math.min(factor, BS.MintValues.MaxTotalFactor)
 	
-		factor = 1.15
-		
+	if gvPresent and PlayerID ~= BS.SpectatorPID then		
+		factor = factor * gvPresent.SDPaydayFactor[PlayerID]		
 	end
 	
-	if gvPresent and PlayerID ~= 17 then	
-	
-		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
-		
-	end
-	
-	local TotalIncome = math.floor(TaxIncome * factor)
-	
+	local TotalIncome = math.floor(TaxIncome * factor)	
 	XGUIEng.SetText(CurrentWidgetID, TotalIncome)	
 	
 end
 
 function GUIUpdate_TaxLeaderCosts()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
-	local PlayerID = GUI.GetPlayerID()
-	
-	local LeaderCosts = -(Logic.GetPlayerPaydayLeaderCosts(PlayerID))
-	
-	local factor = 1
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local PlayerID = GUI.GetPlayerID()	
+	local LeaderCosts = -(Logic.GetPlayerPaydayLeaderCosts(PlayerID))	
+	local factor = 1	
 	local workers 
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
-	
-		if Logic.IsConstructionComplete(eID) == 1 then
-		
-			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-			
-			if workers[1] >= 3 then
-			
-				factor = factor + 0.015
-				
-			else
-			
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then		
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}			
+			if workers[1] >= BS.MintValues.WorkersNeeded then			
+				factor = factor + BS.MintValues.BonusPerMint				
 			end
-			
-		else
-		
-		end
-		
+		end		
 	end
 	
-	factor = math.min(factor,1.15)
+	factor = math.min(factor, BS.MintValues.MaxTotalFactor)
 	
-	if gvPresent and PlayerID ~= 17 then
-	
+	if gvPresent and PlayerID ~= BS.SpectatorPID then	
 		factor = factor * gvPresent.SDPaydayFactor[PlayerID]
 	end
 	
-	local TotalCosts = math.floor(LeaderCosts * factor)
-	
+	local TotalCosts = math.floor(LeaderCosts * factor)	
 	XGUIEng.SetText(CurrentWidgetID, TotalCosts)	
 	
 end
 
 function GUIUpdate_MintTaxBonus()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
 	
-	if PlayerID == 17 then
-	
-		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
-		
+	if PlayerID == BS.SpectatorPID then	
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())		
 	end
 	
-	local NumOfMints = 0
-	
+	local NumOfMints = 0	
 	local workers 
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
-	
-		if Logic.IsConstructionComplete(eID) == 1 then
-		
-			workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-			
-			if workers[1] >= 3 then
-			
-				NumOfMints = NumOfMints + 1
-				
-			else
-			
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(PlayerID), CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do		
+		if Logic.IsConstructionComplete(eID) == 1 then		
+			workers = {Logic.GetAttachedWorkersToBuilding(eID)}			
+			if workers[1] >= BS.MintValues.WorkersNeeded then			
+				NumOfMints = NumOfMints + 1				
 			end
-			
-		else
-		
-		end
-		
+		end		
 	end
 	
-	NumOfMints = math.min(NumOfMints,10)
-	
-	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*0.015))
-	
-	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*0.015)))
-	
-	local String = "@color:255,255,255,255 aktueller Bonus: @color:100,255,100,255 " .. NumOfMints*1.5 .. " % @color:255,255,255,255 erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:255,255,255 erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts
-	
+	NumOfMints = math.min(NumOfMints, BS.MintValues.MaxNumberOfMints)	
+	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*BS.MintValues.BonusPerMint))	
+	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*BS.MintValues.BonusPerMint)))	
+	local String = "@color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." aktueller Bonus: @color:"..BS.DefaultColorValues.BrightGreen.r..","..BS.DefaultColorValues.BrightGreen.g..","..BS.DefaultColorValues.BrightGreen.b..","..BS.DefaultColorValues.BrightGreen.a.." " .. NumOfMints*BS.MintValues.BonusInPercent .. " % @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts	
 	XGUIEng.SetText(CurrentWidgetID, String)	
 	
 end
 
 function GUIUpdate_Hero13Ability(_Ability)
 
-	local PlayerID = GUI.GetPlayerID()
+	local PlayerID = GUI.GetPlayerID()	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local ProgressBarWidget = gvHero13.GetRechargeButtonByAbilityName(_Ability)	
+	local HeroID = GUI.GetSelectedEntity()	
+	local TimePassed = math.floor(Logic.GetTime()- gvHero13.LastTimeUsed[_Ability])	
+	local cooldown = gvHero13.Cooldown[_Ability]
+
+	if TimePassed < cooldown then		
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)			
+		XGUIEng.HighLightButton(CurrentWidgetID,0)				
+		XGUIEng.DisableButton(CurrentWidgetID,1)			
+	else		
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)			
+		XGUIEng.DisableButton(CurrentWidgetID,0)		
+	end
 	
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
-	local ProgressBarWidget = 0
-	
-	local HeroID = GUI.GetSelectedEntity()
-	
-	local TimePassed = 0
-	
-	local cooldown = 0
-	
-	if _Ability == "StoneArmor" then
-	
-		cooldown = 150
-		
-		ProgressBarWidget = XGUIEng.GetWidgetID("Hero13_RechargeStoneArmor")
-		
-		TimePassed = math.floor(Logic.GetTime()- gvHero13.LastTimeStoneArmorUsed)
-		
-		if TimePassed < cooldown then
-		
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)
-			
-			XGUIEng.HighLightButton(CurrentWidgetID,0)	
-			
-			XGUIEng.DisableButton(CurrentWidgetID,1)
-			
-		else
-		
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
-			
-			XGUIEng.DisableButton(CurrentWidgetID,0)
-			
-		end
-		
-		XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
-	
-	elseif _Ability == "DivineJudgment" then
-	
-		cooldown = 60
-		
-		ProgressBarWidget = XGUIEng.GetWidgetID("Hero13_RechargeDivineJudgment")
-		
-		TimePassed = math.floor(Logic.GetTime()- gvHero13.LastTimeDivineJudgmentUsed)
-		
-		if TimePassed < cooldown then
-		
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)
-			
-			XGUIEng.HighLightButton(CurrentWidgetID,0)	
-			
-			XGUIEng.DisableButton(CurrentWidgetID,1)
-			
-		else
-		
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
-			
-			XGUIEng.DisableButton(CurrentWidgetID,0)
-			
-		end
-		
-		XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
-		
-	end	
+	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)	
 	
 end
 function GUIUpdate_Hero14Ability(_Ability)
 
-	local PlayerID = GUI.GetPlayerID()
+	local PlayerID = GUI.GetPlayerID()	
+	local HeroID = GUI.GetSelectedEntity()	
+	local pos = GetPosition(HeroID)	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local ProgressBarWidget = gvHero14.GetRechargeButtonByAbilityName(_Ability)	
+	local TimePassed = math.floor(Logic.GetTime()- gvHero14[_Ability].LastTimeUsed)	
+	local cooldown = gvHero14[_Ability].Cooldown
 	
-	local HeroID = GUI.GetSelectedEntity()
-	
-	local pos = GetPosition(HeroID)
-	
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
-	local ProgressBarWidget = 0
-	
-	local TimePassed = 0
-	
-	local cooldown = 0
-	
-	if _Ability == "CallOfDarkness" then
-	
-		cooldown = gvHero14.CallOfDarkness.Cooldown
+	if _Ability == "RisingEvil" then
 		
-		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeCallOfDarkness")
-		
-		TimePassed = math.floor(Logic.GetTime()- gvHero14.CallOfDarkness.LastTimeUsed)
-	
-	elseif _Ability == "LifestealAura" then
-	
-		cooldown = gvHero14.LifestealAura.Cooldown
-		
-		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeLifestealAura")
-		
-		TimePassed = math.floor(Logic.GetTime()- gvHero14.LifestealAura.LastTimeUsed)
-	
-	elseif _Ability == "RisingEvil" then
-	
-		cooldown = gvHero14.RisingEvil.Cooldown
-		
-		ProgressBarWidget = XGUIEng.GetWidgetID("Hero14_RechargeRisingEvil")
-		
-		TimePassed = math.floor(Logic.GetTime()- gvHero14.RisingEvil.LastTimeUsed)
-		
-		if TimePassed >= cooldown and ({Logic.GetPlayerEntitiesInArea(PlayerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range)})[1] == 0 then
-		
-			XGUIEng.HighLightButton(CurrentWidgetID,0)	
-		
-			XGUIEng.DisableButton(CurrentWidgetID,1)
-			
-			XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
-			
-			return
-			
-		end		
-		
+		if TimePassed >= cooldown and ({Logic.GetPlayerEntitiesInArea(PlayerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range)})[1] == 0 then		
+			XGUIEng.HighLightButton(CurrentWidgetID,0)			
+			XGUIEng.DisableButton(CurrentWidgetID,1)			
+			XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)			
+			return			
+		end				
 	end
 		
-	if TimePassed < cooldown then
-	
-		XGUIEng.SetMaterialColor(ProgressBarWidget,1,214,44,24,189)
-		
-		XGUIEng.HighLightButton(CurrentWidgetID,0)	
-		
-		XGUIEng.DisableButton(CurrentWidgetID,1)
-		
-	else
-	
-		XGUIEng.SetMaterialColor(ProgressBarWidget,1,0,0,0,0)
-		
-		XGUIEng.DisableButton(CurrentWidgetID,0)
-		
+	if TimePassed < cooldown then	
+		XGUIEng.SetMaterialColor(ProgressBarWidget,1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)		
+		XGUIEng.HighLightButton(CurrentWidgetID,0)			
+		XGUIEng.DisableButton(CurrentWidgetID,1)		
+	else	
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)		
+		XGUIEng.DisableButton(CurrentWidgetID,0)		
 	end
 	
 	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
@@ -926,190 +622,118 @@ end
 
 function GUIUpdate_HeroButton()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
-	local EntityID = XGUIEng.GetBaseWidgetUserVariable(CurrentWidgetID, 0)	
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
+	local EntityID = XGUIEng.GetBaseWidgetUserVariable(CurrentWidgetID, 0)		
 	local SourceButton
 	
-	if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero1) == 1 then	
-	
-		SourceButton = "FindHeroSource1"
-		
+	if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero1) == 1 then		
+		SourceButton = "FindHeroSource1"		
 		XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
 		
 		if Logic.SentinelGetUrgency(EntityID) == 1 then					
 		
-		if gvGUI.DarioCounter < 50 then
-			
-			XGUIEng.SetMaterialColor(CurrentWidgetID,0, 100,100,200,255)		
-			
-			gvGUI.DarioCounter = gvGUI.DarioCounter +1
-			
-		end		
+			if gvGUI.DarioCounter < 50 then			
+				XGUIEng.SetMaterialColor(CurrentWidgetID,0, 100,100,200,255)						
+				gvGUI.DarioCounter = gvGUI.DarioCounter +1				
+			end		
 		
-		if gvGUI.DarioCounter >= 50 then	
+			if gvGUI.DarioCounter >= 50 then				
+				XGUIEng.SetMaterialColor(CurrentWidgetID, 0, BS.DefaultColorValues.White.r, BS.DefaultColorValues.White.g, BS.DefaultColorValues.White.b, BS.DefaultColorValues.White.a)					
+				gvGUI.DarioCounter = gvGUI.DarioCounter +1		
+			end
 		
-			XGUIEng.SetMaterialColor(CurrentWidgetID,0, 255,255,255,255)	
-			
-			gvGUI.DarioCounter = gvGUI.DarioCounter +1
-			
-		end
+			if gvGUI.DarioCounter == 100 then		
+				gvGUI.DarioCounter= 0				
+			end
 		
-		if gvGUI.DarioCounter == 100 then
-		
-			gvGUI.DarioCounter= 0
-			
-		end
-		
-		else	
-		
-			XGUIEng.SetMaterialColor(CurrentWidgetID,0, 255,255,255,255)	
-			
+		else			
+			XGUIEng.SetMaterialColor(CurrentWidgetID, 0, BS.DefaultColorValues.White.r, BS.DefaultColorValues.White.g, BS.DefaultColorValues.White.b, BS.DefaultColorValues.White.a)				
 		end
 		
 	else
-		
-		
-		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero2) == 1 then
-		
-			SourceButton = "FindHeroSource2"
-			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero3) == 1 then
-		
-			SourceButton = "FindHeroSource3"
-			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero4) == 1 then
-		
-			SourceButton = "FindHeroSource4"
-			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero5) == 1 then
-		
-			SourceButton = "FindHeroSource5"
-			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero6) == 1 then
-		
-			SourceButton = "FindHeroSource6"
-			
-		elseif Logic.GetEntityType( EntityID )	== Entities.CU_BlackKnight then
-		
-			SourceButton = "FindHeroSource7"
-			
-		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Mary_de_Mortfichet then
-		
-			SourceButton = "FindHeroSource8"
-			
-		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Barbarian_Hero then
-		
-			SourceButton = "FindHeroSource9"
-		
+				
+		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero2) == 1 then		
+			SourceButton = "FindHeroSource2"			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero3) == 1 then		
+			SourceButton = "FindHeroSource3"			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero4) == 1 then		
+			SourceButton = "FindHeroSource4"			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero5) == 1 then		
+			SourceButton = "FindHeroSource5"			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero6) == 1 then		
+			SourceButton = "FindHeroSource6"			
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_BlackKnight then		
+			SourceButton = "FindHeroSource7"			
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Mary_de_Mortfichet then		
+			SourceButton = "FindHeroSource8"			
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Barbarian_Hero then		
+			SourceButton = "FindHeroSource9"		
 		--AddOn
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then
-		
-			SourceButton = "FindHeroSource10"
-			
-		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero11) == 1 then
-		
-			SourceButton = "FindHeroSource11"
-			
-		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Evil_Queen then
-		
-			SourceButton = "FindHeroSource12"
-			
-		elseif Logic.GetEntityType(EntityID) == Entities.PU_Hero13 then
-		
-			SourceButton = "FindHeroSource13"
-			
-		elseif Logic.GetEntityType(EntityID) == Entities.PU_Hero14 then
-		
-			SourceButton = "FindHeroSource14"
-		
-		else
-		
-			SourceButton = "FindHeroSource9"
-			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then		
+			SourceButton = "FindHeroSource10"			
+		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero11) == 1 then		
+			SourceButton = "FindHeroSource11"			
+		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Evil_Queen then		
+			SourceButton = "FindHeroSource12"			
+		elseif Logic.GetEntityType(EntityID) == Entities.PU_Hero13 then		
+			SourceButton = "FindHeroSource13"			
+		elseif Logic.GetEntityType(EntityID) == Entities.PU_Hero14 then		
+			SourceButton = "FindHeroSource14"		
+		else		
+			SourceButton = "FindHeroSource9"			
 		end
 		
 		XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
 		
-	end
-		
+	end		
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------ Archers Tower ----------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
 function GUIUpdate_Archers_Tower_AddSlot()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	local EntityID = GUI.GetSelectedEntity()
 	
-	if gvArchers_Tower.CurrentlyClimbing[EntityID] then
-				
+	if gvArchers_Tower.CurrentlyClimbing[EntityID] then				
 		XGUIEng.DisableButton(CurrentWidgetID, 1)
-
 	else
 	
-		if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots or table.getn(gvArchers_Tower.SlotData[EntityID]) >= 2 then
-		
-			XGUIEng.DisableButton(CurrentWidgetID, 1)
-			
-		else
-			
-			XGUIEng.DisableButton(CurrentWidgetID, 0)
-			
-		end
-		
-	end
-	
+		if gvArchers_Tower.CurrentlyUsedSlots[EntityID] >= gvArchers_Tower.MaxSlots or table.getn(gvArchers_Tower.SlotData[EntityID]) >= gvArchers_Tower.MaxSlots then	
+			XGUIEng.DisableButton(CurrentWidgetID, 1)			
+		else			
+			XGUIEng.DisableButton(CurrentWidgetID, 0)			
+		end		
+	end	
 end
 
 function GUIUpdate_Archers_Tower_RemoveSlot(_slot)
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	local EntityID = GUI.GetSelectedEntity()
 	
-	if gvArchers_Tower.CurrentlyClimbing[EntityID] then
-				
+	if gvArchers_Tower.CurrentlyClimbing[EntityID] then				
 		XGUIEng.DisableButton(CurrentWidgetID, 1)
-
 	else
 	
-		if _slot then
-		
-			if gvArchers_Tower.SlotData[EntityID][_slot] ~= nil then
-				
-				XGUIEng.DisableButton(CurrentWidgetID, 0)
-				
-			else
-				
-				XGUIEng.DisableButton(CurrentWidgetID, 1)
-				
-				for i = 1,4 do
-						
-					XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.EmptySlot_Icon)
-							
-				end
-				
+		if _slot then	
+			if gvArchers_Tower.SlotData[EntityID][_slot] ~= nil then			
+				XGUIEng.DisableButton(CurrentWidgetID, 0)				
+			else				
+				XGUIEng.DisableButton(CurrentWidgetID, 1)				
+				for i = 1,4 do						
+					XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.EmptySlot_Icon)							
+				end			
 			end
 			
-		else
-		
-			if gvArchers_Tower.SlotData[EntityID][1] == nil and gvArchers_Tower.SlotData[EntityID][2] == nil then
-			
-				XGUIEng.DisableButton(CurrentWidgetID, 1)
-				
-			else
-			
-				XGUIEng.DisableButton(CurrentWidgetID, 0)
-				
-			end
-								
-		end
-		
-	end
-	
+		else		
+			if gvArchers_Tower.SlotData[EntityID][1] == nil and gvArchers_Tower.SlotData[EntityID][2] == nil then		
+				XGUIEng.DisableButton(CurrentWidgetID, 1)				
+			else			
+				XGUIEng.DisableButton(CurrentWidgetID, 0)				
+			end								
+		end		
+	end	
 end
 ------------------------------------- Army Creator ---------------------------------------------
 function GUIUpdate_ArmyCreatorPoints(_playerID)
@@ -1124,15 +748,15 @@ function GUIUpdate_ArmyCreatorTroopAmount(_playerID,_entityType)
 end
 function GUIUpdate_SelectionName()
 	
-	local EntityId = GUI.GetSelectedEntity()
-	
+	local EntityId = GUI.GetSelectedEntity()	
 	local EntityType = Logic.GetEntityType( EntityId )
 	local EntityTypeName = Logic.GetEntityTypeName( EntityType )
+	
 	if EntityTypeName == nil then
 		return
 	end
-	local StringKey = "names/" .. EntityTypeName
-		
+	
+	local StringKey = "names/" .. EntityTypeName		
 	local String = XGUIEng.GetStringTableText( StringKey )
 	if string.len(String) >= 25 then
 		XGUIEng.SetTextKeyName(gvGUI_WidgetID.SelectionName, StringKey)
@@ -1146,8 +770,7 @@ function GUIUpdate_MultiSelectionButton()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local MotherContainer= XGUIEng.GetWidgetsMotherID(CurrentWidgetID)	
 	local EntityID = XGUIEng.GetBaseWidgetUserVariable(MotherContainer, 0)			
-	local SelectedHeroID = HeroSelection_GetCurrentSelectedHeroID()
-	
+	local SelectedHeroID = HeroSelection_GetCurrentSelectedHeroID()	
 	local SourceButton
 	
 	if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero1) == 1 then	
@@ -1182,8 +805,7 @@ function GUIUpdate_MultiSelectionButton()
 		SourceButton = "MultiSelectionSource_HeavyCav"
 	elseif Logic.IsEntityInCategory(EntityID,EntityCategories.CavalryLight) == 1 then
 		SourceButton = "MultiSelectionSource_LightCav"	
-	
-	
+		
 	--AddOn
 	elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Rifle) == 1 
 	and Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 0 then
@@ -1207,10 +829,8 @@ function GUIUpdate_MultiSelectionButton()
 	else
 		SourceButton = "MultiSelectionSource_Sword"
 	end
-	
-	
-	XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
-	
+		
+	XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)	
 	-- set color when hero is selected
 	if SelectedHeroID == EntityID then		
 		for i=0, 4,1
@@ -1220,14 +840,13 @@ function GUIUpdate_MultiSelectionButton()
 	else	
 		for i=0, 4,1
 		do
-			XGUIEng.SetMaterialColor(SourceButton,i, 255,255,255,255)
+			XGUIEng.SetMaterialColor(SourceButton,i, BS.DefaultColorValues.White.r, BS.DefaultColorValues.White.g, BS.DefaultColorValues.White.b, BS.DefaultColorValues.White.a)
 		end	
 	end
 end
 function GUIUpdate_Forester_WorkChange(_flag)
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	local EntityID = GUI.GetSelectedEntity()
 	
 	if _flag == 0 then
