@@ -1029,16 +1029,16 @@ Hero13_StoneArmor_Trigger = function(_heroID,_starttime)
 		if target == _heroID then		
 			CEntity.TriggerSetDamage(0)		
 			Logic.CreateEffect(GGL_Effects.FXSalimHeal,posX,posY)	
-			gvHero13.AbilityProperties.DamageStored[player] = (gvHero13.AbilityProperties.DamageStored[player] or 0) + dmg			
+			gvHero13.AbilityProperties.StoneArmor.DamageStored[player] = (gvHero13.AbilityProperties.StoneArmor.DamageStored[player] or 0) + dmg			
 		end
 		
 	else
 	
 		if target == _heroID then
 		
-			CEntity.TriggerSetDamage(dmg + (gvHero13.AbilityProperties.DamageStored[player]*0.7))			
+			CEntity.TriggerSetDamage(dmg + (gvHero13.AbilityProperties.StoneArmor.DamageStored[player]*0.7))			
 			Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)			
-			gvHero13.AbilityProperties.DamageStored[player] = 0			
+			gvHero13.AbilityProperties.StoneArmor.DamageStored[player] = 0			
 			Trigger.UnrequestTrigger(gvHero13.TriggerIDs.StoneArmor[player])
 			gvHero13.TriggerIDs.StoneArmor[player] = nil
 		end		

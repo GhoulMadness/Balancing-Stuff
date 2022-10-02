@@ -735,7 +735,7 @@ end
 
 function IsMilitaryLeader(_entityID)
 
-	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0
+	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0 and string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(_entityID))), "soldier") == nil and Logic.IsLeader(_entityID) == 1
 	
 end
 
