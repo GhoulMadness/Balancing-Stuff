@@ -760,6 +760,7 @@ end
 
 function IsMilitaryLeader(_entityID)
 
+<<<<<<< Updated upstream
 	if Logic.IsHero(_entityID) == 1 or Logic.IsSerf(_entityID) == 1 or Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 1 then
 	
 		return false
@@ -769,6 +770,9 @@ function IsMilitaryLeader(_entityID)
 		return true
 		
 	end
+=======
+	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0
+>>>>>>> Stashed changes
 	
 end
 
@@ -1738,7 +1742,7 @@ end
 NighttimeGFXSets = {9,13,14,19,20,21,28}
 function IsNighttime()
 	
-	return table.findvalue(NighttimeGFXSets, GetCurrentWeatherGfxSet()) ~= nil
+	return table.findvalue(NighttimeGFXSets, GetCurrentWeatherGfxSet()) ~= 0
 	
 end
 

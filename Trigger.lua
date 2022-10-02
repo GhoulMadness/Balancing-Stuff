@@ -1012,91 +1012,65 @@ function BloodRushCheck()
 end
 ------------------------------------------------------------------------------------------------------------------------------
 --------------------------------- Dovbar and Erebos Trigger ------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------
-for i = 1,12 do
+------------------------------------------------------------------------------------------------------------------------------	
+Hero13_StoneArmor_Trigger = function(_heroID,_starttime)
 
-	_G["gvHero13_DamageStored_"..i] = 0
+	local attacker = Event.GetEntityID1()	
+	local target = Event.GetEntityID2()	
+	local player = Logic.EntityGetPlayer(target)	
+	local posX,posY = Logic.GetEntityPosition(target)	
+	local time = Logic.GetTimeMs()	
+	-- Dauer der Fähigkeit in Millisekunden
+	local duration = 1000*5	
+	local dmg = CEntity.TriggerGetDamage()
 	
-	_G["Hero13_StoneArmor_Trigger_"..i] = function(_heroID,_starttime)
+	if time <= (_starttime + duration) then
 	
-		local attacker = Event.GetEntityID1()
+		if target == _heroID then		
+			CEntity.TriggerSetDamage(0)		
+			Logic.CreateEffect(GGL_Effects.FXSalimHeal,posX,posY)	
+			gvHero13.AbilityProperties.DamageStored[player] = (gvHero13.AbilityProperties.DamageStored[player] or 0) + dmg			
+		end
 		
-		local target = Event.GetEntityID2();
-		
-		local player = Logic.EntityGetPlayer(target)
-		
-		local posX,posY = Logic.GetEntityPosition(target)
-		
-		local time = Logic.GetTimeMs()
-		
-		-- Dauer der Fähigkeit in Millisekunden
-		local duration = 1000*5
-		
-		local dmg = CEntity.TriggerGetDamage();
-		
-		if time <= (_starttime + duration) then
-		
-			if target == _heroID then
-			
-				CEntity.TriggerSetDamage(0);
-				
-				Logic.CreateEffect(GGL_Effects.FXSalimHeal,posX,posY)
-				
-				_G["gvHero13_DamageStored_"..player] = _G["gvHero13_DamageStored_"..player] + dmg
-				
-			end;
-			
-		else
-		
-			if target == _heroID then
-			
-				CEntity.TriggerSetDamage(dmg + (_G["gvHero13_DamageStored_"..player]*0.7))
-				
-				Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)
-				
-				_G["gvHero13_DamageStored_"..player] = 0
-				
-				Trigger.UnrequestTrigger(_G["Hero13TriggerID_"..player])
-				
-			end
-			
-		end;
-		
-	end;
+	else
 	
-	_G["Hero13_DMGBonus_Trigger_"..i] = function(_heroID,_starttime)
+		if target == _heroID then
+		
+			CEntity.TriggerSetDamage(dmg + (gvHero13.AbilityProperties.DamageStored[player]*0.7))			
+			Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)			
+			gvHero13.AbilityProperties.DamageStored[player] = 0			
+			Trigger.UnrequestTrigger(gvHero13.TriggerIDs.StoneArmor[player])
+			gvHero13.TriggerIDs.StoneArmor[player] = nil
+		end		
+	end	
+end
 	
-		local attacker = Event.GetEntityID1()
-		
-		local player = Logic.EntityGetPlayer(_heroID)
-		
-		local time = Logic.GetTimeMs()
-		
-		-- Dauer der Fähigkeit in Millisekunden
-		local duration = 1000 * 5
-		
-		local dmg = CEntity.TriggerGetDamage();
-		
-		if time <= (_starttime + duration) then
-		
-			if attacker == _heroID then
-			
-				CEntity.TriggerSetDamage(dmg*4);
-				
-				Trigger.UnrequestTrigger(_G["Hero13DMGBonusTriggerID_"..player])
-				
-			end;
-			
-		else
-		
-			Trigger.UnrequestTrigger(_G["Hero13DMGBonusTriggerID_"..player])
-			
-		end;
-		
-	end;
+Hero13_DMGBonus_Trigger = function(_heroID,_starttime)
+
+	local attacker = Event.GetEntityID1()	
+	local player = Logic.EntityGetPlayer(_heroID)	
+	local time = Logic.GetTimeMs()	
+	-- Dauer der Fähigkeit in Millisekunden
+	local duration = gvHero13.AbilityProperties.DivineJudgment.DMGBonus.Duration
+	local dmg = CEntity.TriggerGetDamage()
 	
-	_G["Hero13_DivineJudgment_Trigger_"..i] = function(_heroID,_origdmg,_posX,_posY,_starttime)
+	if time <= (_starttime + duration) then
 	
+		if attacker == _heroID then		
+			CEntity.TriggerSetDamage(dmg*gvHero13.AbilityProperties.DivineJudgment.DMGBonus.Multiplier)			
+			Trigger.UnrequestTrigger(gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player])	
+			gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
+		end
+		
+	else	
+		Trigger.UnrequestTrigger(gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player])
+		gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
+	end
+end
+	
+Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _starttime)
+	
+<<<<<<< Updated upstream
 		local time = Logic.GetTimeMs()
 		
 		-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
@@ -1161,205 +1135,249 @@ for i = 1,12 do
 							end
 							
 						else
+=======
+	local currtime = Logic.GetTimeMs()		
+	-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
+	local duration = gvHero13.AbilityProperties.DivineJudgment.Judgment.Duration
+
+	if not Logic.IsEntityAlive(_heroID) then
+	
+		if currtime <= (_starttime + duration) then
+			local delay = (currtime - _starttime)
+>>>>>>> Stashed changes
 					
-							if damage >= Logic.GetEntityHealth(eID) then						
-								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
-							end
-							if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
-								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
-								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
-							end
-							
-							Logic.HurtEntity(eID, damage)
-						end
-						
-					-- wenn Held, dann...
-					elseif Logic.IsHero(eID) == 1 then		
-					
-						if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage*2, Logic.GetEntityHealth(eID)))
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage*2, Logic.GetEntityHealth(eID)))
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
-						end
-						Logic.HurtEntity(eID, damage*2)
-						
-					-- wenn Gebäude, dann...
-					elseif Logic.IsBuilding(eID) == 1 then
-					
-						if (damage*6) >= Logic.GetEntityHealth(eID) then
-						
-							BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")
-							
-						end
-						if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] + (math.min(damage*6, Logic.GetEntityHealth(eID)))
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage*6, Logic.GetEntityHealth(eID)))
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
-						end
-					
-						Logic.HurtEntity(eID, damage*6)
-					
-					-- wenn alles andere (Leibi, Kanone), dann...
-					else
-						
-						if (damage*4) >= Logic.GetEntityHealth(eID) then
-						
-							BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
-							
-						end
-						if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage*4, Logic.GetEntityHealth(eID)))
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage*4, Logic.GetEntityHealth(eID)))
-							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
-						end
-						Logic.HurtEntity(eID, damage*4)
-						
-					end
-					
-				end	
-				
+			Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY)
+			-- Reichweite der Fähigkeit (in S-cm)
+			local range = gvHero13.AbilityProperties.DivineJudgment.Judgment.BaseRange - (delay/gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeDelayFalloff)			
+			local damage = _origdmg ^ (gvHero13.AbilityProperties.DivineJudgment.Judgment.BaseExponent - (delay/gvHero13.AbilityProperties.DivineJudgment.Judgment.ExponentDelayFalloff))				
+			for i = 1,gvHero13.AbilityProperties.DivineJudgment.Judgment.NumberOfLightningStrikes do
+			
+				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (range/gvHero13.AbilityProperties.DivineJudgment.Judgment.NumberOfLightningStrikes * i), _posY - (range/gvHero13.AbilityProperties.DivineJudgment.Judgment.NumberOfLightningStrikes * i))					
+				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (range/gvHero13.AbilityProperties.DivineJudgment.Judgment.NumberOfLightningStrikes * i), _posY)					
+				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY - (range/gvHero13.AbilityProperties.DivineJudgment.Judgment.NumberOfLightningStrikes * i))					
 			end
+
+			for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
 			
-			Trigger.UnrequestTrigger(_G["Hero13JudgmentTriggerID_".._heroID])
-			
-			return true
-			
-		end
-		
-	end
-	
-	_G["Hero14_Lifesteal_Trigger_"..i] = function(_heroID,_starttime)	
-	
-		local heroplayer = Logic.EntityGetPlayer(_heroID)
-	
-		if not Logic.IsEntityAlive(_heroID) then
-		
-			_G["Hero14LifestealTriggerID_"..heroplayer] = nil
-			
-			return true
-		
-		else
-		
-			local attacker = Event.GetEntityID1()
-			
-			local attackerplayer = Logic.EntityGetPlayer(attacker)
-			
-			local heropos = GetPosition(_heroID)
-			
-			local attackerpos = GetPosition(attacker)
-			
-			local distance = GetDistance(heropos, attackerpos)
-			
-			local cat = Logic.IsEntityInCategory(attacker, EntityCategories.EvilLeader)
-			
-			local time = Logic.GetTime()
-		
-			local duration = gvHero14.LifestealAura.Duration
-			
-			local dmg = CEntity.TriggerGetDamage()
-			
-			local maxhp = Logic.GetEntityMaxHealth(_heroID)
-			
-			local currhp = Logic.GetEntityHealth(_heroID)
-			
-			local daytimefactor = 1
-			
-			if IsNighttime() then
-			
-				daytimefactor = 1.5
-			
-			end
-			
-			if time <= (_starttime + duration) then
-		
-				if attackerplayer == heroplayer then
-				
-					if distance <= gvHero14.LifestealAura.Range then
-					
-						if currhp < maxhp then
-						
-							if cat == 1 then
-						
-								Logic.HealEntity(attacker, math.ceil(dmg * gvHero14.LifestealAura.LifestealAmount * 3 * daytimefactor))							
-								
+				-- wenn Leader, dann...
+				if IsMilitaryLeader(eID) and Logic.IsEntityAlive(eID) then
+					local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
+					if Soldiers[1] > 0 then							
+						for i = 2, table.getn(Soldiers) do
+							local soldierdmg = math.max(damage - ((i - 2) * damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFalloff), damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.MinDamage)
+							local health = Logic.GetEntityHealth(Soldiers[i])
+							if soldierdmg >= health then						
+								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")	
 							else
-							
-								Logic.HealEntity(attacker, math.floor(dmg * gvHero14.LifestealAura.LifestealAmount))
-								
+								break
 							end
-							
-							Logic.CreateEffect(GGL_Effects.FXSalimHeal, attackerpos.X, attackerpos.Y)
-					
+							if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
+								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
+								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
+								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+							end								
+							Logic.HurtEntity(Soldiers[i], soldierdmg)
+							if i == table.getn(Soldiers) then
+								if soldierdmg >= Logic.GetEntityHealth(eID) then						
+									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
+								end
+								if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+								end			
+								Logic.HurtEntity(eID, round(soldierdmg))
+								break
+							end
 						end
-					
+
+					else
+				
+						if damage >= Logic.GetEntityHealth(eID) then						
+							BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
+						end
+						if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+						end
+						
+						Logic.HurtEntity(eID, damage)
 					end
 					
-				end
+				-- wenn Held, dann...
+				elseif Logic.IsHero(eID) == 1 then		
+					
+					if (damage*gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Hero) >= Logic.GetEntityHealth(eID) then
+					
+						BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
+						
+					end
+					if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Hero, Logic.GetEntityHealth(eID)))
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Hero, Logic.GetEntityHealth(eID)))
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+					end
+					Logic.HurtEntity(eID, damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Hero)
+					
+				-- wenn Gebäude, dann...
+				elseif Logic.IsBuilding(eID) == 1 then
 				
-			else
-			
-				_G["Hero14LifestealTriggerID_"..heroplayer] = nil
+					if (damage*gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Building) >= Logic.GetEntityHealth(eID) then
+					
+						BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")
+						
+					end
+					if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] + (math.min(damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Building, Logic.GetEntityHealth(eID)))
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Building, Logic.GetEntityHealth(eID)))
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+					end
 				
-				return true
+					Logic.HurtEntity(eID, damage * gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactors.Building)
 				
-			end
-			
+				-- wenn Leibi, dann...
+				elseif Logic.IsSerf(eID) == 1 then
+					
+					if damage >= Logic.GetEntityHealth(eID) then
+					
+						BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
+						
+					end
+					if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+					end
+					Logic.HurtEntity(eID, damage)					
+				end				
+			end				
 		end
 		
-	end
+		Trigger.UnrequestTrigger(gvHero13.TriggerIDs.DivineJudgment.Judgment[Logic.EntityGetPlayer(_heroID)])
+		gvHero13.TriggerIDs.DivineJudgment.Judgment[Logic.EntityGetPlayer(_heroID)] = nil
+		return true		
+	end	
+end
 	
-	_G["Hero14_MovementEffects_Player"..i] = function(_EntityID)
+Hero14_Lifesteal_Trigger = function(_heroID,_starttime)	
 	
+	local heroplayer = Logic.EntityGetPlayer(_heroID)
+
+	if not Logic.IsEntityAlive(_heroID) then
+	
+		gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil
+		
+		return true
+	
+	else
+	
+		local attacker = Event.GetEntityID1()		
+		local attackerplayer = Logic.EntityGetPlayer(attacker)		
+		local heropos = GetPosition(_heroID)		
+		local attackerpos = GetPosition(attacker)		
+		local distance = GetDistance(heropos, attackerpos)		
+		local cat = Logic.IsEntityInCategory(attacker, EntityCategories.EvilLeader)		
+		local time = Logic.GetTime()	
+		local duration = gvHero14.LifestealAura.Duration		
+		local dmg = CEntity.TriggerGetDamage()		
+		local maxhp = Logic.GetEntityMaxHealth(_heroID)		
+		local currhp = Logic.GetEntityHealth(_heroID)		
+		local daytimefactor = 1
+		
 		if IsNighttime() then
 		
-			if Logic.IsEntityAlive(_EntityID) then
-			
-				local posX, posY = Logic.GetEntityPosition(_EntityID)
-				
-				local playerID = Logic.EntityGetPlayer(_EntityID)
+			daytimefactor = gvHero14.LifestealAura.NighttimeFactor
+		
+		end
+		
+		if time <= (_starttime + duration) then
 	
-				if Logic.GetCurrentTaskList(_EntityID) == "TL_HERO14_WALK" then
-								
-					Logic.CreateEffect(GGL_Effects.FXHero14_Lightning, posX, posY)
-					
-					Logic.CreateEffect(gvHero14.MovementEffects[math.random(1,4)], posX, posY)		
-
-					_G["Hero14_BurnEffect_ApplyDamage"..playerID.."_"..posX.."_"..posY.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_BurnEffect_ApplyDamage"..playerID,1,{},{_EntityID, playerID, posX, posY})
-					
-				elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" then
+			if attackerplayer == heroplayer then
+			
+				if distance <= gvHero14.LifestealAura.Range then
 				
-					if Counter.Tick2("Hero14_MovementEffects_Player"..i.."_CounterID", 3) then
-				
-						Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)
+					if currhp < maxhp then
+					
+						if cat == 1 then
+					
+							Logic.HealEntity(attacker, math.ceil(dmg * gvHero14.LifestealAura.LifestealAmount * gvHero14.LifestealAura.FogPeopleBonusFactor * daytimefactor))							
+							
+						else
 						
+							Logic.HealEntity(attacker, math.floor(dmg * gvHero14.LifestealAura.LifestealAmount))
+							
+						end
+						
+						Logic.CreateEffect(GGL_Effects.FXSalimHeal, attackerpos.X, attackerpos.Y)
+				
 					end
 				
 				end
 				
-				gvHero14.NighttimeAura.ApplyDamage(_EntityID)
-				
 			end
 			
-		end
-	
-	end
-	
-	_G["Hero14_BurnEffect_ApplyDamage"..i] = function(_EntityID, _PlayerID, _posX, _posY)
-	
-		if Counter.Tick2("Hero14_BurnEffect_ApplyDamage".._EntityID.."_".._posX.."_".._posY.."_CounterID", 5) or not IsNighttime() then
+		else
 		
-			Trigger.UnrequestTrigger(_G["Hero14_BurnEffect_ApplyDamage".._PlayerID.."_".._posX.."_".._posY.."_TriggerID"])
+			gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil
 			
 			return true
-		
-		end
 			
-		gvHero14.NighttimeAura.ApplyDamage(_EntityID, _posX, _posY)			
-	
+		end
+		
 	end
 	
 end
+	
+Hero14_MovementEffects_Player = function(_EntityID)
+	
+	if IsNighttime() then
+	
+		if Logic.IsEntityAlive(_EntityID) then
+		
+			local posX, posY = Logic.GetEntityPosition(_EntityID)
+			
+			local playerID = Logic.EntityGetPlayer(_EntityID)
+
+			if Logic.GetCurrentTaskList(_EntityID) == "TL_HERO14_WALK" then
+							
+				Logic.CreateEffect(GGL_Effects.FXHero14_Lightning, posX, posY)
+				
+				Logic.CreateEffect(gvHero14.MovementEffects[math.random(1,4)], posX, posY)		
+
+				gvHero14.NighttimeAura.TriggerIDs.BurnEffect[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_BurnEffect_ApplyDamage",1,{},{_EntityID, playerID, posX, posY})
+				
+			elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" or Logic.IsEntityMoving(_EntityID) == 0 then
+			
+				if Counter.Tick2("Hero14_MovementEffects_Player"..i.."_CounterID", 3) then
+			
+					Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)
+					
+				end
+			
+			end
+			
+			gvHero14.NighttimeAura.ApplyDamage(_EntityID)
+			
+		end
+		
+	end
+
+end
+	
+Hero14_BurnEffect_ApplyDamage = function(_EntityID, _PlayerID, _posX, _posY)
+	
+	if Counter.Tick2("Hero14_BurnEffect_ApplyDamage".._EntityID.."_".._posX.."_".._posY.."_CounterID", gvHero14.NighttimeAura.MaxDuration) or not IsNighttime() then
+	
+		gvHero14.NighttimeAura.TriggerIDs.BurnEffect[_PlayerID] = nil		
+		return true
+	
+	end
+		
+	gvHero14.NighttimeAura.ApplyDamage(_EntityID, _posX, _posY)			
+
+end
+
 function OnErebos_Created()
 
 	local entityID = Event.GetEntityID()
@@ -1370,7 +1388,7 @@ function OnErebos_Created()
 	
 	if entityType == Entities.PU_Hero14 then    
 	
-		_G["Hero14_MovementEffects_Player"..playerID.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player"..playerID,1,{},{entityID})
+		gvHero14.NighttimeAura.TriggerIDs.Start[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player",1,{},{entityID})
 		
 	end
 	
