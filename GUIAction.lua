@@ -425,8 +425,6 @@ function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
 	
 end	
 -----------------------------------------------------------------------------------------------------------------------------
-gvHero13 = {LastTimeStoneArmorUsed = - 6000,LastTimeDivineJudgmentUsed = - 6000}
-
 function GUIAction_Hero13StoneArmor()
 
 	local heroID = GUI.GetSelectedEntity()
@@ -442,9 +440,9 @@ function GUIAction_Hero13StoneArmor()
 		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID);
 		
 	else
-	
-		_G["Hero13TriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_"..player, 1, nil, {heroID,starttime})
-		
+		if not gvHero13.TriggerIDs.StoneArmor[player] then
+			gvHero13.TriggerIDs.StoneArmor[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger", 1, nil, {heroID,starttime})		
+		end
 	end
 	
 end
@@ -479,10 +477,12 @@ function GUIAction_Hero13DivineJudgment()
 		
 			Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
 			
-			_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
-			
-			_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
-			
+			if not gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] then
+				gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger", 1, nil, {heroID,starttime})
+			end
+			if not gvHero13.TriggerIDs.DivineJudgment.Judgment[player] then
+				gvHero13.TriggerIDs.DivineJudgment.Judgment[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger", 1, nil, {heroID,basedmg,posX,posY,starttime})
+			end
 		end
 		
 	end
@@ -510,14 +510,10 @@ function GUIAction_Hero14CallOfDarkness()
 end
 function GUIAction_Hero14LifestealAura()
 	
-	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
-	
-	local player = Logic.EntityGetPlayer(heroID)
-	
-	local starttime = Logic.GetTime()
-	
-	gvHero14.LifestealAura.LastTimeUsed = starttime
-	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]	
+	local player = Logic.EntityGetPlayer(heroID)	
+	local starttime = Logic.GetTime()	
+	gvHero14.LifestealAura.LastTimeUsed = starttime	
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
 	
 	if CNetwork then
@@ -526,10 +522,9 @@ function GUIAction_Hero14LifestealAura()
 			
 	else
 	
-		_G["Hero14LifestealTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger_"..player, 1, nil, {heroID,starttime})
+		gvHero14.LifestealAura.TriggerIDs[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {heroID,starttime})
 	
-	end
-	
+	end	
 end
 function GUIAction_Hero14RisingEvil()
 	

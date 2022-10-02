@@ -340,6 +340,7 @@
 			"GUIAction",
 			"LocalMusic",
 			"VersionCheck",
+			"Hero13",
 			"Hero14",
 			"VictoryStatue3",
 			"VictoryStatue4",

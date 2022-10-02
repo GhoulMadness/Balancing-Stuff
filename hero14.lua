@@ -1,4 +1,4 @@
-gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
+gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120, 
 			SpawnTroops = function(_heroID)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
@@ -30,8 +30,8 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_SkirmisherElite, 0, 0, pos.X, pos.Y, 0, 0, 0, 0)
 				end
 			end},
-			LifestealAura = {LastTimeUsed = - 6000, Cooldown = 90, Duration = 45, Range = 800, LifestealAmount = 0.2},
-			RisingEvil = {LastTimeUsed = - 6000, Cooldown = 300, Range = 1000, TowerTreshold = 5,
+			LifestealAura = {LastTimeUsed = - 6000, Cooldown = 90, Duration = 45, Range = 800, LifestealAmount = 0.2, TriggerIDs = {}, NighttimeFactor = 1.5, FogPeopleBonusFactor = 3},
+			RisingEvil = {LastTimeUsed = - 6000, Cooldown = 300, Range = 1000, TowerTreshold = 5, TriggerIDs = {},
 			SpawnEvilTower = function(_heroID)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
@@ -57,7 +57,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 					end
 				end
 			end},
-			NighttimeAura = {Range = 600, Damage = 30, 
+			NighttimeAura = {Range = 600, Damage = 30, MaxDuration = 5, TriggerIDs = {Start = {}, BurnEffect = {}},
 			ApplyDamage = function(_heroID, posX, posY)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
