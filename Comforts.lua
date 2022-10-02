@@ -13,15 +13,12 @@ function VC_Deathmatch()
 	
 	-- Get number of humen player
 	local HumenPlayer = XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer()	
-	local LocalPlayer = GUI.GetPlayerID()
-	
+	local LocalPlayer = GUI.GetPlayerID()	
 	
 	-- Check loose condition: Player did loose his Headquarter			
 	local 	CurrentPlayerID
 	for CurrentPlayerID = 1, HumenPlayer, 1 
-	do
-	
-
+	do	
 		-- Check if HQ exists
 		local 	ConditionFlag = 0
 		local 	i		
@@ -32,8 +29,7 @@ function VC_Deathmatch()
 					ConditionFlag = 1
 				end
 			end
-		end
-		
+		end		
 		
 		-- No headquarter exists
 		if ConditionFlag == 0 then 
@@ -42,8 +38,7 @@ function VC_Deathmatch()
 			if Logic.PlayerGetGameState(CurrentPlayerID) == 1 then					
 				
 				Logic.PlayerSetGameStateToLost(CurrentPlayerID)						
-				MultiplayerTools.RemoveAllPlayerEntities( CurrentPlayerID )	
-			
+				MultiplayerTools.RemoveAllPlayerEntities( CurrentPlayerID )				
 			
 				if LocalPlayer == CurrentPlayerID then			
 					GUI.AddNote( XGUIEng.GetStringTableText( "InGameMessages/Note_PlayerLostGame" ) )
@@ -59,8 +54,6 @@ function VC_Deathmatch()
 		end
 	end
 
-
-	
 	-- Check win condition
 	for j=1, 16, 1
 	do
@@ -81,8 +74,7 @@ function VC_Deathmatch()
 						AmountOfPlayersLostInTeam = AmountOfPlayersLostInTeam + 1
 					end
 				end
-			end
-			
+			end		
 				
 			do
 					
@@ -108,19 +100,14 @@ function VC_Deathmatch()
 								end
 							end
 
-						end						
-						
+						end												
 						
 						MultiplayerTools.TeamLostTable[ j ] = 1					
 						MultiplayerTools.AmountOfLooserTeams = MultiplayerTools.AmountOfLooserTeams + 1
 						
 					end
-					
-					
-					
-				end
-				
-				
+										
+				end						
 				
 				if MultiplayerTools.AmountOfLooserTeams  > 0 then
 									
@@ -139,8 +126,7 @@ function VC_Deathmatch()
 						MultiplayerTools.GameFinished = 1
 						
 					end
-				end
-				
+				end				
 				
 			end
 			
@@ -151,51 +137,43 @@ function VC_Deathmatch()
 end 
 PrepareBriefing = function(_briefing)
 
+--	prepare camera
+	GUIAction_GoBackFromHawkViewInNormalView()
+	Interface_SetCinematicMode(1)
+	Camera.StopCameraFlight()
+	Camera.ScrollUpdateZMode(0)
+	Camera.RotSetAngle(-45)
 
-	--	prepare camera
-		GUIAction_GoBackFromHawkViewInNormalView()
-		Interface_SetCinematicMode(1)
-		Camera.StopCameraFlight()
-		Camera.ScrollUpdateZMode(0)
-		Camera.RotSetAngle(-45)
-
-		-- toggle FoW
-		Display.SetRenderFogOfWar(0)
-		GUI.MiniMap_SetRenderFogOfWar(0)
-		--gvCamera.DefaultFlag = 1
+	-- toggle FoW
+	Display.SetRenderFogOfWar(0)
+	GUI.MiniMap_SetRenderFogOfWar(0)
 
 	--	sound
 
-		--	backup
-		briefingState.Effect = Sound.GetVolumeAdjustment(3)
-		briefingState.Ambient = Sound.GetVolumeAdjustment(5)
-		briefingState.Music = Music.GetVolumeAdjustment()
+	--	backup
+	briefingState.Effect = Sound.GetVolumeAdjustment(3)
+	briefingState.Ambient = Sound.GetVolumeAdjustment(5)
+	briefingState.Music = Music.GetVolumeAdjustment()
 
-		--	half volume
-		Sound.SetVolumeAdjustment(3, briefingState.Effect * 0.5)
-		Sound.SetVolumeAdjustment(5, briefingState.Ambient * 0.5)
-		Music.SetVolumeAdjustment(briefingState.Music * 0.5)
+	--	half volume
+	Sound.SetVolumeAdjustment(3, briefingState.Effect * 0.5)
+	Sound.SetVolumeAdjustment(5, briefingState.Ambient * 0.5)
+	Music.SetVolumeAdjustment(briefingState.Music * 0.5)
 
-		--	stop feedback sounds
-		Sound.PlayFeedbackSound(0,0)
+	--	stop feedback sounds
+	Sound.PlayFeedbackSound(0,0)
 
-	--	set gui state
+	--	enable cutscene key mode
+	Input.CutsceneMode()
 
-		--	enable cutscene key mode
-			Input.CutsceneMode()
+	--	forbid feedback sounds
 
-		--	forbid feedback sounds
+	GUI.SetFeedbackSoundOutputState(0)
 
-			GUI.SetFeedbackSoundOutputState(0)
+	--start briefing music
+	LocalMusic.SongLength = 0
 
-		--	activate cinematic menu
-
---			XGUIEng.ShowWidget("3dOnScreenDisplay",1)
-
-			--start briefing music
-			LocalMusic.SongLength = 0
-
-			XGUIEng.ShowWidget("CinematicMiniMapContainer",1)
+	XGUIEng.ShowWidget("CinematicMiniMapContainer",1)
 
 end
 StartCutscene = function(_Name, _Callback)
@@ -294,11 +272,8 @@ function GetNumberOfPlayingHumanPlayer()
 	return count 
 	
 end
-if not gvPlayerName then
 
-	gvPlayerName = {}
-	
-end
+gvPlayerName = gvPlayerName or {}
 
 function SetPlayerName(_playerId, _name)
 
@@ -760,19 +735,7 @@ end
 
 function IsMilitaryLeader(_entityID)
 
-<<<<<<< Updated upstream
-	if Logic.IsHero(_entityID) == 1 or Logic.IsSerf(_entityID) == 1 or Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 1 then
-	
-		return false
-		
-	else
-	
-		return true
-		
-	end
-=======
 	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0
->>>>>>> Stashed changes
 	
 end
 
@@ -1715,8 +1678,6 @@ function CreateSoldiersForLeader( _LeaderID, _SoldierAmount )
 		local SoldierID = Logic.CreateEntity( SoldierType, LeaderX, LeaderY, 0, LeaderPlayerID )
 		
 		if SoldierID == 0 then
-		
-			LuaDebugger.Break()
 			
 			assert(SoldierID~=0)
 			
@@ -1757,9 +1718,21 @@ function SetInternalClippingLimitMin(_val)
 	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
 	
 end
+-- returns the weather movement speed modifier
+function GetWeatherSpeedModifier(_weatherstate)
+	if _weatherstate == 1 then
+		return _weatherstate
+	else
+		return CUtilMemory.GetMemory(8758240)[0][36-3*_weatherstate]:GetFloat()
+	end
+end
 -- returns the technology raw speed modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologySpeedModifier(_techID)
-	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][56]:GetFloat(), CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][58]:GetInt()-42
+	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][56]:GetFloat(), math.mod(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][58]:GetInt(), 256)-42
+end
+-- returns the technology raw attack range modifier and the operation (+/*), both defined in the respective xml
+function GetTechnologyAttackRangeModifier(_techID)
+	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][88]:GetFloat(), math.mod(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][90]:GetInt(), 256)-42
 end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
@@ -1769,51 +1742,42 @@ function GetSettlerBaseMovementSpeed(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
 	
 end
-BS.EntityCatSpeedModifierTechs = {	[EntityCategories.Hero] = {Technologies.T_HeroicShoes},
-									[EntityCategories.Serf] = {Technologies.T_Shoes, Technologies.T_Alacricity},
-									[EntityCategories.Bow] = {Technologies.T_BetterTrainingArchery},
-									[EntityCategories.Rifle] = {Technologies.T_BetterTrainingArchery},
-									[EntityCategories.Sword] = {Technologies.T_BetterTrainingBarracks},
-									[EntityCategories.Spear] = {Technologies.T_BetterTrainingBarracks},
-									[EntityCategories.CavalryHeavy] = {Technologies.T_Shoeing},
-									[EntityCategories.CavalryLight] = {Technologies.T_Shoeing},
-									[EntityCategories.Cannon] = {Technologies.T_BetterChassis},
-									[EntityCategories.Thief] = {Technologies.T_Agility, Technologies.T_Chest_ThiefBuff}								
-								}
+BS.EntityCatModifierTechs = {["Speed"] = {	[EntityCategories.Hero] = {Technologies.T_HeroicShoes},
+											[EntityCategories.Serf] = {Technologies.T_Shoes, Technologies.T_Alacricity},
+											[EntityCategories.Bow] = {Technologies.T_BetterTrainingArchery},
+											[EntityCategories.Rifle] = {Technologies.T_BetterTrainingArchery},
+											[EntityCategories.Sword] = {Technologies.T_BetterTrainingBarracks},
+											[EntityCategories.Spear] = {Technologies.T_BetterTrainingBarracks},
+											[EntityCategories.CavalryHeavy] = {Technologies.T_Shoeing},
+											[EntityCategories.CavalryLight] = {Technologies.T_Shoeing},
+											[EntityCategories.Cannon] = {Technologies.T_BetterChassis},
+											[EntityCategories.Thief] = {Technologies.T_Agility, Technologies.T_Chest_ThiefBuff}
+											},
+							["AttackRange"] = {	[EntityCategories.Bow] = {Technologies.T_Fletching},
+												[EntityCategories.CavalryLight] = {Technologies.T_Fletching},
+												[EntityCategories.Rifle] = {Technologies.T_Sights}
+												}										
+							}
 -- return settler movement speed
 function GetSettlerCurrentMovementSpeed(_entityID,_player)
 
-	local BaseSpeed = round(GetSettlerBaseMovementSpeed(_entityID))
-	
-	local SpeedTechBonus = 0
-	
-	local SpeedWeatherFactor = 1
-	
-	local SpeedHeroMultiplier = 1
-	
-	--Check auf Wetter		
-	if Logic.GetWeatherState() == 2 then
-	
-		SpeedWeatherFactor = CUtilMemory.GetMemory(8758240)[0][30]:GetFloat()
-		
-	elseif Logic.GetWeatherState() == 3 then
-	
-		SpeedWeatherFactor = CUtilMemory.GetMemory(8758240)[0][27]:GetFloat()
-		
-	end
+	local BaseSpeed = round(GetSettlerBaseMovementSpeed(_entityID))	
+	local SpeedTechBonus, SpeedHeroMultiplier	
+	local SpeedWeatherFactor = GetWeatherSpeedModifier(Logic.GetWeatherState())
 	
 	--Check auf Technologie Modifikatoren		
-	for k,v in pairs(BS.EntityCatSpeedModifierTechs) do
-	
-		if Logic.IsEntityInCategory(_entityID, k) == 1 then
+	for k,v in pairs(BS.EntityCatModifierTechs.Speed) do
 		
+		if Logic.IsEntityInCategory(_entityID, k) == 1 then
+			SpeedTechBonus = 0
+			SpeedHeroMultiplier = 1
 			for i = 1,table.getn(v) do
 			
 				if Logic.GetTechnologyState(_player,v[i]) == 4 then
 				
 					local val, op = GetTechnologySpeedModifier(v[i])
 					if op == 0 then
-						SpeedHeroMultiplier = SpeedHeroMultiplier + val
+						SpeedHeroMultiplier = SpeedHeroMultiplier + (val -1)
 					elseif op == 1 then
 						SpeedTechBonus = SpeedTechBonus + val
 					end
@@ -1824,7 +1788,7 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 		
 	end
 	
-	return (BaseSpeed + SpeedTechBonus) * SpeedWeatherFactor * (SpeedHeroMultiplier or 1)
+	return (BaseSpeed + (SpeedTechBonus or 0)) * (SpeedWeatherFactor or 1) * (SpeedHeroMultiplier or 1)
 	
 end
 -- table with entityTypes with leaderBehavior two places further (index 8 instead of 6)
@@ -1850,144 +1814,124 @@ BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
 function GetEntityTypeBaseAttackSpeed(_entityType)
 
 	assert( _entityType ~= 0 , "invalid entityType" );
-
-	local behavior_pos
-	
-	if not BehaviorExceptionEntityTypeTable[_entityType] then
-		
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then
-		
-			behavior_pos = 4
-			
-		else
-		
-			behavior_pos = 6
-			
-		end
-		
-	else
-	
-		behavior_pos = 8
-		
+	local behavior_pos	
+	if not BehaviorExceptionEntityTypeTable[_entityType] then		
+		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+			behavior_pos = 4			
+		else		
+			behavior_pos = 6			
+		end		
+	else	
+		behavior_pos = 8		
 	end
 	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][21]:GetInt()
-	
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][21]:GetInt()	
 end
 -- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackRange(_entityType)
 
 	assert( _entityType ~= 0 , "invalid entityType" );
-
 	local behavior_pos
-
-	if not BehaviorExceptionEntityTypeTable[_entityType] then
-	
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then
-		
-			behavior_pos = 4
-			
-		else
-		
-			behavior_pos = 6
-			
-		end
-		
-	else
-	
-		behavior_pos = 8		
-		
+	if not BehaviorExceptionEntityTypeTable[_entityType] then	
+		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+			behavior_pos = 4			
+		else		
+			behavior_pos = 6			
+		end		
+	else	
+		behavior_pos = 8				
 	end
 	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][23]:GetFloat()
-	
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][23]:GetFloat()	
 end
 
 function GetEntityTypeMaxAttackRange(_entity,_player)
 
-	local entityType = Logic.GetEntityType(_entity)
-	
-	local RangeTechBonus = 0
-	
-	--Check auf Technologie Modifikatoren
-	if Logic.IsEntityInCategory(_entity, EntityCategories.Bow) == 1 or Logic.IsEntityInCategory(_entity, EntityCategories.CavalryLight) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_Fletching) == 4 then
-		
-			RangeTechBonus = 300
-			
-		else
-		
-			RangeTechBonus = 0
-			
-		end
-		
-	elseif  Logic.IsEntityInCategory(_entity, EntityCategories.Rifle) == 1 then
-	
-		if Logic.GetTechnologyState(_player,Technologies.T_Sights) == 4 then
-		
-			RangeTechBonus = 300
-			
-		else
-		
-			RangeTechBonus = 0
-			
+	local entityType = Logic.GetEntityType(_entity)	
+	local RangeTechBonusFlat
+	local RangeTechBonusMultiplier
+	--Check auf Technologie Modifikatoren		
+	for k,v in pairs(BS.EntityCatModifierTechs.AttackRange) do		
+		if Logic.IsEntityInCategory(_entity, k) == 1 then
+			RangeTechBonusFlat = 0
+			RangeTechBonusMultiplier = 1
+			for i = 1,table.getn(v) do			
+				if Logic.GetTechnologyState(_player,v[i]) == 4 then				
+					local val, op = GetTechnologyAttackRangeModifier(v[i])
+					if op == 0 then
+						RangeTechBonusMultiplier = RangeTechBonusMultiplier + (val -1)
+					elseif op == 1 then
+						RangeTechBonusFlat = RangeTechBonusFlat + val
+					end
+				end				
+			end	
 		end		
-		
-	else
-	
-		RangeTechBonus = 0
-		
 	end
 	
-	return GetEntityTypeBaseAttackRange(entityType) + RangeTechBonus
-
+	return GetEntityTypeBaseAttackRange(entityType) + (RangeTechBonusFlat or 0) * (RangeTechBonusMultiplier or 1)
 end
 -- get the current task, logic cant return animal tasks, returns number, not string
 function GetEntityCurrentTask(_entityID)
 
 	assert( IsValid(_entityID) , "invalid entityID" )
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()	
+end
+-- set entity current task
+function SetEntityCurrentTask(_entityID, _num)
 
-	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
-	
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_num) == "number", "task needs to be a number")
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:SetInt(_num)	
 end
 -- get entity current task sub-index
 function GetEntityCurrentTaskIndex(_entityID)
 
 	assert( IsValid(_entityID) , "invalid entityID" )
-
-	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()
-	
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()	
 end
 -- set entity current task sub-index
 function SetEntityCurrentTaskIndex(_entityID, _index)
 
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_index) == "number", "index needs to be a number")
-	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)
-	
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)	
 end
 
 function GetEntitySize(_entityID)
 
 	assert( IsValid(_entityID) , "invalid entityID" )
-
-	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
-	
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()	
 end
 
 function SetEntitySize(_entityID,_size)
 
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_size) == "number", "size needs to be a number")
-	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
-	
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)	
+end
+gvVisibilityStates = {	[0] = 257,
+						[1] = 65793
+					}
+-- get visibility of entity (0=invisible, 1=visible)
+function GetEntityVisibility(_entityID)
+	assert( IsValid(_entityID) , "invalid entityID" )
+	for k,v in pairs(gvVisibilityStates) do
+		if Logic.GetEntityScriptingValue(_entityID, -30) == v then	
+			return k
+		end
+	end
+end
+-- changes visibility of entity (_flag: 0 = invisible, 1 = visible, -1 = toggle)
+function SetEntityVisibility(_entityID, _flag)
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
+	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))		
 end
 -- Rundungs-Comfort
 function round( _n )
 
-	return math.floor( _n + 0.5 )
-	
+	assert(type(_n) == "number", "size needs to be a number")
+	return math.floor( _n + 0.5 )	
 end
 
 function GetPlayerEntities(_playerID, _entityType)

@@ -1070,72 +1070,6 @@ end
 	
 Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _starttime)
 	
-<<<<<<< Updated upstream
-		local time = Logic.GetTimeMs()
-		
-		-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
-		local duration = 1000 * 3
-		
-		if time > (_starttime + duration) then
-		
-			if Logic.IsEntityAlive(_heroID) then
-				
-			else
-				Logic.CreateEffect(GGL_Effects.FXLightning, _posX, _posY)
-				
-				for i = 1,10 do
-				
-					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (100 * i), _posY - (100 * i))
-					
-					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (100 * i), _posY)
-					
-					Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY - (100 * i))
-					
-				end
-				
-				-- Reichweite der Fähigkeit (in S-cm)
-				local range = 1000
-				
-				local damage = _origdmg * 12
-				
-				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
-				
-					-- wenn Leader, dann...
-					if Logic.IsLeader(eID) == 1 and Logic.IsEntityAlive(eID) then
-						local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
-						if Soldiers[1] > 0 then
-							local hurtleader = false
-							for i = 2, Soldiers[1] + 1 do
-								local soldierdmg = math.max(damage - ((i - 2) * damage/10), damage/5)
-								local health = Logic.GetEntityHealth(Soldiers[i])
-								if soldierdmg >= health then						
-									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")	
-									if i == (Soldiers[1] + 1) then
-										LuaDebugger.Break()
-										hurtleader = true
-									end
-								end
-								if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
-									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
-									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
-									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
-								end								
-								Logic.HurtEntity(Soldiers[i], soldierdmg)
-								if hurtleader then
-									if damage >= Logic.GetEntityHealth(eID) then						
-										BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
-									end
-									if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
-										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
-										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
-									end								
-									Logic.HurtEntity(eID, soldierdmg*3/4)
-								end
-							end
-							
-						else
-=======
 	local currtime = Logic.GetTimeMs()		
 	-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
 	local duration = gvHero13.AbilityProperties.DivineJudgment.Judgment.Duration
@@ -1144,7 +1078,6 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 	
 		if currtime <= (_starttime + duration) then
 			local delay = (currtime - _starttime)
->>>>>>> Stashed changes
 					
 			Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY)
 			-- Reichweite der Fähigkeit (in S-cm)

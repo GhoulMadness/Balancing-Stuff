@@ -286,9 +286,6 @@ function GUIAction_LighthouseHireTroops()
 	local eID = GUI.GetSelectedEntity()
 	local pID = Logic.EntityGetPlayer(eID)
 	
-	local Iron   = Logic.GetPlayersGlobalResource( pID, ResourceType.Iron ) + Logic.GetPlayersGlobalResource( pID, ResourceType.IronRaw)
-	local Sulfur = Logic.GetPlayersGlobalResource( pID, ResourceType.Sulfur ) + Logic.GetPlayersGlobalResource( pID, ResourceType.SulfurRaw)
-	
 	if Logic.GetPlayerAttractionUsage(pID) >= Logic.GetPlayerAttractionLimit(pID) then
 		GUI.SendPopulationLimitReachedFeedbackEvent(pID)
 		return
@@ -297,14 +294,13 @@ function GUIAction_LighthouseHireTroops()
 		Message("Achtung: Ihr habt nur sehr wenig Plätze in Eurer Siedlung frei! @cr Die vollen Verstärkungstruppen treffen nur ein, wenn ihr über einige weitere freie Plätze verfügt!")
 	end
 	
-	if Iron >= 600 and Sulfur >= 400 then
+	if gvLighthouse.CheckForResources(pID) then
 		GUI.DeselectEntity(eID)
 		GUI.SelectEntity(eID)
 		if CNetwork then
 			CNetwork.SendCommand("Ghoul_Lighthouse_SpawnJob", pID,eID);
 		else
-			Lighthouse_SpawnJob(pID,eID)
-			gvLighthouse.starttime[1] = Logic.GetTime()
+			gvLighthouse.PrepareSpawn(pID,eID)
 		end
 	else
 		Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)
@@ -608,29 +604,11 @@ function GUIAction_Archers_Tower_RemoveSlot(_slot)
 	
 		if CNetwork then
 		
-			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop",player,entity,_slot)
+			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop", player, entity, _slot)
 		
 		else
 	
-			_G["Archers_Tower_RemoveTroopTriggerID_"..entity.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop_"..player.."_".._slot, 1, nil, {_slot,entity,soldiers,player})
-	
-			Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][_slot])
-			
-			Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][_slot],-30,257)
-			
-			if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entity][_slot], EntityCategories.Cannon) ~= 1 then
-			
-				table.remove(soldierstable,1)
-								
-				for i = 1,table.getn(soldierstable) do
-
-					Logic.SuspendEntity(soldierstable[i])
-
-					Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
-				
-				end
-				
-			end
+			gvArchers_Tower.PrepareData.RemoveTroop(player, entity, _slot)
 		
 		end
 		
@@ -662,7 +640,7 @@ function GUIAction_Archers_Tower_AddSlot()
 	
 	local pos = GetPosition(entity)
 	
-	if AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.RangedEnemySearchCategories, pos, gvArchers_Tower.RangedEnemySearchRange, Diplomacy.Hostile ) or AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.MeleeEnemySearchCategories, pos, gvArchers_Tower.MeleeEnemySearchRange, Diplomacy.Hostile ) then
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, gvArchers_Tower.RangedEnemySearchCategories, pos, gvArchers_Tower.RangedEnemySearchRange, Diplomacy.Hostile ) or AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.MeleeEnemySearchCategories, pos, gvArchers_Tower.MeleeEnemySearchRange, Diplomacy.Hostile ) then
 	
 		Message("Der Feind ist Euch bereits zu nahe. Truppen können nicht den Turm hinauf, solange Feinde in der Nähe sind!")
 		
@@ -706,33 +684,11 @@ function GUIAction_Archers_Tower_AddSlot()
 				
 					if CNetwork then
 
-						CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop",player,entity,eID)
+						CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop", player, entity, eID)
 						
 					else
 						
-						gvArchers_Tower.SlotData[entity][freeslot] = eID
-				
-						_G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_"..player.."_"..freeslot, 1, nil, {freeslot,soldiers,player,entity})
-				
-						gvArchers_Tower.CurrentlyUsedSlots[entity] = gvArchers_Tower.CurrentlyUsedSlots[entity] + 1
-						
-						Logic.SuspendEntity(gvArchers_Tower.SlotData[entity][freeslot])
-		
-						Logic.SetEntityScriptingValue(gvArchers_Tower.SlotData[entity][freeslot],-30,257)
-						
-						if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
-						
-							table.remove(soldierstable,1)
-							
-							for i = 1,table.getn(soldierstable) do
-
-								Logic.SuspendEntity(soldierstable[i])
-			
-								Logic.SetEntityScriptingValue(soldierstable[i],-30,257)
-							
-							end
-							
-						end
+						gvArchers_Tower.PrepareData.AddTroop(player, entity, eID)
 						
 					end
 					

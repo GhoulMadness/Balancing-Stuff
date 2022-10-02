@@ -189,13 +189,13 @@ Forester.DoorOffsetByEntityType = {	[Entities.PB_VillageCenter1] = 	{X = -500,
 																	Y = 200},	
 									[Entities.PB_Castle1] = 		{X = -960,
 																	Y = -300},
-									[Entities.PB_Castle1] = 		{X = -960,
+									[Entities.PB_Castle2] = 		{X = -960,
 																	Y = -300},
-									[Entities.PB_Castle1] = 		{X = -960,
+									[Entities.PB_Castle3] = 		{X = -960,
 																	Y = -300},
-									[Entities.PB_Castle1] = 		{X = -960,
+									[Entities.PB_Castle4] = 		{X = -960,
 																	Y = -300},
-									[Entities.PB_Castle1] = 		{X = -960,
+									[Entities.PB_Castle5] = 		{X = -960,
 																	Y = -300}
 									}
 Forester.TriggerIDs = {	PrepareForPause = {},
@@ -229,6 +229,9 @@ end
 Forester.WorkChange = function(_id, _flag)
 	local posX, posY = Logic.GetEntityPosition(_id)
 	local workerID = Forester.GetWorkerIDByBuildingID(_id)
+	if not workerID then	
+		return
+	end
 	if _flag == 0 then
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.FinishAnim[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Inside[workerID])

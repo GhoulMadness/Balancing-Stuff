@@ -244,7 +244,7 @@
 						}
 
 	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias"},
-								[2] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias", "Novator12", "ARK_ZorkManu", "RitterLeo", "DerEisenfresser", "ThePhoenix_2000"},
+								[2] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias", "Novator12", "ARK_ZorkManu", "RitterLeo", "DerEisenfresser", "ThePhoenix_2000", "Vqrys"},
 								[3] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias"},
 								[4] = {}
 							}
