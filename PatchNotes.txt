@@ -606,3 +606,12 @@ Durch Dovbars Götterdämmerung, Erebos Aura sowie Marys und Kalas Gift-DoT get�
 Freischaltungen durch Herausforderungs-Maps sind nun nur noch im Zusammenspiel mit einer Whitelist wirkbar.
 Falls ihr eine dieser Karten auf der Herausforderungsstufe schafft, so gebt mir bitte Bescheid. Frühere Siege sind bereits berücksichtigt.
 
+--- Version 0.727
+
+Es wurde ein Fehler im Zusammenhang mit Erebos Höllenfeuer-Aura behoben.
+
+Es wurden einige Änderungen an Dovbars Götterdämmerung vorgenommen. Der Schaden wird nun direkt nach Dovbars Tod verteilt anstatt nach Beendigung des Zeitfensters.
+Das Zeitfenster der Fähigkeit wurde auf 4 Sekunden erhöht. Reichweite und Schaden skalieren nun mit der Differenz Fähigkeitenaktivierung -> Todeszeitpunkt
+Der Schaden der Fähigkeit an Gebäuden wurde erhöht.
+
+Es wurde ein Fehler im Zusammenhang mit den Soldaten der Anführer der Banditen behoben.

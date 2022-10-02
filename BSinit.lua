@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.726
+	BS.Version = 0.727
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -340,6 +340,7 @@
 			"GUIAction",
 			"LocalMusic",
 			"VersionCheck",
+			"Hero13",
 			"Hero14",
 			"VictoryStatue3",
 			"VictoryStatue4",

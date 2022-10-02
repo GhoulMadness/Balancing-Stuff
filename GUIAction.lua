@@ -341,19 +341,17 @@ function GUIAction_MercenaryTower(_ucat)
 	Logic.FillSoldierCostsTable( PlayerID, _ucat, InterfaceGlobals.CostTable )
 	
 	
-		if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then
-			if _ucat ~= UpgradeCategories.LeaderElite then
-				-- Yes
-				
-				GUI.BuyLeader(MercID, _ucat)
-				gvMercenaryTower.LastTimeUsed = Logic.GetTime()
-				GUI.DeselectEntity(MercID)
-				GUI.SelectEntity(MercID)
-			else
-	
-				if (Logic.GetPlayersGlobalResource(PlayerID,ResourceType.SilverRaw) + Logic.GetPlayersGlobalResource(PlayerID,ResourceType.Silver)) >= 80 then	
-				-- Yes
-				
+	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then
+		if _ucat ~= UpgradeCategories.LeaderElite then
+			-- Yes			
+			GUI.BuyLeader(MercID, _ucat)
+			gvMercenaryTower.LastTimeUsed = Logic.GetTime()
+			GUI.DeselectEntity(MercID)
+			GUI.SelectEntity(MercID)
+		else
+
+			if (Logic.GetPlayersGlobalResource(PlayerID,ResourceType.SilverRaw) + Logic.GetPlayersGlobalResource(PlayerID,ResourceType.Silver)) >= 80 then	
+				-- Yes			
 				GUI.BuyLeader(MercID, _ucat)
 				gvMercenaryTower.LastTimeUsed = Logic.GetTime()
 				GUI.DeselectEntity(MercID)
@@ -387,60 +385,44 @@ function GUIAction_ChangeToSpecialWeather(_weathertype,_EntityID)
 					
 	else
 		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/GUI_WeathermashineNotReady"))
-	end
-	
+	end	
 end
 function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
 
-	if Logic.GetEntityType(_EntityID) ~= Entities.PB_WeatherTower1 then
-	
-		return
-		
+	if Logic.GetEntityType(_EntityID) ~= Entities.PB_WeatherTower1 then	
+		return		
 	end
 	
-	Logic.AddWeatherElement(2,120,0,11,5,15)
-	
+	Logic.AddWeatherElement(2,120,0,11,5,15)	
 	Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetEnergyRequiredForWeatherChange()))
 	
 	--in case the player still has energy left, bring him down to zero!
-	if Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy ) > Logic.GetEnergyRequiredForWeatherChange() then
-	
-		Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy )))
-		
+	if Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy ) > Logic.GetEnergyRequiredForWeatherChange() then	
+		Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy )))		
 	end
 	
-	if EMS then
-	
-		EMS.RF.WLT.LockWeatherChange()
-		
+	if EMS then	
+		EMS.RF.WLT.LockWeatherChange()		
 	end
 	
-	GUI.DeselectEntity(_EntityID)
-	
+	GUI.DeselectEntity(_EntityID)	
 	GUI.SelectEntity(_EntityID)
 	
 end	
 -----------------------------------------------------------------------------------------------------------------------------
-gvHero13 = {LastTimeStoneArmorUsed = - 6000,LastTimeDivineJudgmentUsed = - 6000}
-
 function GUIAction_Hero13StoneArmor()
 
-	local heroID = GUI.GetSelectedEntity()
+	local heroID = GUI.GetSelectedEntity()	
+	local player = Logic.EntityGetPlayer(heroID)	
+	local starttime = Logic.GetTimeMs()	
+	gvHero13.LastTimeUsed.StoneArmor = starttime/1000
 	
-	local player = Logic.EntityGetPlayer(heroID)
-	
-	local starttime = Logic.GetTimeMs()
-	
-	gvHero13.LastTimeStoneArmorUsed = starttime/1000
-	
-	if CNetwork then
-	
-		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID);
-		
+	if CNetwork then	
+		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID);		
 	else
-	
-		_G["Hero13TriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger_"..player, 1, nil, {heroID,starttime})
-		
+		if not gvHero13.TriggerIDs.StoneArmor[player] then
+			gvHero13.TriggerIDs.StoneArmor[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger", 1, nil, {heroID,starttime})		
+		end
 	end
 	
 end
@@ -457,28 +439,24 @@ function GUIAction_Hero13DivineJudgment()
 	
 	if heroID ~= nil then
 	
-		local player = Logic.EntityGetPlayer(heroID)
+		local player = Logic.EntityGetPlayer(heroID)		
+		local basedmg = Logic.GetEntityDamage(heroID)		
+		local starttime = Logic.GetTimeMs()		
+		local posX,posY = Logic.GetEntityPosition(heroID)		
+		gvHero13.LastTimeUsed.DivineJudgment = starttime/1000
 		
-		local basedmg = Logic.GetEntityDamage(heroID)
-		
-		local starttime = Logic.GetTimeMs()
-		
-		local posX,posY = Logic.GetEntityPosition(heroID)
-		
-		gvHero13.LastTimeDivineJudgmentUsed = starttime/1000
-		
-		if CNetwork then
-		
-			CNetwork.SendCommand("Ghoul_Hero13DivineJudgment",GUI.GetPlayerID(),heroID);
-			
+		if CNetwork then		
+			CNetwork.SendCommand("Ghoul_Hero13DivineJudgment",GUI.GetPlayerID(),heroID);			
 		else
 		
 			Logic.CreateEffect(GGL_Effects.FXKerberosFear,posX,posY)
 			
-			_G["Hero13DMGBonusTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger_"..player, 1, nil, {heroID,starttime})
-			
-			_G["Hero13JudgmentTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger_"..player, 1, nil, {heroID,basedmg,posX,posY,starttime})
-			
+			if not gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] then
+				gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger", 1, nil, {heroID,starttime})
+			end
+			if not gvHero13.TriggerIDs.DivineJudgment.Judgment[player] then
+				gvHero13.TriggerIDs.DivineJudgment.Judgment[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger", 1, nil, {heroID,basedmg,posX,posY,starttime})
+			end
 		end
 		
 	end
@@ -506,14 +484,10 @@ function GUIAction_Hero14CallOfDarkness()
 end
 function GUIAction_Hero14LifestealAura()
 	
-	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
-	
-	local player = Logic.EntityGetPlayer(heroID)
-	
-	local starttime = Logic.GetTime()
-	
-	gvHero14.LifestealAura.LastTimeUsed = starttime
-	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]	
+	local player = Logic.EntityGetPlayer(heroID)	
+	local starttime = Logic.GetTime()	
+	gvHero14.LifestealAura.LastTimeUsed = starttime	
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
 	
 	if CNetwork then
@@ -522,10 +496,9 @@ function GUIAction_Hero14LifestealAura()
 			
 	else
 	
-		_G["Hero14LifestealTriggerID_"..player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger_"..player, 1, nil, {heroID,starttime})
+		gvHero14.LifestealAura.TriggerIDs[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {heroID,starttime})
 	
-	end
-	
+	end	
 end
 function GUIAction_Hero14RisingEvil()
 	
