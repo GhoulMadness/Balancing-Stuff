@@ -963,12 +963,9 @@ Hero14_Lifesteal_Trigger = function(_heroID,_starttime)
 	
 	local heroplayer = Logic.EntityGetPlayer(_heroID)
 
-	if not Logic.IsEntityAlive(_heroID) then
-	
-		gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil
-		
-		return true
-	
+	if not Logic.IsEntityAlive(_heroID) then	
+		gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil		
+		return true	
 	else
 	
 		local attacker = Event.GetEntityID1()		
@@ -990,68 +987,47 @@ Hero14_Lifesteal_Trigger = function(_heroID,_starttime)
 		
 		end
 		
-		if time <= (_starttime + duration) then
-	
-			if attackerplayer == heroplayer then
-			
-				if distance <= gvHero14.LifestealAura.Range then
-				
-					if currhp < maxhp then
-					
-						if cat == 1 then
-					
-							Logic.HealEntity(attacker, math.ceil(dmg * gvHero14.LifestealAura.LifestealAmount * gvHero14.LifestealAura.FogPeopleBonusFactor * daytimefactor))							
-							
-						else
-						
-							Logic.HealEntity(attacker, math.floor(dmg * gvHero14.LifestealAura.LifestealAmount))
-							
+		if time <= (_starttime + duration) then	
+			if attackerplayer == heroplayer then			
+				if distance <= gvHero14.LifestealAura.Range then				
+					if currhp < maxhp then					
+						if cat == 1 then					
+							Logic.HealEntity(attacker, math.ceil(dmg * gvHero14.LifestealAura.LifestealAmount * gvHero14.LifestealAura.FogPeopleBonusFactor * daytimefactor))														
+						else						
+							Logic.HealEntity(attacker, math.floor(dmg * gvHero14.LifestealAura.LifestealAmount))							
 						end
 						
 						Logic.CreateEffect(GGL_Effects.FXSalimHeal, attackerpos.X, attackerpos.Y)
 				
-					end
-				
-				end
-				
+					end				
+				end				
 			end
 			
 		else
 		
-			gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil
+			gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil			
+			return true		
 			
-			return true
-			
-		end
-		
-	end
-	
+		end		
+	end	
 end
 	
 Hero14_MovementEffects_Player = function(_EntityID)
 	
 	if IsNighttime() then
 	
-		if Logic.IsEntityAlive(_EntityID) then
-		
-			local posX, posY = Logic.GetEntityPosition(_EntityID)
-			
+		if Logic.IsEntityAlive(_EntityID) then		
+			local posX, posY = Logic.GetEntityPosition(_EntityID)			
 			local playerID = Logic.EntityGetPlayer(_EntityID)
 
-			if Logic.GetCurrentTaskList(_EntityID) == "TL_HERO14_WALK" then
-							
-				Logic.CreateEffect(GGL_Effects.FXHero14_Lightning, posX, posY)
-				
+			if Logic.GetCurrentTaskList(_EntityID) == "TL_HERO14_WALK" then							
+				Logic.CreateEffect(GGL_Effects.FXHero14_Lightning, posX, posY)				
 				Logic.CreateEffect(gvHero14.MovementEffects[math.random(1,4)], posX, posY)		
-
 				gvHero14.NighttimeAura.TriggerIDs.BurnEffect[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_BurnEffect_ApplyDamage",1,{},{_EntityID, playerID, posX, posY})
 				
-			elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" or Logic.IsEntityMoving(_EntityID) == 0 then
-			
-				if Counter.Tick2("Hero14_MovementEffects_Player"..i.."_CounterID", 3) then
-			
-					Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)
-					
+			elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" or Logic.IsEntityMoving(_EntityID) == 0 then			
+				if Counter.Tick2("Hero14_MovementEffects_Player"..i.."_CounterID", 3) then			
+					Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)					
 				end
 			
 			end
@@ -1079,16 +1055,12 @@ end
 
 function OnErebos_Created()
 
-	local entityID = Event.GetEntityID()
-	
-    local entityType = Logic.GetEntityType(entityID)
-	
+	local entityID = Event.GetEntityID()	
+    local entityType = Logic.GetEntityType(entityID)	
     local playerID = GetPlayer(entityID)
 	
-	if entityType == Entities.PU_Hero14 then    
-	
-		gvHero14.NighttimeAura.TriggerIDs.Start[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player",1,{},{entityID})
-		
+	if entityType == Entities.PU_Hero14 then    	
+		gvHero14.NighttimeAura.TriggerIDs.Start[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player",1,{},{entityID})		
 	end
 	
 end
@@ -1283,61 +1255,47 @@ end
 
 function OnArchers_TowerDestroyed()
 	
-    local entityID = Event.GetEntityID()
-	
+    local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)
 	
-    if entityType == Entities.PB_Archers_Tower then       
+    if entityType == Entities.PB_Archers_Tower then       		
+		for i = 1,gvArchers_Tower.MaxSlots do	
 		
-		for i = 1,gvArchers_Tower.MaxSlots do
-		
-			if gvArchers_Tower.SlotData[entityID][i] ~= nil then
-			
+			if gvArchers_Tower.SlotData[entityID][i] ~= nil then			
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[entityID][i])
-			
-				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entityID][i], EntityCategories.Cannon) ~= 1 then
 				
-					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entityID][i])}
-					
+				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entityID][i], EntityCategories.Cannon) ~= 1 then				
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entityID][i])}					
 					table.remove(soldiers,1)					
 					
-					for k = 1,table.getn(soldiers) do
-					
-						Logic.ResumeEntity(soldiers[k])
-					
+					for k = 1,table.getn(soldiers) do					
+						Logic.ResumeEntity(soldiers[k])					
 					end
 				
 				end
 				
 				Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[entityID][i])
 				
-				if _G["Archers_Tower_RemoveTroopTriggerID_"..entityID.."_"..i] then
-				
+				if _G["Archers_Tower_RemoveTroopTriggerID_"..entityID.."_"..i] then				
 					Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..entityID.."_"..i])
 				end
 				
-				if _G["Archers_Tower_AddTroopTriggerID_"..entityID.."_"..i] then
-				
-					Trigger.UnrequestTrigger(_G["Archers_Tower_AddTroopTriggerID_"..entityID.."_"..i])
-				
+				if _G["Archers_Tower_AddTroopTriggerID_"..entityID.."_"..i] then				
+					Trigger.UnrequestTrigger(_G["Archers_Tower_AddTroopTriggerID_"..entityID.."_"..i])				
 				end
 				
-				if gvArchers_Tower.CurrentlyClimbing[entityID] then
-				
-					gvArchers_Tower.CurrentlyClimbing[entityID] = nil
-					
+				if gvArchers_Tower.CurrentlyClimbing[entityID] then				
+					gvArchers_Tower.CurrentlyClimbing[entityID] = nil					
 				end
 				
-				gvArchers_Tower.SlotData[entityID][i] = nil
-				
+				gvArchers_Tower.SlotData[entityID][i] = nil				
 				gvArchers_Tower.CurrentlyUsedSlots[entityID] = nil
 				
 			end
 		
 		end
 		
-		gvArchers_Tower.SlotData[entityID] = nil
-		
+		gvArchers_Tower.SlotData[entityID] = nil		
 		gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] = gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] - 1
 		
 	end
@@ -1346,182 +1304,151 @@ end
 
 function OnArchers_TowerCreated()
 	
-    local entityID = Event.GetEntityID()
-	
+    local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)
 	
-    if entityType == Entities.PB_Archers_Tower then       
-		
-		gvArchers_Tower.CurrentlyUsedSlots[entityID] = 0
-		
-		gvArchers_Tower.SlotData[entityID] = {}		
-		
-		gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] = gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] + 1
-		
+    if entityType == Entities.PB_Archers_Tower then       		
+		gvArchers_Tower.CurrentlyUsedSlots[entityID] = 0		
+		gvArchers_Tower.SlotData[entityID] = {}				
+		gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] = gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] + 1		
 	end
 
 end
 
 function OnArchers_Tower_OccupiedTroopDied()
 
-	local entityID = Event.GetEntityID()
-	
-	local playerID = Logic.EntityGetPlayer(entityID)
-	
+	local entityID = Event.GetEntityID()	
+	local playerID = Logic.EntityGetPlayer(entityID)	
 	local pos = GetPosition(entityID)
 	
-	if playerID ~= 0 then
-	
-		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) ~= 0 then
-	
-			if Logic.IsLeader(entityID) == 1 then
-		
+	if playerID ~= 0 then	
+		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) ~= 0 then	
+			if Logic.IsLeader(entityID) == 1 then		
 				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
 					
-					for k,v in pairs(gvArchers_Tower.SlotData) do
-						
+					for k,v in pairs(gvArchers_Tower.SlotData) do						
 						local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
 				
-						if  slot ~= nil then
-						
+						if  slot ~= nil then						
 							gvArchers_Tower.SlotData[k][slot] = nil
 							
-							if gvArchers_Tower.CurrentlyUsedSlots[k] ~= nil then
-								
-								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
-								
+							if gvArchers_Tower.CurrentlyUsedSlots[k] ~= nil then								
+								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1								
 							end
 							
-							if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
-							
-								Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])
-								
+							if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then							
+								Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])								
 							end
 							
-						end
-						
-					end
-					
-				end
-				
+						end						
+					end					
+				end				
 			end
 			
 		else
 		
-			if playerID == 1 then
-			
-				if Logic.IsLeader(entityID) == 1 then
-		
-					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
+			if playerID == 1 then			
+				if Logic.IsLeader(entityID) == 1 then		
+					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then		
 					
-						for k,v in pairs(gvArchers_Tower.SlotData) do
-						
+						for k,v in pairs(gvArchers_Tower.SlotData) do						
 							local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
 					
-							if  slot ~= nil then
-							
+							if  slot ~= nil then							
 								gvArchers_Tower.SlotData[k][slot] = nil
 								
-								if gvArchers_Tower.CurrentlyUsedSlots[k] then
-									
-									gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
-									
+								if gvArchers_Tower.CurrentlyUsedSlots[k] then									
+									gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1									
 								end
 								
-								if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then
-								
-									Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])
-									
+								if _G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot] then								
+									Trigger.UnrequestTrigger(_G["Archers_Tower_RemoveTroopTriggerID_"..k.."_"..slot])									
 								end
 								
-							end
-							
-						end
-						
-					end
-					
-				end
-				
-			end
-		
-		end
-		
-	end
-	
+							end							
+						end						
+					end					
+				end				
+			end		
+		end		
+	end	
 end
 
 function OnArchers_Tower_OccupiedTroopAttacked()
 
 	local attacker = Event.GetEntityID1()
 	
-	if Logic.GetEntityType(attacker) == Entities.PV_Cannon2 or Logic.GetEntityType(attacker) == Entities.PV_Cannon4 then
-		
-		local target = Event.GetEntityID2();
-				
+	if Logic.GetEntityType(attacker) == Entities.PV_Cannon2 or Logic.GetEntityType(attacker) == Entities.PV_Cannon4 then		
+		local target = Event.GetEntityID2();				
 		local playerID = Logic.EntityGetPlayer(target)
 		
 		if gvArchers_Tower.AmountOfTowers[playerID] then
-			
-			if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
-			
-				local posX,posY = Logic.GetEntityPosition(target)
-				
-				local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]
-				
+		
+			if gvArchers_Tower.AmountOfTowers[playerID] > 0 then			
+				local posX,posY = Logic.GetEntityPosition(target)			
+				local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]				
 				local soldiers = {}
 				
-				if towerID then
+				if towerID then	
 				
-					for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do
-					
+					for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do					
 						soldiers[k] = {Logic.GetSoldiersAttachedToLeader(v)}
-
 						table.remove(soldiers[k],1)
 						
 						for n,m in pairs(soldiers[k]) do
 						
-							if target == soldiers[k][n] then
-							
+							if target == soldiers[k][n] then							
 								local dmg = CEntity.TriggerGetDamage();
 								
-								if dmg > gvArchers_Tower.OccupiedTroop.DamageTreshold then
-								
-									local attack = Logic.GetEntityDamage(attacker)
-									
-									local armor = Logic.GetEntityArmor(target)
-									
-									CEntity.TriggerSetDamage(math.max(math.ceil(attack*gvArchers_Tower.OccupiedTroop.AverageDamageFactor-armor),1))
-									
+								if dmg > gvArchers_Tower.OccupiedTroop.DamageTreshold then								
+									local attack = Logic.GetEntityDamage(attacker)									
+									local armor = Logic.GetEntityArmor(target)									
+									CEntity.TriggerSetDamage(math.max(math.ceil(attack*gvArchers_Tower.OccupiedTroop.AverageDamageFactor-armor),1))									
 								end
 								
-							end
-							
-						end
-						
-					end
-					
-				end
-					
-			end
-			
-		end
-		
-	end
-		
+							end							
+						end						
+					end					
+				end					
+			end			
+		end		
+	end		
 end
 
 function OnVictoryStatue3Destroyed()
 
-	local entityID = Event.GetEntityID()
-	
-    local entityType = Logic.GetEntityType(entityID)
-	
+	local entityID = Event.GetEntityID()	
+    local entityType = Logic.GetEntityType(entityID)	
     local playerID = GetPlayer(entityID)
 	
-	if entityType == Entities.PB_VictoryStatue3 then    
-	
-		gvVictoryStatue3.Amount[playerID] = gvVictoryStatue3.Amount[playerID] - 1
-		
+	if entityType == Entities.PB_VictoryStatue3 then    	
+		gvVictoryStatue3.Amount[playerID] = gvVictoryStatue3.Amount[playerID] - 1		
 	end
 	
+end
+
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 500, 
+								[Entities.PV_Cannon4] = 500, 
+								[Entities.PV_Catapult] = 500}
+for k,v in pairs(gvAntiBuildingCannonsRange) do
+	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k) 
+end
+
+function AntiBuildingCannon_RedirectTarget()
+
+	local attacker = Event.GetEntityID1()
+	local target = Event.GetEntityID2()
+	local attype = Logic.GetEntityType(attacker)
+	
+	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(Logic.EntityGetPlayer(attacker)) == 0 then
+		for k,v in pairs(gvAntiBuildingCannonsRange) do
+			if attype == k and Logic.IsBuilding(target) == 0 then
+				local building = BS.CheckForNearestHostileBuildingInAttackRange(attacker, v)
+				if building then
+					Logic.GroupAttack(attacker, building)
+				end
+			end
+		end
+	end
+
 end

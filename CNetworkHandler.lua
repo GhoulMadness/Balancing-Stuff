@@ -426,22 +426,18 @@
 		CNetwork.SetNetworkHandler("Ghoul_Forester_WorkChange", 
 			function(name, _playerID, _id, _flag) 
 			
-				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
-				
-					CLogger.Log("Ghoul_Forester_WorkChange", name, _playerID, _id, _flag)
-    
-					-- execute stuff
-					
-					Forester.WorkChange(_id, _flag)
-					
+				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 				
+					CLogger.Log("Ghoul_Forester_WorkChange", name, _playerID, _id, _flag)   
+					-- execute stuff					
+					Forester.WorkChange(_id, _flag)					
 				end
 				
 			end
 			
 		)
 		
-		--[[CNetwork.SetNetworkHandler("BuyHero",
-			function(name, _playerID, _0, _type, _buildingID)
+		CNetwork.SetNetworkHandler("BuyHero",
+			function(name, _playerID, _buildingID, _type)
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 					if _type == Entities.PU_Hero14 then
 						local count = 0
@@ -453,16 +449,14 @@
 							end
 						end
 						if count == 3 then
-							CLogger.Log("BuyHero", _playerID, _type, _buildingID)
-							SendEvent.BuyHero(_playerID, _type, _buildingID)
+							SendEvent.BuyHero(_playerID, _buildingID, _type)
 						end
 					else
-						CLogger.Log("BuyHero", _playerID, _type, _buildingID)
-						SendEvent.BuyHero(_playerID, _type, _buildingID)
+						SendEvent.BuyHero(_playerID, _buildingID, _type)
 					end
 				end
 			end
-		)]]
+		)
 		
 		CommandCallback_PlaceBuilding = function(_name, _player, _upgradeCategory, _x, _y, _rotation, ...)
 			for i = 1,4 do 

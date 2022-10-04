@@ -330,8 +330,8 @@
 			"Tower",
 			"Archers_Tower",
 			"Scaremonger",
-			"Trigger",
 			"Comforts",
+			"Trigger",
 			"CMod_Additions",
 			"InterfaceTools",
 			"GameCallbacks",
@@ -417,6 +417,8 @@
 	StartSimpleJob("Lightning_Job")
 	--Control Siversmith Grievance
 	StartSimpleJob("ControlSiversmithGrievance")
+	--Trigger for AI cannon target redirection
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AntiBuildingCannon_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
 	--internal payday activation (for treasury technology - debenture)
 	if CUtil then 

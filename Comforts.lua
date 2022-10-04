@@ -2044,3 +2044,49 @@ function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)
 		end
 	end
 end
+
+BS.GetAllEnemyPlayerIDs = function(_playerID)
+	
+	local playerIDTable = {}
+	local maxplayers
+	
+	if CNetwork then 
+		maxplayers = 16
+	else
+		maxplayers = 8
+	end
+	
+	for i = 1, maxplayers do
+		if Logic.GetDiplomacyState(i, _playerID) == Diplomacy.Hostile then
+			table.insert(playerIDTable, i)
+		end
+	end
+	
+	return playerIDTable
+	
+end
+
+BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
+
+	if not Logic.IsEntityAlive(_entity) then	
+		return
+	end
+	
+	local playerID = Logic.EntityGetPlayer(_entity)
+	local posX, posY = Logic.GetEntityPosition(_entity)
+	local distancepow2table	= {}
+	
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(playerID))), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(posX, posY, _range)) do
+		local _X, _Y = Logic.GetEntityPosition(eID)	
+		local distancepow2 = (_X - posX)^2 + (_Y - posY)^2		
+		table.insert(distancepow2table, {id = eID, dist = distancepow2})
+	end
+			
+	table.sort(distancepow2table, function(p1, p2)
+		return p1.dist < p2.dist
+	end)
+	
+	if distancepow2table[1] then
+		return distancepow2table[1].id 
+	end
+end
