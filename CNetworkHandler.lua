@@ -195,8 +195,11 @@
 					-- update cooldown.
 					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.StoneArmor * 1000)
 					-- execute stuff
-					if not gvHero13.TriggerIDs.StoneArmor[_playerID] then
-						gvHero13.TriggerIDs.StoneArmor[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger", 1, nil, {_heroID,starttime})
+					if not gvHero13.TriggerIDs.StoneArmor.DamageStoring[_playerID] then
+						gvHero13.TriggerIDs.StoneArmor.DamageStoring[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_StoreDamage", 1, nil, {_heroID,starttime})
+					end
+					if not gvHero13.TriggerIDs.StoneArmor.DamageApply[_playerID] then
+						gvHero13.TriggerIDs.StoneArmor.DamageApply[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_StoneArmor_ApplyDamage", 1, nil, {_heroID,starttime})
 					end
 				end  
 				
@@ -437,8 +440,8 @@
 			
 		)
 		
-		CNetwork.SetNetworkHandler("BuyHero",
-			function(name, _playerID, _type, _buildingID)
+		--[[CNetwork.SetNetworkHandler("BuyHero",
+			function(name, _playerID, _0, _type, _buildingID)
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 					if _type == Entities.PU_Hero14 then
 						local count = 0
@@ -459,7 +462,7 @@
 					end
 				end
 			end
-		)
+		)]]
 		
 		CommandCallback_PlaceBuilding = function(_name, _player, _upgradeCategory, _x, _y, _rotation, ...)
 			for i = 1,4 do 

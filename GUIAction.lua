@@ -420,8 +420,11 @@ function GUIAction_Hero13StoneArmor()
 	if CNetwork then	
 		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID);		
 	else
-		if not gvHero13.TriggerIDs.StoneArmor[player] then
-			gvHero13.TriggerIDs.StoneArmor[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_Trigger", 1, nil, {heroID,starttime})		
+		if not gvHero13.TriggerIDs.StoneArmor.DamageStoring[player] then
+			gvHero13.TriggerIDs.StoneArmor.DamageStoring[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_StoreDamage", 1, nil, {heroID,starttime})		
+		end
+		if not gvHero13.TriggerIDs.StoneArmor.DamageApply[player] then
+			gvHero13.TriggerIDs.StoneArmor.DamageApply[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_StoneArmor_ApplyDamage", 1, nil, {heroID,starttime})
 		end
 	end
 	
