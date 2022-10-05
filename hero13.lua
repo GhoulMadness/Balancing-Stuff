@@ -5,5 +5,5 @@ gvHero13 = {LastTimeUsed = {StoneArmor = - 6000, DivineJudgment = - 6000}, Trigg
 			GetRechargeButtonByAbilityName = function(_name)
 				return gvHero13.AbilityNameRechargeButtons[_name]
 			end,
-			StoneArmor = {}
+			StoneArmor = {}, DivineJudgment = {}
 			}
