@@ -846,3 +846,16 @@ function GUIAction_Forester_WorkChange(_id, _flag)
 		end
 	end
 end
+-- Buy a hero
+function BuyHeroWindow_Action_BuyHero(_HeroEntityType)
+
+	local PlayerID = GUI.GetPlayerID()
+	local BuildingID = GUI.GetSelectedEntity() or 0
+	GUI.BuyHero(PlayerID, _HeroEntityType, BuildingID)
+	
+	XGUIEng.ShowWidget(gvGUI_WidgetID.BuyHeroWindow, 0)
+	
+	--Update all buttons in the visible container
+	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
+	
+end
