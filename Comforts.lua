@@ -2090,3 +2090,10 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 		return distancepow2table[1].id 
 	end
 end
+
+BS.GetTableStrByHeroType = function(_type)
+	
+	local typename = Logic.GetEntityTypeName(_type)
+	local s, e = string.find(typename, "Hero")	
+	return string.sub(typename, s)
+end

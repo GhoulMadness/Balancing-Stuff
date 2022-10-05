@@ -85,7 +85,7 @@ function GUIUpdate_Experience()
 	
 end
 
-BS.Time = {DefaultValues = {secondsperday = 1440, daytimebegin = 8, tutorialoffset = 34}, calculation = {dayinsec = 60*60*24, hourinminutes = 60*60}}
+BS.Time = {DefaultValues = {secondsperday = 1440, daytimebegin = 8, tutorialoffset = 34}, calculation = {dayinsec = 60*60*24, hourinminutes = 60*60}, IngameTimeSec = 0}
 function GUIUpdate_Time()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
@@ -95,12 +95,12 @@ function GUIUpdate_Time()
 	local GameTime = Logic.GetTime() - (gvDayCycleStartTime or 0)
 	
 	if gvTutorialFlag ~= nil then	
-		GameTime = gvIngameTimeSec - gvSecondsDuringBreak - BS.Time.DefaultValues.tutorialoffset		
+		GameTime = BS.Time.IngameTimeSec - BS.Time.DefaultValues.tutorialoffset		
 	end
 	
 	local TimeMinutes = math.floor(GameTime/(BS.Time.calculation.hourinminutes*daytimefactor))	
 	--Tag startet um 8 Uhr morgens	
-	local TimeHours = daytimebegin			
+	local TimeHours = BS.Time.DefaultValues.daytimebegin			
 	local TimeMinutesText = ""	
 	local TimeHoursText = ""	
 	while TimeMinutes > 59 do 

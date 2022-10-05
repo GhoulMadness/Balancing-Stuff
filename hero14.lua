@@ -160,5 +160,6 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			AbilityNameRechargeButtons = {CallOfDarkness = "Hero14_RechargeCallOfDarkness", LifestealAura = "Hero14_RechargeLifestealAura", RisingEvil = "Hero14_RechargeRisingEvil"},				
 			GetRechargeButtonByAbilityName = function(_name)
 				return gvHero14.AbilityNameRechargeButtons[_name]
-			end
+			end,
+			TriggerIDs = {Resurrection = {}}
 			}

@@ -236,8 +236,6 @@ function GameCallback_GUI_SelectionChanged()
 		
 end
 gvGameSpeed = 1
-gvBreakCheck = 0
-gvSecondsDuringBreak = 0
 function GameCallback_GameSpeedChanged( _Speed )
 --GameCallback_GameSpeedChangedOrig(_Speed)
 local Speed = _Speed * 1000
@@ -251,7 +249,6 @@ local Speed = _Speed * 1000
     else
     
 		gvGameSpeed = _Speed
-		gvBreakCheck = 0
 		for i = 1,5 do
 			XGUIEng.ShowWidget("PauseScreen"..i,0)   
 		end

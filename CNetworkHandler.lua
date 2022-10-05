@@ -184,16 +184,16 @@
 				
 					CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID)  					
 					-- Cooldown handling
-					gvHero13StoneArmor_NextCooldown = gvHero13StoneArmor_NextCooldown or {} 					
+					gvHero13.StoneArmor.NextCooldown = gvHero13.StoneArmor.NextCooldown or {} 					
 					local starttime = Logic.GetTimeMs()	
 					
-					if gvHero13StoneArmor_NextCooldown[_playerID] then					
-						if gvHero13StoneArmor_NextCooldown[_playerID] > starttime then						
+					if gvHero13.StoneArmor.NextCooldown[_playerID] then					
+						if gvHero13.StoneArmor.NextCooldown[_playerID] > starttime then						
 							return 							
 						end 						
 					end 					
 					-- update cooldown.
-					gvHero13StoneArmor_NextCooldown[_playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.StoneArmor * 1000)
+					gvHero13.StoneArmor.NextCooldown[_playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.StoneArmor * 1000)
 					-- execute stuff
 					if not gvHero13.TriggerIDs.StoneArmor.DamageStoring[_playerID] then
 						gvHero13.TriggerIDs.StoneArmor.DamageStoring[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_StoreDamage", 1, nil, {_heroID,starttime})

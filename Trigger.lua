@@ -1,6 +1,14 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Drakes Headshot ----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+gvHero10 = {SnipeAbilityValues = {CriticalRange = 800, AboveCriticalRange = {MaxHealthDMG = 0.36, DMGMultiplier = 4.8}, BelowCriticalRange = {MaxHealthDMG = 0.12, DMGMultiplier = 1.6}},
+			GetCriticalStateByDistance = function(_distance)
+				if _distance >= gvHero10.SnipeAbilityValues.CriticalRange then
+					return "AboveCriticalRange"
+				else
+					return "BelowCriticalRange"
+				end
+			end}
 function DrakeHeadshotDamage() 
 
 	local attacker = Event.GetEntityID1()	
@@ -15,12 +23,10 @@ function DrakeHeadshotDamage()
 	local attackerdmg = Logic.GetEntityDamage(attacker)
 	
 	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" then	
-		if max == dmg then 		
-			if math.abs(GetDistance(attackerpos,targetpos)) >= 800 then			
-				CEntity.TriggerSetDamage(math.floor((max * 0.36) + (attackerdmg*4.8)))			
-			else			
-				CEntity.TriggerSetDamage(math.floor((max * 0.12) + (attackerdmg*1.6)))		
-			end			
+		if max == dmg then 	
+			local distance = math.abs(GetDistance(attackerpos,targetpos))
+			local str = gvHero10.GetCriticalStateByDistance(distance)
+			CEntity.TriggerSetDamage(math.floor((max * gvHero10.SnipeAbilityValues[str].MaxHealthDMG) + (attackerdmg*gvHero10.SnipeAbilityValues[str].DMGMultiplier)))			
 		end	
 	end	
 end
@@ -28,15 +34,9 @@ end
 ------------------------------------ Trigger for Marys/Kalas Poison ----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 gvPoisonDoT = {}
-
 --Heroes that are using poison (so these are relevant for the DoT effect)
-gvPoisonDoT.PoisonUsers = {
-						
-							[Entities.CU_Mary_de_Mortfichet] = true,
-	
-							[Entities.CU_Evil_Queen] = true
-							
-							}
+gvPoisonDoT.PoisonUsers = {	[Entities.CU_Mary_de_Mortfichet] = true,
+							[Entities.CU_Evil_Queen] = true	}
 							
 gvPoisonDoT.GetNeededTaskByEntityType = function(_type)
 
@@ -46,9 +46,6 @@ gvPoisonDoT.GetNeededTaskByEntityType = function(_type)
 		task = "TL_BATTLE_POISON"		
 	elseif _type == Entities.CU_Evil_Queen then	
 		task = "TL_BATTLE_SPECIAL"		
-	else	
-		task = ""		
-		LuaDebugger.Log(_type.." verwendet keinen Gift-Effekt. Task konnte nicht bestimmt werden!")		
 	end
 	
 	return task
@@ -127,6 +124,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Yukis Shuriken -----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+gvHero11 = {ShurikenValues = {CriticalAngle = 45, DMGMultiplier = 2, AmpDMGMultiplier = 5, MaxDelay = 10, CooldownReset = 15}}
 function YukiShurikenBonusDamage() 
 
 	local attacker = Event.GetEntityID1()	
@@ -141,17 +139,17 @@ function YukiShurikenBonusDamage()
 	local dmgtype = CEntity.HurtTrigger.GetDamageSourceType()
 	
 	if attype == Entities.PU_Hero11 and dmgtype ~= 0 then	
-		if cooldown <= 10 then		
-			if math.abs(rotattacker - rottarget) <= 45 then		
-				ampdmg = math.floor(dmg * 5)									
+		if cooldown <= gvHero11.ShurikenValues.MaxDelay then		
+			if math.abs(rotattacker - rottarget) <= gvHero11.ShurikenValues.CriticalAngle then		
+				ampdmg = math.floor(dmg * gvHero11.ShurikenValues.AmpDMGMultiplier)									
 			else			
-				ampdmg = math.floor(dmg * 2)									
+				ampdmg = math.floor(dmg * gvHero11.ShurikenValues.DMGMultiplier)									
 			end
 			
 			CEntity.TriggerSetDamage(ampdmg)
 				
 			if ampdmg >= maxhp then			
-				Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + 15, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))			
+				Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + gvHero11.ShurikenValues.CooldownReset, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))			
 			end			
 		end		
 	end	
@@ -159,6 +157,9 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Kerberos attacks ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+gvHero7 = {ArmorDiffPassive = {DMGMultiplierAddPerDiff = 0.2, CooldownResetPerDiff = {	[Abilities.AbilityInflictFear] = 1,
+																						[Abilities.AbilityRangedEffect] = 3}},
+			Abilities = {Abilities.AbilityInflictFear, Abilities.AbilityRangedEffect}}
 function KerberosAttackAdditions() 
 
 	local attacker = Event.GetEntityID1()	
@@ -171,14 +172,12 @@ function KerberosAttackAdditions()
 	local ampdmg 
 	
 	if attype == Entities.CU_BlackKnight and defattacker > deftarget then	
-		ampdmg = dmg * (1 + (0.2 * defdiff))
-	
-		if Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear) ~= Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityInflictFear) then		
-			Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityInflictFear, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear) + defdiff, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityInflictFear)))			
-		end
+		ampdmg = dmg * (1 + (gvHero7.ArmorDiffPassive.DMGMultiplierAddPerDiff * defdiff))
 		
-		if Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityRangedEffect) ~= Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityRangedEffect) then		
-			Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityRangedEffect, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityRangedEffect) + (3 * defdiff), Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityRangedEffect)))			
+		for k, v in pairs(gvHero7.Abilities) do
+			if Logic.HeroGetAbiltityChargeSeconds(attacker, v) ~= Logic.HeroGetAbilityRechargeTime(attacker, v) then		
+				Logic.HeroSetAbilityChargeSeconds(attacker, v, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, v) + (defdiff * gvHero7.ArmorDiffPassive.CooldownResetPerDiff[v]), Logic.HeroGetAbilityRechargeTime(attacker, v)))			
+			end
 		end
 		
 		if Logic.GetEntityHealth(attacker) < Logic.GetEntityMaxHealth(attacker) then		
@@ -211,10 +210,10 @@ function CatapultStoneHitEffects()
 	local attype = Logic.GetEntityType(attacker)
 	
 	if attype == Entities.PV_Catapult then	
-		Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,8)],targetpos.X,targetpos.Y)		
+		Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1, table.getn(CatapultStoneOnHitEffects))],targetpos.X,targetpos.Y)		
 	end
 	
-end;
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------- Trigger for Castles (global variables to be find in Castle.lua) --------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -265,8 +264,7 @@ function OnTowerCreated()
 		    
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
-		local pos = {X = posX, Y = posY}
-		
+		local pos = {X = posX, Y = posY}		
 		table.insert(gvTower.PositionTable,pos)
 		
 		if gvTower.AmountOfTowers[playerID] then		
@@ -285,8 +283,7 @@ function OnTowerDestroyed()
 		
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
-		local pos = {X = posX, Y = posY}
-		
+		local pos = {X = posX, Y = posY}		
 		removetablekeyvalue(gvTower.PositionTable,pos)
 		
 		if gvTower.AmountOfTowers[playerID] then		
@@ -307,8 +304,7 @@ function OnVStatue4Created()
 	
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
-		local pos = {X = posX, Y = posY}
-		
+		local pos = {X = posX, Y = posY}		
 		table.insert(gvVStatue4.PositionTable,pos)
 		
 		if gvVStatue4.Amount[playerID] then		
@@ -330,8 +326,7 @@ function OnVStatue4Destroyed()
 	
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
-		local pos = {X = posX, Y = posY}
-	
+		local pos = {X = posX, Y = posY}	
 		removetablekeyvalue(gvVStatue4.PositionTable,pos)
 		
 		if gvVStatue4.Amount[playerID] then		
@@ -369,125 +364,89 @@ end
 function OnHeroDied()
 
 	local attacker = Event.GetEntityID1()	
-    local target = Event.GetEntityID2();	
+    local target = Event.GetEntityID2()
 	local targettype = Logic.GetEntityType(target)	
 	local health = Logic.GetEntityHealth(target)	
 	local damage = CEntity.TriggerGetDamage()	
     local playerID = GetPlayer(target)
 	
-	if targettype == Entities.PU_Hero13 and damage >= health then	
-		_G["Hero13_ResurrectionCheck_Player"..playerID.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero13_ResurrectionCheck_Player"..playerID,1,{},{target})		
-	elseif targettype == Entities.PU_Hero14 and damage >= health then	
-		_G["Hero14_ResurrectionCheck_Player"..playerID.."_TriggerID"] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_ResurrectionCheck_Player"..playerID,1,{},{target})		
+	if (targettype == Entities.PU_Hero13 or targettype == Entities.PU_Hero14) and damage >= health then	
+		local str = BS.GetTableStrByHeroType(targettype)
+		_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{target})			
 	end	
 end
 
-for i = 1,12 do
-
-	_G["Hero13_ResurrectionCheck_Player"..i] = function(_EntityID)
+Hero13_ResurrectionCheck = function(_EntityID)
+	
+	if Logic.IsEntityAlive(_EntityID) then
 	
 		local playerID = Logic.EntityGetPlayer(_EntityID)
 		
-		if Logic.IsEntityAlive(_EntityID) then
+		if GUI.GetPlayerID() == playerID then		
+			gvHero13.LastTimeUsed.StoneArmor = Logic.GetTime()		
+			gvHero13.LastTimeUsed.DivineJudgment = Logic.GetTime()			
+		end	
 		
-			if GUI.GetPlayerID() == playerID then
+		if CNetwork then
 			
-				gvHero13.LastTimeUsed.StoneArmor = Logic.GetTime()
-				
-				gvHero13.LastTimeUsed.DivineJudgment = Logic.GetTime()
-				
-			end	
-			
-			if CNetwork then
-				
-				if gvHero13StoneArmor_NextCooldown then
-				
-					if gvHero13StoneArmor_NextCooldown[playerID] then
-					
-						gvHero13StoneArmor_NextCooldown[playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.StoneArmor * 1000)
-						
-					end
-					
-				end
-				
-				if gvHero13DivineJudgment_NextCooldown then
-				
-					if gvHero13DivineJudgment_NextCooldown[playerID] then
-					
-						gvHero13DivineJudgment_NextCooldown[playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.DivineJudgment * 1000)
-						
-					end
-					
-				end
-				
+			if gvHero13.StoneArmor.NextCooldown then			
+				if gvHero13.StoneArmor.NextCooldown[playerID] then				
+					gvHero13.StoneArmor.NextCooldown[playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.StoneArmor * 1000)					
+				end				
 			end
 			
-			_G["Hero13_ResurrectionCheck_Player"..playerID.."_TriggerID"] = nil
-			
-			return true
+			if gvHero13.DivineJudgment.NextCooldown then			
+				if gvHero13.DivineJudgment.NextCooldown[playerID] then				
+					gvHero13.DivineJudgment.NextCooldown[playerID] = Logic.GetTimeMs() + (gvHero13.Cooldown.DivineJudgment * 1000)					
+				end				
+			end
 			
 		end
 		
-	end
+		gvHero13.TriggerIDs.Resurrection[playerID] = nil		
+		return true
+		
+	end		
+end
 	
-	_G["Hero14_ResurrectionCheck_Player"..i] = function(_EntityID)
+Hero14_ResurrectionCheck = function(_EntityID)
+	
+	if Logic.IsEntityAlive(_EntityID) then
 	
 		local playerID = Logic.EntityGetPlayer(_EntityID)
+	
+		if GUI.GetPlayerID() == playerID then		
+			gvHero14.CallOfDarkness.LastTimeUsed = Logic.GetTime()			
+			gvHero14.LifestealAura.LastTimeUsed = Logic.GetTime()			
+			gvHero14.RisingEvil.LastTimeUsed = Logic.GetTime()											
+		end	
 		
-		if Logic.IsEntityAlive(_EntityID) then
-		
-			if GUI.GetPlayerID() == playerID then
+		if CNetwork then
 			
-				gvHero14.CallOfDarkness.LastTimeUsed = Logic.GetTime()
-				
-				gvHero14.LifestealAura.LastTimeUsed = Logic.GetTime()
-				
-				gvHero14.RisingEvil.LastTimeUsed = Logic.GetTime()								
-				
-			end	
-			
-			if CNetwork then
-				
-				if gvHero14.CallOfDarkness.NextCooldown then
-				
-					if gvHero14.CallOfDarkness.NextCooldown[playerID] then
-					
-						gvHero14.CallOfDarkness.NextCooldown[playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown
-						
-					end
-					
-				end
-				
-				if gvHero14.LifestealAura.NextCooldown then
-				
-					if gvHero14.LifestealAura.NextCooldown[playerID] then
-					
-						gvHero14.LifestealAura.NextCooldown[playerID] = Logic.GetTime() + gvHero14.LifestealAura.Cooldown
-						
-					end
-					
-				end
-				
-				if gvHero14.RisingEvil.NextCooldown then
-				
-					if gvHero14.RisingEvil.NextCooldown[playerID] then
-					
-						gvHero14.RisingEvil.NextCooldown[playerID] = Logic.GetTime() + gvHero14.RisingEvil.Cooldown
-						
-					end
-					
-				end
-				
+			if gvHero14.CallOfDarkness.NextCooldown then			
+				if gvHero14.CallOfDarkness.NextCooldown[playerID] then				
+					gvHero14.CallOfDarkness.NextCooldown[playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown					
+				end				
 			end
 			
-			_G["Hero14_ResurrectionCheck_Player"..playerID.."_TriggerID"] = nil
+			if gvHero14.LifestealAura.NextCooldown then			
+				if gvHero14.LifestealAura.NextCooldown[playerID] then				
+					gvHero14.LifestealAura.NextCooldown[playerID] = Logic.GetTime() + gvHero14.LifestealAura.Cooldown					
+				end				
+			end
 			
-			return true
+			if gvHero14.RisingEvil.NextCooldown then			
+				if gvHero14.RisingEvil.NextCooldown[playerID] then				
+					gvHero14.RisingEvil.NextCooldown[playerID] = Logic.GetTime() + gvHero14.RisingEvil.Cooldown					
+				end				
+			end
 			
 		end
 		
-	end
-	
+		gvHero14.TriggerIDs.Resurrection[playerID] = nil			
+		return true
+		
+	end	
 end
 ---------------------------------------------------------------------------------------------------------------------------
 -------------------------------- Trigger for Salims trap ------------------------------------------------------------------
@@ -531,10 +490,6 @@ function TransactionDetails()
 	elseif TTyp == ResourceType.Stone then Text = "Steine"
 	
 	elseif TTyp == ResourceType.Sulfur then Text = "Schwefel"
-	
-	else
-		
-		return
 	
 	end
 	
@@ -673,28 +628,34 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------- Beautification Animation Trigger -------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------
+gvBeautiAnim = {IDs = {}, AnimByType = {[Entities.PB_Beautification07] = "PB_Beautification07_Clockwork_600",
+										[Entities.PB_Beautification12] = "PB_Beautification12_Turn_600"}, 
+										Delay = 2}
+function OnSpecBeautiCreated()
+
+	local entityID = Event.GetEntityID()	
+    local entityType = Logic.GetEntityType(entityID)	
+	
+	if gvBeautiAnim.AnimByType[entityType] then     
+		table.insert(gvBeautiAnim.IDs, entityID)
+	end
+	
+end
 function BeautiAnimCheck()
 
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PB_Beautification07)) do	
-		if eID  ~= nil then		
-			Logic.SetBuildingSubAnim(eID, 1, "PB_Beautification07_Clockwork_600")			
-		end		
+    for k,v in pairs(gvBeautiAnim.IDs) do		
+		Logic.SetBuildingSubAnim(v, 1, gvBeautiAnim.AnimByType[Logic.GetEntityType(v)])				
 	end
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PB_Beautification12)) do	
-		if eID  ~= nil then		
-			Logic.SetBuildingSubAnim(eID, 1, "PB_Beautification12_Turn_600")			
-		end		
-	end
-	
-	StartCountdown(2,BeautiAnimCheck,false)
+	StartCountdown(gvBeautiAnim.Delay, BeautiAnimCheck, false)
 	
 end
 --------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------ Trigger für Leibeigene ----------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------
-SerfHPRegenAmount = 1
-SerfHPRegenTime = 4
+SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
+table.remove(SerfIDTable,1)
+SerfHPRegenVal = {Amount = 1, Time = 4}
 
 function SerfCreated()
 
@@ -721,32 +682,42 @@ end
 function SerfHPRegen()
 
 	for i = 1,table.getn(SerfIDTable) do 	
-		Logic.HealEntity(SerfIDTable[i], SerfHPRegenAmount)		
+		Logic.HealEntity(SerfIDTable[i], SerfHPRegenVal.Amount)		
 	end
 	
-	StartCountdown(SerfHPRegenTime,SerfHPRegen,false)
+	StartCountdown(SerfHPRegenVal.Time,SerfHPRegen,false)
 	
 end
 ------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------- Trigger for Winter Sounds -------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
+gvWinterTheme = {GfxSets = {3, 9, 13}, WeatherState = 3, Chance = 1/28, Volume = 130,
+				IsCurrentWeatherSuited = function()
+					if Logic.GetWeatherState() == gvWinterTheme.WeatherState then
+						return true
+					end
+					for k,v in pairs(gvWinterTheme.GfxSets) do
+						if GetCurrentWeatherGfxSet() == v then
+							return true 
+						end
+					end
+					return false
+				end}
 function WinterTheme()
 
-	if Logic.GetWeatherState() == 3 or GetCurrentWeatherGfxSet() == 9 or GetCurrentWeatherGfxSet() == 13 then	
-		local SoundChance = Logic.GetRandom(28)		
-		if SoundChance == 10 then		
-			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1,130)		
+	if gvWinterTheme.IsCurrentWeatherSuited() then	
+		local SoundChance = Logic.GetRandom(1/gvWinterTheme.Chance)		
+		if SoundChance == 1 then		
+			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1, gvWinterTheme.Volume)		
 		end		
 	end
 	
 end
 ------------------------------------------------------------------------------------------------------------------------------
-gvIngameTimeSec = 0
-
 function IngameTimeJob()
 
 	if gvGameSpeed ~= 0 then
-		gvIngameTimeSec = gvIngameTimeSec + 1		
+		BS.Time.IngameTimeSec = BS.Time.IngameTimeSec + 1		
 	end
 	
 end
