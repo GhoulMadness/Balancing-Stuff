@@ -850,9 +850,13 @@ end
 function BuyHeroWindow_Action_BuyHero(_HeroEntityType)
 
 	local PlayerID = GUI.GetPlayerID()
-	local BuildingID = GUI.GetSelectedEntity() or 0
-	GUI.BuyHero(PlayerID, _HeroEntityType, BuildingID)
-	
+	local BuildingID = GUI.GetSelectedEntity()
+	if BuildingID ~= nil then		 
+		if not gvHQTypeTable[Logic.GetEntityType(BuildingID)] then
+			BuildingID = 0
+		end
+	end
+	GUI.BuyHero(PlayerID, _HeroEntityType, BuildingID or 0)	
 	XGUIEng.ShowWidget(gvGUI_WidgetID.BuyHeroWindow, 0)
 	
 	--Update all buttons in the visible container

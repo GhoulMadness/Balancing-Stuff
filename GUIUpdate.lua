@@ -41,7 +41,7 @@ function GUIUpdate_AttackSpeed()
 	local EntityID = GUI.GetSelectedEntity()	
 	local EntityType = Logic.GetEntityType(EntityID)	
 	-- Angriffe pro 1000 Sek.
-	local BaseSpeed = round(1000/GetEntityTypeBaseAttackSpeed(EntityType))	
+	local BaseSpeed = 1000/GetEntityTypeBaseAttackSpeed(EntityType)	
 	-- Angriffe pro Sek.
 	local SpeedAsString = string.format("%.3f",BaseSpeed)	
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..SpeedAsString )		
