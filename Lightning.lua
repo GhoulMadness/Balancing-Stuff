@@ -191,17 +191,35 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		-- wenn Held oder Kanone, dann...
 		elseif Logic.IsHero(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 			if Logic.IsEntityAlive(eID) then
-				Logic.HurtEntity(eID, _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.8))
+				local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.8)
+				if ExtendedStatistics then
+					if damage >= Logic.GetEntityHealth(eID) then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+					end
+					ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + damage
+				end
+				Logic.HurtEntity(eID, damage)
 			end
 		-- wenn Leader, dann...
 		elseif Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then		
 			local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
 			if Soldiers[1] > 0 then
 				for i = 2, math.floor(Soldiers[1]/2) do
-					ChangeHealthOfEntity(Soldiers[i],0)
+					if ExtendedStatistics then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning + 1
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning + Logic.GetEntityHealth(Soldiers[i])
+					end
+					ChangeHealthOfEntity(Soldiers[i],0)					
 				end
 			else
-				Logic.HurtEntity(eID, _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.6))
+				local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.6)
+				if ExtendedStatistics then
+					if damage >= Logic.GetEntityHealth(eID) then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+					end
+					ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + damage
+				end
+				Logic.HurtEntity(eID, damage)
 			end
 		-- wenn Gebäude, dann...
 		elseif Logic.IsBuilding(eID) == 1 then 
@@ -209,6 +227,9 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				if Logic.IsConstructionComplete(eID) == 1 then
 					local PID = Logic.EntityGetPlayer(eID)
 					if gvLightning.RodProtected[PID] == false then
+						if ExtendedStatistics then
+							ExtendedStatistics.Players[PID].DamageTakenByLightning = ExtendedStatistics.Players[PID].DamageTakenByLightning + _buildingdamage
+						end
 						Logic.HurtEntity(eID, _buildingdamage)
 						if Logic.GetTechnologyState(PID,Technologies.T_LightningInsurance) == 4 then
 							if _buildingdamage ~= nil then
@@ -226,6 +247,12 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		-- wenn alles andere (Soldier), dann...
 		else
 			if Logic.IsEntityAlive(eID) then
+				if ExtendedStatistics then
+					if _damage >= Logic.GetEntityHealth(eID) then
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+					end
+					ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + _damage
+				end
 				Logic.HurtEntity(eID, _damage)
 			end
 		end
@@ -233,6 +260,13 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) then
 			gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
 			GUI.ScriptSignal(_posX, _posY, 0)
-		end				
+		end		
+		local count
+		if ExtendedStatistics then
+			if not count then
+				ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes + 1
+				count = true
+			end
+		end
 	end
 end

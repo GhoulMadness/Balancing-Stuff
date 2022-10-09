@@ -1410,6 +1410,23 @@ function SetEntityVisibility(_entityID, _flag)
 	assert( type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))		
 end
+-- gets entity type damage range (only use for types with given damage range!)
+function GetEntityTypeDamageRange(_entityType)
+
+	assert(_entityType ~= nil, "invalid entityType")
+	local behavior_pos
+	if not BehaviorExceptionEntityTypeTable[_entityType] then	
+		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+			behavior_pos = 4			
+		else		
+			behavior_pos = 6			
+		end		
+	else	
+		behavior_pos = 8				
+	end
+	
+	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][16]:GetFloat()	
+end
 -- gets entity type damage class
 function GetEntityTypeDamageClass(_entityType)
 
@@ -1430,7 +1447,11 @@ end
 -- gets entity type armor class
 function GetEntityTypeArmorClass(_entityType)
 	assert(_entityType ~= nil , "invalid entityType")
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][60]:GetInt()
+	if not string.find(Logic.GetEntityTypeName(_entityType), "PB") and not string.find(Logic.GetEntityTypeName(_entityType), "CB") then
+		return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][60]:GetInt()
+	else
+		return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][102]:GetInt()
+	end
 end
 -- gets damage factor related to the damageclass/armorclass
 function GetDamageFactor(_damageclass, _armorclass)
@@ -1441,6 +1462,33 @@ end
 function GetAttractionPlacesProvided(_entityType)
 	assert(_entityType ~= nil , "invalid entityType")
 	return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][44]:GetInt()
+end
+-- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
+function GetPlayerKillStatisticsProperties(_playerID, _statistic)
+	assert(type(_playerID) == "number", "PlayerID needs to be a number")
+	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
+	assert(type(_statistic) == "number", "Statistic type needs to be a number")
+	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
+	return CUtilMemory.GetMemory(8758176)[0][10][_playerID*2+1][82 + _statistic]:GetInt()
+end
+-- sets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
+function SetPlayerKillStatisticsProperties(_playerID, _statistic, _value)
+	assert(type(_playerID) == "number", "PlayerID needs to be a number")
+	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
+	assert(type(_statistic) == "number", "Statistic type needs to be a number")
+	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
+	assert(type(_value) == "number", "Value needs to be a number")
+	return CUtilMemory.GetMemory(8758176)[0][10][_playerID*2+1][82 + _statistic]:SetInt(_value)
+end
+-- adds value to respective player kill statistic (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
+function AddValueToPlayerKillStatistic(_playerID, _statistic, _value)
+	assert(type(_playerID) == "number", "PlayerID needs to be a number")
+	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
+	assert(type(_statistic) == "number", "Statistic type needs to be a number")
+	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
+	assert(type(_value) == "number", "Value needs to be a number")
+	local currstat = GetPlayerKillStatisticsProperties(_playerID, _statistic)
+	SetPlayerKillStatisticsProperties(_playerID, _statistic, currstat + _value)
 end
 -- Rundungs-Comfort
 function round( _n )
@@ -1548,6 +1596,8 @@ function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)
 	if Logic.GetDiplomacyState(_attackerPID, _targetPID) == Diplomacy.Hostile then
 		if _scoretype == "Settler" then
 			GameCallback_SettlerKilled(_attackerPID, _targetPID)
+			AddValueToPlayerKillStatistic(_attackerPID, 0, 1)
+			AddValueToPlayerKillStatistic(_targetPID, 1, 1)
 			if ExtendedStatistics then
 				if _attackerPID > 0 and _targetPID > 0 then
 					ExtendedStatistics.Players[_attackerPID].Kills = ExtendedStatistics.Players[_attackerPID].Kills + 1
@@ -1556,8 +1606,15 @@ function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)
 			end
 		elseif _scoretype == "Building" then
 			GameCallback_BuildingDestroyed(_attackerPID, _targetPID)
+			AddValueToPlayerKillStatistic(_attackerPID, 2, 1)
+			AddValueToPlayerKillStatistic(_targetPID, 3, 1)
 		end
 	end
+end
+function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)	
+	ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)][_scoretype] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)][_scoretype] + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])	
 end
 
 BS.GetAllEnemyPlayerIDs = function(_playerID)

@@ -200,4 +200,30 @@ if CNetwork then
 			
 		end;
 	end
+	for player = 1, 16 do
+		ExtendedStatistics.Players[player].DamageTakenByLightning = 0
+		ExtendedStatistics.Players[player].AmountOfLightningStrikes = 0
+		ExtendedStatistics.Players[player].UnitsLostThroughLightning = 0
+	end
+	CUtilStatistics.AddStatistic("DamageTakenByLightning", "Damage Taken By Lightning Strikes", "Damage/Attacks", "ExtendedStatistics_Callback_DamageTakenByLightning");
+	CUtilStatistics.SetStatisticWidgetValues("normal",  "DamageTakenByLightning", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 0, 1));
+	CUtilStatistics.SetStatisticWidgetValues("hovered", "DamageTakenByLightning", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 1, 1));
+	CUtilStatistics.SetStatisticWidgetValues("pressed", "DamageTakenByLightning", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 2, 1));
+	function ExtendedStatistics_Callback_DamageTakenByLightning(player)
+		return ExtendedStatistics.Players[player].DamageTakenByLightning;
+	end;
+	CUtilStatistics.AddStatistic("AmountOfLightningStrikes", "Hitted by Lightning Strikes", "Damage/Attacks", "ExtendedStatistics_Callback_AmountOfLightningStrikes");
+	CUtilStatistics.SetStatisticWidgetValues("normal",  "AmountOfLightningStrikes", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 0, 4));
+	CUtilStatistics.SetStatisticWidgetValues("hovered", "AmountOfLightningStrikes", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 1, 4));
+	CUtilStatistics.SetStatisticWidgetValues("pressed", "AmountOfLightningStrikes", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 2, 4));
+	function ExtendedStatistics_Callback_AmountOfLightningStrikes(player)
+		return ExtendedStatistics.Players[player].AmountOfLightningStrikes
+	end;
+	CUtilStatistics.AddStatistic("UnitsLostThroughLightning", "Units Killed By Lightning", "Damage/Attacks", "ExtendedStatistics_Callback_UnitsLostThroughLightning");
+	CUtilStatistics.SetStatisticWidgetValues("normal",  "UnitsLostThroughLightning", "graphics\\textures\\gui\\b_small_generic.png", GetTextureCoordinatesAt(128/26, 256/26, 0, 4));
+	CUtilStatistics.SetStatisticWidgetValues("hovered", "UnitsLostThroughLightning", "graphics\\textures\\gui\\b_small_generic.png", GetTextureCoordinatesAt(128/26, 256/26, 0, 4));
+	CUtilStatistics.SetStatisticWidgetValues("pressed", "UnitsLostThroughLightning", "graphics\\textures\\gui\\b_small_generic.png", GetTextureCoordinatesAt(128/26, 256/26, 0, 4));
+	function ExtendedStatistics_Callback_UnitsLostThroughLightning(player)
+		return ExtendedStatistics.Players[player].UnitsLostThroughLightning
+	end;
 end

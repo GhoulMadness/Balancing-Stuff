@@ -615,3 +615,23 @@ Das Zeitfenster der Fähigkeit wurde auf 4 Sekunden erhöht. Reichweite und Scha
 Der Schaden der Fähigkeit an Gebäuden wurde erhöht.
 
 Es wurde ein Fehler im Zusammenhang mit den Soldaten der Anführer der Banditen behoben.
+
+Nachtrag: Bronzekanonen, Belagerungskanonen und Katapulte der KI fokussieren nun Gebäude etwas mehr.
+
+Es wurde ein Fehler im Zusammenhang mit der Interaktion von Förstern und Schlössern behoben.
+
+Es wurde ein Fehler im Zusammenhang mit der GUI von Uhren behoben.
+
+Helden erscheinen nun in der/m jeweiligen Burg/Festung/Zitadelle/Schloss, in der/m sie ausgewählt wurden. Ist währenddessen kein Gebäude selektiert, wird weiterhin die "Standard-Burg" verwendet
+
+Die Schadensberechnung für Truppen, die auf dem Schützenturm stehen, während dieser von Bronze-/Belagerungskanonen/Katapulte angegriffen wird, wurde angepasst und berücksichtigt nun die Rüstungsklasse der angegriffenen Truppen 
+
+--- Version 0.728
+
+Zusätzliche Statistiken zu Blitzeinschlägen sind nun nach dem Spiel verfügbar.
+
+Durch Dovbars Götterdämmerung, Erebos Aura sowie Marys und Kalas Gift-DoT getötete Feinde zählen nun auch in die "erledigte Feinde"- bzw. "verlorene Einheiten"- Statistik hinein.
+
+Dovbars Götterdämmerung verursacht nun einen Mindestschaden vom vierfachen seines Angriffswerts.
+
+Die Schadensberechnung für Truppen, die auf dem Schützenturm stehen, während dieser von Bronze-/Belagerungskanonen/Katapulte angegriffen wird, berücksichtigt nun ebenfalls die Schadensabnahmeformel von Flächenschäden. 
