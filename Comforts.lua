@@ -1205,11 +1205,11 @@ function GetWeatherSpeedModifier(_weatherstate)
 end
 -- returns the technology raw speed modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologySpeedModifier(_techID)
-	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][56]:GetFloat(), math.mod(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][58]:GetInt(), 256)-42
+	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][56]:GetFloat(), CUtilBit32.BitAnd(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][58]:GetInt(), 2^8-1)-42
 end
 -- returns the technology raw attack range modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologyAttackRangeModifier(_techID)
-	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][88]:GetFloat(), math.mod(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][90]:GetInt(), 256)-42
+	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][88]:GetFloat(), CUtilBit32.BitAnd(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][90]:GetInt(), 2^8-1)-42
 end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
@@ -1470,7 +1470,7 @@ function GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	assert(type(_statistic) == "number", "Statistic type needs to be a number")
 	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
 	return CUtilMemory.GetMemory(8758176)[0][10][_playerID*2+1][82 + _statistic]:GetInt()
-end
+end			
 -- sets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
 function SetPlayerKillStatisticsProperties(_playerID, _statistic, _value)
 	assert(type(_playerID) == "number", "PlayerID needs to be a number")
@@ -1612,9 +1612,10 @@ function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)
 	end
 end
 function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)	
-	ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)][_scoretype] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)][_scoretype] + (math.min(_damage, _maxdmg))
-	ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
-	ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])	
+	local playerID = Logic.EntityGetPlayer(_heroID)
+	ExtendedStatistics.Players[playerID][_scoretype] = ExtendedStatistics.Players[playerID][_scoretype] + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage, ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID])	
 end
 
 BS.GetAllEnemyPlayerIDs = function(_playerID)
@@ -1678,3 +1679,209 @@ gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Castle4] = true,
 					[Entities.PB_Castle5] = true
 				}
+
+ChestRandomPositions = {}
+ChestRandomPositions.AllowedTypes = { 	Entities.XD_Fir1,
+										Entities.XD_Fir1_small,
+										Entities.XD_CherryTree,
+										Entities.XD_CliffBright1,
+										Entities.XD_CliffBright3,
+										Entities.XD_CliffBright4,
+										Entities.XD_CliffBright5,
+										Entities.XD_CliffDesert1,
+										Entities.XD_CliffDesert3,
+										Entities.XD_CliffDesert4,
+										Entities.XD_CliffDesert5,
+										Entities.XD_CliffEvelance1,
+										Entities.XD_CliffEvelance2,
+										Entities.XD_CliffEvelance3,
+										Entities.XD_CliffMoor1,
+										Entities.XD_CliffMoor2,
+										Entities.XD_CliffMoor3,
+										Entities.XD_CliffTideland1,
+										Entities.XD_CliffTideland2,
+										Entities.XD_CliffTideland3,
+										Entities.XD_CliffTidelandShadows1,
+										Entities.XD_CliffTidelandShadows2,
+										Entities.XD_CliffTidelandShadows3,
+										Entities.XD_Cypress1,
+										Entities.XD_DeadTreeEvelance3,
+										Entities.XD_DeadTreeMoor2,
+										Entities.XD_DeadTreeMoor3,
+										Entities.XD_GreeneryBushHigh4,
+										Entities.XD_MiscTent1,
+										Entities.XD_OliveTree1,
+										Entities.XD_OliveTree2,
+										Entities.XD_OrangeTree1,
+										Entities.XD_PineNorth1,
+										Entities.XD_PineNorth2,
+										Entities.XD_RuinFarm1,
+										Entities.XD_RuinHouse1,
+										Entities.XD_RuinHouse2,
+										Entities.XD_RuinMonastery1,
+										Entities.XD_RuinMonastery2,
+										Entities.XD_RuinResidence1,
+										Entities.XD_RuinResidence2,
+										Entities.XD_RuinSmallTower1,
+										Entities.XD_RuinSmallTower2,
+										Entities.XD_RuinTower1,
+										Entities.XD_RuinTower2,
+										Entities.XD_RuinWall5,
+										Entities.XD_RuinWall6,
+										Entities.XD_Tree1,
+										Entities.XD_Tree1_small,
+										Entities.XD_Tree2,
+										Entities.XD_Tree2_small,
+										Entities.XD_Tree3,
+										Entities.XD_Tree3_small,
+										Entities.XD_Tree5,
+										Entities.XD_Tree6,
+										Entities.XD_Tree8,
+										Entities.XD_TreeEvelance1,
+										Entities.XD_TreeMoor1,
+										Entities.XD_TreeMoor2,
+										Entities.XD_TreeMoor3,
+										Entities.XD_TreeMoor4,
+										Entities.XD_TreeMoor5,
+										Entities.XD_TreeMoor6,
+										Entities.XD_Umbrella1,
+										Entities.XD_Umbrella2,
+										Entities.XD_Umbrella3,
+										Entities.XD_Willow1
+										}
+ChestRandomPositions.OffsetByType = {	[Entities.XD_Fir1] = {X = 80, Y = 80},
+										[Entities.XD_Fir1_small] = {X = 70, Y = 30},
+										[Entities.XD_CherryTree] = {X = 110, Y = 60},
+										[Entities.XD_CliffBright1] = {X = 190, Y = 130},
+										[Entities.XD_CliffBright3] = {X = 330, Y = 260},
+										[Entities.XD_CliffBright4] = {X = 300, Y = 200},
+										[Entities.XD_CliffBright5] = {X = 470, Y = 240},
+										[Entities.XD_CliffDesert1] = {X = 190, Y = 130},
+										[Entities.XD_CliffDesert3] = {X = 330, Y = 260},
+										[Entities.XD_CliffDesert4] = {X = 300, Y = 200},
+										[Entities.XD_CliffDesert5] = {X = 470, Y = 240},
+										[Entities.XD_CliffEvelance1] = {X = 470, Y = -30},
+										[Entities.XD_CliffEvelance2] = {X = 140, Y = 180},
+										[Entities.XD_CliffEvelance3] = {X = 160, Y = 120},
+										[Entities.XD_CliffMoor1] = {X = 450, Y = -80},
+										[Entities.XD_CliffMoor2] = {X = 140, Y = 180},
+										[Entities.XD_CliffMoor3] = {X = 170, Y = 130},
+										[Entities.XD_CliffTideland1] = {X = 1450, Y = 580},
+										[Entities.XD_CliffTideland2] = {X = 660, Y = 420},
+										[Entities.XD_CliffTideland3] = {X = 540, Y = 550},
+										[Entities.XD_CliffTidelandShadows1] = {X = 1460, Y = 700},
+										[Entities.XD_CliffTidelandShadows2] = {X = 700, Y = 450},
+										[Entities.XD_CliffTidelandShadows3] = {X = 460, Y = 580},
+										[Entities.XD_Cypress1] = {X = 90, Y = 80},
+										[Entities.XD_DeadTreeEvelance3] = {X = 100, Y = 100},
+										[Entities.XD_DeadTreeMoor2] = {X = 110, Y = 80},
+										[Entities.XD_DeadTreeMoor3] = {X = 130, Y = 90},
+										[Entities.XD_GreeneryBushHigh4] = {X = 50, Y = 60},
+										[Entities.XD_MiscTent1] = {X = 130, Y = 120},
+										[Entities.XD_OliveTree1] = {X = 80, Y = 70},
+										[Entities.XD_OliveTree2] = {X = 140, Y = 120},
+										[Entities.XD_OrangeTree1] = {X = 290, Y = 260},
+										[Entities.XD_PineNorth1] = {X = 90, Y = 180},
+										[Entities.XD_PineNorth2] = {X = 100, Y = 90},
+										[Entities.XD_RuinFarm1] = {X = 300, Y = 200},
+										[Entities.XD_RuinHouse1] = {X = 280, Y = 260},
+										[Entities.XD_RuinHouse2] = {X = 360, Y = 200},
+										[Entities.XD_RuinMonastery1] = {X = 770, Y = 60},
+										[Entities.XD_RuinMonastery2] = {X = 770, Y = 60},
+										[Entities.XD_RuinResidence1] = {X = 270, Y = 210},
+										[Entities.XD_RuinResidence2] = {X = 270, Y = 210},
+										[Entities.XD_RuinSmallTower1] = {X = 160, Y = 160},
+										[Entities.XD_RuinSmallTower2] = {X = 160, Y = 160},
+										[Entities.XD_RuinTower1] = {X = 210, Y = 190},
+										[Entities.XD_RuinTower2] = {X = 210, Y = 190},
+										[Entities.XD_RuinWall5] = {X = 320, Y = 130},
+										[Entities.XD_RuinWall6] = {X = 320, Y = 130},
+										[Entities.XD_Tree1] = {X = 80, Y = 130},
+										[Entities.XD_Tree1_small] = {X = 150, Y = 120},
+										[Entities.XD_Tree2] = {X = 120, Y = 130},
+										[Entities.XD_Tree2_small] = {X = 130, Y = 120},
+										[Entities.XD_Tree3] = {X = 120, Y = 190},
+										[Entities.XD_Tree3_small] = {X = 130, Y = 160},
+										[Entities.XD_Tree5] = {X = 200, Y = 240},
+										[Entities.XD_Tree6] = {X = 100, Y = 110},
+										[Entities.XD_Tree8] = {X = 120, Y = 120},
+										[Entities.XD_TreeEvelance1] = {X = 130, Y = 140},
+										[Entities.XD_TreeMoor1] = {X = 110, Y = 110},
+										[Entities.XD_TreeMoor2] = {X = 170, Y = 170},
+										[Entities.XD_TreeMoor3] = {X = 230, Y = 140},
+										[Entities.XD_TreeMoor4] = {X = 190, Y = 140},
+										[Entities.XD_TreeMoor5] = {X = 170, Y = 110},
+										[Entities.XD_TreeMoor6] = {X = 230, Y = 160},
+										[Entities.XD_Umbrella1] = {X = 120, Y = 200},
+										[Entities.XD_Umbrella2] = {X = 170, Y = 200},
+										[Entities.XD_Umbrella3] = {X = 140, Y = 330},
+										[Entities.XD_Willow1] = {X = 140, Y = 140}
+										
+										}
+ChestRandomPositions.GetRandomPositions = function(_amount)
+
+	local sizeX, sizeY = Logic.WorldGetSize()
+	local postable = {}
+	while table.getn(postable) < _amount do
+		X, Y = math.random(sizeX), math.random(sizeY)
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes)), CEntityIterator.InCircleFilter(X, Y, 100)) do
+			local _X, _Y = GetPosition(eID).X + ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].X, GetPosition(eID).Y + ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].Y
+			local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
+				
+			if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
+				table.insert(postable, {X = _X, Y = _Y})				
+			end
+		end
+	end
+	return postable
+end
+ChestRandomPositions.ActiveState = {}
+ChestRandomPositions.CreateChests = function(_amount)
+
+	_amount = _amount or round(((Mapsize/100)^2)/30000)
+	local postable = ChestRandomPositions.GetRandomPositions(_amount)
+	local chestIDtable = {}
+	for k,v in pairs(postable) do
+		chestIDtable[k] = Logic.CreateEntity(Entities.XD_ChestGold, v.X, v.Y, 0, 0)
+		Logic.SetEntityName(chestIDtable[k], "RandomPosChest"..k)
+	end
+	for i = 1,table.getn(chestIDtable) do
+		ChestRandomPositions.ActiveState[i] = true
+	end
+	ChestRandomPositions.OpenedCount = 0
+	return chestIDtable
+end
+		
+ChestRandomPositions_ChestControl = function(...)
+
+	if not cutsceneIsActive and not briefingIsActive then
+		local entities, pos, randomEventAmount
+		for i = 1, arg.n do	
+			if ChestRandomPositions.ActiveState[i] then				
+				pos = GetPosition(arg[i])
+				for j = 1, 2 do
+					entities = {Logic.GetPlayerEntitiesInArea(j, 0, pos.X, pos.Y, 400, 1)}
+					if entities[1] > 0 then
+						if Logic.IsHero(entities[2]) == 1 then
+							local randomval = math.random(1, 50-i)
+							if randomval ~= 1 then								
+								randomEventAmount = round((450 + math.random(150) + Logic.GetTime()/30) * (gvDiffLVL or 1))
+								Logic.AddToPlayersGlobalResource(j,ResourceType.Gold,randomEventAmount)
+								Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " hat eine Schatztruhe geplündert. Inhalt: " .. randomEventAmount.." Taler" )										
+							else
+								randomEventAmount = round((150 + math.random(50) + Logic.GetTime()/90) * (gvDiffLVL or 1))
+								Logic.AddToPlayersGlobalResource(j,ResourceType.Silver,randomEventAmount)
+								Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " hat einen besonders wertvollen Schatz gefunden. Inhalt: " .. randomEventAmount.." Silber" )		
+							end
+							Sound.PlayGUISound(Sounds.Misc_Chat2,100)
+							ChestRandomPositions.ActiveState[i] = false
+							ChestRandomPositions.OpenedCount = ChestRandomPositions.OpenedCount + 1
+							ReplaceEntity(arg[i], Entities.XD_ChestOpen)
+						end
+					end
+				end
+			end
+		end
+		return ChestRandomPositions.OpenedCount == arg.n
+	end
+end

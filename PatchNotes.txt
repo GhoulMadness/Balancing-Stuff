@@ -635,3 +635,7 @@ Durch Dovbars Götterdämmerung, Erebos Aura sowie Marys und Kalas Gift-DoT get�
 Dovbars Götterdämmerung verursacht nun einen Mindestschaden vom vierfachen seines Angriffswerts.
 
 Die Schadensberechnung für Truppen, die auf dem Schützenturm stehen, während dieser von Bronze-/Belagerungskanonen/Katapulte angegriffen wird, berücksichtigt nun ebenfalls die Schadensabnahmeformel von Flächenschäden. 
+
+--- Version 0.729
+
+Allen Kooperationskarten wurden Schatztruhen hinzugefügt. Damit sich der Schwierigkeitsgrad nicht zu sehr verändert, wurden die Prüfungskarten entsprechend angepasst.

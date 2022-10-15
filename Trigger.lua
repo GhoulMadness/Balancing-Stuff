@@ -357,7 +357,7 @@ function VStatue4_CalculateDamageTrigger(_EntityID, _PlayerID)
 	end	
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
------------------------------------------ Set correct cooldowns when Dovbar (and future heroes?) resurrects -----------------------------------------------------------------
+----------------------------------------- Set correct cooldowns when Dovbar and Erebos (and future heroes?) resurrects ------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function OnHeroDied()
 
@@ -1304,7 +1304,8 @@ function OnArchers_Tower_OccupiedTroopAttacked()
 									local dmgfactor = GetDamageFactor(GetEntityTypeDamageClass(attype), GetEntityTypeArmorClass(targettype))	
 									local dmgrange = GetEntityTypeDamageRange(attype)
 									local distance = GetDistance(GetPosition(attacker), GetPosition(target))
-									CEntity.TriggerSetDamage(math.ceil((dmg / currdmgfactor * dmgfactor) * (1-(distance/dmgrange))))																	
+									CEntity.TriggerSetDamage(math.ceil((dmg / currdmgfactor * dmgfactor) * (1-(distance/dmgrange))))	
+									return
 								end							
 							end						
 						end					
