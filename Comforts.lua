@@ -1865,11 +1865,11 @@ ChestRandomPositions_ChestControl = function(...)
 						if Logic.IsHero(entities[2]) == 1 then
 							local randomval = math.random(1, 50-i)
 							if randomval ~= 1 then								
-								randomEventAmount = round((450 + math.random(150) + Logic.GetTime()/30) * (gvDiffLVL or 1))
+								randomEventAmount = round((600 + math.random(200) + Logic.GetTime()/5) * (gvDiffLVL or 1))
 								Logic.AddToPlayersGlobalResource(j,ResourceType.Gold,randomEventAmount)
 								Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " hat eine Schatztruhe geplündert. Inhalt: " .. randomEventAmount.." Taler" )										
 							else
-								randomEventAmount = round((150 + math.random(50) + Logic.GetTime()/90) * (gvDiffLVL or 1))
+								randomEventAmount = round((150 + math.random(50) + Logic.GetTime()/15) * (gvDiffLVL or 1))
 								Logic.AddToPlayersGlobalResource(j,ResourceType.Silver,randomEventAmount)
 								Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " hat einen besonders wertvollen Schatz gefunden. Inhalt: " .. randomEventAmount.." Silber" )		
 							end
