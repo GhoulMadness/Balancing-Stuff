@@ -1824,12 +1824,20 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
 	local postable = {}
 	while table.getn(postable) < _amount do
 		X, Y = math.random(sizeX), math.random(sizeY)
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes)), CEntityIterator.InCircleFilter(X, Y, 100)) do
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes)), CEntityIterator.InCircleFilter(X, Y, 200)) do
 			local _X, _Y = GetPosition(eID).X + ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].X, GetPosition(eID).Y + ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].Y
 			local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
 				
 			if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
-				table.insert(postable, {X = _X, Y = _Y})				
+				local distcheck = true
+				for k,v in pairs(postable) do
+					if GetDistance(v, {X = _X, Y = _Y}) < 1000 then
+						distcheck = false
+					end
+				end
+				if distcheck then
+					table.insert(postable, {X = _X, Y = _Y})		
+				end
 			end
 		end
 	end
