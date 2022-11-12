@@ -67,7 +67,7 @@ WCutter.BlockTree = function(_treeid, _flag)
 					2: hard block - tree can neither be approached nor cut
 					]]
 	local etype = Logic.GetEntityType(_treeid)
-	local model = _G["Models"][Logic.GetEntityTypeName(etype)]
+	local model = Models[Logic.GetEntityTypeName(etype)]
 	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])		
 
 	Logic.SetModelAndAnimSet(newID, model)

@@ -236,8 +236,6 @@ function GameCallback_GUI_SelectionChanged()
 		
 end
 gvGameSpeed = 1
-gvBreakCheck = 0
-gvSecondsDuringBreak = 0
 function GameCallback_GameSpeedChanged( _Speed )
 --GameCallback_GameSpeedChangedOrig(_Speed)
 local Speed = _Speed * 1000
@@ -251,7 +249,6 @@ local Speed = _Speed * 1000
     else
     
 		gvGameSpeed = _Speed
-		gvBreakCheck = 0
 		for i = 1,5 do
 			XGUIEng.ShowWidget("PauseScreen"..i,0)   
 		end
@@ -262,12 +259,10 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 
 	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
 	
-	if _TechnologyType == Technologies.T_HeavyThunder then
-	
+	if _TechnologyType == Technologies.T_HeavyThunder then	
 		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
 		
-	elseif _TechnologyType == Technologies.T_TotalDestruction then
-	
+	elseif _TechnologyType == Technologies.T_TotalDestruction then	
 		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
 		
 	end
@@ -275,25 +270,21 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	if not gvMercTechsCheated then
 	
 		if _TechnologyType == Technologies.T_BarbarianCulture then
-
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
 			
-		elseif _TechnologyType == Technologies.T_KnightsCulture then
-			
+		elseif _TechnologyType == Technologies.T_KnightsCulture then			
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
 			
-		elseif _TechnologyType == Technologies.T_BearmanCulture then
-			
+		elseif _TechnologyType == Technologies.T_BearmanCulture then			
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
 			
-		elseif _TechnologyType == Technologies.T_BanditCulture then
-			
+		elseif _TechnologyType == Technologies.T_BanditCulture then			
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
@@ -309,63 +300,50 @@ end
 
 function GameCallback_RefinedResource(_entityID, _type, _amount)
         
-    local playerID = Logic.EntityGetPlayer(_entityID);
+    local playerID = Logic.EntityGetPlayer(_entityID)
         
     if _type == ResourceType.Gold then
 	
-        if Logic.GetTechnologyState(playerID, Technologies.T_BookKeeping) == 4 then
-                
-            local work = Logic.GetSettlersWorkBuilding(_entityID);
-			
+        if Logic.GetTechnologyState(playerID, Technologies.T_BookKeeping) == 4 then               
+            local work = Logic.GetSettlersWorkBuilding(_entityID)		
             _amount = (refined_resource_gold[Logic.GetEntityType(work)] or _amount)
 		
 		else
 		
-			if gvChallengeFlag then
-			
-				local work = Logic.GetSettlersWorkBuilding(_entityID);
-			
+			if gvChallengeFlag then			
+				local work = Logic.GetSettlersWorkBuilding(_entityID)		
 				_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
 				
 			end
 			
-        end;
+        end
 		
 	else
 	
-		if gvChallengeFlag then
-			
-			local work = Logic.GetSettlersWorkBuilding(_entityID);
-			
+		if gvChallengeFlag then			
+			local work = Logic.GetSettlersWorkBuilding(_entityID)		
 			_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
 				
 		end
 		
-    end;
+    end
         
-    if GameCallback_RefinedResourceOrig then
-	
-        return GameCallback_RefinedResourceOrig(_entityID, _type, _amount);
+    if GameCallback_RefinedResourceOrig then	
+        return GameCallback_RefinedResourceOrig(_entityID, _type, _amount)
 		
-    else
-	
-        return _entityID, _type, _amount;
+    else	
+        return _entityID, _type, _amount
 		
-    end;
-	
-end;
+    end	
+end
 
 function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 
-	local playerID = Logic.EntityGetPlayer(_extractor);
-	
-	local work = Logic.GetSettlersWorkBuilding(_extractor)
-	
-	local resremain = Logic.GetResourceAmountBelowMine(work)
-	
+	local playerID = Logic.EntityGetPlayer(_extractor);	
+	local work = Logic.GetSettlersWorkBuilding(_extractor)	
+	local resremain = Logic.GetResourceAmountBelowMine(work)	
 	--respective values "mine_running_low" sound is played
-	local criticaltresholdsilver = 400
-	
+	local criticaltresholdsilver = 400	
 	local criticaltresholdgold = 2500
 	
 	--Sound nur abspielen, wenn die neuen Sounds nicht initialisiert wurden
@@ -701,114 +679,78 @@ function GameCallback_ResearchProgress(_player, _research_building, _technology,
 	
 	local playerID = _player
 	
-	if _technology == Technologies.T_CityGuard then
-	
-		_research_amount = math.floor((_max + 0.5)/120) or _research_amount
-		
+	if _technology == Technologies.T_CityGuard then	
+		_research_amount = math.floor((_max + 0.5)/120) or _research_amount		
 	end
 	
-	if Logic.GetTechnologyState(playerID, Technologies.T_TownGuard) == 4 then
-	
-		_research_amount = math.ceil(_research_amount *1.2) or _research_amount
-		
+	if Logic.GetTechnologyState(playerID, Technologies.T_TownGuard) == 4 then	
+		_research_amount = math.ceil(_research_amount *1.2) or _research_amount		
 	end
 			
-	if GameCallback_ResearchProgressOrig then
-	
-		return GameCallback_ResearchProgressOrig(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max);
-		
+	if GameCallback_ResearchProgressOrig then	
+		return GameCallback_ResearchProgressOrig(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max);		
 	else
 	
 		return  _research_amount
 		
-	end;
-	
+	end	
 end
 
 function GameCallback_PaydayPayed(_player,_amount)
 
 	if _amount ~= nil then
 	
-		if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then		
-		
-			local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
-			
-			CUtil.Payday_SetFrequency(_player, frequency)
-			
+		if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then				
+			local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)			
+			CUtil.Payday_SetFrequency(_player, frequency)			
 		end
 		
 		-- Zahltag pro Münzstätte um 1.5% erhöht, max 15%
-		local factor = 1
-		
+		local factor = 1		
 		local workers 
 		
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do	
-		
-			if Logic.IsConstructionComplete(eID) == 1 then
-			
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do			
+			if Logic.IsConstructionComplete(eID) == 1 then			
 				workers = {Logic.GetAttachedWorkersToBuilding(eID)}
 				
-				if workers[1] >= 3 then
-				
-					factor = factor + 0.015
-					
-				else
-				
+				if workers[1] >= BS.MintValues.WorkersNeeded then				
+					factor = math.min(factor + BS.MintValues.BonusPerMint, BS.MintValues.MaxTotalFactor)				
 				end
 				
-			else
-			
-			end
-			
-		end
-			
-		if factor > 1.15 then 
-		
-			factor = 1.15
-			
-		end
+			end			
+		end			
 		
 		_amount = math.floor(_amount*factor)
 		
 		--KI bekommt 5fachen Zahltag
 		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 then
 		
-			if _amount > 0 then
-			
-				_amount = _amount * 5
-				
-			else
-			
+			if _amount > 0 then			
+				_amount = _amount * 5				
+			else			
 				--KI kann keinen negativen Zahltag haben
-				_amount = 0
-				
+				_amount = 0				
 			end
 			
 		else
 		-- Sudden Death auf der Weihnachtsmap
 		
-			if gvXmasEventFlag then
-			
-				if gvPresent.SDPaydayFactor then		
-				
-					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
-					
-				end
-				
+			if gvXmasEventFlag then			
+				if gvPresent.SDPaydayFactor then						
+					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])					
+				end				
 			end
 			
 		end
 		
 		return _amount
 		
-	else
+	else	
 	
-		LuaDebugger.Log(_player)
-		
+		LuaDebugger.Log(_player)		
 		return 0
 		
-	end
-	
+	end	
 end	
 
 
@@ -817,40 +759,26 @@ function HeroWidgetUpdate_ShowHeroWidget(EntityId)
 
 	local EntityType = Logic.GetEntityType(EntityId)
 	
-	if EntityType == Entities.PU_Hero13 then
-	
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)
-	
-		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)
-	
-		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)	
-		
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)
-		
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)
-		
+	if EntityType == Entities.PU_Hero13 then	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)	
+		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)	
+		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)			
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)		
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero13" ) ,1)
 	
-	elseif EntityType == Entities.PU_Hero14 then
-	
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)
-	
-		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)
-	
-		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)	
-		
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)
-		
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)
-		
+	elseif EntityType == Entities.PU_Hero14 then	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)	
+		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)	
+		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)			
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)		
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero14" ) ,1)
 		
-	else
-	
+	else	
 		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
 		
-	end
-	
+	end	
 end
 
 --------------------------------------------------------------------------------
@@ -863,34 +791,23 @@ function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
 						
 		local slot = table.findvalue(gvArchers_Tower.SlotData[k],_OldID)
 		
-		if slot ~= nil then
-		
-			gvArchers_Tower.SlotData[k][slot] = _NewID
-			
-			gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] + 1
-			
-			local TroopIDs = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[k][slot])}
-						
-			table.remove(TroopIDs,1)
-			
+		if slot ~= 0 then		
+			gvArchers_Tower.SlotData[k][slot] = _NewID			
+			gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] + 1			
+			local TroopIDs = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[k][slot])}						
+			table.remove(TroopIDs,1)			
 			table.insert(TroopIDs,gvArchers_Tower.SlotData[k][slot])
 			
-			for i = 1,table.getn(TroopIDs) do
-				
-				CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
-				
-				CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
-				
-				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),Logic.EntityGetPlayer(TroopIDs[i]))*gvArchers_Tower.MaxRangeFactor)
-			
+			for i = 1,table.getn(TroopIDs) do				
+				CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)				
+				CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)				
+				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),Logic.EntityGetPlayer(TroopIDs[i]))*gvArchers_Tower.MaxRangeFactor)			
 			end
 			
-		end
-	
+		end	
 	end
 	
-	GameCallback_GUI_EntityIDChangedOrig(_OldID,_NewID)
-	
+	GameCallback_GUI_EntityIDChangedOrig(_OldID,_NewID)	
 end
 
 GameCallback_UnknownTask = function(_id)

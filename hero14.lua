@@ -94,7 +94,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
 									end
 									Logic.HurtEntity(Soldiers[i], soldierdmg)
-									if _G["Hero14LifestealTriggerID_"..pID] then
+									if gvHero14.LifestealAura.TriggerIDs[pID] then
 										Logic.HealEntity(_heroID, soldierdmg * gvHero14.LifestealAura.LifestealAmount)
 										Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 									end
@@ -109,7 +109,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
 								end
 								Logic.HurtEntity(eID, damage)
-								if _G["Hero14LifestealTriggerID_"..pID] then
+								if gvHero14.LifestealAura.TriggerIDs[pID] then
 									Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 									Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 								end
@@ -127,7 +127,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
 										end
 										Logic.HurtEntity(eID, damage)
-										if _G["Hero14LifestealTriggerID_"..pID] then
+										if gvHero14.LifestealAura.TriggerIDs[pID] then
 											Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 											Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 										end										
@@ -144,7 +144,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
 							end
 							Logic.HurtEntity(eID, damage)
-							if _G["Hero14LifestealTriggerID_"..pID] then
+							if gvHero14.LifestealAura.TriggerIDs[pID] then
 								Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 								Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 							end
@@ -160,5 +160,6 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			AbilityNameRechargeButtons = {CallOfDarkness = "Hero14_RechargeCallOfDarkness", LifestealAura = "Hero14_RechargeLifestealAura", RisingEvil = "Hero14_RechargeRisingEvil"},				
 			GetRechargeButtonByAbilityName = function(_name)
 				return gvHero14.AbilityNameRechargeButtons[_name]
-			end
+			end,
+			TriggerIDs = {Resurrection = {}}
 			}

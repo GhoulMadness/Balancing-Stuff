@@ -34,24 +34,17 @@ gvArchers_Tower.CurrentlyClimbing = {}
 
 gvArchers_Tower.SlotData = {}
 
-gvArchers_Tower.AllowedTypes = {Entities.PU_LeaderBow1,
+gvArchers_Tower.TriggerIDs = {AddTroop = {}, RemoveTroop = {}}
 
-								Entities.PU_LeaderBow2,
-								
-								Entities.PU_LeaderBow3,
-								
-								Entities.PU_LeaderBow4,
-								
-								Entities.PU_LeaderRifle1,
-								
-								Entities.PU_LeaderRifle2,
-								
-								Entities.PV_Cannon1,
-								
-								Entities.PV_Cannon3,
-								
-								Entities.CU_Evil_LeaderSkirmisher1,
-								
+gvArchers_Tower.AllowedTypes = {Entities.PU_LeaderBow1,
+								Entities.PU_LeaderBow2,								
+								Entities.PU_LeaderBow3,								
+								Entities.PU_LeaderBow4,								
+								Entities.PU_LeaderRifle1,								
+								Entities.PU_LeaderRifle2,								
+								Entities.PV_Cannon1,								
+								Entities.PV_Cannon3,								
+								Entities.CU_Evil_LeaderSkirmisher1,								
 								Entities.CU_BanditLeaderBow1}
 								-- value that defines the damage treshold needed to trigger the damage recalculation
 gvArchers_Tower.OccupiedTroop = {DamageTreshold = 50,
@@ -61,64 +54,50 @@ gvArchers_Tower.OccupiedTroop = {DamageTreshold = 50,
 								TowerSearchRange = 500}
 if CNetwork then
 
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
-	
-		gvArchers_Tower.AmountOfTowers[i] = Logic.GetNumberOfEntitiesOfTypeOfPlayer(i, Entities.PB_Archers_Tower) 
-		
+	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 	
+		gvArchers_Tower.AmountOfTowers[i] = Logic.GetNumberOfEntitiesOfTypeOfPlayer(i, Entities.PB_Archers_Tower) 		
 	end
 	
 else
 
-	for i = 1,8 do
-	
-		gvArchers_Tower.AmountOfTowers[i] = Logic.GetNumberOfEntitiesOfTypeOfPlayer(i, Entities.PB_Archers_Tower) 
-		
+	for i = 1,8 do	
+		gvArchers_Tower.AmountOfTowers[i] = Logic.GetNumberOfEntitiesOfTypeOfPlayer(i, Entities.PB_Archers_Tower) 		
 	end
 	
 end
 
 gvArchers_Tower.Offset_ByOrientation = {[0] = {	X = 0,
-
 												Y = 700},
 												
-										[90] = {X = -600,
-										
+										[90] = {X = -600,										
 												Y = 0},
 												
-										[180]= {X = 0,
-										
+										[180]= {X = 0,										
 												Y = -600},
 												
-										[270]= {X = 800,
-										
+										[270]= {X = 800,										
 												Y = 0},
 												
-										[360]= {X = 0,
-										
-												Y = 700}
-												
+										[360]= {X = 0,										
+												Y = 700}											
 										}
 										
 function gvArchers_Tower.GetOffset_ByOrientation(_entity)
 
-	local orientation = Logic.GetEntityOrientation(_entity)
-	
+	local orientation = Logic.GetEntityOrientation(_entity)	
 	return gvArchers_Tower.Offset_ByOrientation[orientation]
 	
 end
 	
 function gvArchers_Tower.GetFirstFreeSlot(_entity)
 
-	if gvArchers_Tower.SlotData[_entity][1] == nil then
-	
+	if gvArchers_Tower.SlotData[_entity][1] == nil then	
 		return 1
 		
-	elseif gvArchers_Tower.SlotData[_entity][2] == nil then
-	
+	elseif gvArchers_Tower.SlotData[_entity][2] == nil then	
 		return 2
 		
-	else
-	
+	else	
 		return false
 		
 	end
@@ -126,41 +105,37 @@ function gvArchers_Tower.GetFirstFreeSlot(_entity)
 end
 	
 gvArchers_Tower.Icon_ByEntityCategory = {	[EntityCategories.Bow]	 = "Data\\Graphics\\Textures\\GUI\\b_select_bowman",
-
-											[EntityCategories.Rifle]  = "Data\\Graphics\\Textures\\GUI\\b_select_rifleman",
-											
-											[EntityCategories.Cannon] = "Data\\Graphics\\Textures\\GUI\\b_select_cannon",
-											
-											[EntityCategories.EvilLeader] = "Data\\Graphics\\Textures\\GUI\\b_select_skirmisher"
-											
+											[EntityCategories.Rifle]  = "Data\\Graphics\\Textures\\GUI\\b_select_rifleman",											
+											[EntityCategories.Cannon] = "Data\\Graphics\\Textures\\GUI\\b_select_cannon",											
+											[EntityCategories.EvilLeader] = "Data\\Graphics\\Textures\\GUI\\b_select_skirmisher"											
 										}
 
 gvArchers_Tower.EmptySlot_Icon = "Data\\Graphics\\Textures\\GUI\\b_select_empty"
 											
 function gvArchers_Tower.GetIcon_ByEntityCategory(_entity)
 
-	if Logic.IsEntityInCategory(_entity, EntityCategories.Bow) == 1 and Logic.IsEntityInCategory(_entity, EntityCategories.EvilLeader) ~= 1 then
-	
+	--[[if Logic.IsEntityInCategory(_entity, EntityCategories.Bow) == 1 and Logic.IsEntityInCategory(_entity, EntityCategories.EvilLeader) ~= 1 then	
 		return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.Bow]
 		
-	elseif Logic.IsEntityInCategory(_entity, EntityCategories.Rifle) == 1 then
-	
+	elseif Logic.IsEntityInCategory(_entity, EntityCategories.Rifle) == 1 then	
 		return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.Rifle]
 		
-	elseif Logic.IsEntityInCategory(_entity, EntityCategories.Cannon) == 1 then
-	
+	elseif Logic.IsEntityInCategory(_entity, EntityCategories.Cannon) == 1 then	
 		return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.Cannon]
 		
-	elseif Logic.IsEntityInCategory(_entity, EntityCategories.EvilLeader) == 1 then
-	
+	elseif Logic.IsEntityInCategory(_entity, EntityCategories.EvilLeader) == 1 then	
 		return gvArchers_Tower.Icon_ByEntityCategory[EntityCategories.EvilLeader]
 			
-	else
+	else	
+		return false		
 	
-		return false
-		
+	end]]
+	for k,v in pairs(EntityCategories) do
+		if Logic.IsEntityInCategory(_entity, v) == 1 and gvArchers_Tower.Icon_ByEntityCategory[v] then
+			return gvArchers_Tower.Icon_ByEntityCategory[v]
+		end		
 	end
-	
+	return gvArchers_Tower.EmptySlot_Icon
 end
 gvArchers_Tower.PrepareData = {}
 function gvArchers_Tower.PrepareData.AddTroop(_playerID, _entityID, _leaderID)
@@ -174,7 +149,7 @@ function gvArchers_Tower.PrepareData.AddTroop(_playerID, _entityID, _leaderID)
 		soldiers = _soldierstable[1]		
 	end								
 	
-	_G["Archers_Tower_AddTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop_".._playerID.."_".._slot, 1, nil, {_slot, soldiers or 0, _playerID, _entityID})
+	gvArchers_Tower.TriggerIDs.AddTroop[_entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_AddTroop", 1, nil, {_slot, soldiers or 0, _playerID, _entityID})
 	gvArchers_Tower.CurrentlyUsedSlots[_entityID] = gvArchers_Tower.CurrentlyUsedSlots[_entityID] + 1	
 	Logic.SuspendEntity(gvArchers_Tower.SlotData[_entityID][_slot])
 	SetEntityVisibility(gvArchers_Tower.SlotData[_entityID][_slot], 0)
@@ -198,7 +173,7 @@ function gvArchers_Tower.PrepareData.RemoveTroop(_playerID, _entityID, _slot)
 		soldiers = _soldierstable[1]		
 	end
 	
-	_G["Archers_Tower_RemoveTroopTriggerID_".._entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop_".._playerID.."_".._slot, 1, nil, {_slot, _entityID, soldiers or 0, _playerID})
+	gvArchers_Tower.TriggerIDs.RemoveTroop[_entityID.."_".._slot] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Archers_Tower_RemoveTroop", 1, nil, {_slot, _entityID, soldiers or 0, _playerID})
 	Logic.SuspendEntity(gvArchers_Tower.SlotData[_entityID][_slot])	
 	SetEntityVisibility(gvArchers_Tower.SlotData[_entityID][_slot], 0)
 	

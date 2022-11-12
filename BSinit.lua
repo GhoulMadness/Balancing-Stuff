@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.726
+	BS.Version = 0.730
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -330,8 +330,8 @@
 			"Tower",
 			"Archers_Tower",
 			"Scaremonger",
-			"Trigger",
 			"Comforts",
+			"Trigger",
 			"CMod_Additions",
 			"InterfaceTools",
 			"GameCallbacks",
@@ -400,8 +400,6 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnArchers_Tower_OccupiedTroopDied", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "OnArchers_Tower_OccupiedTroopAttacked", 1)
 	--Trigger for serfs
-	SerfIDTable = {Logic.GetEntities(Entities.PU_Serf,30)}
-	table.remove(SerfIDTable,1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SerfCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "SerfDestroyed", 1)
 	StartCountdown(5,SerfHPRegen,false)
@@ -417,6 +415,12 @@
 	StartSimpleJob("Lightning_Job")
 	--Control Siversmith Grievance
 	StartSimpleJob("ControlSiversmithGrievance")
+	--Trigger to get building ids for beauti anims
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
+	--Trigger for AI target redirection
+	AIchunks = {}
+	AIchunks.time = {}
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
 	--internal payday activation (for treasury technology - debenture)
 	if CUtil then 
@@ -427,7 +431,8 @@
 	--initializing dz trade punishment
 	DZTrade_Init()
 	--initializing animations for beautifications
-	StartCountdown(5*60,BeautiAnimCheck,false)
+
+	BeautiAnimCheck()
 	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------		
 	if not gvEMSFlag then
 		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")

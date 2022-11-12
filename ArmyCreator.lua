@@ -220,7 +220,7 @@ ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 
 	for k,v in pairs(_trooptable) do
 						
-		if ArmyCreator.TroopException[k] and v == 1then						
+		if ArmyCreator.TroopException[k] and v == 1 then						
 				
 			Logic.CreateEntity(k, ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, math.random(360), _playerID)
 			
@@ -260,5 +260,4 @@ ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 	
 	end
 	
-end
-	
+end	
