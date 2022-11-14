@@ -331,12 +331,18 @@ ManualControl_AttackTarget = function(_player, _army, _id)
 		MapEditor_Armies[_player][_army + 1][_id] = nil
 		return true
 	end
-	local range = math.max(GetEntityTypeMaxAttackRange(_id, _player) + 600, 3200)
+	local range = math.max(GetEntityTypeMaxAttackRange(_id, _player) + 600, 1000)
 	local target = MapEditor_Armies[_player][_army + 1][_id].currenttarget
 	local time = MapEditor_Armies[_player][_army + 1][_id].lasttime
 	local delay = 5 + (Logic.IsEntityInCategory(_id, EntityCategories.Melee) * 20)
-	if not AreEntitiesOfDiplomacyStateInArea(_player, GetPosition(_id), range, Diplomacy.Hostile) then
-		
+	local posX, posY = Logic.GetEntityPosition(_id)
+	local currtime = Logic.GetTimeMs()
+	if AIchunks.time[_player] ~= currtime then
+		AIchunks[_player]:UpdatePositions()
+		AIchunks.time[_player] = Logic.GetTimeMs()
+	end
+	local entities = AIchunks[_player]:GetEntitiesInAreaInCMSorted(posX, posY, range)
+	if not entities[1] then
 		local newtarget = GetNearestTarget(_player, _id)
 		if newtarget and newtarget ~= target then
 			if not Logic.IsEntityAlive(target) then 
@@ -351,20 +357,44 @@ ManualControl_AttackTarget = function(_player, _army, _id)
 				end
 			end
 		end
-		
 	else
-		
-		local newtarget = CheckForBetterTarget(_id, target, range)
-		if newtarget and newtarget ~= target then
-			if not Logic.IsEntityAlive(target) then 
-				MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-				MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
-				Logic.GroupAttack(_id, newtarget)
-			else
-				if Logic.GetCurrentTurn() > time + delay then
+		local count = 0
+		for i = 1, table.getn(entities) do
+			if count > 0 then
+				break
+			end
+			if Logic.IsEntityAlive(entities[i]) then
+				count = count + 1
+			end
+		end
+		if count == 0 then
+			local newtarget = GetNearestTarget(_player, _id)
+			if newtarget and newtarget ~= target then
+				if not Logic.IsEntityAlive(target) then 
 					MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
 					MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
 					Logic.GroupAttack(_id, newtarget)		
+				else
+					if Logic.GetCurrentTurn() > time + delay then
+						MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
+						MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+						Logic.GroupAttack(_id, newtarget)		
+					end
+				end
+			end				
+		else		
+			local newtarget = CheckForBetterTarget(_id, target, range)
+			if newtarget and newtarget ~= target then
+				if not Logic.IsEntityAlive(target) then 
+					MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
+					MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+					Logic.GroupAttack(_id, newtarget)
+				else
+					if Logic.GetCurrentTurn() > time + delay then
+						MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
+						MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+						Logic.GroupAttack(_id, newtarget)		
+					end
 				end
 			end
 		end
@@ -382,7 +412,7 @@ end
 AITroopGenerator_Condition = function(_Name, _Index)
 
 	-- Already enough troops
-	if 	Counter.Tick2(_Name.."Generator",7) == false or ((DataTable[_Index].ignoreAttack == nil or not DataTable[_Index].ignoreAttack) and DataTable[_Index].Attack) 
+	if 	Counter.Tick2(_Name.."Generator",6) == false or ((DataTable[_Index].ignoreAttack == nil or not DataTable[_Index].ignoreAttack) and DataTable[_Index].Attack) 
 		or
 		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= table.getn(MapEditor_Armies[DataTable[_Index].player]) *DataTable[_Index].strength then
 		return false
@@ -429,13 +459,13 @@ end
 AITroopGenerator_Action = function(_Index)
 
 	-- Get entityType/Category
-	local eTyp = AITroopGenerator_EvaluateMilitaryBuildingsPriority(_Index)
+	local eTyp = AITroopGenerator_EvaluateMilitaryBuildingsPriority(_Index) or DataTable[_Index].AllowedTypes[math.random(table.getn(DataTable[_Index].AllowedTypes))]
 	if eTyp == Entities.PV_Cannon1 and DataTable[_Index].techLVL == 3 then
 		eTyp = Entities.PV_Cannon3
 	elseif eTyp == Entities.PV_Cannon2 and DataTable[_Index].techLVL == 3 then
 		eTyp = Entities.PV_Cannon4
 	end
-	if eTyp and AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < table.getn(MapEditor_Armies[DataTable[_Index].player]) * DataTable[_Index].strength * 3/4 then
+	if AI.Player_GetNumberOfLeaders(DataTable[_Index].player) < table.getn(MapEditor_Armies[DataTable[_Index].player]) * DataTable[_Index].strength * 3/4 then
 		AI.Army_BuyLeader(DataTable[_Index].player, DataTable[_Index].id, eTyp)
 	end
 	return false
@@ -447,6 +477,9 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_Index)
 	if MapEditor_Armies[player].prioritylist_lastUpdate == 0 or Logic.GetTime() > MapEditor_Armies[player].prioritylist_lastUpdate + 30 then
 		local num = {}
 		num.Barracks, num.Archery, num.Stables, num.Foundry = AI.Village_GetNumberOfMilitaryBuildings(player)
+		if num.Foundry > 0 and (MilitaryBuildingIsTrainingSlotFree(({Logic.GetPlayerEntities(player, Entities.PB_Foundry1, 1)})[2]) or MilitaryBuildingIsTrainingSlotFree(({Logic.GetPlayerEntities(player, Entities.PB_Foundry2, 1)})[2])) then
+			return Entities["PV_Cannon"..math.min(math.random(1, 3), 2)]
+		end
 		local armorclasspercT = GetPercentageOfLeadersPerArmorClass(AIEnemiesAC[player])
 		for i = 1,7 do
 			local bestdclass = BS.GetBestDamageClassByArmorClass(armorclasspercT[i].id)

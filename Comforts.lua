@@ -1925,7 +1925,7 @@ end
 DamageFactorToArmorClass = {}
 for i = 1,9 do
 	DamageFactorToArmorClass[i] = {}
-	for k = 1,6 do
+	for k = 1,7 do
 		DamageFactorToArmorClass[i][k] = GetDamageFactor(i, k)
 	end
 end
@@ -2023,7 +2023,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	for i = 1, table.getn(entities) do
 		if Logic.IsEntityAlive(entities[i]) then
 			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(entities[i]))]	
-			local mul = ({Logic.GetSoldiersAttachedToLeader(entities[i])})[1] + 1
+			local mul = (({Logic.GetSoldiersAttachedToLeader(entities[i])})[1] or 0) + 1
 			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
 				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul})
 				--[[local soldiers = {Logic.GetSoldiersAttachedToLeader(entities[i])}
@@ -2060,7 +2060,8 @@ function CheckForBetterTarget(_eID, _target, _range)
 		if _dist > _range then
 			return math.sqrt((_dist - _range) / _range)
 		else
-			return math.sqrt(math.abs((_dist - _range) / _range))
+			return 0
+			--math.sqrt(math.abs((_dist - _range) / _range))
 		end
 	end
 	table.sort(calcT, function(p1, p2)
@@ -2200,6 +2201,9 @@ GetUpgradeCategoryInDamageClass = function(_dclass)
 	end
 end
 MilitaryBuildingIsTrainingSlotFree = function(_id)
+	if not _id or not Logic.IsEntityAlive(_id) then
+		return
+	end
 	local slots
 	local IsFoundry = (Logic.GetEntityType(_id) == Entities.PB_Foundry1 or Logic.GetEntityType(_id) == Entities.PB_Foundry2)
 	if IsFoundry then
@@ -2366,32 +2370,108 @@ ChestRandomPositions.OffsetByType = {	[Entities.XD_Fir1] = {X = 80, Y = 80},
 																	[90] = {X = 550, Y = 850},
 																	[180] = {X = 680, Y = -200},
 																	[270] = {X = 580, Y = 460}},
-										[Entities.PB_GoldMine2] = {X = 280, Y = 710},
-										[Entities.PB_GoldMine3] = {X = 280, Y = 710},
-										[Entities.PB_GunsmithWorkshop1] = {X = -100, Y = 570},
-										[Entities.PB_GunsmithWorkshop2] = {X = -100, Y = 570},
-										[Entities.PB_Headquarters1] = {X = 640, Y = 640},
-										[Entities.PB_Headquarters2] = {X = 640, Y = 640},
-										[Entities.PB_Outpost1] = {X = 640, Y = 640},
-										[Entities.PB_Outpost2] = {X = 640, Y = 640},
-										[Entities.PB_Outpost3] = {X = 640, Y = 640},
-										[Entities.PB_Market1] = {X = 590, Y = 660},
-										[Entities.PB_Market2] = {X = 590, Y = 660},
-										[Entities.PB_Market3] = {X = 870, Y = 710},
-										[Entities.PB_MasterBuilderWorkshop] = {X = 340, Y = 360},
-										[Entities.PB_MercenaryTower] = {X = 400, Y = 250},
-										[Entities.PB_Monastery1] = {X = 790, Y = 620},
-										[Entities.PB_Monastery2] = {X = 790, Y = 620},
-										[Entities.PB_Monastery3] = {X = 790, Y = 620},
-										[Entities.PB_PowerPlant1] = {X = 260, Y = 320},
-										[Entities.PB_Residence1] = {X = 300, Y = 210},
-										[Entities.PB_Residence2] = {X = 300, Y = 210},
-										[Entities.PB_Residence3] = {X = 300, Y = 210},
-										[Entities.PB_Sawmill1] = {X = 490, Y = 720},
-										[Entities.PB_Sawmill2] = {X = 490, Y = 720},
+										[Entities.PB_GoldMine2] = {	[0] = {X = 280, Y = 710},
+																	[90] = {X = 480, Y = 570},
+																	[180] = {X = 580, Y = -230},
+																	[270] = {X = 650, Y = 320}},
+										[Entities.PB_GoldMine3] = {	[0] = {X = 280, Y = 710},
+																	[90] = {X = 480, Y = 570},
+																	[180] = {X = 580, Y = -230},
+																	[270] = {X = 650, Y = 320}},
+										[Entities.PB_GunsmithWorkshop1] = {	[0] = {X = -100, Y = 570},
+																			[90] = {X = 450, Y = 400},
+																			[180] = {X = -10, Y = 500},
+																			[270] = {X = 530, Y = 420}},
+										[Entities.PB_GunsmithWorkshop2] = {	[0] = {X = -100, Y = 570},
+																			[90] = {X = 450, Y = 400},
+																			[180] = {X = -10, Y = 500},
+																			[270] = {X = 530, Y = 420}},
+										[Entities.PB_Headquarters1] = {	[0] = {X = 640, Y = 640},
+																		[90] = {X = 90, Y = 640},
+																		[180] = {X = 600, Y = 300},
+																		[270] = {X = 610, Y = -180}},
+										[Entities.PB_Headquarters2] = {	[0] = {X = 640, Y = 640},
+																		[90] = {X = 90, Y = 640},
+																		[180] = {X = 600, Y = 300},
+																		[270] = {X = 610, Y = -180}},
+										[Entities.PB_Headquarters3] = {	[0] = {X = 640, Y = 640},
+																		[90] = {X = 90, Y = 640},
+																		[180] = {X = 600, Y = 300},
+																		[270] = {X = 610, Y = -180}},
+										[Entities.PB_Outpost1] = {	[0] = {X = 640, Y = 640},
+																	[90] = {X = 90, Y = 640},
+																	[180] = {X = 600, Y = 300},
+																	[270] = {X = 610, Y = -180}},
+										[Entities.PB_Outpost2] = {	[0] = {X = 640, Y = 640},
+																	[90] = {X = 90, Y = 640},
+																	[180] = {X = 600, Y = 300},
+																	[270] = {X = 610, Y = -180}},
+										[Entities.PB_Outpost3] = {	[0] = {X = 640, Y = 640},
+																	[90] = {X = 90, Y = 640},
+																	[180] = {X = 600, Y = 300},
+																	[270] = {X = 610, Y = -180}},
+										[Entities.PB_Market1] = {	[0] = {X = 590, Y = 660},
+																	[90] = {X = 500, Y = 650},
+																	[180] = {X = 340, Y = 580},
+																	[270] = {X = 590, Y = 240}},
+										[Entities.PB_Market2] = {	[0] = {X = 590, Y = 660},
+																	[90] = {X = 500, Y = 650},
+																	[180] = {X = 340, Y = 580},
+																	[270] = {X = 590, Y = 240}},
+										[Entities.PB_Market3] = {	[0] = {X = 870, Y = 710},
+																	[90] = {X = 790, Y = -350},
+																	[180] = {X = 720, Y = 670},
+																	[270] = {X = 830, Y = -610}},
+										[Entities.PB_MasterBuilderWorkshop] = {	[0] = {X = 340, Y = 360},
+																				[90] = {X = 480, Y = 330},
+																				[180] = {X = 200, Y = 490},
+																				[270] = {X = 270, Y = 220}},
+										[Entities.PB_MercenaryTower] = {[0] = {X = 400, Y = 250},
+																		[90] = {X = 310, Y = 300},
+																		[180] = {X = 400, Y = -10},
+																		[270] = {X = 300, Y = 270}},
+										[Entities.PB_Monastery1] = {[0] = {X = 790, Y = 620},
+																	[90] = {X = 100, Y = 680},
+																	[180] = {X = 600, Y = 90},
+																	[270] = {X = 700, Y = -230}},
+										[Entities.PB_Monastery2] = {[0] = {X = 790, Y = 620},
+																	[90] = {X = 100, Y = 680},
+																	[180] = {X = 600, Y = 90},
+																	[270] = {X = 700, Y = -230}},
+										[Entities.PB_Monastery3] = {[0] = {X = 790, Y = 620},
+																	[90] = {X = 100, Y = 680},
+																	[180] = {X = 600, Y = 90},
+																	[270] = {X = 700, Y = -230}},
+										[Entities.PB_PowerPlant1] = {	[0] = {X = 260, Y = 320},
+																		[90] = {X = 200, Y = 100},
+																		[180] = {X = 300, Y = 110},
+																		[270] = {X = 300, Y = 220}},
+										[Entities.PB_Residence1] = {[0] = {X = 300, Y = 210},
+																	[90] = {X = 300, Y = 140},
+																	[180] = {X = 200, Y = 180},
+																	[270] = {X = 200, Y = 140}},
+										[Entities.PB_Residence2] = {[0] = {X = 300, Y = 210},
+																	[90] = {X = 300, Y = 140},
+																	[180] = {X = 200, Y = 180},
+																	[270] = {X = 200, Y = 140}},
+										[Entities.PB_Residence3] = {[0] = {X = 300, Y = 210},
+																	[90] = {X = 300, Y = 140},
+																	[180] = {X = 200, Y = 180},
+																	[270] = {X = 200, Y = 140}},
+										[Entities.PB_Sawmill1] = {	[0] = {X = 490, Y = 720},
+																	[90] = {X = 770, Y = 280},
+																	[180] = {X = -100, Y = 830},
+																	[270] = {X = 760, Y = -100}},
+										[Entities.PB_Sawmill2] = {	[0] = {X = 490, Y = 720},
+																	[90] = {X = 770, Y = 280},
+																	[180] = {X = -100, Y = 830},
+																	[270] = {X = 760, Y = -100}},
 										[Entities.PB_SilverMine2] = {X = 520, Y = 680},
 										[Entities.PB_SilverMine3] = {X = 600, Y = 610},
-										[Entities.PB_StoneMason1] = {X = 480, Y = 470},
+										[Entities.PB_StoneMason1] = {	[0] = {X = 480, Y = 470},
+																		[90] = {X = 450, Y = 400},
+																		[180] = {X = -70, Y = 480},
+																		[270] = {X = 480, Y = -50}},
 										[Entities.PB_StoneMason2] = {X = 510, Y = 230},
 										[Entities.PB_SulfurMine2] = {X = 245, Y = 790},
 										[Entities.PB_SulfurMine3] = {X = 245, Y = 790},
@@ -2476,7 +2556,7 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
         for _, eID in entities do
             local offX, offY
             if Logic.IsBuilding(eID) == 1 then
-                local r = Logic.GetEntityOrientation(eID)
+                local r = round(Logic.GetEntityOrientation(eID))
                 if ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)][r] then
                     offX, offY = ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)][r].X, ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)][r].Y
                 end                    
