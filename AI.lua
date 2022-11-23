@@ -1,3 +1,11 @@
+AIEnemiesAC = AIEnemiesAC or {}
+for _playerId = 2,12 do
+	AIEnemiesAC[_playerId] = AIEnemiesAC[_playerId] or {}
+	AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total or 0
+	for i = 1,7 do
+		AIEnemiesAC[_playerId][i] = AIEnemiesAC[_playerId][i] or {}
+	end
+end
 function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime)
 
 	-- Valid
@@ -132,12 +140,6 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_TURN, "", "StartMapEditor_Controller", 1, {}, {_playerId, i})		
 	end	
 	SetHostile(1,_playerId)
-	AIEnemiesAC = AIEnemiesAC or {}
-	AIEnemiesAC[_playerId] = AIEnemiesAC[_playerId] or {}
-	AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total or 0
-	for i = 1,7 do
-		AIEnemiesAC[_playerId][i] = AIEnemiesAC[_playerId][i] or {}
-	end
 	local enemies = BS.GetAllEnemyPlayerIDs(_playerId)
 	if gvTower.StartTowersIDTable and gvTower.StartTowersIDTable[1] then
 		for i = 1, table.getn(gvTower.StartTowersIDTable) do			
@@ -149,10 +151,11 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 			end
 		end
 	end
-	AIchunks[_playerId] = CUtil.Chunks.new()
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_playerId})
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_playerId})
-	
+	if not AIchunks[_playerId] then
+		AIchunks[_playerId] = CUtil.Chunks.new()
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_playerId})
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_playerId})
+	end
 end
 function StartMapEditor_Controller(_playerId,_armycount)
 
@@ -174,7 +177,7 @@ end
 
 ControlMapEditor_Armies = function(_playerId,_armycount)
 	
-	if Counter.Tick2("ControlMapEditor_Armies_".._playerId.."_".._armycount,5) then
+	if Counter.Tick2("ControlMapEditor_Armies_".._playerId.."_".._armycount,3) then
 				
 		if MapEditor_Armies[_playerId] ~= nil and MapEditor_Armies[_playerId][_armycount] ~= nil then							
 			TickOffensiveAIController(MapEditor_Armies[_playerId][_armycount])												
@@ -278,7 +281,7 @@ TickOffensiveAIController = function(_army)
 		else
 			
 			if AI.Army_GetDistanceBetweenAnchorAndEnemy(player, army) < _army.manualControlRange then
-				AI_StartManualControl(player, _army)
+				AI_StartManualControl(player, _army, 0)
 			else
 				Advance(_army)
 			end
@@ -298,42 +301,110 @@ AIController_Defensive = function(_army, _range)
 	end
 	
 end
-AI_StartManualControl = function(_player, _army)
+AI_AddEnemiesToChunkData = function(_playerId)
+
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(_playerId))), CEntityIterator.IsSettlerOrBuildingFilter()) do
+		local etype = Logic.GetEntityType(eID)
+		if IsMilitaryLeader(eID) or Logic.IsHero(eID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
+			AIchunks[_playerId]:AddEntity(eID)
+			table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
+			AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
+		end
+	end
+end
+SetupArmy = function(_army)
 	
-	local target, newtarget
+	if not ArmyTable then
+		ArmyTable = {}
+	end
+	if not ArmyTable[_army.player] then
+		ArmyTable[_army.player] = {}
+	end
+	ArmyTable[_army.player][_army.id + 1] = ArmyTable[_army.player][_army.id + 1] or {}
+	AI.Army_SetAnchor(
+		_army.player,
+		_army.id,
+		_army.position.X,
+		_army.position.Y,
+		_army.rodeLength
+	)
+	
+	AI.Army_SetScatterTolerance(
+		_army.player,
+		_army.id,
+		4
+	)		
+	
+	if _army.beAgressive ~= nil then
+	
+		AI.Army_BeAlwaysAggressive(_army.player,_army.id)
+		
+	end
+	
+	if not AIchunks[_army.player] then
+		AIchunks[_army.player] = CUtil.Chunks.new()
+		AI_AddEnemiesToChunkData(_army.player)
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_army.player})
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_army.player})
+	end	
+end
+Advance = function(_army, _flag)
+
+	local distanceToEnemy = AI.Army_GetDistanceBetweenAnchorAndEnemy(_army.player,_army.id)
+	AI.Army_SetAnchorRodeLength(_army.player,_army.id,distanceToEnemy)
+	if not _flag and (not MapEditor_Armies or not MapEditor_Armies[_army.player]) and distanceToEnemy <= _army.rodeLength then
+		AI_StartManualControl(_army.player, _army, 1)
+	end
+end	
+AI_StartManualControl = function(_player, _army, _flag)
+	
+	local target, newtarget, tabname, range
 	local leaderIDs = AI.Army_GetLeaderIDs(_player, _army.id)
-	local range = MapEditor_Armies[_player][_army.id + 1].manualControlRange
+	if _flag == 0 then
+		tabname = MapEditor_Armies[_player][_army.id + 1]
+		range = tabname.manualControlRange 		
+	elseif _flag == 1 then
+		tabname = _army
+		range = math.min(tabname.rodeLength, 5000)
+	end
 	if leaderIDs[1] then
 		for i = 1,table.getn(leaderIDs) do
-			if MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]] and MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]].currenttarget then
-				target = MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]].currenttarget
+			if tabname[leaderIDs[i]] and tabname[leaderIDs[i]].currenttarget then
+				target = tabname[leaderIDs[i]].currenttarget
 				newtarget = CheckForBetterTarget(leaderIDs[i], target, range)
 			else
 				newtarget = CheckForBetterTarget(leaderIDs[i], nil, range)
 			end
 			if newtarget and newtarget ~= target then
-				MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]] = MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]] or {}
-				MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]].currenttarget = newtarget
-				MapEditor_Armies[_player][_army.id + 1][leaderIDs[i]].lasttime = Logic.GetCurrentTurn() 
+				tabname[leaderIDs[i]] = tabname[leaderIDs[i]] or {}
+				tabname[leaderIDs[i]].currenttarget = newtarget
+				tabname[leaderIDs[i]].lasttime = Logic.GetCurrentTurn() 
 				AI.Army_EnableLeaderAi(leaderIDs[i], 0)
 				AI.Entity_RemoveFromArmy(leaderIDs[i], _player, _army.id)
 				Logic.GroupAttack(leaderIDs[i], newtarget)
-				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "ManualControl_AttackTarget", 1, {}, {_player, _army.id, leaderIDs[i]})
+				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "ManualControl_AttackTarget", 1, {}, {_player, _flag, _army.id, leaderIDs[i]})
 			else
-				Advance(_army)
+				Advance(_army, 0)
 			end
 		end
 	end
 end
-ManualControl_AttackTarget = function(_player, _army, _id)
-
+ManualControl_AttackTarget = function(_player, _flag, _armyId, _id)
+	
+	local tabname, range
+	if _flag == 0 then
+		tabname = MapEditor_Armies[_player][_armyId + 1]
+		range = tabname.manualControlRange + 500 		
+	elseif _flag == 1 then
+		tabname = ArmyTable[_player][_armyId + 1]
+		range = math.min(tabname.rodeLength, 5000)
+	end
 	if not Logic.IsEntityAlive(_id) then
-		MapEditor_Armies[_player][_army + 1][_id] = nil
+		tabname[_id] = nil
 		return true
 	end
-	local range = math.max(GetEntityTypeMaxAttackRange(_id, _player) + 600, 1000)
-	local target = MapEditor_Armies[_player][_army + 1][_id].currenttarget
-	local time = MapEditor_Armies[_player][_army + 1][_id].lasttime
+	local target = tabname[_id].currenttarget
+	local time = tabname[_id].lasttime
 	local delay = 5 + (Logic.IsEntityInCategory(_id, EntityCategories.Melee) * 20)
 	local posX, posY = Logic.GetEntityPosition(_id)
 	local currtime = Logic.GetTimeMs()
@@ -346,13 +417,13 @@ ManualControl_AttackTarget = function(_player, _army, _id)
 		local newtarget = GetNearestTarget(_player, _id)
 		if newtarget and newtarget ~= target then
 			if not Logic.IsEntityAlive(target) then 
-				MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-				MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+				tabname[_id].currenttarget = newtarget
+				tabname[_id].lasttime = Logic.GetCurrentTurn()
 				Logic.GroupAttack(_id, newtarget)		
 			else
 				if Logic.GetCurrentTurn() > time + delay then
-					MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-					MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+					tabname[_id].currenttarget = newtarget
+					tabname[_id].lasttime = Logic.GetCurrentTurn()
 					Logic.GroupAttack(_id, newtarget)		
 				end
 			end
@@ -371,13 +442,13 @@ ManualControl_AttackTarget = function(_player, _army, _id)
 			local newtarget = GetNearestTarget(_player, _id)
 			if newtarget and newtarget ~= target then
 				if not Logic.IsEntityAlive(target) then 
-					MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-					MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+					tabname[_id].currenttarget = newtarget
+					tabname[_id].lasttime = Logic.GetCurrentTurn()
 					Logic.GroupAttack(_id, newtarget)		
 				else
 					if Logic.GetCurrentTurn() > time + delay then
-						MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-						MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+						tabname[_id].currenttarget = newtarget
+						tabname[_id].lasttime = Logic.GetCurrentTurn()
 						Logic.GroupAttack(_id, newtarget)		
 					end
 				end
@@ -386,13 +457,13 @@ ManualControl_AttackTarget = function(_player, _army, _id)
 			local newtarget = CheckForBetterTarget(_id, target, range)
 			if newtarget and newtarget ~= target then
 				if not Logic.IsEntityAlive(target) then 
-					MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-					MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+					tabname[_id].currenttarget = newtarget
+					tabname[_id].lasttime = Logic.GetCurrentTurn()
 					Logic.GroupAttack(_id, newtarget)
 				else
 					if Logic.GetCurrentTurn() > time + delay then
-						MapEditor_Armies[_player][_army + 1][_id].currenttarget = newtarget
-						MapEditor_Armies[_player][_army + 1][_id].lasttime = Logic.GetCurrentTurn()
+						tabname[_id].currenttarget = newtarget
+						tabname[_id].lasttime = Logic.GetCurrentTurn()
 						Logic.GroupAttack(_id, newtarget)		
 					end
 				end
@@ -412,7 +483,7 @@ end
 AITroopGenerator_Condition = function(_Name, _Index)
 
 	-- Already enough troops
-	if 	Counter.Tick2(_Name.."Generator",6) == false or ((DataTable[_Index].ignoreAttack == nil or not DataTable[_Index].ignoreAttack) and DataTable[_Index].Attack) 
+	if 	Counter.Tick2(_Name.."Generator",4) == false or ((DataTable[_Index].ignoreAttack == nil or not DataTable[_Index].ignoreAttack) and DataTable[_Index].Attack) 
 		or
 		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= table.getn(MapEditor_Armies[DataTable[_Index].player]) *DataTable[_Index].strength then
 		return false

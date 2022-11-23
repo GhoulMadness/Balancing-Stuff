@@ -1346,7 +1346,7 @@ function OnAIEnemyCreated(_playerID)
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
 	
-	if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
+	if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
 		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
 		for i = 1, table.getn(enemies) do
 			if playerID == enemies[i] then
@@ -1387,7 +1387,7 @@ function AITower_RedirectTarget()
 	local attype = Logic.GetEntityType(attacker)
 	local playerID = Logic.EntityGetPlayer(attacker)
 	
-	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) == 0 and MapEditor_Armies[playerID] then
+	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) == 0 and AIchunks[playerID] then
 
 		if Logic.IsEntityInCategory(attacker, EntityCategories.MilitaryBuilding) == 1 then
 			local newtarget = CheckForBetterTarget(attacker, target)
