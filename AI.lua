@@ -400,7 +400,7 @@ ManualControl_AttackTarget = function(_player, _flag, _armyId, _id)
 		range = tabname.manualControlRange + 500 		
 	elseif _flag == 1 then
 		tabname = ArmyTable[_player][_armyId + 1]
-		range = math.min(tabname.rodeLength, 5000)
+		range = math.min(tabname.rodeLength or 3200, 5000)
 	end
 	if not Logic.IsEntityAlive(_id) then
 		tabname[_id] = nil
