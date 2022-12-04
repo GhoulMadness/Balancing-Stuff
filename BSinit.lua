@@ -87,7 +87,9 @@
 					["(4) emsbs im graben der verdammnis"] = true,
 					["(4) emsbs tal rasha"] = true,
 					["(4) emsbs hasenjagd"] = true,
-					["(4) emsbs der taktiker"] = true
+					["(4) emsbs der taktiker"] = true,
+					["(4) emsbs winterzauber"] = true,
+					["(4) emsbs sparrowdale"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,

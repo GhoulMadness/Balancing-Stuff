@@ -1655,6 +1655,7 @@ function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
 		local id = adress[playerOffset][40 + offsets[k] + (_armyID *84)]:GetInt()
 		if id == _id then
 			adress[playerOffset][40 + offsets[k] + (_armyID *84)]:SetInt(0)
+			break
 		end
 	end
 end
@@ -1669,6 +1670,7 @@ function AI.Entity_AddToArmy(_id, _playerID, _armyID)
 		local id = adress[playerOffset][40 + offsets[k] + (_armyID *84)]:GetInt()
 		if id == 0 then
 			adress[playerOffset][40 + offsets[k] + (_armyID *84)]:SetInt(_id)
+			break
 		end
 	end
 end
@@ -1845,7 +1847,10 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 	
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(playerID))), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(posX, posY, _range)) do
 		local _X, _Y = Logic.GetEntityPosition(eID)	
-		local distancepow2 = (_X - posX)^2 + (_Y - posY)^2		
+		local distancepow2 = (_X - posX)^2 + (_Y - posY)^2	
+		if Logic.GetFoundationTop(eID) ~= 0 then
+			distancepow2 = distancepow2 / 2
+		end
 		table.insert(distancepow2table, {id = eID, dist = distancepow2})
 	end
 			
@@ -1990,6 +1995,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	end
 	local etype = Logic.GetEntityType(_eID)	
 	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1)
+	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
 	local posX, posY = Logic.GetEntityPosition(_eID)	
 	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
 	local damageclass = GetEntityTypeDamageClass(etype)
@@ -2013,37 +2019,29 @@ function CheckForBetterTarget(_eID, _target, _range)
 	
 	local postable = {}	
 	local clumpscore
+	local attach
 	local entities = AIchunks[player]:GetEntitiesInAreaInCMSorted(posX, posY, (_range or maxrange) + 500)
-	if table.getn(entities) < 5 then
-		local eIDs = {Logic.GetEntitiesInArea(Entities.PB_Tower3, posX, posY, (_range or maxrange), 1)}
-		if eIDs[2] and Logic.GetDiplomacyState(Logic.EntityGetPlayer(eIDs[2]), player) == Diplomacy.Hostile then
-			return eIDs[2]
-		end
+	
+	if not entities[1] then
+		return _target
 	end
 	for i = 1, table.getn(entities) do
 		if Logic.IsEntityAlive(entities[i]) then
-			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(entities[i]))]	
+			local ety = Logic.GetEntityType(entities[i])
+			local threatbonus
+			if Logic.GetFoundationTop(entities[i]) ~= 0 or GetEntityTypeDamageRange(ety) > 0 then
+				threatbonus = 1
+			end
+			attach = CEntity.GetAttachedEntities(entities[i])[37]
+			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]	
 			local mul = (({Logic.GetSoldiersAttachedToLeader(entities[i])})[1] or 0) + 1
 			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
-				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul})
-				--[[local soldiers = {Logic.GetSoldiersAttachedToLeader(entities[i])}
-				if soldiers[2] then
-					for k = 2, soldiers[1] do
-						local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(soldiers[k]))]
-						table.insert(postable, {pos = GetPosition(soldiers[k]), factor = damagefactor})
-					end
-				end	]]			
+				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul + (threatbonus or 0)})	
 			end						
-			table.insert(calcT, {id = entities[i], factor = damagefactor * mul, dist = GetDistance(_eID, entities[i])})
-			--[[local soldiers = {Logic.GetSoldiersAttachedToLeader(entities[i])}
-			if soldiers[2] then
-				for k = 2, soldiers[1] do
-					local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(soldiers[k]))]
-					table.insert(calcT, {id = soldiers[k], factor = damagefactor, dist = GetDistance(_eID, soldiers[k])})
-				end
-			end	]]			
+			table.insert(calcT, {id = entities[i], factor = damagefactor * mul + (threatbonus or 0), dist = GetDistance(_eID, entities[i])})	
 		end
 	end
+	local attachN = attach and table.getn(attach) or 0
 	if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
 		if postable[1] then
 			clumppos, score = GetPositionClump(postable, damagerange, 100)
@@ -2058,10 +2056,13 @@ function CheckForBetterTarget(_eID, _target, _range)
 	end	
 	local distval = function(_dist, _range)	
 		if _dist > _range then
-			return math.sqrt((_dist - _range) / _range)
+			if IsMelee then
+				return (_dist - _range) / _range
+			else
+				return math.sqrt((_dist - _range) / _range)
+			end
 		else
 			return 0
-			--math.sqrt(math.abs((_dist - _range) / _range))
 		end
 	end
 	table.sort(calcT, function(p1, p2)
@@ -2072,15 +2073,11 @@ function CheckForBetterTarget(_eID, _target, _range)
 				return p1.clumpscore + p1.factor - distval(p1.dist, maxrange) > p2.clumpscore + p2.factor - distval(p2.dist, maxrange)
 			end
 		else
-			return (p1.factor - distval(p1.dist, maxrange)) > (p2.factor - distval(p2.dist, maxrange))
+			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN / 2) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN / 2)
 		end
 	end)
-	if IsTower then
-		return calcT[1].id or _target
-	else
-		if calcT[1] and calcT[1].id ~= _target then
-			return calcT[1].id
-		end
+	if calcT[1] then
+		return calcT[1].id
 	end
 	return _target
 end

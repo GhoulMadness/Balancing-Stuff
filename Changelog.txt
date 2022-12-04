@@ -569,7 +569,7 @@ technische Infos:
 
 			RandomDMGBonus		0									2
 
-			Leibeigene können nun nicht mehr an Minen Ressourcen hacken.
+			Neu: Leibeigene können nun nicht mehr an Minen Ressourcen hacken.
 
 		Miliz:
 
@@ -671,7 +671,7 @@ technische Infos:
 
 			Falle Schadensrw.: 	1200								3000
 
-			Die Falle ist für Gegner erschwert sichtbar (keine Namensanzeige und kein Lebensbalken über der Falle, kein sichtbarer Effekt)
+			Neu: Die Falle ist für Gegner erschwert sichtbar (keine Namensanzeige und kein Lebensbalken über der Falle, kein sichtbarer Effekt)
 
 			Heilung-CD[s]:		90									120
 
@@ -749,379 +749,410 @@ technische Infos:
 
 		Helias:
 
-			Rüstung:		4									2
+			Rüstung:			4									2
 
-			HP:			666									600
+			HP:					666									600
 
-			Sichtweite:		2800									2800
+			Sichtweite:			2800								2800
 
-			Lauftempo:		430									400
+			Lauftempo:			430									400
 
-			HPReg[1/s]:		25/2									8/2
+			HPReg[1/s]:			25/2								8/2
 
-			DMG:			25									16
+			DMG:				25									16
 
 			RandomDMGBonus		20									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
-			Truppen bekehren-CD[s]:	180									60
+			Truppen bekehren-CD:180									60
 
 			Segnen-CD[s]:		180									120
 
 			Segnen Rüst.-Buff:	70%									40%
 
 			Segnen Dauer[s]:	45									60
-					
+
 		Drake:
 
-			Rüstung:		1									4
+			Rüstung:			1									4
 
-			HP:			500									600
+			HP:					500									600
 
-			Sichtweite:		2900									2800
+			Sichtweite:			2900								2800
 
-			Lauftempo:		320									400
+			Lauftempo:			320									400
 
-			HPReg[1/s]:		5/3									8/2
+			HPReg[1/s]:			5/3									8/2
 
-			DMG:			25									28
+			DMG:				27									28
 
 			RandomDMGBonus		7									2
 
-			Reichweite:		2800									2800
+			Reichweite:			2800								2800
 
-			sicher zielen-CD[s]:	210									120
+			sicher zielen-CD:	210									120
 
-			sicher zielen.-Buff:	65%									100%
+			sich. zielen Buff:	65%									100%
 
-			sicher zielen Dauer[s]:	30									60
+			sich. zielen Dauer:	30									60
 
-			sicher zielen Reichw.:	900									1500
+			sich. z. Reichw.:	900									1500
 
-			Meisterschuss-CD[s]:	150									90
+			Meisterschuss-CD:	150									90
 
-			Meisterschuss-DMG:	36% der HP des Ziels + 480% von Drakes DMG,				100% der HP des Ziels
-						im Nahkampf reduziert auf
-						12% der HP des Ziels + 160% von Drakes DMG
+			Meisterschuss-DMG:	36% HP (Ziel) + 480% DMG (Drake)	100% HP (Ziel)
+								im Nahkampf reduziert auf:
+								12% HP (Ziel) + 160% DMG (Drake)
 
-			Meisterschuss-Reichw.:	4000									5500
+			kritische Reichw.:	800									-
+
+			Meisters.-Reichw.:	4000								5500
 
 		Yuki:
 
-			Rüstung:		6									3
+			Rüstung:			4									3
 
-			HP:			800									600
+			HP:					800									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		440									400
+			Lauftempo:			440									400
 
-			HPReg[1/s]:		10/2									8/2
+			HPReg[1/s]:			12/2								8/2
 
-			DMG:			25									20
-
-			RandomDMGBonus		7									4
-
-			Reichweite:		250									250
-
-			Feuerw. d. Furcht-CD[s]:180									120
-			
-			Fr.Feuerw.-CD[s]: 90										120
-
-			Fr.Feuerw.ArbeiterBuff:	300 Worktime								200 Worktime
-			
-			Shuriken-CD[s]:		100									90
-			
-			Shuriken-Anzahl:	6									4
-
-			Shuriken DMG:		88									38
-
-		Kala:
-
-			Rüstung:		1									5
-
-			HP:			450									600
-
-			Sichtweite:		2200									2200
-
-			Lauftempo:		400									400
-
-			HPReg[1/s]:		16/2									8/2
-
-			DMG:			29									20
+			DMG:				25									20
 
 			RandomDMGBonus		9									4
 
-			Reichweite:		240									200
+			Reichweite:			250									250
 
-			Giftpfeile-CD[s]:	38									30
-			
-			Giftpfeile Anzahl:	12									10
+			Feuerw. Furcht-CD:	180									120
 
-			Giftpfeile DMG:		72									20	
+			Fr.Feuerw.-CD[s]: 	90									120
 
-			Giftnebel-CD[s]:	27									110
+			Fr.Feuerw.Arb.Buff:	300 Worktime						200 Worktime
+
+			Shuriken-CD[s]:		180									90
+
+			Shuriken-Anzahl:	12									4
+
+			Shuriken-Reichw:	1500								3000
+
+			Shur. Max Winkel:	180°								90°
+
+			Shuriken DMG:		100									38
+
+			Neu: Wenn die Shuriken max. 10 Sekunden nach einem Feuerwerk der Furcht aktiviert werden,
+			erhöht sich der Schaden auf 200 pro Shuriken. Wird der Gegner außerdem von hinten getroffen,
+			steigt der Schaden auf 500 pro Shuriken. 
+			Für jeden getöteten Gegner, während einer dieser Effekte aktiv ist, reduziert sich die Abklingzeit
+			um 15 Sekunden.
+
+		Kala:
+
+			Rüstung:			0									5
+
+			HP:					450									600
+
+			Sichtweite:			2200								2200
+
+			Lauftempo:			400									400
+
+			HPReg[1/s]:			12/2								8/2
+
+			DMG:				29									20
+
+			RandomDMGBonus		9									4
+
+			Reichweite:			240									200
+
+			Giftpfeile-CD:		38									30
+
+			Giftpf. Anz.:		12									10
+
+			Giftpf. DMG:		80									20	
+
+			Giftnebel-CD:		27									110
 
 			Giftnebel DMG:		50									25	
-			
-			Giftnebel Reichw:	500									1200
-			
-			Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
+
+			Giftn. Reichw:		500									1200
+
+			Neu: Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
 			(Schadensberechnung 10mal pro Sekunde)
 
 		Mary de Mortfichet:
 
-			Rüstung:		2									3
+			Rüstung:			0									3
 
-			HP:			500									600
+			HP:					500									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		12/2									8/2
+			HPReg[1/s]:			10/2								8/2
 
-			DMG:			28									16
+			DMG:				28									16
 
 			RandomDMGBonus		8									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
-			Demoralisieren-CD[s]:	120									120
+			Demoral.-CD:		120									120
 
-			Demoralisieren DMG-Eff.	-70%									-50%	
+			Demoral. Debuff		-60%								-50%	
 
-			Demoralisieren Dauer[s]	30									60
-			
-			Gift-CD[S]:		150									120
-			
-			Gift-DMG:		70									45
-			
-			Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
+			Demoral. Dauer		30									60
+
+			Gift-CD[S]:			150									120
+
+			Gift-DMG:			70									45
+
+			Neu: Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
 			(Schadensberechnung 10mal pro Sekunde)
 
 		Kerberos:
 
-			Rüstung:		7									5
+			Rüstung:			7									5
 
-			HP:			850									600
+			HP:					700									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		12/2									8/2
+			HPReg[1/s]:			4/2									8/2
 
-			DMG:			27									22
+			DMG:				24									22
 
 			RandomDMGBonus		7									4
 
-			Reichweite:		220									200
+			Reichweite:			220									200
 
-			Angst einfl.-CD[s]:	100									120
+			Höllenschr. CD:		100									120
 
-			Angst einfl. Rüs.-Eff.	-40%									-20%	
+			Angst Rüs.-Eff.		-50%								-20%	
 
-			Angst einfl. Dauer[s]	30									60
+			Angst Dauer[s]		30									60
+
+			Neu: Wann immer Kerberos einen Gegner angreift, der weniger Rüstung als er selbst besitzt, reduzieren sich die Abklingzeiten seiner Fähigkeiten 
+			Höllenschrei um die Rüstungs-Differenz sowie der Aura der Furcht um das dreifache der Rüstungs-Differenz. Außerdem erhöht sich der Schaden an Gegnern 
+			mit niedrigerer Rüstung um 20% pro Rüstungsdifferenz von 1.
+			Kerberos heilt sich um die Menge des verursachten Bonus-Schadens.
 
 		Varg:
 
-			Rüstung:		4									4
+			Rüstung:			4									4
 
-			HP:			600									600
+			HP:					600									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:			8/2									8/2
 
-			DMG:			20									16
+			DMG:				20									16
 
 			RandomDMGBonus		2									2
 
-			Reichweite:		200									200
+			Reichweite:			200									200
 
-			Berserkerwut-CD[s]:	120									300
+			Berserkerw.-CD:		120									300
 
-			Berserkerwut DMG-Eff.	60%									100%	
+			B.wut DMG-Eff.		+60%								+100%	
 
-			Berserkerwut Rüs.-Eff.	-50%									-50%
+			B.wut Rüs.-Eff.		-50%								-50%
 
-			Berserkerwut Heil-Eff.	50%									30%
+			B.wut Heil-Eff.		50%									30%
 
-			Berserkerwut Dauer[s]	40									40
+			B.wut Dauer[s]		40									40
 
-			Wölfe rufen-CD[s]:	300									180
+			Wölfe rufen-CD:		300									180
 
-			Wölfe rufen Anzahl:	5									2
+			Wölfe Anzahl:		5									2
 
-			Wölfe Rüstungsklasse:	Eisen									keine
+			Wölfe R.klasse:		Eisen								keine
 
 			Wölfe Rüstung:		2									0
 
-			Wölfe Lauftempo:	540									360
+			Wölfe L.tempo:		540									360
 
 			Wölfe Schaden:		15									14
 
-			Wölfe ATK-Tempo[1/s]:	0.91									0.67
+			AngTempo[1/s]:		0.91								0.67
 
-			Wölfe Sold:		-									20/Zahltag
-			
-			Wölfe Lebensdauer	90									180
+			Wölfe Sold:			-									20/Zahltag
+
+			Lebensdauer[s]		90									180
 
 		Armbrustschütze*:
 
 			Kosten:	Taler:		250									250
 			(HM)	Eisen:		70									70
-				Holz:		70									-
+					Holz:		70									-
 
 			Kosten:	Taler:		50									50
 			(Sold.)	Eisen:		40									40
-				Holz:		40									-	
+					Holz:		40									-	
 
-			Schaden:		14									12
+			Schaden:			14									12
 
 		Arbalestenschütze*:
 
 			Kosten:	Taler:		280									300
 			(HM)	Eisen:		80									80
-				Holz:		80									-
+					Holz:		80									-
 
 			Kosten:	Taler:		60									60
 			(Sold.)	Eisen:		50									50
-				Holz:		50									-	
+					Holz:		50									-	
 
-			Sichtweite:		3100									2900
+			Sichtweite:			3100								2900
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			Schaden:		17									14
+			Schaden:			17									14
 
-			Reichweite:		3000									2900
+			Reichweite:			3000								2900
 
-			Soldaten:		12									8
+			Soldaten:			12									8
 
 		LKav-Bogenschütze*:
 
-			Rüstungsklasse:		Eisen									keine
+			Rüstungsklasse:		Eisen								keine
 
-			Rüstung:		2									0
+			Rüstung:			2									0
 
-			HP:			300									150
+			HP:					300									150
 
-			Sichtweite:		2500									2300
+			Sichtweite:			2500								2300
 
 			eing. DZ-Plätze:	1									2
 
-			Lauftempo:		550									500
+			Lauftempo:			550									500
 
-			Schaden:		12									10
+			Schaden:			12									10
 
-			Reichweite:		2500									2300
+			Schadensklasse:		Kavallerie							Stich
+
+			Reichweite:			2500								2300
 
 		LKav-Armbrustschütze*:
 
 			Kosten:	Taler:		350									250
 			(HM)	Eisen:		70									-
-				Holz:		90									70
+					Holz:		90									70
 
 			Kosten:	Taler:		100									100
 			(Sold.)	Eisen:		40									40
-				Holz:		55									-	
+					Holz:		55									-	
 
-			Rüstungsklasse:		Eisen									keine
+			Rüstungsklasse:		Eisen								keine
 
-			Rüstung:		5									1
+			Rüstung:			4									1
 
-			HP:			300									150
+			HP:					300									150
 
-			Sichtweite:		2900									2700
+			Sichtweite:			2900								2700
 
 			eing. DZ-Plätze:	1									2
 
-			Lauftempo:		550									500
+			Lauftempo:			550									500
 
-			Schaden:		15									12
+			Schaden:			14									12
 
-			Angriffs-Tempo[1/s]:	0.48									0.4
+			Schadensklasse:		Kavallerie							Stich
 
-			Reichweite:		2900									2700
+			Angr.-Tempo[1/s]:	0.63								0.4
 
-			Soldaten:		6									3
+			Reichweite:			2900								2700
+
+			Soldaten:			6									3
 
 			* Die Fehltreffer-Chance aller Bogenschützen wurde stark reduziert.
-			
+			Neu: Die Schadensklasse Kavallerie wurde hinzugefügt, damit sich der angerichtete Schaden von Bogenschützen unterscheidet.
+			Diese Schadensklasse ist stark gegen Kavallerie, Schwertkämpfer und Scharfschützen.
+
 		SKav-Kurzschwertkämpfer:
 
-			Kosten:	Taler:		300									350
-			(HM)	Eisen:		120									90
+			Kosten:	Taler:		300									250
+			(HM)	Eisen:		120									80
 
 			Kosten:	Taler:		150									120
 			(Sold.)	Eisen:		70									40
 
 		Skav-Streitaxtkämpfer:
 
-			Kosten:	Taler:		450									250
-			(HM)	Eisen:		160									80
+			Kosten:	Taler:		450									350
+			(HM)	Eisen:		160									90
 
 			Kosten:	Taler:		210									150
 			(Sold.)	Eisen:		90									50
 
-			Rüstung:		9									6
+			Rüstung:			9									6
 
-			HP:			400									300
+			HP:					400									300
 
-			Reichweite:		260									200
+			Reichweite:			260									200
 
 		Hellebardier:
 
 			Kosten:	Taler:		220									200
 			(HM)	Eisen:		50									-
-				Holz:		80									80
+					Holz:		80									80
 
 			Kosten:	Taler:		70									60
 			(Sold.)	Eisen:		30									-
-				Holz:		50									50
+					Holz:		50									50
 
-			Rüstung:		6									4
+			Rüstung:			4									4
 
-			Lauftempo:		400									360
+			Rüstungsklasse:		keine								Wams
 
-			Schaden:		21									18
+			Lauftempo:			400									360
+
+			Schaden:			21									18
+
+			Schadensklasse:		Speer								Stich
 
 			RandomDMG-Bonus:	2									2			
 
-			Reichweite:		390									300
+			Reichweite:			390									300
 
-			Soldaten:		12									8
+			Soldaten:			12									8
+
+			Neu: Die Schadensklasse Speer wurde hinzugefügt, damit sich der angerichtete Schaden von Bogenschützen unterscheidet.
+			Diese Schadensklasse ist besonders stark gegen Kavallerie und besitzt leichte Bonis gegen Schwertkämpfer und Scharfschützen.
+			Die Änderung von Rüstungsklasse und Schadensklasse wirkt sich ebenfalls auf Stufe 1-3 Speerträger aus.
 
 		leichter Scharfschütze:
 
 			Kosten:	Taler:		250									200
 			(HM)	Schwefel:	90									70
-				Eisen:		30									-
+					Eisen:		30									-
 
 			Kosten:	Taler:		65									50
 			(Sold.)	Schwefel:	50									40
-				Eisen:		15									-
+					Eisen:		15									-
 
-			Rüstungsklasse:		keine									Leder
+			Rüstungsklasse:		keine								Leder
 
-			Rüstung:		0									1
+			Rüstung:			0									1
 
-			HP:			120									150
+			HP:					120									150
 		
-			Sichtweite:		2400									2800
+			Sichtweite:			2400								2800
 
-			Lauftempo:		300									320
+			Lauftempo:			300									320
 
-			Schaden:		15									16		
+			Schaden:			15									16		
 
-			Reichweite:		2300									2800
+			Reichweite:			2300								2800
 
-			Soldaten:		3									4
+			Soldaten:			3									4
 
 		schwerer Scharfschütze:
 

@@ -140,7 +140,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_TURN, "", "StartMapEditor_Controller", 1, {}, {_playerId, i})		
 	end	
 	SetHostile(1,_playerId)
-	local enemies = BS.GetAllEnemyPlayerIDs(_playerId)
+	--[[local enemies = BS.GetAllEnemyPlayerIDs(_playerId)
 	if gvTower.StartTowersIDTable and gvTower.StartTowersIDTable[1] then
 		for i = 1, table.getn(gvTower.StartTowersIDTable) do			
 			for k = 1, table.getn(enemies) do
@@ -150,9 +150,10 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 				end
 			end
 		end
-	end
+	end]]
 	if not AIchunks[_playerId] then
 		AIchunks[_playerId] = CUtil.Chunks.new()
+		AI_AddEnemiesToChunkData(_playerId)
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_playerId})
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_playerId})
 	end
@@ -283,7 +284,7 @@ TickOffensiveAIController = function(_army)
 			if AI.Army_GetDistanceBetweenAnchorAndEnemy(player, army) < _army.manualControlRange then
 				AI_StartManualControl(player, _army, 0)
 			else
-				Advance(_army)
+				Advance(_army, 0)
 			end
 		end
 
@@ -309,6 +310,8 @@ AI_AddEnemiesToChunkData = function(_playerId)
 			AIchunks[_playerId]:AddEntity(eID)
 			table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
 			AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
+		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0) or Logic.IsSerf(eID) == 1 then
+			AIchunks[_playerId]:AddEntity(eID)
 		end
 	end
 end
@@ -352,7 +355,7 @@ Advance = function(_army, _flag)
 
 	local distanceToEnemy = AI.Army_GetDistanceBetweenAnchorAndEnemy(_army.player,_army.id)
 	AI.Army_SetAnchorRodeLength(_army.player,_army.id,distanceToEnemy)
-	if not _flag and (not MapEditor_Armies or not MapEditor_Armies[_army.player]) and distanceToEnemy <= _army.rodeLength then
+	if not _flag and distanceToEnemy <= _army.rodeLength then
 		AI_StartManualControl(_army.player, _army, 1)
 	end
 end	
@@ -364,8 +367,8 @@ AI_StartManualControl = function(_player, _army, _flag)
 		tabname = MapEditor_Armies[_player][_army.id + 1]
 		range = tabname.manualControlRange 		
 	elseif _flag == 1 then
-		tabname = _army
-		range = math.min(tabname.rodeLength, 5000)
+		tabname = _army or MapEditor_Armies[_player][_army.id + 1]
+		range = math.min(tabname.rodeLength or tabname.manualControlRange, 5000)
 	end
 	if leaderIDs[1] then
 		for i = 1,table.getn(leaderIDs) do
