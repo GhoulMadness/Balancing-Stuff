@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.729
+	BS.Version = 0.730
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -87,7 +87,9 @@
 					["(4) emsbs im graben der verdammnis"] = true,
 					["(4) emsbs tal rasha"] = true,
 					["(4) emsbs hasenjagd"] = true,
-					["(4) emsbs der taktiker"] = true
+					["(4) emsbs der taktiker"] = true,
+					["(4) emsbs winterzauber"] = true,
+					["(4) emsbs sparrowdale"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
@@ -415,10 +417,12 @@
 	StartSimpleJob("Lightning_Job")
 	--Control Siversmith Grievance
 	StartSimpleJob("ControlSiversmithGrievance")
-	--Trigger for AI cannon target redirection
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AntiBuildingCannon_RedirectTarget", 1)
 	--Trigger to get building ids for beauti anims
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
+	--Trigger for AI target redirection
+	AIchunks = {}
+	AIchunks.time = {}
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
 	--internal payday activation (for treasury technology - debenture)
 	if CUtil then 

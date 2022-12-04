@@ -271,7 +271,7 @@ end
 Forester.PlaceTree = function(_id, _buildingID, _posX, _posY, _terrType)
 	local id = Logic.CreateEntity(Entities.XD_Rock1, _posX, _posY, 0, 0)
 	local suffixName = Forester.LandscapeTreeSets[Forester.LandscapeTypeBySoilTexture[_terrType]][math.random(table.getn(Forester.LandscapeTreeSets[Forester.LandscapeTypeBySoilTexture[_terrType]]))]
-	Logic.SetModelAndAnimSet(id, _G["Models"][suffixName])
+	Logic.SetModelAndAnimSet(id, Models[suffixName])
 	SetEntitySize(id, Forester.InitialTreeSizeFactor)
 	Forester.TriggerIDs.Tree.Growth[id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_TreeGrowthControl",1,{},{id, suffixName})
 	table.insert(Forester.TreeGrowingBlockedPos, {X = _posX, Y = _posY})
@@ -511,7 +511,7 @@ Forester_TreeGrowthControl = function(_id, _suffixName)
 		return true
 	end
 	if GetEntitySize(_id) >= 1 then
-		local newID = ReplaceEntity(_id, _G["Entities"][_suffixName])		
+		local newID = ReplaceEntity(_id, Entities[_suffixName])		
 		Forester.TriggerIDs.Tree.Cutted[newID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","Forester_Tree_OnTreeCutted",1,{},{newID})
 		return true
 	else
@@ -519,7 +519,7 @@ Forester_TreeGrowthControl = function(_id, _suffixName)
 			local size = GetEntitySize(_id)
 			__id = ReplaceEntity(_id, Entities.XD_Rock1)
 			SetEntitySize(__id, math.min(size + Forester.TreeGrowthAmount, 1))
-			Logic.SetModelAndAnimSet(__id, _G["Models"][_suffixName])
+			Logic.SetModelAndAnimSet(__id, Models[_suffixName])
 			Forester.TriggerIDs.Tree.Growth[__id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_TreeGrowthControl",1,{},{__id, _suffixName})
 			return true
 		end

@@ -553,7 +553,7 @@ end
 
 function IsMilitaryLeader(_entityID)
 
-	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0 and string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(_entityID))), "soldier") == nil and Logic.IsLeader(_entityID) == 1
+	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0 and string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(_entityID))), "soldier") == nil and Logic.IsLeader(_entityID) == 1 and Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 0
 	
 end
 
@@ -603,8 +603,12 @@ function GetEntityHealth( _entity )
 end
 
 function AreEntitiesOfDiplomacyStateInArea( _player, _position, _range, _state )
-
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 	
+	
+	local maxplayers = 8
+	if CNetwork then
+		maxplayers = 16
+	end
+	for i = 1, maxplayers do 	
 		if Logic.GetDiplomacyState( _player, i) == _state then		
 			if AreEntitiesInArea( i, 0, _position, _range, 1) then			
 				return true				
@@ -1062,11 +1066,11 @@ end
 GetDistance = function(_a, _b)
 
 	if type(_a) ~= "table" then	
-		_a = {Logic.GetEntityPosition(Logic.GetEntityIDByName(_a))}		
+		_a = {Logic.GetEntityPosition(GetID(_a))}		
 	end
 	
 	if type(_b) ~= "table" then	
-		_b = {Logic.GetEntityPosition(Logic.GetEntityIDByName(_b))} 		
+		_b = {Logic.GetEntityPosition(GetID(_b))} 		
 	end
 	
 	if _a.X ~= nil then	
@@ -1200,22 +1204,47 @@ function GetWeatherSpeedModifier(_weatherstate)
 	if _weatherstate == 1 then
 		return _weatherstate
 	else
-		return CUtilMemory.GetMemory(8758240)[0][36-3*_weatherstate]:GetFloat()
+		return GetLogicPropertiesPointer[36-3*_weatherstate]:GetFloat()
 	end
 end
 -- returns the technology raw speed modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologySpeedModifier(_techID)
-	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][56]:GetFloat(), CUtilBit32.BitAnd(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][58]:GetInt(), 2^8-1)-42
+	return GetTechnologyPointer(_techID)[56]:GetFloat(), CUtilBit32.BitAnd(GetTechnologyPointer(_techID)[58]:GetInt(), 2^8-1)-42
 end
 -- returns the technology raw attack range modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologyAttackRangeModifier(_techID)
-	return CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][88]:GetFloat(), CUtilBit32.BitAnd(CUtilMemory.GetMemory(8758176)[0][13][1][_techID-1][90]:GetInt(), 2^8-1)-42
+	return GetTechnologyPointer(_techID)[88]:GetFloat(), CUtilBit32.BitAnd(GetTechnologyPointer(_techID)[90]:GetInt(), 2^8-1)-42
+end
+function GetEntityTypePointer(_entityType)
+	return CUtilMemory.GetMemory(tonumber("0x895DB0", 16))[0][16][_entityType * 8 + 2]
+end
+function GetPlayerStatusPointer(_playerID)
+	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][10][_playerID*2+1]
+end
+function GetDamageModifierPointer()
+	return CUtilMemory.GetMemory(tonumber("0x85A3DC", 16))[0][2]
+end
+function GetTechnologyPointer(_techID)
+	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][13][1][_techID-1]
+end
+function GetLogicPropertiesPointer()
+	return CUtilMemory.GetMemory(tonumber("0x85A3E0", 16))[0]
+end
+function GetArmyObjectPointer()
+	return CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][1]
 end
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
 
 	assert( IsValid(_entityID), "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
+	
+end
+function SetSettlerBaseMovementSpeed(_entityID, _val)
+
+	assert( IsValid(_entityID), "invalid entityID" )
+	assert(type(_val) == "number", "value input needs to be a number")
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:SetFloat(_val)
 	
 end
 BS.EntityCatModifierTechs = {["Speed"] = {	[EntityCategories.Hero] = {Technologies.T_HeroicShoes},
@@ -1285,7 +1314,9 @@ function GetEntityTypeBaseAttackSpeed(_entityType)
 	local behavior_pos	
 	if not BehaviorExceptionEntityTypeTable[_entityType] then		
 		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4			
+			behavior_pos = 4	
+		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+			behavior_pos = 0
 		else		
 			behavior_pos = 6			
 		end		
@@ -1302,7 +1333,12 @@ function GetEntityTypeBaseAttackRange(_entityType)
 	local behavior_pos
 	if not BehaviorExceptionEntityTypeTable[_entityType] then	
 		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4			
+			behavior_pos = 4	
+		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+			behavior_pos = 0
+			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
+				return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][11]:GetFloat()	
+			end
 		else		
 			behavior_pos = 6			
 		end		
@@ -1318,7 +1354,12 @@ function GetEntityTypeBaseMinAttackRange(_entityType)
 	local behavior_pos
 	if not BehaviorExceptionEntityTypeTable[_entityType] then	
 		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4			
+			behavior_pos = 4	
+		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+			behavior_pos = 0
+			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
+				return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][12]:GetFloat()	
+			end
 		else		
 			behavior_pos = 6			
 		end		
@@ -1385,6 +1426,8 @@ function GetEntitySize(_entityID)
 	assert( IsValid(_entityID) , "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()	
 end
+--[[GetMilitaryBuildingMaxTrainSlots
+CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]
 
 function SetEntitySize(_entityID,_size)
 
@@ -1417,7 +1460,12 @@ function GetEntityTypeDamageRange(_entityType)
 	local behavior_pos
 	if not BehaviorExceptionEntityTypeTable[_entityType] then	
 		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4			
+			behavior_pos = 4	
+		elseif string.find(Logic.GetEntityTypeName(_entityType), "Tower") ~= nil then	
+			behavior_pos = 0
+			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
+				return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][15]:GetFloat()	
+			end
 		else		
 			behavior_pos = 6			
 		end		
@@ -1435,7 +1483,9 @@ function GetEntityTypeDamageClass(_entityType)
 	if not BehaviorExceptionEntityTypeTable[_entityType] then	
 		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
 			behavior_pos = 4			
-		else		
+		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+			behavior_pos = 0
+		else
 			behavior_pos = 6			
 		end		
 	else	
@@ -1447,21 +1497,26 @@ end
 -- gets entity type armor class
 function GetEntityTypeArmorClass(_entityType)
 	assert(_entityType ~= nil , "invalid entityType")
-	if not string.find(Logic.GetEntityTypeName(_entityType), "PB") and not string.find(Logic.GetEntityTypeName(_entityType), "CB") then
-		return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][60]:GetInt()
-	else
-		return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][102]:GetInt()
+	local pointer = GetEntityTypePointer(_entityType)
+	local behpos
+	if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+		behpos = 102
+	elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+		behpos = 60
+	elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+		behpos = 102
 	end
+	return pointer[behpos]:GetInt()	
 end
 -- gets damage factor related to the damageclass/armorclass
 function GetDamageFactor(_damageclass, _armorclass)
 	assert(_damageclass > 0 and _damageclass <= 9, "invalid damageclass")
 	assert(_armorclass > 0 and _armorclass <= 7, "invalid armorclass")
-	return CUtilMemory.GetMemory(8758236)[0][2][_damageclass][_armorclass]:GetFloat()
+	return GetDamageModifierPointer()[_damageclass][_armorclass]:GetFloat()
 end
 function GetAttractionPlacesProvided(_entityType)
 	assert(_entityType ~= nil , "invalid entityType")
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType * 8 + 2][44]:GetInt()
+	return GetEntityTypePointer(_entityType)[44]:GetInt()
 end
 -- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
 function GetPlayerKillStatisticsProperties(_playerID, _statistic)
@@ -1469,7 +1524,7 @@ function GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
 	assert(type(_statistic) == "number", "Statistic type needs to be a number")
 	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
-	return CUtilMemory.GetMemory(8758176)[0][10][_playerID*2+1][82 + _statistic]:GetInt()
+	return GetPlayerStatusPointer(_playerID)[82 + _statistic]:GetInt()
 end			
 -- sets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
 function SetPlayerKillStatisticsProperties(_playerID, _statistic, _value)
@@ -1478,7 +1533,7 @@ function SetPlayerKillStatisticsProperties(_playerID, _statistic, _value)
 	assert(type(_statistic) == "number", "Statistic type needs to be a number")
 	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
 	assert(type(_value) == "number", "Value needs to be a number")
-	return CUtilMemory.GetMemory(8758176)[0][10][_playerID*2+1][82 + _statistic]:SetInt(_value)
+	return GetPlayerStatusPointer(_playerID)[82 + _statistic]:SetInt(_value)
 end
 -- adds value to respective player kill statistic (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
 function AddValueToPlayerKillStatistic(_playerID, _statistic, _value)
@@ -1490,11 +1545,151 @@ function AddValueToPlayerKillStatistic(_playerID, _statistic, _value)
 	local currstat = GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	SetPlayerKillStatisticsProperties(_playerID, _statistic, currstat + _value)
 end
+-- gets building type blocking properties, returns Blocked1X, Blocked1Y, Blocked2X, Blocked2Y
+function GetBuildingTypeBlockingArea(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	local tab = {}
+	for i = 1,4 do
+		table.insert(tab, GetEntityTypePointer(_entityType)[35][i-1]:GetFloat())
+	end
+	return unpack(tab)
+end
+-- gets building type terrain pos properties, returns TerrainPos1X, TerrainPos1Y, TerrainPos2X, TerrainPos2Y
+function GetBuildingTypeTerrainPosArea(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	local tab = {}
+	for i = 1,4 do
+		table.insert(tab, GetEntityTypePointer(_entityType)[37 + i]:GetFloat())
+	end
+	return unpack(tab)
+end
+function GetArmyPlayerObjectLength()
+	local vstart = CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][1]:GetInt()
+	local vend = CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][2]:GetInt()
+	return (vend - vstart) / 4
+end
+function GetArmyPlayerObjectOffset(_playerID)
+	local adress = GetArmyObjectPointer()
+	local playerOffset
+	for i = 1, GetArmyPlayerObjectLength() do
+		if adress[i-1][5]:GetInt() == _playerID then				
+			playerOffset = i-1
+			break
+		end
+	end
+	return playerOffset
+end
+--[[armyobj_vtable:tonumber("0x766A70", 16)
+0 vtable
+3 lfd army ID
+5 = 11 Bitfield?
+6 Pos?
+7 = ~15-20 float?
+11 = -1.0 float?
+12 Army PosX (Siedler-Meter)
+13 Army PosY (Siedler-Meter)
+14 = -1.0 bis 1.0 float?
+15 = -1.0 bis 1.0 float?
+19 = 0.0 - 1.0 float? (0.25 steps?)
+20 = 30.0 float?
+23 Target PosX (Siedler-Meter)
+24 Target PosY (Siedler-Meter)
+26 Pos?
+27 = 0.25 float?
+29 Target ID
+38 = 15 Bitfield?
+50 id slot 1
+51 id slot 2
+56 id slot 3
+57 id slot 4
+62 id slot 5
+63 id slot 6
+65 = 2 Bitfield?
+68 id slot 7
+69 id slot 8
+71 Target PID
+72 anzahl belegte slots
+73 anzahl alive slots
+76 PosX?
+77 PosY?
+78 = 1.0 float?	
+]]
+--AI.Army_GetOccupancyRate(_player, _armyId) %-Wert alive-slots/gesamt-slots
+function AI.Army_GetNextFreeSlot(_playerID)
+	local slot
+	for i = 9, 1, -1 do
+		if AI.Army_GetOccupancyRate(_playerID, i - 1) < 100 then
+			if MapEditor_Armies[_playerID][i] and MapEditor_Armies[_playerID][i].id then
+				slot = i - 1
+				break
+			end
+		end
+	end
+	return slot or false
+end
+
+function AI.Army_GetLeaderIDs(_playerID, _armyID)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
+	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
+	local adress = GetArmyObjectPointer()
+	local tab = {}
+	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
+				
+	for k = 1, table.getn(offsets) do	
+		local id = adress[playerOffset][40 + offsets[k] + (_armyID *84)]:GetInt()
+		if id > 0 then
+			table.insert(tab, id)
+		end
+	end
+	return tab
+end
+function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
+	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
+	local adress = GetArmyObjectPointer()
+	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
+	
+	for k = 1, table.getn(offsets) do	
+		local id = adress[playerOffset][40 + offsets[k] + (_armyID *84)]:GetInt()
+		if id == _id then
+			adress[playerOffset][40 + offsets[k] + (_armyID *84)]:SetInt(0)
+			break
+		end
+	end
+end
+function AI.Entity_AddToArmy(_id, _playerID, _armyID)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
+	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
+	local adress = GetArmyObjectPointer()
+	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
+	
+	for k = 1, table.getn(offsets) do	
+		local id = adress[playerOffset][40 + offsets[k] + (_armyID *84)]:GetInt()
+		if id == 0 then
+			adress[playerOffset][40 + offsets[k] + (_armyID *84)]:SetInt(_id)
+			break
+		end
+	end
+end
+function AI.Army_GetInternalID(_playerID, _armyID)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
+	local adress = GetArmyObjectPointer()
+	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
+	return adress[playerOffset][40 + 3 + (_armyID *84)]:GetInt()
+end
+---------------------------------------------------------------------------------------------------------------------------------
 -- Rundungs-Comfort
 function round( _n )
-
-	assert(type(_n) == "number", "size needs to be a number")
+	assert(type(_n) == "number", "round val needs to be a number")
 	return math.floor( _n + 0.5 )	
+end
+function dekaround(_n)
+	assert(type(_n) == "number", "round val needs to be a number")
+	return math.floor( _n / 100 + 0.5 ) * 100	
 end
 
 function GetPlayerEntities(_playerID, _entityType)
@@ -1614,6 +1809,7 @@ end
 function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)	
 	local playerID = Logic.EntityGetPlayer(_heroID)
 	ExtendedStatistics.Players[playerID][_scoretype] = ExtendedStatistics.Players[playerID][_scoretype] + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[player]["Damage"] = ExtendedStatistics.Players[player]["Damage"] + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage, ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID])	
 end
@@ -1651,7 +1847,10 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 	
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(playerID))), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(posX, posY, _range)) do
 		local _X, _Y = Logic.GetEntityPosition(eID)	
-		local distancepow2 = (_X - posX)^2 + (_Y - posY)^2		
+		local distancepow2 = (_X - posX)^2 + (_Y - posY)^2	
+		if Logic.GetFoundationTop(eID) ~= 0 then
+			distancepow2 = distancepow2 / 2
+		end
 		table.insert(distancepow2table, {id = eID, dist = distancepow2})
 	end
 			
@@ -1680,75 +1879,356 @@ gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Castle5] = true
 				}
 
-ChestRandomPositions = {}
-ChestRandomPositions.AllowedTypes = { 	Entities.XD_Fir1,
-										Entities.XD_Fir1_small,
-										Entities.XD_CherryTree,
-										Entities.XD_CliffBright1,
-										Entities.XD_CliffBright3,
-										Entities.XD_CliffBright4,
-										Entities.XD_CliffBright5,
-										Entities.XD_CliffDesert1,
-										Entities.XD_CliffDesert3,
-										Entities.XD_CliffDesert4,
-										Entities.XD_CliffDesert5,
-										Entities.XD_CliffEvelance1,
-										Entities.XD_CliffEvelance2,
-										Entities.XD_CliffEvelance3,
-										Entities.XD_CliffMoor1,
-										Entities.XD_CliffMoor2,
-										Entities.XD_CliffMoor3,
-										Entities.XD_CliffTideland1,
-										Entities.XD_CliffTideland2,
-										Entities.XD_CliffTideland3,
-										Entities.XD_CliffTidelandShadows1,
-										Entities.XD_CliffTidelandShadows2,
-										Entities.XD_CliffTidelandShadows3,
-										Entities.XD_Cypress1,
-										Entities.XD_DeadTreeEvelance3,
-										Entities.XD_DeadTreeMoor2,
-										Entities.XD_DeadTreeMoor3,
-										Entities.XD_GreeneryBushHigh4,
-										Entities.XD_MiscTent1,
-										Entities.XD_OliveTree1,
-										Entities.XD_OliveTree2,
-										Entities.XD_OrangeTree1,
-										Entities.XD_PineNorth1,
-										Entities.XD_PineNorth2,
-										Entities.XD_RuinFarm1,
-										Entities.XD_RuinHouse1,
-										Entities.XD_RuinHouse2,
-										Entities.XD_RuinMonastery1,
-										Entities.XD_RuinMonastery2,
-										Entities.XD_RuinResidence1,
-										Entities.XD_RuinResidence2,
-										Entities.XD_RuinSmallTower1,
-										Entities.XD_RuinSmallTower2,
-										Entities.XD_RuinTower1,
-										Entities.XD_RuinTower2,
-										Entities.XD_RuinWall5,
-										Entities.XD_RuinWall6,
-										Entities.XD_Tree1,
-										Entities.XD_Tree1_small,
-										Entities.XD_Tree2,
-										Entities.XD_Tree2_small,
-										Entities.XD_Tree3,
-										Entities.XD_Tree3_small,
-										Entities.XD_Tree5,
-										Entities.XD_Tree6,
-										Entities.XD_Tree8,
-										Entities.XD_TreeEvelance1,
-										Entities.XD_TreeMoor1,
-										Entities.XD_TreeMoor2,
-										Entities.XD_TreeMoor3,
-										Entities.XD_TreeMoor4,
-										Entities.XD_TreeMoor5,
-										Entities.XD_TreeMoor6,
-										Entities.XD_Umbrella1,
-										Entities.XD_Umbrella2,
-										Entities.XD_Umbrella3,
-										Entities.XD_Willow1
+function GetApprTimeNeededToReachPos(_eID, _posX, _posY)
+
+	local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_posX, _posY)
+    if sector == 0 or blockingtype ~= 0 then
+		LuaDebugger.Log("Position blocked; not reachable")
+		return 0
+	end
+	if (height <= CUtil.GetWaterHeight(_posX/100, _posY/100)) and Logic.GetWeatherState() ~= 3 then
+		LuaDebugger.Log("Position at water; not reachable")
+		return 0
+	end
+	local fakeetype = Entities.CU_Merchant
+	local starttime = Logic.GetTimeMs()
+	local posX, posY = Logic.GetEntityPosition(_eID)
+	local fakeID = Logic.CreateEntity(fakeetype, posX, posY, 0, Logic.EntityGetPlayer(_eID))
+	SetSettlerBaseMovementSpeed(fakeID, 10000)	
+	Logic.MoveSettler(fakeID, _posX, _posY)
+	local trID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "ReachPos_Job", 1, {}, {_eID, fakeID, starttime, _posX, _posY})		
+	
+	--[[while GetDistance(GetPosition(fakeID), {X = _posX, Y = _posY}) > 100 do
+		if Logic.IsEntityMoving(fakeID) == 0 then
+			Logic.MoveSettler(fakeID, _posX, _posY)
+		end
+		if Logic.GetTimeMs() - starttime > 200 then
+			LuaDebugger.Log("Position either not reachable or too far away")
+			break
+		end
+	end]]
+	local fakespeed = GetSettlerCurrentMovementSpeed(fakeID)
+	Logic.DestroyEntity(fakeID)
+	local realspeed = GetSettlerCurrentMovementSpeed(_eID)
+	return (Logic.GetTimeMs() - starttime) * (fakespeed/realspeed)
+end		
+function ReachPos_Job(_eID, _fakeID, _starttime, _posX, _posY)
+	if GetDistance(GetPosition(_fakeID), {X = _posX, Y = _posY}) > 100 then
+		if Logic.IsEntityMoving(_fakeID) == 0 then
+			Logic.MoveSettler(_fakeID, _posX, _posY)
+		end
+		if Logic.GetTimeMs() - _starttime > 200 then
+			LuaDebugger.Log("Position either not reachable or too far away")
+			return true
+		end
+	end
+	local fakespeed = GetSettlerCurrentMovementSpeed(_fakeID)
+	Logic.DestroyEntity(_fakeID)
+	local realspeed = GetSettlerCurrentMovementSpeed(_eID)
+	return GetApprTimeNeededToReachPos(_eID, _posX, _posY, (Logic.GetTimeMs() - _starttime) * (fakespeed/realspeed))
+end	
+DamageFactorToArmorClass = {}
+for i = 1,9 do
+	DamageFactorToArmorClass[i] = {}
+	for k = 1,7 do
+		DamageFactorToArmorClass[i][k] = GetDamageFactor(i, k)
+	end
+end
+function GetNearestTarget(_player, _id)
+	if not Logic.IsEntityAlive(_id) then
+		return
+	end
+	local posX, posY = Logic.GetEntityPosition(_id)	
+	local range = 5000
+	local maxrange = ({Logic.WorldGetSize()})[1]
+	local sector = Logic.GetSector(_id)
+	local currtime = Logic.GetTimeMs()
+	if AIchunks.time[_player] ~= currtime then
+		AIchunks[_player]:UpdatePositions()
+		AIchunks.time[_player] = Logic.GetTimeMs()
+	end
+	repeat		
+		local entities = AIchunks[_player]:GetEntitiesInAreaInCMSorted(posX, posY, range)
+		for i = 1, table.getn(entities) do
+			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == sector and Logic.GetDiplomacyState(_player, Logic.EntityGetPlayer(entities[i])) == Diplomacy.Hostile then
+				return entities[i]
+			end
+		end
+		range = range + 3000
+	until range >= maxrange
+	for i = 9, 1, -1 do
+		local target = AI.Army_GetEntityIdOfEnemy(_player, i - 1)
+		if target ~= nil and target > 0 and Logic.IsEntityAlive(target) and Logic.GetSector(target) == sector then
+			return target
+		end
+	end
+	do
+		local enemies = BS.GetAllEnemyPlayerIDs(_player)
+		for i = 1, table.getn(enemies) do
+			IDs = {Logic.GetPlayerEntities(enemies[i], 0, 16)}
+			for k = 1, IDs[1] do
+				if Logic.IsBuilding(IDs[k]) == 1 and Logic.GetSector(IDs[k]) == sector then
+					return IDs[k]
+				end
+			end
+		end
+	end
+	do
+		local slot = AI.Army_GetNextFreeSlot(_player)
+		if slot then
+			AI.Entity_AddToArmy(_id, _player, slot)
+		end
+	end
+	return false
+end
+function CheckForBetterTarget(_eID, _target, _range)
+	
+	if not Logic.IsEntityAlive(_eID) then
+		return
+	end
+
+	local currtime = Logic.GetTimeMs()
+	local player = Logic.EntityGetPlayer(_eID)
+	if AIchunks.time[player] ~= currtime then
+		AIchunks[player]:UpdatePositions()
+		AIchunks.time[player] = Logic.GetTimeMs()
+	end
+	local etype = Logic.GetEntityType(_eID)	
+	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1)
+	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
+	local posX, posY = Logic.GetEntityPosition(_eID)	
+	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
+	local damageclass = GetEntityTypeDamageClass(etype)
+	local damagerange = GetEntityTypeDamageRange(etype)
+	local calcT = {}
+	
+	if _target then
+		if gvAntiBuildingCannonsRange[etype] then
+			if Logic.IsBuilding(_target) == 0 then
+				return BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
+			end		
+		end
+		if Logic.IsEntityAlive(_target) then
+			calcT[1] = {id = _target, factor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(_target))], dist = GetDistance(_eID, _target)}
+		end
+	else
+		if gvAntiBuildingCannonsRange[etype] then
+			return BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
+		end
+	end
+	
+	local postable = {}	
+	local clumpscore
+	local attach
+	local entities = AIchunks[player]:GetEntitiesInAreaInCMSorted(posX, posY, (_range or maxrange) + 500)
+	
+	if not entities[1] then
+		return _target
+	end
+	for i = 1, table.getn(entities) do
+		if Logic.IsEntityAlive(entities[i]) then
+			local ety = Logic.GetEntityType(entities[i])
+			local threatbonus
+			if Logic.GetFoundationTop(entities[i]) ~= 0 or GetEntityTypeDamageRange(ety) > 0 then
+				threatbonus = 1
+			end
+			attach = CEntity.GetAttachedEntities(entities[i])[37]
+			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]	
+			local mul = (({Logic.GetSoldiersAttachedToLeader(entities[i])})[1] or 0) + 1
+			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
+				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul + (threatbonus or 0)})	
+			end						
+			table.insert(calcT, {id = entities[i], factor = damagefactor * mul + (threatbonus or 0), dist = GetDistance(_eID, entities[i])})	
+		end
+	end
+	local attachN = attach and table.getn(attach) or 0
+	if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
+		if postable[1] then
+			clumppos, score = GetPositionClump(postable, damagerange, 100)
+			for i = 1, table.getn(calcT) do
+				if IsTower then
+					calcT[i].clumpscore = score
+				else
+					calcT[i].clumpscore = score / GetDistance(clumppos, GetPosition(calcT[i].id))
+				end
+			end
+		end
+	end	
+	local distval = function(_dist, _range)	
+		if _dist > _range then
+			if IsMelee then
+				return (_dist - _range) / _range
+			else
+				return math.sqrt((_dist - _range) / _range)
+			end
+		else
+			return 0
+		end
+	end
+	table.sort(calcT, function(p1, p2)
+		if p1.clumpscore then
+			if IsTower then
+				return p1.clumpscore > p2.clumpscore
+			else
+				return p1.clumpscore + p1.factor - distval(p1.dist, maxrange) > p2.clumpscore + p2.factor - distval(p2.dist, maxrange)
+			end
+		else
+			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN / 2) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN / 2)
+		end
+	end)
+	if calcT[1] then
+		return calcT[1].id
+	end
+	return _target
+end
+function GetPositionClump(_postable, _infrange, _step)
+	local tab = {}
+	for k, v in pairs(_postable) do
+		v.pos.X = dekaround(v.pos.X)
+		for i = v.pos.X - _infrange, v.pos.X + _infrange, _step do
+			tab[i] = {}
+			v.pos.Y = dekaround(v.pos.Y)
+			for j = v.pos.Y - _infrange, v.pos.Y + _infrange, _step do
+				if not tab[i][j] then
+					tab[i][j] = 0
+				end
+				tab[i][j] = tab[i][j] + v.factor
+			end
+		end
+	end
+	local highscore = 0
+	local clumppos = {}
+	for _X, v in pairs(tab) do
+		for _Y, x in pairs(v) do
+			if x > highscore then
+				highscore = x
+				clumppos.X = _X
+				clumppos.Y = _Y
+			end
+		end
+	end
+	return clumppos, highscore
+end
+function GetPercentageOfLeadersPerArmorClass(_table)
+	local perctable = {}
+	for i = 1,7 do
+		perctable[i] = {id = i, count = table.getn(_table[i]) * 100 / _table.total}
+	end
+	table.sort(perctable, function(p1, p2)
+		return p1.count > p2.count
+	end)
+	return perctable
+end
+--[[function GetPercentageOfLeadersPerArmorClass(_table)
+	local perctable = {}
+	for i = 1,7 do
+		perctable[i] = {id = i, count = 0}
+	end
+	for i = 1, table.getn(_table) do
+		local etype = Logic.GetEntityType(_table[i])
+		local armorclass = GetEntityTypeArmorClass(etype)
+		perctable[armorclass].count = perctable[armorclass].count + 1
+	end
+	table.sort(perctable, function(p1, p2)
+		return p1.count > p2.count
+	end)
+	for i = 1,7 do
+		perctable[i].count = perctable[i].count * 100 / table.getn(_table)
+	end
+	return perctable
+end]]
+BS.GetBestDamageClassesByArmorClass = {	[1] = {{id = 2, val = 6}, {id = 7, val = 2}, {id = 1, val = 2}},
+										[2] = {{id = 7, val = 6}, {id = 1, val = 4}},
+										[3] = {{id = 3, val = 3}, {id = 1, val = 3}, {id = 8, val = 2}, {id = 9, val = 2}},
+										[4] = {{id = 8, val = 4}, {id = 9, val = 3}, {id = 2, val = 2}, {id = 3, val = 1}},
+										[5] = {{id = 4, val = 10}},
+										[6] = {{id = 8, val = 5}, {id = 9, val = 5}},
+										[7] = {{id = 7, val = 8}, {id = 9, val = 2}}
 										}
+BS.GetBestDamageClassByArmorClass = function(_ACid)
+	local rand = math.random(1, 10)
+	if not BS.GetBestDamageClassesByArmorClass[_ACid][2] then
+		return BS.GetBestDamageClassesByArmorClass[_ACid][1].id
+	elseif table.getn(BS.GetBestDamageClassesByArmorClass[_ACid]) == 2 then		
+		if rand <= BS.GetBestDamageClassesByArmorClass[_ACid][1].val then
+			return BS.GetBestDamageClassesByArmorClass[_ACid][1].id
+		else
+			return BS.GetBestDamageClassesByArmorClass[_ACid][2].id
+		end
+	elseif table.getn(BS.GetBestDamageClassesByArmorClass[_ACid]) == 3 then
+		if rand <= BS.GetBestDamageClassesByArmorClass[_ACid][1].val then
+			return BS.GetBestDamageClassesByArmorClass[_ACid][1].id
+		elseif rand > BS.GetBestDamageClassesByArmorClass[_ACid][1].val and rand <= BS.GetBestDamageClassesByArmorClass[_ACid][1].val + BS.GetBestDamageClassesByArmorClass[_ACid][2].val then
+			return BS.GetBestDamageClassesByArmorClass[_ACid][2].id
+		else
+			return BS.GetBestDamageClassesByArmorClass[_ACid][3].id
+		end
+	else
+		if rand <= BS.GetBestDamageClassesByArmorClass[_ACid][1].val then
+			return BS.GetBestDamageClassesByArmorClass[_ACid][1].id
+		elseif rand > BS.GetBestDamageClassesByArmorClass[_ACid][1].val and rand <= BS.GetBestDamageClassesByArmorClass[_ACid][1].val + BS.GetBestDamageClassesByArmorClass[_ACid][2].val then
+			return BS.GetBestDamageClassesByArmorClass[_ACid][2].id
+		elseif rand > BS.GetBestDamageClassesByArmorClass[_ACid][1].val + BS.GetBestDamageClassesByArmorClass[_ACid][2].val and rand <= BS.GetBestDamageClassesByArmorClass[_ACid][1].val + BS.GetBestDamageClassesByArmorClass[_ACid][2].val + BS.GetBestDamageClassesByArmorClass[_ACid][3].val then
+			return BS.GetBestDamageClassesByArmorClass[_ACid][3].id
+		else
+			return BS.GetBestDamageClassesByArmorClass[_ACid][4].id
+		end
+	end
+end
+BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Entities.PV_Cannon1},
+										[2] = UpgradeCategories.LeaderBow,
+										[3] = UpgradeCategories.LeaderHeavyCavalry,
+										[4] = Entities.PV_Cannon2,
+										[5] = UpgradeCategories.LeaderElite,
+										[6] = {UpgradeCategories.Evil_LeaderBearman, UpgradeCategories.Evil_LeaderSkirmisher},
+										[7] = UpgradeCategories.LeaderRifle,
+										[8] = UpgradeCategories.LeaderPoleArm,
+										[9] = UpgradeCategories.LeaderCavalry
+										}
+BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm},
+									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle},
+									["Stables"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry},
+									["Foundry"] = {Entities.PV_Cannon1, Entities.PV_Cannon2, Entities.PV_Cannon3, Entities.PV_Cannon4}
+									}
+GetUpgradeCategoryInDamageClass = function(_dclass)
+	if type(BS.GetUpgradeCategoryByDamageClass[_dclass]) == "table" then
+		return BS.GetUpgradeCategoryByDamageClass[_dclass][math.random(table.getn(BS.GetUpgradeCategoryByDamageClass[_dclass]))]
+	else
+		return BS.GetUpgradeCategoryByDamageClass[_dclass]
+	end
+end
+MilitaryBuildingIsTrainingSlotFree = function(_id)
+	if not _id or not Logic.IsEntityAlive(_id) then
+		return
+	end
+	local slots
+	local IsFoundry = (Logic.GetEntityType(_id) == Entities.PB_Foundry1 or Logic.GetEntityType(_id) == Entities.PB_Foundry2)
+	if IsFoundry then
+		return Logic.GetCannonProgress(_id) == 100
+	else
+		local count = 0
+		local attach = CEntity.GetAttachedEntities(_id)[42]
+		if attach and attach[1] then
+			for i = 1, table.getn(attach) do
+				if Logic.IsEntityInCategory(attach[i], EntityCategories.Soldier) == 0 then
+					count = count + 1
+				end
+			end
+		end
+		return count < 3
+	end
+end
+	 
+RotateOffset = function(_x, _y, _rot)
+	
+	_rot = math.rad(_rot)
+	return _x * math.cos(_rot) - _y * math.sin(_rot), _x * math.sin(_rot) + _y * math.cos(_rot)
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------- RANDOM CHESTS ---------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ChestRandomPositions = ChestRandomPositions or {}
+ChestRandomPositions.AllowedTypes = ChestRandomPositions.AllowedTypes or {} 	
 ChestRandomPositions.OffsetByType = {	[Entities.XD_Fir1] = {X = 80, Y = 80},
 										[Entities.XD_Fir1_small] = {X = 70, Y = 30},
 										[Entities.XD_CherryTree] = {X = 110, Y = 60},
@@ -1815,43 +2295,301 @@ ChestRandomPositions.OffsetByType = {	[Entities.XD_Fir1] = {X = 80, Y = 80},
 										[Entities.XD_Umbrella1] = {X = 120, Y = 200},
 										[Entities.XD_Umbrella2] = {X = 170, Y = 200},
 										[Entities.XD_Umbrella3] = {X = 140, Y = 330},
-										[Entities.XD_Willow1] = {X = 140, Y = 140}
-										
+										[Entities.XD_Willow1] = {X = 140, Y = 140},
+										[Entities.PB_Alchemist1] = {[0] = {X = 370, Y = 290},
+																	[90] = {X = 370, Y = 290},
+																	[180] = {X = 300, Y = 700},
+																	[270] = {X = 690, Y = 330}},
+										[Entities.PB_Alchemist2] = {[0] = {X = 370, Y = 290},
+																	[90] = {X = 370, Y = 290},
+																	[180] = {X = 300, Y = 700},
+																	[270] = {X = 690, Y = 330}},
+										[Entities.PB_Archers_Tower] = {X = 650, Y = 530},
+										[Entities.PB_Archery1] = {	[0] = {X = 780, Y = 670},
+																	[90] = {X = -260, Y = 720},
+																	[180] = {X = -480, Y = 730},
+																	[270] = {X = 750, Y = -180}},
+										[Entities.PB_Archery2] = {	[0] = {X = 780, Y = 670},
+																	[90] = {X = -260, Y = 720},
+																	[180] = {X = -480, Y = 730},
+																	[270] = {X = 750, Y = -180}},
+										[Entities.PB_Bank3] = {	[0] = {X = 740, Y = 520},
+																[90] = {X = 470, Y = 590},
+																[180] = {X = 420, Y = 440},
+																[270] = {X = 460, Y = 360}},																
+										[Entities.PB_Barracks1] = {	[0] = {X = 730, Y = 90},
+																	[90] = {X = 430, Y = 680},
+																	[180] = {X = 570, Y = 690},
+																	[270] = {X = 690, Y = -310}},
+										[Entities.PB_Barracks2] = {	[0] = {X = 730, Y = 90},
+																	[90] = {X = 430, Y = 680},
+																	[180] = {X = 570, Y = 690},
+																	[270] = {X = 690, Y = -310}},
+										[Entities.PB_Beautification11] = {X = 220, Y = 200},																			
+										[Entities.PB_Blacksmith3] = {	[0] = {X = 480, Y = -20},
+																		[90] = {X = 370, Y = 330},
+																		[180] = {X = 470, Y = 0},
+																		[270] = {X = 310, Y = 370}},
+										[Entities.PB_Brickworks2] = {	[0] = {X = 360, Y = 480},
+																		[90] = {X = -80, Y = 280},
+																		[180] = {X = 110, Y = 600},
+																		[270] = {X = 470, Y = 240}},
+										[Entities.PB_Castle4] = {	[0] = {X = 1710, Y = 450},
+																	[90] = {X = 760, Y = 1580},
+																	[180] = {X = -560, Y = 1970},
+																	[270] = {X = 2000, Y = -640}},
+										[Entities.PB_Castle5] = {	[0] = {X = 1710, Y = 450},
+																	[90] = {X = 760, Y = 1580},
+																	[180] = {X = 280, Y = 1980},
+																	[270] = {X = 1980, Y = -370}},
+										[Entities.PB_Dome] = {	[0] = {X = 2400, Y = 1340},
+																[90] = {X = 400, Y = 2270},
+																[180] = {X = 2060, Y = 1200},
+																[270] = {X = 2000, Y = 1520}},
+										[Entities.CB_RuinDome] = {X = -670, Y = 2100},
+										[Entities.PB_Farm2] = {	[0] = {X = 350, Y = 250},
+																[90] = {X = 270, Y = 270},
+																[180] = {X = 270, Y = -420},
+																[270] = {X = 470, Y = 280}},
+										[Entities.PB_Farm3] = {	[0] = {X = 350, Y = 600},
+																[90] = {X = 300, Y = 300},
+																[180] = {X = 270, Y = -240},
+																[270] = {X =  580, Y = 190}},
+										[Entities.PB_ForestersHut1] = {	[0] = {X = 350, Y = 340},
+																		[90] = {X = 360, Y = 240},
+																		[180] = {X = 180, Y = 350},
+																		[270] = {X = 420, Y = 120}},
+										[Entities.PB_Foundry1] = {	[0] = {X = 860, Y = 350},
+																	[90] = {X = 550, Y = 850},
+																	[180] = {X = 680, Y = -200},
+																	[270] = {X = 580, Y = 460}},
+										[Entities.PB_Foundry2] = {	[0] = {X = 860, Y = 350},
+																	[90] = {X = 550, Y = 850},
+																	[180] = {X = 680, Y = -200},
+																	[270] = {X = 580, Y = 460}},
+										[Entities.PB_GoldMine2] = {	[0] = {X = 280, Y = 710},
+																	[90] = {X = 480, Y = 570},
+																	[180] = {X = 580, Y = -230},
+																	[270] = {X = 650, Y = 320}},
+										[Entities.PB_GoldMine3] = {	[0] = {X = 280, Y = 710},
+																	[90] = {X = 480, Y = 570},
+																	[180] = {X = 580, Y = -230},
+																	[270] = {X = 650, Y = 320}},
+										[Entities.PB_GunsmithWorkshop1] = {	[0] = {X = -100, Y = 570},
+																			[90] = {X = 450, Y = 400},
+																			[180] = {X = -10, Y = 500},
+																			[270] = {X = 530, Y = 420}},
+										[Entities.PB_GunsmithWorkshop2] = {	[0] = {X = -100, Y = 570},
+																			[90] = {X = 450, Y = 400},
+																			[180] = {X = -10, Y = 500},
+																			[270] = {X = 530, Y = 420}},
+										[Entities.PB_Headquarters1] = {	[0] = {X = 640, Y = 640},
+																		[90] = {X = 90, Y = 640},
+																		[180] = {X = 600, Y = 300},
+																		[270] = {X = 610, Y = -180}},
+										[Entities.PB_Headquarters2] = {	[0] = {X = 640, Y = 640},
+																		[90] = {X = 90, Y = 640},
+																		[180] = {X = 600, Y = 300},
+																		[270] = {X = 610, Y = -180}},
+										[Entities.PB_Headquarters3] = {	[0] = {X = 640, Y = 640},
+																		[90] = {X = 90, Y = 640},
+																		[180] = {X = 600, Y = 300},
+																		[270] = {X = 610, Y = -180}},
+										[Entities.PB_Outpost1] = {	[0] = {X = 640, Y = 640},
+																	[90] = {X = 90, Y = 640},
+																	[180] = {X = 600, Y = 300},
+																	[270] = {X = 610, Y = -180}},
+										[Entities.PB_Outpost2] = {	[0] = {X = 640, Y = 640},
+																	[90] = {X = 90, Y = 640},
+																	[180] = {X = 600, Y = 300},
+																	[270] = {X = 610, Y = -180}},
+										[Entities.PB_Outpost3] = {	[0] = {X = 640, Y = 640},
+																	[90] = {X = 90, Y = 640},
+																	[180] = {X = 600, Y = 300},
+																	[270] = {X = 610, Y = -180}},
+										[Entities.PB_Market1] = {	[0] = {X = 590, Y = 660},
+																	[90] = {X = 500, Y = 650},
+																	[180] = {X = 340, Y = 580},
+																	[270] = {X = 590, Y = 240}},
+										[Entities.PB_Market2] = {	[0] = {X = 590, Y = 660},
+																	[90] = {X = 500, Y = 650},
+																	[180] = {X = 340, Y = 580},
+																	[270] = {X = 590, Y = 240}},
+										[Entities.PB_Market3] = {	[0] = {X = 870, Y = 710},
+																	[90] = {X = 790, Y = -350},
+																	[180] = {X = 720, Y = 670},
+																	[270] = {X = 830, Y = -610}},
+										[Entities.PB_MasterBuilderWorkshop] = {	[0] = {X = 340, Y = 360},
+																				[90] = {X = 480, Y = 330},
+																				[180] = {X = 200, Y = 490},
+																				[270] = {X = 270, Y = 220}},
+										[Entities.PB_MercenaryTower] = {[0] = {X = 400, Y = 250},
+																		[90] = {X = 310, Y = 300},
+																		[180] = {X = 400, Y = -10},
+																		[270] = {X = 300, Y = 270}},
+										[Entities.PB_Monastery1] = {[0] = {X = 790, Y = 620},
+																	[90] = {X = 100, Y = 680},
+																	[180] = {X = 600, Y = 90},
+																	[270] = {X = 700, Y = -230}},
+										[Entities.PB_Monastery2] = {[0] = {X = 790, Y = 620},
+																	[90] = {X = 100, Y = 680},
+																	[180] = {X = 600, Y = 90},
+																	[270] = {X = 700, Y = -230}},
+										[Entities.PB_Monastery3] = {[0] = {X = 790, Y = 620},
+																	[90] = {X = 100, Y = 680},
+																	[180] = {X = 600, Y = 90},
+																	[270] = {X = 700, Y = -230}},
+										[Entities.PB_PowerPlant1] = {	[0] = {X = 260, Y = 320},
+																		[90] = {X = 200, Y = 100},
+																		[180] = {X = 300, Y = 110},
+																		[270] = {X = 300, Y = 220}},
+										[Entities.PB_Residence1] = {[0] = {X = 300, Y = 210},
+																	[90] = {X = 300, Y = 140},
+																	[180] = {X = 200, Y = 180},
+																	[270] = {X = 200, Y = 140}},
+										[Entities.PB_Residence2] = {[0] = {X = 300, Y = 210},
+																	[90] = {X = 300, Y = 140},
+																	[180] = {X = 200, Y = 180},
+																	[270] = {X = 200, Y = 140}},
+										[Entities.PB_Residence3] = {[0] = {X = 300, Y = 210},
+																	[90] = {X = 300, Y = 140},
+																	[180] = {X = 200, Y = 180},
+																	[270] = {X = 200, Y = 140}},
+										[Entities.PB_Sawmill1] = {	[0] = {X = 490, Y = 720},
+																	[90] = {X = 770, Y = 280},
+																	[180] = {X = -100, Y = 830},
+																	[270] = {X = 760, Y = -100}},
+										[Entities.PB_Sawmill2] = {	[0] = {X = 490, Y = 720},
+																	[90] = {X = 770, Y = 280},
+																	[180] = {X = -100, Y = 830},
+																	[270] = {X = 760, Y = -100}},
+										[Entities.PB_SilverMine2] = {X = 520, Y = 680},
+										[Entities.PB_SilverMine3] = {X = 600, Y = 610},
+										[Entities.PB_StoneMason1] = {	[0] = {X = 480, Y = 470},
+																		[90] = {X = 450, Y = 400},
+																		[180] = {X = -70, Y = 480},
+																		[270] = {X = 480, Y = -50}},
+										[Entities.PB_StoneMason2] = {X = 510, Y = 230},
+										[Entities.PB_SulfurMine2] = {X = 245, Y = 790},
+										[Entities.PB_SulfurMine3] = {X = 245, Y = 790},
+										[Entities.PB_Tavern1] = {X = 520, Y = 520},
+										[Entities.PB_Tavern2] = {X = 520, Y = 520},
+										[Entities.PB_University1] = {X = 780, Y = 190},
+										[Entities.PB_University2] = {X = 780, Y = 190},
+										[Entities.PB_WeatherTower1] = {X = 280, Y = 230},
+										[Entities.PB_VillageCenter1] = {X = 260, Y = 700},
+										[Entities.PB_VillageCenter2] = {X = 260, Y = 700},
+										[Entities.PB_VillageCenter3] = {X = 260, Y = 700},
+										[Entities.CB_Abbey01] = {X = 510, Y = 410},
+										[Entities.CB_Abbey02] = {X = 190, Y = 130},
+										[Entities.CB_Abbey03] = {X = 160, Y = 150},
+										[Entities.CB_Abbey04] = {X = 160, Y = 50},
+										[Entities.CB_BarmeciaCastle] = {X = 780, Y = 440},
+										[Entities.CB_Bastille1] = {X = 380, Y = 370},
+										[Entities.CB_Camp15] = {X = 280, Y = 190},
+										[Entities.CB_Camp22] = {X = 140, Y = 90},
+										[Entities.CB_Castle1] = {X = 670, Y = 410},
+										[Entities.CB_Castle2] = {X = 650, Y = 540},
+										[Entities.CB_CleycourtCastle] = {X = 280, Y = 790},
+										[Entities.CB_CrawfordCastle] = {X = 530, Y = 590},
+										[Entities.CB_DarkCastle] = {X = 930, Y = 830},			
+										[Entities.CB_DestroyAbleRuinFarm1] = {X = 240, Y = 610},
+										[Entities.CB_DestroyAbleRuinHouse1] = {X = 270, Y = 130},
+										[Entities.CB_DestroyAbleRuinMonastery1] = {X = 700, Y = 180},
+										[Entities.CB_DestroyAbleRuinResidence1] = {X = 260, Y = 230},
+										[Entities.CB_FolklungCastle] = {X = 850, Y = 940},
+										[Entities.CB_KaloixCastle] = {X = 910, Y = 630},
+										[Entities.CB_MinerCamp2] = {X = 240, Y = 220},
+										[Entities.CB_MinerCamp3] = {X = 240, Y = 220},
+										[Entities.CB_Mint1] = {X = 360, Y = 480},
+										[Entities.CB_OldKingsCastle] = {X = 1170, Y = 580},
+										[Entities.CB_OldKingsCastleRuin] = {X = 1170, Y = 580},
+										[Entities.CB_RobberyTower1] = {X = 410, Y = 260},
+										[Entities.CB_Tower1] = {X = 350, Y = 220}
 										}
-ChestRandomPositions.GetRandomPositions = function(_amount)
-
-	local sizeX, sizeY = Logic.WorldGetSize()
-	local postable = {}
-	while table.getn(postable) < _amount do
-		X, Y = math.random(sizeX), math.random(sizeY)
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes)), CEntityIterator.InCircleFilter(X, Y, 200)) do
-			local _X, _Y = GetPosition(eID).X + ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].X, GetPosition(eID).Y + ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].Y
-			local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
-				
-			if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
-				local distcheck = true
-				for k,v in pairs(postable) do
-					if GetDistance(v, {X = _X, Y = _Y}) < 1000 then
-						distcheck = false
-					end
-				end
-				if distcheck then
-					table.insert(postable, {X = _X, Y = _Y})		
-				end
-			end
-		end
+for k,v in pairs(Entities) do
+	if ChestRandomPositions.OffsetByType[v] then
+		table.insert(ChestRandomPositions.AllowedTypes, v)
 	end
-	return postable
+end
+-- search range for random pos (smaller range: better results, but worse performance, larger range: worse results but better performance scales square!)
+ChestRandomPositions.SearchRange = 200
+-- minimum distance between chests
+ChestRandomPositions.MinDistance = 1000
+-- exponent to calculate default num of chests scaling with mapsize (mapsize is square so 2 is only logical)
+ChestRandomPositions.DefValueExponent = 2
+-- quotient to calculate default num of chests scaling with mapsize
+ChestRandomPositions.DefValueQuotient = 30000
+-- max range in which heroes can open chests
+ChestRandomPositions.ChestOpenerRange = 400
+-- chest resource dependent values
+ChestRandomPositions.Resources = {Gold = {BaseAmount = 600, RandomBonus = 200, TimeQuotient = 5, Chance = -1}, Silver = {BaseAmount = 150, RandomBonus = 50, TimeQuotient = 15, Chance = 50}}
+-- needed for the message to players
+ChestRandomPositions.TypeToName = {Gold = "Taler", Silver = "Silber"}
+ChestRandomPositions.TypeToPretext = {Gold = "hat eine Schatztruhe geplündert.", Silver = "hat einen besonders wertvollen Schatz gefunden."}
+-- played sound and its volume when chest was opened
+ChestRandomPositions.OpenedSound = {Type = Sounds.Misc_Chat2, Volume = 100}
+-- created chest entity type
+ChestRandomPositions.ChestType = Entities.XD_ChestGold
+-- default script name given to created chests
+ChestRandomPositions.ScriptNamePattern = "RandomPosChest"
+ChestRandomPositions.GetRandomPositions = function(_amount)
+    local chunks = CUtil.Chunks.new()
+    for id in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes))) do
+        chunks:AddEntity(id)
+    end
+    chunks:UpdatePositions()
+    local sizeX, sizeY = Logic.WorldGetSize()
+    local postable = {}
+    while table.getn(postable) < _amount do
+        local X, Y = math.random(sizeX), math.random(sizeY)
+        local entities = chunks:GetEntitiesInAreaInCMSorted(X, Y, ChestRandomPositions.SearchRange)
+        -- shuffle
+        for i = table.getn(entities), 2, - 1 do
+            local j = math.random(i)
+            entities[i], entities[j] = entities[j], entities[i]
+        end
+        --
+        for _, eID in entities do
+            local offX, offY
+            if Logic.IsBuilding(eID) == 1 then
+                local r = round(Logic.GetEntityOrientation(eID))
+                if ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)][r] then
+                    offX, offY = ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)][r].X, ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)][r].Y
+                end                    
+            end
+            if not offX then
+                offX, offY = ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].X, ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].Y
+            end
+            local _X, _Y = GetPosition(eID).X + offX, GetPosition(eID).Y + offY
+            local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
+                
+            if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
+                local distcheck = true
+                for k,v in pairs(postable) do
+                    if GetDistance(v, {X = _X, Y = _Y}) < ChestRandomPositions.MinDistance then
+                        distcheck = false
+						break
+                    end
+                end
+                if distcheck then
+                    table.insert(postable, {X = _X, Y = _Y})        
+                    break
+                end
+            end
+        end
+    end
+    return postable
 end
 ChestRandomPositions.ActiveState = {}
 ChestRandomPositions.CreateChests = function(_amount)
 
-	_amount = _amount or round(((Mapsize/100)^2)/30000)
+	_amount = _amount or round(((Mapsize/100)^ChestRandomPositions.DefValueExponent)/ChestRandomPositions.DefValueQuotient)
 	local postable = ChestRandomPositions.GetRandomPositions(_amount)
 	local chestIDtable = {}
 	for k,v in pairs(postable) do
-		chestIDtable[k] = Logic.CreateEntity(Entities.XD_ChestGold, v.X, v.Y, 0, 0)
-		Logic.SetEntityName(chestIDtable[k], "RandomPosChest"..k)
+		chestIDtable[k] = Logic.CreateEntity(ChestRandomPositions.ChestType, v.X, v.Y, 0, 0)
+		Logic.SetEntityName(chestIDtable[k], ChestRandomPositions.ScriptNamePattern..""..k)
 	end
 	for i = 1,table.getn(chestIDtable) do
 		ChestRandomPositions.ActiveState[i] = true
@@ -1867,21 +2605,25 @@ ChestRandomPositions_ChestControl = function(...)
 		for i = 1, arg.n do	
 			if ChestRandomPositions.ActiveState[i] then				
 				pos = GetPosition(arg[i])
-				for j = 1, 2 do
-					entities = {Logic.GetPlayerEntitiesInArea(j, 0, pos.X, pos.Y, 400, 1)}
+				for j = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+					entities = {Logic.GetPlayerEntitiesInArea(j, 0, pos.X, pos.Y, ChestRandomPositions.ChestOpenerRange, 1)}
 					if entities[1] > 0 then
 						if Logic.IsHero(entities[2]) == 1 then
-							local randomval = math.random(1, 50-i)
-							if randomval ~= 1 then								
-								randomEventAmount = round((600 + math.random(200) + Logic.GetTime()/5) * (gvDiffLVL or 1))
-								Logic.AddToPlayersGlobalResource(j,ResourceType.Gold,randomEventAmount)
-								Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " hat eine Schatztruhe geplündert. Inhalt: " .. randomEventAmount.." Taler" )										
+							local res
+							local randomval = math.random(1, ChestRandomPositions.Resources.Silver.Chance + i)
+							if randomval <= ChestRandomPositions.Resources.Silver.Chance then			
+								res = "Gold"
 							else
-								randomEventAmount = round((150 + math.random(50) + Logic.GetTime()/15) * (gvDiffLVL or 1))
-								Logic.AddToPlayersGlobalResource(j,ResourceType.Silver,randomEventAmount)
-								Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " hat einen besonders wertvollen Schatz gefunden. Inhalt: " .. randomEventAmount.." Silber" )		
+								res = "Silver"
 							end
-							Sound.PlayGUISound(Sounds.Misc_Chat2,100)
+							randomEventAmount = round((ChestRandomPositions.Resources[res].BaseAmount + math.random(ChestRandomPositions.Resources[res].RandomBonus) + Logic.GetTime()/ChestRandomPositions.Resources[res].TimeQuotient) * (gvDiffLVL or 1))
+							Logic.AddToPlayersGlobalResource(j,ResourceType[res],randomEventAmount)
+							Message("@color:0,255,255 " .. UserTool_GetPlayerName(j) ..  " " .. ChestRandomPositions.TypeToPretext[res] .. " Inhalt: " .. randomEventAmount .." " .. ChestRandomPositions.TypeToName[res])										
+							if ExtendedStatistics then
+								ExtendedStatistics.Players[j][res] = ExtendedStatistics.Players[j][res] + randomEventAmount
+							end
+							--
+							Sound.PlayGUISound(ChestRandomPositions.OpenedSound.Type, ChestRandomPositions.OpenedSound.Volume)
 							ChestRandomPositions.ActiveState[i] = false
 							ChestRandomPositions.OpenedCount = ChestRandomPositions.OpenedCount + 1
 							ReplaceEntity(arg[i], Entities.XD_ChestOpen)

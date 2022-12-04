@@ -20,651 +20,594 @@ technische Infos:
 	
 		Dorfzentrum:
 
-			Kosten:	Holz:		300							Holz:		300
-				Stein:		200							Stein:		200
+			Kosten:		Holz:	300									300
+						Stein:	200									200
 
-			benötigt:		-									-
-			
-			DZ Plätze:		70									75
+			benötigt:			-									-
 
-			Rüstung:		7									4
-	
-			HP:			1500									1000
+			DZ Plätze:			70									75
 
-			Sichtweite:		4000									4000
+			Rüstung:			7									4
+
+			HP:					1500								1000
+
+			Sichtweite:			4000								4000
 
 			Dieb Sprengfaktor:	25%									75%
 
 		Gemeindezentrum:
-		
-			Kosten:	Taler:		250							Taler:		150
-				Lehm:		300							Lehm:		100
-				Stein:		400							Stein:		300
 
-			benötigt: 		Bildung									Bildung
+			Kosten:		Taler:	250									150
+						Lehm:	200									100
+						Holz: 	300									-
+						Stein:	200									300
 
-			DZ Plätze:		90									100
+			benötigt: 			Bildung								Bildung
 
-			Rüstung:		9									4
+			DZ Plätze:			90									100
 
-			HP:			2000									1200
+			Rüstung:			9									4
 
-			Sichtweite:		4400									4000
-		
+			HP:					2000								1200
+
+			Sichtweite:			4400								4000
+
 			Dieb Sprengfaktor:	20%									75%
 
 		Stadtzentrum:
 
-			Kosten:	Taler:		500							Taler:		200
-				Lehm:		500							Lehm:		150
-				Stein:		700							Stein:		400
-		
-			benötigt:		Architektur								Handelswesen
+			Kosten:		Taler:	500									200
+						Lehm:	300									150
+						Holz: 	200									-
+						Stein:	700									400
 
-			DZ Plätze:		140									125
+			benötigt:			Architektur							Handelswesen
 
-			Rüstung:		25									4
+			DZ Plätze:			140									125
 
-			HP:			6000									1400
+			Rüstung:			25									4
 
-			Sichtweite:		6000									4000
+			HP:					6000								1400
+
+			Sichtweite:			6000								4000
 
 			Dieb Sprengfaktor:	15%									75%
-		
+
 		Aussichtsturm:
 
-			Kosten:	Holz:		200							Holz:		200
-				Stein:		200							Stein:		200
+			Kosten:		Holz:	200							Holz:	200
+						Stein:	200							Stein:	200
 
-			benötigt:		Konstruktion								Konstruktion
+			benötigt:			Konstruktion						Konstruktion
 
-			Rüstung:		10									6
-			
-			HP:			500									1000
+			Rüstung:			6									6
 
-			Sichtweite:		6000									3300
+			HP:					500									1000
 
-			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
-			
-			Besonderheiten: Aussichtstürme können nicht nahe anderer Aussichtstürme gebaut werden.
+			Sichtweite:			6000								3300
+
+			Rüstungsklasse:		Gebäude								Leder (Schützen, Lanzenträger)
+
+			Besonderheiten: 	Aussichtstürme können nicht nahe anderer Aussichtstürme gebaut werden.
 
 		Ballistaturm:
 
-			Kosten:	Holz:		350							Holz:		200
-				Stein:		500							Stein:		300
+			Kosten:		Holz:	350							Holz:	200
+						Stein:	500							Stein:	300
 
-			benötigt:		Flaschenzug								Zahnrad
+			benötigt:			Flaschenzug							Zahnrad
 
-			Rüstung:		1									6
-			
-			HP:			600									1200
+			Rüstung:			1									6
 
-			Sichtweite:		3300									3300
+			HP:					600									1200
 
-			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
+			Sichtweite:			3300								3300
 
-			Max.Range:		2200									2800
-		
-			Min.Range:		800									800
-		
-			DMG-Range:		420									500
+			Rüstungsklasse:		Gebäude								Leder (Schützen, Lanzenträger)
 
-			DMG:			35									30
+			Max.Range:			2200								2800
+
+			Min.Range:			800									800
+
+			DMG-Range:			420									500
+
+			DMG:				35									30
 
 		Kanonenturm:
 
-			Kosten:	Taler:		800							
-				Stein:		1000							Stein:		200
-				Schwefel:	1250							Schwefel:	200			
+			Kosten:		Taler:	800									-			
+						Stein:	1000								200
+						Schwefel:1250								200			
 
-			benötigt:		Chemie									Metallurgie
+			benötigt:			Chemie								Metallurgie
 
-			Rüstung:		1									6
-				
-			HP:			700									1200
+			Rüstung:			1									6
 
-			Sichtweite:		3300									3300
+			HP:					700									1200
 
-			Rüstungsklasse:		Gebäude									Leder (Schützen, Lanzenträger)
+			Sichtweite:			3300								3300
 
-			Max.Range:		2400									2800
-		
-			Min.Range:		800									800
-		
-			DMG-Range:		480									700
+			Rüstungsklasse:		Gebäude								Leder (Schützen, Lanzenträger)
 
-			DMG:			60									40
+			Max.Range:			2400								2800
+
+			Min.Range:			800									800
+
+			DMG-Range:			480									700
+
+			DMG:				60									40
 
 			Anmerkungen:		Diese Änderungen betreffen gleichermaßen die "dunklen" Versionen der Türme. Diese haben jedoch im Schnitt etwa 50% mehr HP.
 
 		Laboratorium:
 
-			Kosten:	Stein:		250							Stein:		250
-				Eisen:		100							Eisen:		100											Stein:		400
-		
-			benötigt:		Metallurgie								Metallurgie
+			Rüstung:			5									3
 
-			Rüstung:		5									3
-
-			HP:			2200									1700
-
-			Sichtweite:		2000									2000
+			HP:					2200								1700
 
 			Veredlung/Tick:		5									4
 
-			Arbeiter:		6									6
-
 		Schießanlage:
-			
-			Rüstung:		6									4
 
-			HP:			3000									2000
-			
-			Sichtweite:		3000									3000
-	
-			Rekrutierungszeit[s]:	25									30
+			Rüstung:			6									4
+
+			HP:					3000								2000
+
+			Rekrutierungszeit	15									30
 
 		Garnison:
-			
-			Rüstung:		6									4
 
-			HP:			3000									2000
-			
-			Sichtweite:		3000									3000
-	
-			Rekrutierungszeit[s]:	25									30
+			Rüstung:			6									4
+
+			HP:					3000								2000
+
+			Rekrutierungszeit	15									30
 
 		Reiterei:
-			
-			Rüstung:		6									4
 
-			HP:			3000									2000
-			
-			Sichtweite:		3000									3000
-	
-			Rekrutierungszeit[s]:	15									20
+			Rüstung:			6									4
+
+			HP:					3000								2000
+
+			Rekrutierungszeit	15									20
 
 		Kanonenmanufaktur:
-			
-			Rüstung:		6									3
 
-			HP:			3000									2000
-			
-			Sichtweite:		3000									3000
+			Rüstung:			6									3
+
+			HP:					3000								2000
 
 		Schatzkammer:
 
-			Rüstung:		9									5
+			Rüstung:			9									5
 
-			HP:			3000									1700
-
-			Sichtweite:		3000									3000
+			HP:					3000								1700
 
 			Veredlung/Tick:		2									2
 
-			Arbeiter:		6									6
+			Arbeiter:			6									6
 
 		Dario-Statue:
 
-			Kosten:	Taler:		600									200
-				Stein:		300									100
+			Kosten:		Taler:	600									200
+						Stein:	300									100
 
-			MotiEffekt:		12%									4%
-			
-			HP:			600									300
+			MotiEffekt:			12%									4%
+
+			HP:					600									300
 
 		Brunnen:
 
-			Kosten:	Taler:		600									200
-				Stein:		300									100
+			Kosten:		Taler:	600									200
+						Stein:	300									100
 
-			MotiEffekt:		12%									4%
-			
-			HP:			600									300
+			MotiEffekt:			12%									4%
+
+			HP:					600									300
 
 		Reiter:
 
-			Kosten:	Taler:		2000									400
-				Stein:		1000									200
+			Kosten:		Taler:	2000								400
+						Stein:	1000								200
 
-			MotiEffekt:		30%									6%
-			
-			HP:			600									300
+			MotiEffekt:			30%									6%
+
+			HP:					600									300
 
 		Kameraden:
 
-			Kosten:	Taler:		300									100
-				Lehm:		300									100
+			Kosten:		Taler:	300									100
+						Lehm:	300									100
 
-			MotiEffekt:		6%									2%
-			
-			HP:			600									300
-		
+			MotiEffekt:			6%									2%
+
+			HP:					600									300
+
 		Obelisk:
 
-			Kosten:	Taler:		1500									300
-				Stein:		500									100
+			Kosten:		Taler:	1500								300
+						Stein:	500									100
 
-			MotiEffekt:		25%									5%
-			
-			HP:			600									300
+			MotiEffekt:			25%									5%
+
+			HP:					600									300
 
 		Astrolabium:
 
-			Kosten:	Taler:		300									100
-				Eisen:		500									100
+			Kosten:		Taler:	300									100
+						Eisen:	500									100
 
-			MotiEffekt:		8%									2%
-			
-			HP:			600									300
+			MotiEffekt:			8%									2%
+
+			HP:					600									300
 
 		Uhr:
 
-			Kosten:	Taler:		900									300
-				Holz:		300									100
+			Kosten:		Taler:	900									300
+						Holz:	300									100
 
-			MotiEffekt:		15%									5%
-			
-			HP:			600									300
+			MotiEffekt:			15%									5%
+
+			HP:					600									300
 
 		Zugbrunnen:
 
-			Kosten:	Taler:		900									300
-				Stein:		300									100
+			Kosten:		Taler:	900									300
+						Stein:	300									100
 
-			MotiEffekt:		15%									5%
-			
-			HP:			600									300
+			MotiEffekt:			15%									5%
+
+			HP:					600									300
 
 		Blumen:
 
-			Kosten:	Taler:		200									100
-				Holz:		400									100
+			Kosten:		Taler:	200									100
+						Holz:	400									100
 
-			MotiEffekt:		5%									2%
-			
-			HP:			600									300
+			MotiEffekt:			5%									2%
+
+			HP:					600									300
 
 		Teleskop:
 
-			Kosten:	Taler:		2000									400
-				Eisen:		1000									200
+			Kosten:		Taler:	2000								400
+						Eisen:	1000								200
 
-			MotiEffekt:		30%									6%
-			
-			HP:			600									300
+			MotiEffekt:			30%									6%
+
+			HP:					600									300
 
 		Pavillon:
 
-			Kosten:	Taler:		2000									400
-				Stein:		1000									200
+			Kosten:		Taler:	2000								400
+						Stein:	1000								200
 
-			MotiEffekt:		30%									6%
-			
-			HP:			600									300
+			MotiEffekt:			30%									6%
+
+			HP:					600									300
 
 		Windrad:
 
-			Kosten:	Taler:		1000									200
-				Eisen:		500									100
+			Kosten:		Taler:	1000								200
+						Eisen:	500									100
 
-			MotiEffekt:		20%									4%
-			
-			HP:			600									300
+			MotiEffekt:			20%									4%
+
+			HP:					600									300
 
 		Grobschmiede:
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			2200									1700
-
-			Sichtweite:		3000									3000
+			HP:					2200								1700
 
 			Veredlung/Tick:		5									4
 
-			Arbeiter:		6									6
-	
+			Arbeiter:			6									6
+
 		Feinschmiede:
-			
-			Kosten:	Lehm:		500									150
-				Stein:		800									300
 
-			Rüstung:		5									3
+			Kosten:		Lehm:	500									150
+						Stein:	800									300
 
-			HP:			2800									2200
+			Rüstung:			5									3
 
-			Sichtweite:		3000									3000
+			HP:					2800								2200
 
 			Veredlung/Tick:		6									4
 
-			Arbeiter:		8									6
+			Arbeiter:			8									6
 
 		Ziegelbrennerei:
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			2200									1700
-
-			Sichtweite:		3000									3000
+			HP:					2200								1700
 
 			Veredlung/Tick:		5									4
-
-			Arbeiter:		6									6
 
 		Lehmstollen:
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			1200									1000
-
-			Sichtweite:		3000									3000
+			HP:					1200								1000
 
 			Veredlung/Tick:		6									5
 
-			Arbeiter:		7									6
+			Arbeiter:			7									6
 
 		Lehmbergwerk:
 
-			Kosten:	Taler:		400									-
-				Holz:		500									250
-				Stein:		600									300
+			Kosten:		Taler:	400									-
+						Holz:	500									250
+						Stein:	600									300
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			2000									1400
-
-			Sichtweite:		3000									3000
+			HP:					2000								1400
 
 			Veredlung/Tick:		8									6
 
-			Arbeiter:		9									7
+			Arbeiter:			9									7
 
 		Eisenstollen:
 
-			Rüstung:		4									3
+			Rüstung:			4									3
 
-			HP:			1200									1000
-
-			Sichtweite:		3000									3000
+			HP:					1200								1000
 
 			Veredlung/Tick:		6									5
 
-			Arbeiter:		7									6
+			Arbeiter:			7									6
 
 		Eisenbergwerk:
 
-			Kosten:	Taler:		400									-
-				Holz:		600									300
-				Lehm:		600									300
+			Kosten:		Taler:	400									-
+						Holz:	600									300
+						Lehm:	600									300
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			2000									1400
-
-			Sichtweite:		3000									3000
+			HP:					2000								1400
 
 			Veredlung/Tick:		8									6
 
-			Arbeiter:		9									7
+			Arbeiter:			9									7
 
 		Steinstollen:
 
-			Rüstung:		4									3
+			Rüstung:			4									3
 
-			HP:			1200									1000
-
-			Sichtweite:		3000									3000
+			HP:					1200								1000
 
 			Veredlung/Tick:		6									5
 
-			Arbeiter:		7									6
+			Arbeiter:			7									6
 
 		Steinbergwerk:
 
-			Kosten:	Taler:		400									-
-				Eisen:		400									200
-				Lehm:		400									200
+			Kosten:		Taler:	400									-
+						Eisen:	400									200
+						Lehm:	400									200
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			2000									1400
-
-			Sichtweite:		3000									3000
+			HP:					2000								1400
 
 			Veredlung/Tick:		8									6
 
-			Arbeiter:		9									7
+			Arbeiter:			9									7
 
 		Schwefelstollen:
 
-			Rüstung:		4									3
+			Rüstung:			4									3
 
-			HP:			1200									1000
-
-			Sichtweite:		3000									3000
+			HP:					1200								1000
 
 			Veredlung/Tick:		6									5
 
-			Arbeiter:		7									6
+			Arbeiter:			7									6
 
 		Schwefelbergwerk:
 
-			Kosten:	Taler:		400									-
-				Stein:		600									200
-				Lehm:		400									200
+			Kosten:		Taler:	400									-
+						Stein:	600									200
+						Lehm:	400									200
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			2000									1400
-
-			Sichtweite:		3000									3000
+			HP:					2000								1400
 
 			Veredlung/Tick:		8									6
 
-			Arbeiter:		9									7
+			Arbeiter:			9									7
 
 		Mühle:
 
-			Rüstung:		4									3
+			Rüstung:			4									3
 
-			HP:			1000									700
-
-			Sichtweite:		3000									3000
+			HP:					1000								700
 
 			Nahrungsplätze:		11									10
 
-			Arbeiter:		1									2
+			Arbeiter:			1									2
 
 		Gutshof:
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			1700									1000
-
-			Sichtweite:		3000									3000
+			HP:					1700								1000
 
 			Nahrungsplätze:		15									12
 
-			Arbeiter:		1									3
+			Arbeiter:			1									3
 
 		Büchsenmanufaktur:
 
-			Rüstung:		7									3
+			Rüstung:			7									3
 
-			HP:			2500									1700
-
-			Sichtweite:		3000									3000
+			HP:					2500								1700
 
 			Veredlung/Tick:		5									4
 
-			Arbeiter:		5									4
+			Arbeiter:			5									4
+
+		Festung:
+
+			Rüstung:			9									5
+
+			HP:					3000								2500
+
+			Max Leibis:			300									1000
+
+			Max Arbeiter(Alarm)	800									200
+
+		Festung:
+
+			Rüstung:			15									5
+
+			HP:					4500								3200
+
+			Max Leibis:			300									1000
+
+			Max Arbeiter(Alarm)	800									300
 
 		Zitadelle:
 
-			Rüstung:		60									5
+			Rüstung:			60									5
 
-			HP:			9000									4100
+			HP:					9000								4100
 
-			Sichtweite:		5000									3000
+			Max Leibis:			300									1000
 
-			Max Leibis:		300									1000
-
-			Max Arbeiter (Alarm):	800									400
+			Max Arbeiter(Alarm)	800									400
 
 			Dieb Sprengfaktor:	5%									10%	
 
 		Marktplatz:
 
-			Kosten:	Taler:		1000									-
-				Holz:		600									-
-				Stein:		750									200
-				Lehm:		400									100
-		
-			Rüstung:		5									3
+			Kosten:		Taler:	1000								-
+						Holz:	600									-
+						Stein:	750									200
+						Lehm:	400									100
 
-			HP:			2000									1700
+			Rüstung:			5									3
 
-			Sichtweite:		3000									3000
+			HP:					2000								1700
 
-			Arbeiter:		4									6
+			Arbeiter:			4									6
 
 		Kathedrale:
-		
-			Rüstung:		18									5
 
-			HP:			7000									4500
-				
-			Sichtweite:		3000									3000
+			Rüstung:			18									5
+
+			HP:					7000								4500
 
 			Dieb Sprengfaktor:	15%									75%
 
 		Mittleres Wohnhaus:
 
-			Rüstung:		3									3
-
-			HP:			900									700
-
-			Sichtweite:		2000									2000
+			HP:					900									700
 
 			Schlafplätze:		10									9
 
 		Großes Wohnhaus:
 
-			Rüstung:		3									3
-
-			HP:			1500									1000
-
-			Sichtweite:		2000									2000
+			HP:					1500								1000
 
 			Schlafplätze:		14									12
 
 		Sägemühle:
-			
-			Rüstung:		3									3
 
-			HP:			1500									1200
-
-			Sichtweite:		3000									3000
-
-			Veredlung/Tick:		4									4
-
-			Arbeiter:		4									4
+			HP:					1500								1200
 
 		Sägewerk:
 
-			Kosten:	Lehm:		550									150
-				Stein:		600									100
-			
-			Rüstung:		6									3
+			Kosten:		Lehm:	550									150
+						Stein:	600									100
 
-			HP:			2500									1700
+			Rüstung:			6									3
 
-			Sichtweite:		3000									3000
+			HP:					2500								1700
 
 			Veredlung/Tick:		6									4
 
-			Arbeiter:		9									6
+			Arbeiter:			9									6
 
 		Steinmetze:
-			
-			Rüstung:		5									3
 
-			HP:			2200									1700
+			Rüstung:			5									3
 
-			Sichtweite:		3000									3000
+			HP:					2200								1700
 
 			Veredlung/Tick:		5									4
 
-			Arbeiter:		6									6
-
 		Universität:
-			
-			Rüstung:		7									4
 
-			HP:			4000									3500
+			Rüstung:			7									4
 
-			Sichtweite:		3000									3000
+			HP:					4000								3500
 
-		
+
 		sämtliche Baukosten Stufe 1 sind unverändert!
 
 	Einheiten:
 
 		Leibeigener:
 
-			Rüstung:		0									0
+			Rüstung:			0									0
 
-			HP:			100									200
+			HP:					100									200
 
-			Sichtweite:		1500									2000
+			Sichtweite:			1500								2000
 
-			HPReg[1/s]:		1/4									-
+			HPReg[1/s]:			1/4									-
 
-			Res.SuchRadius:		6000									4500
+			Res.SuchRadius:		6000								4500
 
-			DMG:			1									5
+			DMG:				1									5
 
 			RandomDMGBonus		0									2
-			
-			Leibeigene können nicht an Minen Ressourcen hacken.
+
+			Neu: Leibeigene können nun nicht mehr an Minen Ressourcen hacken.
 
 		Miliz:
 
-			Rüstung:		0									1
+			Rüstung:			0									1
 
-			HP:			100									200
+			HP:					100									200
 
-			Sichtweite:		1500									1500
+			Sichtweite:			1500								1500
 
-			HPReg[1/s]:		-									-
+			HPReg[1/s]:			-									-
 
-			DMG:			5									10
+			DMG:				5									10
 
 			RandomDMGBonus		1									3
 
 		Dario:
 
-			Rüstung:		6									3
+			Rüstung:			6									3
 
-			HP:			1100									600
+			HP:					1100								600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		10/2									8/2
+			HPReg[1/s]:			10/2								8/2
 
-			DMG:			23									16
+			DMG:				23									16
 
 			RandomDMGBonus		5									3
 
-			Reichweite:		280									250
+			Reichweite:			280									250
 
-			Falken-MinReichw.:	4000									4000
+			Falken-MinReichw.:	4000								4000
 
-			Falken-MaxReichw.	13000									8000
+			Falken-MaxReichw.	13000								8000
 
-			Falken-Sichtw.:		2200									1500
+			Falken-Sichtw.:		2200								1500
 
 			Falken-Lauftempo:	550									500
 
@@ -674,507 +617,542 @@ technische Infos:
 
 		Pilgrim:
 
-			Rüstung:		6									4
+			Rüstung:			6									4
 
-			HP:			900									600
+			HP:					900									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		10/2									8/2
+			HPReg[1/s]:			10/2								8/2
 
-			DMG:			24									22
+			DMG:				24									22
 
 			RandomDMGBonus		4									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
 			Bombe legen-CD[s]:	30									60
-			
-			Selbsts.-Kanone-CD[s]: 	240									180
-			
-			Selbsts.-Kanone Schüsse: 7									5
-			
-			Selbsts.-Kanone Schaden: 37									15
-			
-			Selbsts.-K. DMGReichw:	 400									800
-			
+
+			Kanone-CD[s]: 		240									180
+
+			Kanone Schüsse: 	7									5
+
+			Kanone Schaden: 	37									15
+
+			Kanone DMGReichw:	400									800
+
 		Salim:
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			HP:			850									600
+			HP:					850									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		480									400
+			Lauftempo:			480									400
 
-			HPReg[1/s]:		14/2									8/2
+			HPReg[1/s]:			14/2								8/2
 
-			DMG:			26									16
+			DMG:				26									16
 
 			RandomDMGBonus		4									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
 			Falle legen-CD[s]:	90									180
-			
-			Falle Sichtweite:	2200									2000
-			
-			Falle Aktiv.-Reichw: 	600									1000
-			
+
+			Falle Sichtweite:	2200								2000
+
+			Falle Aktiv.-Rw.:	600									1000
+
 			Falle Schaden:		95									40
-			
-			Falle Schadensreichw: 	1200									3000
-			
-			Die Falle ist für Gegner erschwert sichtbar (keine Namensanzeige und kein Lebensbalken über der Falle, kein sichtbarer Effekt)
-			
+
+			Falle Schadensrw.: 	1200								3000
+
+			Neu: Die Falle ist für Gegner erschwert sichtbar (keine Namensanzeige und kein Lebensbalken über der Falle, kein sichtbarer Effekt)
+
 			Heilung-CD[s]:		90									120
-			
+
 			Heilungsmenge:		70%									30%
 
 		Erec:
 
-			Rüstung:		4									4
+			Rüstung:			4									4
 
-			HP:			800									600
+			HP:					800									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		10/2									8/2
+			HPReg[1/s]:			10/2								8/2
 
-			DMG:			20									16
+			DMG:				20									16
 
 			RandomDMGBonus		4									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
-			Moral erhöhen-CD[s]:	210									120
+			Moral erhöhen-CD:	210									120
 
-			Moral erhöhen DMG-Buff:	40%									100%
+			Moral erh. DMG-Buff:40%									100%
 
-			Moral erhöhen Dauer[s]:	30									60
-					
-			Rundumschlag-CD[s]:	140									120	
-				
+			Moral erh. Dauer:	40									60
+
+			Rundumschlag-CD:	140									120	
+
 			Rundumschlag-DMG:	75									80
 
-			Rundumschlag Reichw.:	600									400
+			Rundumschlag Rw.:	600									400
 
 		Ari:
 
-			Rüstung:		2									2
+			Rüstung:			2									2
 
-			HP:			500									600
+			HP:					500									600
 
-			Sichtweite:		3200									2200
+			Sichtweite:			3200								2200
 
-			Lauftempo:		360									400
+			Lauftempo:			360									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:			8/2									8/2
 
-			DMG:			23									16
+			DMG:				23									16
 
 			RandomDMGBonus		6									4
 
-			Reichweite:		3100									2700
+			Reichweite:			3100								2700
 
 			Fehltreffer-Chance:	2									5
 
-			Banditen herbeir.-CD[s]:180									180
+			Banditen rufen-CD:	180									180
 
-			Banditen herbeir.Anz.	6									3
+			Banditen rufen.Anz.	6									3
 
-			Banditen Sichtw.:	1400									1000
-		
+			Banditen Sichtw.:	1400								1000
+
 			Banditen Rüstung:	4									4
 
 			Banditen Lauftempo:	440									400
 
-			B. Schaden:		14									10
+			B. Schaden:			14									10
 
 			B. Reichweite:		290									250
 
 			B. Lebensdauer[s]:	60									60
-		
+
+			Tarnung CD:			150									180
+
+			Tarnung Aufdeck-RW:	300									100
+
 		Helias:
 
-			Rüstung:		4									2
+			Rüstung:			4									2
 
-			HP:			666									600
+			HP:					666									600
 
-			Sichtweite:		2800									2800
+			Sichtweite:			2800								2800
 
-			Lauftempo:		430									400
+			Lauftempo:			430									400
 
-			HPReg[1/s]:		25/2									8/2
+			HPReg[1/s]:			25/2								8/2
 
-			DMG:			25									16
+			DMG:				25									16
 
 			RandomDMGBonus		20									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
-			Truppen bekehren-CD[s]:	180									60
+			Truppen bekehren-CD:180									60
 
 			Segnen-CD[s]:		180									120
 
 			Segnen Rüst.-Buff:	70%									40%
 
 			Segnen Dauer[s]:	45									60
-					
+
 		Drake:
 
-			Rüstung:		1									4
+			Rüstung:			1									4
 
-			HP:			500									600
+			HP:					500									600
 
-			Sichtweite:		2900									2800
+			Sichtweite:			2900								2800
 
-			Lauftempo:		320									400
+			Lauftempo:			320									400
 
-			HPReg[1/s]:		5/3									8/2
+			HPReg[1/s]:			5/3									8/2
 
-			DMG:			25									28
+			DMG:				27									28
 
 			RandomDMGBonus		7									2
 
-			Reichweite:		2800									2800
+			Reichweite:			2800								2800
 
-			sicher zielen-CD[s]:	210									120
+			sicher zielen-CD:	210									120
 
-			sicher zielen.-Buff:	65%									100%
+			sich. zielen Buff:	65%									100%
 
-			sicher zielen Dauer[s]:	30									60
+			sich. zielen Dauer:	30									60
 
-			sicher zielen Reichw.:	900									1500
+			sich. z. Reichw.:	900									1500
 
-			Meisterschuss-CD[s]:	150									90
+			Meisterschuss-CD:	150									90
 
-			Meisterschuss-DMG:	36% der HP des Ziels + 480% von Drakes DMG,				100% der HP des Ziels
-						im Nahkampf reduziert auf
-						12% der HP des Ziels + 160% von Drakes DMG
+			Meisterschuss-DMG:	36% HP (Ziel) + 480% DMG (Drake)	100% HP (Ziel)
+								im Nahkampf reduziert auf:
+								12% HP (Ziel) + 160% DMG (Drake)
 
-			Meisterschuss-Reichw.:	4000									5500
+			kritische Reichw.:	800									-
+
+			Meisters.-Reichw.:	4000								5500
 
 		Yuki:
 
-			Rüstung:		6									3
+			Rüstung:			4									3
 
-			HP:			800									600
+			HP:					800									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		440									400
+			Lauftempo:			440									400
 
-			HPReg[1/s]:		10/2									8/2
+			HPReg[1/s]:			12/2								8/2
 
-			DMG:			25									20
-
-			RandomDMGBonus		7									4
-
-			Reichweite:		250									250
-
-			Feuerw. d. Furcht-CD[s]:180									120
-			
-			Fr.Feuerw.-CD[s]: 90										120
-
-			Fr.Feuerw.ArbeiterBuff:	300 Worktime								200 Worktime
-			
-			Shuriken-CD[s]:		100									90
-			
-			Shuriken-Anzahl:	6									4
-
-			Shuriken DMG:		88									38
-
-		Kala:
-
-			Rüstung:		1									5
-
-			HP:			450									600
-
-			Sichtweite:		2200									2200
-
-			Lauftempo:		400									400
-
-			HPReg[1/s]:		16/2									8/2
-
-			DMG:			29									20
+			DMG:				25									20
 
 			RandomDMGBonus		9									4
 
-			Reichweite:		240									200
+			Reichweite:			250									250
 
-			Giftpfeile-CD[s]:	38									30
-			
-			Giftpfeile Anzahl:	12									10
+			Feuerw. Furcht-CD:	180									120
 
-			Giftpfeile DMG:		72									20	
+			Fr.Feuerw.-CD[s]: 	90									120
 
-			Giftnebel-CD[s]:	27									110
+			Fr.Feuerw.Arb.Buff:	300 Worktime						200 Worktime
+
+			Shuriken-CD[s]:		180									90
+
+			Shuriken-Anzahl:	12									4
+
+			Shuriken-Reichw:	1500								3000
+
+			Shur. Max Winkel:	180°								90°
+
+			Shuriken DMG:		100									38
+
+			Neu: Wenn die Shuriken max. 10 Sekunden nach einem Feuerwerk der Furcht aktiviert werden,
+			erhöht sich der Schaden auf 200 pro Shuriken. Wird der Gegner außerdem von hinten getroffen,
+			steigt der Schaden auf 500 pro Shuriken. 
+			Für jeden getöteten Gegner, während einer dieser Effekte aktiv ist, reduziert sich die Abklingzeit
+			um 15 Sekunden.
+
+		Kala:
+
+			Rüstung:			0									5
+
+			HP:					450									600
+
+			Sichtweite:			2200								2200
+
+			Lauftempo:			400									400
+
+			HPReg[1/s]:			12/2								8/2
+
+			DMG:				29									20
+
+			RandomDMGBonus		9									4
+
+			Reichweite:			240									200
+
+			Giftpfeile-CD:		38									30
+
+			Giftpf. Anz.:		12									10
+
+			Giftpf. DMG:		80									20	
+
+			Giftnebel-CD:		27									110
 
 			Giftnebel DMG:		50									25	
-			
-			Giftnebel Reichw:	500									1200
-			
-			Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
+
+			Giftn. Reichw:		500									1200
+
+			Neu: Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
 			(Schadensberechnung 10mal pro Sekunde)
 
 		Mary de Mortfichet:
 
-			Rüstung:		2									3
+			Rüstung:			0									3
 
-			HP:			500									600
+			HP:					500									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		12/2									8/2
+			HPReg[1/s]:			10/2								8/2
 
-			DMG:			28									16
+			DMG:				28									16
 
 			RandomDMGBonus		8									4
 
-			Reichweite:		250									250
+			Reichweite:			250									250
 
-			Demoralisieren-CD[s]:	120									120
+			Demoral.-CD:		120									120
 
-			Demoralisieren DMG-Eff.	-70%									-50%	
+			Demoral. Debuff		-60%								-50%	
 
-			Demoralisieren Dauer[s]	30									60
-			
-			Gift-CD[S]:		150									120
-			
-			Gift-DMG:		70									45
-			
-			Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
+			Demoral. Dauer		30									60
+
+			Gift-CD[S]:			150									120
+
+			Gift-DMG:			70									45
+
+			Neu: Das Gift verursacht nun an allen feindlichen im Gift stehenden Einheiten 5 Sekunden lang pro Sekunde 10% ihrer HP an zusätzlichen Schaden.
 			(Schadensberechnung 10mal pro Sekunde)
 
 		Kerberos:
 
-			Rüstung:		7									5
+			Rüstung:			7									5
 
-			HP:			850									600
+			HP:					700									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		12/2									8/2
+			HPReg[1/s]:			4/2									8/2
 
-			DMG:			27									22
+			DMG:				24									22
 
 			RandomDMGBonus		7									4
 
-			Reichweite:		220									200
+			Reichweite:			220									200
 
-			Angst einfl.-CD[s]:	100									120
+			Höllenschr. CD:		100									120
 
-			Angst einfl. Rüs.-Eff.	-40%									-20%	
+			Angst Rüs.-Eff.		-50%								-20%	
 
-			Angst einfl. Dauer[s]	30									60
+			Angst Dauer[s]		30									60
+
+			Neu: Wann immer Kerberos einen Gegner angreift, der weniger Rüstung als er selbst besitzt, reduzieren sich die Abklingzeiten seiner Fähigkeiten 
+			Höllenschrei um die Rüstungs-Differenz sowie der Aura der Furcht um das dreifache der Rüstungs-Differenz. Außerdem erhöht sich der Schaden an Gegnern 
+			mit niedrigerer Rüstung um 20% pro Rüstungsdifferenz von 1.
+			Kerberos heilt sich um die Menge des verursachten Bonus-Schadens.
 
 		Varg:
 
-			Rüstung:		4									4
+			Rüstung:			4									4
 
-			HP:			600									600
+			HP:					600									600
 
-			Sichtweite:		2200									2200
+			Sichtweite:			2200								2200
 
-			Lauftempo:		400									400
+			Lauftempo:			400									400
 
-			HPReg[1/s]:		8/2									8/2
+			HPReg[1/s]:			8/2									8/2
 
-			DMG:			20									16
+			DMG:				20									16
 
 			RandomDMGBonus		2									2
 
-			Reichweite:		200									200
+			Reichweite:			200									200
 
-			Berserkerwut-CD[s]:	120									300
+			Berserkerw.-CD:		120									300
 
-			Berserkerwut DMG-Eff.	60%									100%	
+			B.wut DMG-Eff.		+60%								+100%	
 
-			Berserkerwut Rüs.-Eff.	-50%									-50%
+			B.wut Rüs.-Eff.		-50%								-50%
 
-			Berserkerwut Heil-Eff.	50%									30%
+			B.wut Heil-Eff.		50%									30%
 
-			Berserkerwut Dauer[s]	40									40
+			B.wut Dauer[s]		40									40
 
-			Wölfe rufen-CD[s]:	300									180
+			Wölfe rufen-CD:		300									180
 
-			Wölfe rufen Anzahl:	5									2
+			Wölfe Anzahl:		5									2
 
-			Wölfe Rüstungsklasse:	Eisen									keine
+			Wölfe R.klasse:		Eisen								keine
 
 			Wölfe Rüstung:		2									0
 
-			Wölfe Lauftempo:	540									360
+			Wölfe L.tempo:		540									360
 
 			Wölfe Schaden:		15									14
 
-			Wölfe ATK-Tempo[1/s]:	0.91									0.67
+			AngTempo[1/s]:		0.91								0.67
 
-			Wölfe Sold:		-									20/Zahltag
-			
-			Wölfe Lebensdauer	90									180
+			Wölfe Sold:			-									20/Zahltag
+
+			Lebensdauer[s]		90									180
 
 		Armbrustschütze*:
 
 			Kosten:	Taler:		250									250
 			(HM)	Eisen:		70									70
-				Holz:		70									-
+					Holz:		70									-
 
 			Kosten:	Taler:		50									50
 			(Sold.)	Eisen:		40									40
-				Holz:		40									-	
+					Holz:		40									-	
 
-			Schaden:		14									12
+			Schaden:			14									12
 
 		Arbalestenschütze*:
 
 			Kosten:	Taler:		280									300
 			(HM)	Eisen:		80									80
-				Holz:		80									-
+					Holz:		80									-
 
 			Kosten:	Taler:		60									60
 			(Sold.)	Eisen:		50									50
-				Holz:		50									-	
+					Holz:		50									-	
 
-			Sichtweite:		3100									2900
+			Sichtweite:			3100								2900
 
-			Rüstung:		5									3
+			Rüstung:			5									3
 
-			Schaden:		17									14
+			Schaden:			17									14
 
-			Reichweite:		3000									2900
+			Reichweite:			3000								2900
 
-			Soldaten:		12									8
+			Soldaten:			12									8
 
 		LKav-Bogenschütze*:
 
-			Rüstungsklasse:		Eisen									keine
+			Rüstungsklasse:		Eisen								keine
 
-			Rüstung:		2									0
+			Rüstung:			2									0
 
-			HP:			300									150
+			HP:					300									150
 
-			Sichtweite:		2500									2300
+			Sichtweite:			2500								2300
 
 			eing. DZ-Plätze:	1									2
 
-			Lauftempo:		550									500
+			Lauftempo:			550									500
 
-			Schaden:		12									10
+			Schaden:			12									10
 
-			Reichweite:		2500									2300
+			Schadensklasse:		Kavallerie							Stich
+
+			Reichweite:			2500								2300
 
 		LKav-Armbrustschütze*:
 
 			Kosten:	Taler:		350									250
 			(HM)	Eisen:		70									-
-				Holz:		90									70
+					Holz:		90									70
 
 			Kosten:	Taler:		100									100
 			(Sold.)	Eisen:		40									40
-				Holz:		55									-	
+					Holz:		55									-	
 
-			Rüstungsklasse:		Eisen									keine
+			Rüstungsklasse:		Eisen								keine
 
-			Rüstung:		5									1
+			Rüstung:			4									1
 
-			HP:			300									150
+			HP:					300									150
 
-			Sichtweite:		2900									2700
+			Sichtweite:			2900								2700
 
 			eing. DZ-Plätze:	1									2
 
-			Lauftempo:		550									500
+			Lauftempo:			550									500
 
-			Schaden:		15									12
+			Schaden:			14									12
 
-			Angriffs-Tempo[1/s]:	0.48									0.4
+			Schadensklasse:		Kavallerie							Stich
 
-			Reichweite:		2900									2700
+			Angr.-Tempo[1/s]:	0.63								0.4
 
-			Soldaten:		6									3
+			Reichweite:			2900								2700
+
+			Soldaten:			6									3
 
 			* Die Fehltreffer-Chance aller Bogenschützen wurde stark reduziert.
-			
+			Neu: Die Schadensklasse Kavallerie wurde hinzugefügt, damit sich der angerichtete Schaden von Bogenschützen unterscheidet.
+			Diese Schadensklasse ist stark gegen Kavallerie, Schwertkämpfer und Scharfschützen.
+
 		SKav-Kurzschwertkämpfer:
 
-			Kosten:	Taler:		300									350
-			(HM)	Eisen:		120									90
+			Kosten:	Taler:		300									250
+			(HM)	Eisen:		120									80
 
 			Kosten:	Taler:		150									120
 			(Sold.)	Eisen:		70									40
 
 		Skav-Streitaxtkämpfer:
 
-			Kosten:	Taler:		450									250
-			(HM)	Eisen:		160									80
+			Kosten:	Taler:		450									350
+			(HM)	Eisen:		160									90
 
 			Kosten:	Taler:		210									150
 			(Sold.)	Eisen:		90									50
 
-			Rüstung:		9									6
+			Rüstung:			9									6
 
-			HP:			400									300
+			HP:					400									300
 
-			Reichweite:		260									200
+			Reichweite:			260									200
 
 		Hellebardier:
 
 			Kosten:	Taler:		220									200
 			(HM)	Eisen:		50									-
-				Holz:		80									80
+					Holz:		80									80
 
 			Kosten:	Taler:		70									60
 			(Sold.)	Eisen:		30									-
-				Holz:		50									50
+					Holz:		50									50
 
-			Rüstung:		6									4
+			Rüstung:			4									4
 
-			Lauftempo:		400									360
+			Rüstungsklasse:		keine								Wams
 
-			Schaden:		21									18
+			Lauftempo:			400									360
+
+			Schaden:			21									18
+
+			Schadensklasse:		Speer								Stich
 
 			RandomDMG-Bonus:	2									2			
 
-			Reichweite:		390									300
+			Reichweite:			390									300
 
-			Soldaten:		12									8
+			Soldaten:			12									8
+
+			Neu: Die Schadensklasse Speer wurde hinzugefügt, damit sich der angerichtete Schaden von Bogenschützen unterscheidet.
+			Diese Schadensklasse ist besonders stark gegen Kavallerie und besitzt leichte Bonis gegen Schwertkämpfer und Scharfschützen.
+			Die Änderung von Rüstungsklasse und Schadensklasse wirkt sich ebenfalls auf Stufe 1-3 Speerträger aus.
 
 		leichter Scharfschütze:
 
 			Kosten:	Taler:		250									200
 			(HM)	Schwefel:	90									70
-				Eisen:		30									-
+					Eisen:		30									-
 
 			Kosten:	Taler:		65									50
 			(Sold.)	Schwefel:	50									40
-				Eisen:		15									-
+					Eisen:		15									-
 
-			Rüstungsklasse:		keine									Leder
+			Rüstungsklasse:		keine								Leder
 
-			Rüstung:		0									1
+			Rüstung:			0									1
 
-			HP:			120									150
+			HP:					120									150
 		
-			Sichtweite:		2400									2800
+			Sichtweite:			2400								2800
 
-			Lauftempo:		300									320
+			Lauftempo:			300									320
 
-			Schaden:		15									16		
+			Schaden:			15									16		
 
-			Reichweite:		2300									2800
+			Reichweite:			2300								2800
 
-			Soldaten:		3									4
+			Soldaten:			3									4
 
 		schwerer Scharfschütze:
 

@@ -166,18 +166,14 @@ function BS.LevyTax(_playerID)
 	
 	local TaxBonus = 1
 	
-	for i = 1, gvVictoryStatue3.Amount[_playerID] do
-	
-		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
-	
+	for i = 1, gvVictoryStatue3.Amount[_playerID] do	
+		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))	
 	end
 
 	Logic.AddToPlayersGlobalResource(_playerID, ResourceType.GoldRaw, round(Logic.GetPlayerTaxIncome(_playerID) * TaxBonus))
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
-	
-		local motivation = Logic.GetSettlersMotivation(eID) 
-		
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 	
+		local motivation = Logic.GetSettlersMotivation(eID) 		
 		CEntity.SetMotivation(eID, motivation - 0.12) 
 		
 	end
@@ -189,79 +185,51 @@ end
 --------------------------------------------------------------------------------
 function GUIAction_ForceSettlersToWork()
 		
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
-	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local BuildingID = GUI.GetSelectedEntity()
 	
-	if Logic.IsAlarmModeActive(BuildingID) == true then
-	
-		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_StoptAlarmFirst"))	
-		
-		return
-		
+	if Logic.IsAlarmModeActive(BuildingID) == true then	
+		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_StoptAlarmFirst"))			
+		return		
 	end
 	
-	if Logic.GetRemainingUpgradeTimeForBuilding(BuildingID) ~= Logic.GetTotalUpgradeTimeForBuilding (BuildingID) then
-	
-		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_BuildingUnderConstruction"))
-		
-		return
-		
+	if Logic.GetRemainingUpgradeTimeForBuilding(BuildingID) ~= Logic.GetTotalUpgradeTimeForBuilding (BuildingID) then	
+		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_BuildingUnderConstruction"))		
+		return		
 	end
 		
-	local BuildingType =  Logic.GetEntityType( BuildingID )
-	
-	local BuildingCategory = Logic.GetUpgradeCategoryByBuildingType( BuildingType )
-	
+	local BuildingType =  Logic.GetEntityType( BuildingID )	
+	local BuildingCategory = Logic.GetUpgradeCategoryByBuildingType( BuildingType )	
 	local SettlersTable = {}
 		
 	--Force Settlers 
-	if BuildingCategory == UpgradeCategories.Residence then
-	
+	if BuildingCategory == UpgradeCategories.Residence then	
 		SettlersTable = {Logic.GetAttachedResidentsToBuilding(BuildingID)}	
 		
-		for i= 1, SettlersTable[1], 1 
-		
-		do
-		
-			GUI.ForceSettlerToWork(SettlersTable[i+1])
-			
+		for i= 1, SettlersTable[1], 1 do		
+			GUI.ForceSettlerToWork(SettlersTable[i+1])		
 		end
 		
-	elseif BuildingCategory == UpgradeCategories.Farm then
-	
-		SettlersTable = {Logic.GetAttachedEaterToBuilding(BuildingID)}
+	elseif BuildingCategory == UpgradeCategories.Farm then	
+		SettlersTable = {Logic.GetAttachedEaterToBuilding(BuildingID)}	
 		
-		for i= 1, SettlersTable[1], 1
-		
-		do
-		
-			GUI.ForceSettlerToWork(SettlersTable[i+1])
-			
+		for i= 1, SettlersTable[1], 1 do		
+			GUI.ForceSettlerToWork(SettlersTable[i+1])			
 		end
 		
-	elseif BuildingCategory == UpgradeCategories.Silversmith then
-	
-		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine Überstunden verrichten!")
-		
-		return
-			
+	elseif BuildingCategory == UpgradeCategories.Silversmith then	
+		GUI.AddNote("Eure Silberschmiede weigern sich. Sie werden keine Überstunden verrichten!")		
+		return			
 	else
 	
 		GUI.ToggleOvertimeAtBuilding(BuildingID)
 		
-		if Logic.IsOvertimeActiveAtBuilding(BuildingID) ~= 1 then
-		
-			if CNetwork then
-			
-				CNetwork.SendCommand("Ghoul_ForceSettlersToWorkPenalty", GUI.GetPlayerID());
-				
-			else
-			
-				GUIAction_ForceSettlersToWorkPenalty(GUI.GetPlayerID())
-				
-			end
-			
+		if Logic.IsOvertimeActiveAtBuilding(BuildingID) ~= 1 then		
+			if CNetwork then			
+				CNetwork.SendCommand("Ghoul_ForceSettlersToWorkPenalty", GUI.GetPlayerID());				
+			else			
+				GUIAction_ForceSettlersToWorkPenalty(GUI.GetPlayerID())				
+			end			
 		end
 		
 	end
@@ -270,13 +238,10 @@ end
 
 function GUIAction_ForceSettlersToWorkPenalty(_playerID)
 	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 
-					
-		local motivation = Logic.GetSettlersMotivation(eID) 
-		
-		CEntity.SetMotivation(eID, motivation - 0.08) 
-		
-	end; 
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do 					
+		local motivation = Logic.GetSettlersMotivation(eID) 		
+		CEntity.SetMotivation(eID, motivation - 0.08) 		
+	end
 	
 	CUtil.AddToPlayersMotivationHardcap(_playerID, - 0.02)
 					
@@ -314,8 +279,7 @@ function GUIAction_MercenaryTower(_ucat)
 		return
 	end
 	
-	local PlayerID = GUI.GetPlayerID()
-	
+	local PlayerID = GUI.GetPlayerID()	
 	local VCThreshold = Logic.GetLogicPropertiesMotivationThresholdVCLock()
 	local AverageMotivation = Logic.GetAverageMotivation(PlayerID)
 	
@@ -468,20 +432,14 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Hero14CallOfDarkness()
 	
-	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
-	
-	local starttime = Logic.GetTime()
-	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]	
+	local starttime = Logic.GetTime()	
 	gvHero14.CallOfDarkness.LastTimeUsed = starttime
 	
-	if CNetwork then
-		
-		CNetwork.SendCommand("Ghoul_Hero14CallOfDarkness", heroID);
-			
-	else
-	
-		gvHero14.CallOfDarkness.SpawnTroops(heroID)
-		
+	if CNetwork then		
+		CNetwork.SendCommand("Ghoul_Hero14CallOfDarkness", heroID);			
+	else	
+		gvHero14.CallOfDarkness.SpawnTroops(heroID)		
 	end
 	
 end
@@ -493,108 +451,79 @@ function GUIAction_Hero14LifestealAura()
 	gvHero14.LifestealAura.LastTimeUsed = starttime	
 	GUI.SettlerAffectUnitsInArea(GUI.GetSelectedEntity())	
 	
-	if CNetwork then
-		
-		CNetwork.SendCommand("Ghoul_Hero14LifestealAura",GUI.GetPlayerID(),heroID);
-			
-	else
-	
-		gvHero14.LifestealAura.TriggerIDs[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {heroID,starttime})
-	
+	if CNetwork then		
+		CNetwork.SendCommand("Ghoul_Hero14LifestealAura",GUI.GetPlayerID(),heroID);			
+	else	
+		gvHero14.LifestealAura.TriggerIDs[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {heroID,starttime})	
 	end	
+
 end
 function GUIAction_Hero14RisingEvil()
 	
-	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]
-	
-	local pos = GetPosition(heroID)
-	
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero14,1)})[2]	
+	local pos = GetPosition(heroID)	
 	local starttime = Logic.GetTime()
 	
-	if ({Logic.GetPlayerEntitiesInArea(GUI.GetPlayerID(), Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[1] > 0 then
-	
+	if ({Logic.GetPlayerEntitiesInArea(GUI.GetPlayerID(), Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[1] > 0 then	
 		gvHero14.RisingEvil.LastTimeUsed = starttime
 		
-		if CNetwork then
-			
-			CNetwork.SendCommand("Ghoul_Hero14RisingEvil",GUI.GetPlayerID(),heroID);
-				
-		else
-		
-			gvHero14.RisingEvil.SpawnEvilTower(heroID)
-			
-		end
-			
+		if CNetwork then			
+			CNetwork.SendCommand("Ghoul_Hero14RisingEvil",GUI.GetPlayerID(),heroID);				
+		else		
+			gvHero14.RisingEvil.SpawnEvilTower(heroID)			
+		end			
 	end
 	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Archers_Tower_RemoveSlot(_slot)
 
-	local entity = GUI.GetSelectedEntity()
-	
+	local entity = GUI.GetSelectedEntity()	
 	local player = Logic.EntityGetPlayer(entity) or GUI.GetPlayerID()
 	
-	if gvArchers_Tower.CurrentlyClimbing[entity] then
-	
-		return
-		
+	if gvArchers_Tower.CurrentlyClimbing[entity] then	
+		return		
 	end
 	
-	if not _slot then
-	
-		if gvArchers_Tower.SlotData[entity][2] ~= nil then
-		
+	if not _slot then	
+		if gvArchers_Tower.SlotData[entity][2] ~= nil then		
 			_slot = 2
 			
-		elseif gvArchers_Tower.SlotData[entity][1] ~= nil then
-		
+		elseif gvArchers_Tower.SlotData[entity][1] ~= nil then		
 			_slot = 1 
 			
-		else
-		
+		else		
 			return
 			
-		end
-		
+		end		
 	end
 	
-	if gvArchers_Tower.SlotData[entity][_slot] == nil then
-	
-		return
-		
+	if gvArchers_Tower.SlotData[entity][_slot] == nil then	
+		return		
 	end
 	
 	local soldierstable,soldiers
 	
-	if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entity][_slot], EntityCategories.Cannon) ~= 1 then
-	
-		soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entity][_slot])}
-		
+	if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entity][_slot], EntityCategories.Cannon) ~= 1 then	
+		soldierstable = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entity][_slot])}		
 		soldiers = soldierstable[1]
 		
 	else
 	
-		soldierstable = 0
-		
-		soldiers = 0
-		
+		soldierstable = 0		
+		soldiers = 0		
 	end
 	
-	if not _G["Archers_Tower_RemoveTroopTriggerID_"..entity.."_".._slot] then
+	if not gvArchers_Tower.TriggerIDs.AddTroop[entity.."_".._slot] then
 	
-		if CNetwork then
-		
-			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop", player, entity, _slot)
-		
+		if CNetwork then		
+			CNetwork.SendCommand("Ghoul_Archers_Tower_RemoveTroop", player, entity, _slot)	
 		else
 	
-			gvArchers_Tower.PrepareData.RemoveTroop(player, entity, _slot)
-		
+			gvArchers_Tower.PrepareData.RemoveTroop(player, entity, _slot)	
 		end
 		
-		gvArchers_Tower.CurrentlyClimbing[entity] = true
-		
+		gvArchers_Tower.CurrentlyClimbing[entity] = true		
 	end
 	
 	GUI.DeselectEntity(entity)
@@ -603,40 +532,28 @@ end
 
 function GUIAction_Archers_Tower_AddSlot()
 
-	local entity = GUI.GetSelectedEntity()
-	
+	local entity = GUI.GetSelectedEntity()	
 	local player = Logic.EntityGetPlayer(entity) or GUI.GetPlayerID()
 	
-	if gvArchers_Tower.CurrentlyUsedSlots[entity] >= gvArchers_Tower.MaxSlots then
-	
-		return
-		
+	if gvArchers_Tower.CurrentlyUsedSlots[entity] >= gvArchers_Tower.MaxSlots then	
+		return		
 	end
 	
-	if gvArchers_Tower.CurrentlyClimbing[entity] then
-	
-		return
-		
+	if gvArchers_Tower.CurrentlyClimbing[entity] then	
+		return		
 	end
 	
 	local pos = GetPosition(entity)
 	
-	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, gvArchers_Tower.RangedEnemySearchCategories, pos, gvArchers_Tower.RangedEnemySearchRange, Diplomacy.Hostile ) or AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.MeleeEnemySearchCategories, pos, gvArchers_Tower.MeleeEnemySearchRange, Diplomacy.Hostile ) then
-	
-		Message("Der Feind ist Euch bereits zu nahe. Truppen können nicht den Turm hinauf, solange Feinde in der Nähe sind!")
-		
-		Sound.PlayFeedbackSound( Sounds.Leader_LEADER_NO_rnd_01, 0 )
-		
-		return
-		
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, gvArchers_Tower.RangedEnemySearchCategories, pos, gvArchers_Tower.RangedEnemySearchRange, Diplomacy.Hostile ) or AreEntitiesOfCategoriesAndDiplomacyStateInArea( player, gvArchers_Tower.MeleeEnemySearchCategories, pos, gvArchers_Tower.MeleeEnemySearchRange, Diplomacy.Hostile ) then	
+		Message("Der Feind ist Euch bereits zu nahe. Truppen können nicht den Turm hinauf, solange Feinde in der Nähe sind!")		
+		Sound.PlayFeedbackSound( Sounds.Leader_LEADER_NO_rnd_01, 0 )		
+		return		
 	end
 				
-	local offset = gvArchers_Tower.GetOffset_ByOrientation(entity)
-	
-	local position = {X = pos.X - offset.X, Y = pos.Y - offset.Y}
-	
-	local freeslot = gvArchers_Tower.GetFirstFreeSlot(entity)
-	
+	local offset = gvArchers_Tower.GetOffset_ByOrientation(entity)	
+	local position = {X = pos.X - offset.X, Y = pos.Y - offset.Y}	
+	local freeslot = gvArchers_Tower.GetFirstFreeSlot(entity)	
 	local soldierstable,soldiers
 	
 	if freeslot then
@@ -645,44 +562,34 @@ function GUIAction_Archers_Tower_AddSlot()
 			
 			local slot = (table.findvalue(gvArchers_Tower.SlotData[entity],eID) ~= 0)
 				
-			if  not slot then							
-			
-				if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then
-				
-					soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}
-					
+			if  not slot then										
+				if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then				
+					soldierstable = {Logic.GetSoldiersAttachedToLeader(eID)}					
 					soldiers = soldierstable[1]
 					
-				else
-					
-					soldierstable = 0
-					
-					soldiers = 0
-					
+				else					
+					soldierstable = 0					
+					soldiers = 0					
 				end
 					
-				if not _G["Archers_Tower_AddTroopTriggerID_"..entity.."_"..freeslot] then
+				if not gvArchers_Tower.TriggerIDs.AddTroop[entity.."_"..freeslot] then
 				
 					if CNetwork then
-
 						CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop", player, entity, eID)
 						
-					else
-						
+					else						
 						gvArchers_Tower.PrepareData.AddTroop(player, entity, eID)
 						
 					end
 					
-					gvArchers_Tower.CurrentlyClimbing[entity] = true
-						
+					gvArchers_Tower.CurrentlyClimbing[entity] = true						
 				end
 				
 			end
 			
 			break
 			
-		end
-		
+		end		
 	end
 	
 	GUI.DeselectEntity(entity)
@@ -699,22 +606,16 @@ function GUIAction_ArmyCreatorChangeAmount(_EntityType,_Modifier)
 	
 			if ArmyCreator.TroopException[_EntityType] then
 			
-				if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier <= 1 then
-		
+				if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier <= 1 then		
 					ArmyCreator.PlayerPoints = ArmyCreator.PlayerPoints - (ArmyCreator.PointCosts[_EntityType] * _Modifier)
-
-					ArmyCreator.PlayerTroops[pID][_EntityType] = ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier 
-					
+					ArmyCreator.PlayerTroops[pID][_EntityType] = ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier 					
 				end
 				
 			else
 			
-				if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier <= ArmyCreator.TroopLimit then
-				
+				if ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier <= ArmyCreator.TroopLimit then				
 					ArmyCreator.PlayerPoints = ArmyCreator.PlayerPoints - (ArmyCreator.PointCosts[_EntityType] * _Modifier)
-
-					ArmyCreator.PlayerTroops[pID][_EntityType] = ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier 
-					
+					ArmyCreator.PlayerTroops[pID][_EntityType] = ArmyCreator.PlayerTroops[pID][_EntityType] + _Modifier 					
 				end
 				
 			end
@@ -728,19 +629,15 @@ end
 function GUIAction_ArmyCreatorCheckForFinish()
 
 	XGUIEng.ShowWidget("BS_ArmyCreator_Finished",0)
-
-	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_Yes",1)
-	
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_Yes",1)	
 	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_No",1)
 	
 end
 
 function GUIAction_ArmyCreatorBackToSetup()
 
-	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_Yes",0)
-	
-	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_No",0)
-	
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_Yes",0)	
+	XGUIEng.ShowWidget("BS_ArmyCreator_Finished_No",0)	
 	XGUIEng.ShowWidget("BS_ArmyCreator_Finished",1)
 	
 end
@@ -799,8 +696,7 @@ function GUIAction_BuyMilitaryUnit(_UpgradeCategory)
 	Logic.FillSoldierCostsTable( PlayerID, _UpgradeCategory, InterfaceGlobals.CostTable )
 	
 	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then	
-		-- Yes		
-		
+		-- Yes				
 		GUI.BuyLeader(BarracksID, _UpgradeCategory)
 	end
 		
@@ -829,8 +725,7 @@ function GUIAction_BuyCannon(_CannonType, _UpgradeCategory)
 	Logic.FillSoldierCostsTable( PlayerID, _UpgradeCategory, InterfaceGlobals.CostTable )
 	
 	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then	
-		-- Yes
-		
+		-- Yes		
 		GUI.BuyCannon(FoundryID, _CannonType)		
 		XGUIEng.ShowWidget(gvGUI_WidgetID.CannonInProgress,1)
 	end
@@ -857,8 +752,7 @@ function BuyHeroWindow_Action_BuyHero(_HeroEntityType)
 		end
 	end
 	GUI.BuyHero(PlayerID, _HeroEntityType, BuildingID or 0)	
-	XGUIEng.ShowWidget(gvGUI_WidgetID.BuyHeroWindow, 0)
-	
+	XGUIEng.ShowWidget(gvGUI_WidgetID.BuyHeroWindow, 0)	
 	--Update all buttons in the visible container
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
 	

@@ -639,3 +639,9 @@ Die Schadensberechnung für Truppen, die auf dem Schützenturm stehen, während 
 --- Version 0.729
 
 Allen Kooperationskarten wurden Schatztruhen hinzugefügt. Damit sich der Schwierigkeitsgrad nicht zu sehr verändert, wurden die Prüfungskarten entsprechend angepasst.
+
+--- Version 0.730
+
+Das KI-Verhalten wurde überarbeitet.
+
+Zusätzliche Statistiken für abgebautes Silber sind nun verfügbar.

@@ -653,7 +653,10 @@ function GUIUpdate_Archers_Tower_RemoveSlot(_slot)
 	
 		if _slot then	
 			if gvArchers_Tower.SlotData[EntityID][_slot] ~= nil then			
-				XGUIEng.DisableButton(CurrentWidgetID, 0)				
+				XGUIEng.DisableButton(CurrentWidgetID, 0)	
+				for i = 1,4 do				
+					XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.GetIcon_ByEntityCategory(gvArchers_Tower.SlotData[EntityID][_slot]))						
+				end
 			else				
 				XGUIEng.DisableButton(CurrentWidgetID, 1)				
 				for i = 1,4 do						
@@ -670,6 +673,7 @@ function GUIUpdate_Archers_Tower_RemoveSlot(_slot)
 		end		
 	end	
 end
+
 ------------------------------------- Army Creator ---------------------------------------------
 function GUIUpdate_ArmyCreatorPoints(_playerID)
 
