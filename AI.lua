@@ -130,7 +130,6 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		
 		AI.Army_BeAlwaysAggressive(_playerId, MapEditor_Armies[_playerId][i].id)
 		AI.Army_SetScatterTolerance(_playerId, MapEditor_Armies[_playerId][i].id,4)		
-		--AI.Army_SetSize(_playerId, MapEditor_Armies[_playerId][i].id, 1)
 		-- Spawn generator
 		SetupAITroopGenerator("MapEditor_Armies_".._playerId.."_"..i, MapEditor_Armies[_playerId][i])
 				
@@ -140,17 +139,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_TURN, "", "StartMapEditor_Controller", 1, {}, {_playerId, i})		
 	end	
 	SetHostile(1,_playerId)
-	--[[local enemies = BS.GetAllEnemyPlayerIDs(_playerId)
-	if gvTower.StartTowersIDTable and gvTower.StartTowersIDTable[1] then
-		for i = 1, table.getn(gvTower.StartTowersIDTable) do			
-			for k = 1, table.getn(enemies) do
-				if Logic.EntityGetPlayer(gvTower.StartTowersIDTable[i]) == enemies[k] and Logic.GetUpgradeLevelForBuilding(gvTower.StartTowersIDTable[i]) == 2 then
-					table.insert(AIEnemiesAC[_playerId][5], gvTower.StartTowersIDTable[i])
-					AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
-				end
-			end
-		end
-	end]]
+
 	if not AIchunks[_playerId] then
 		AIchunks[_playerId] = CUtil.Chunks.new()
 		AI_AddEnemiesToChunkData(_playerId)
@@ -323,7 +312,7 @@ SetupArmy = function(_army)
 	if not ArmyTable[_army.player] then
 		ArmyTable[_army.player] = {}
 	end
-	ArmyTable[_army.player][_army.id + 1] = ArmyTable[_army.player][_army.id + 1] or {}
+	ArmyTable[_army.player][_army.id + 1] = ArmyTable[_army.player][_army.id + 1] or _army
 	AI.Army_SetAnchor(
 		_army.player,
 		_army.id,
@@ -340,7 +329,7 @@ SetupArmy = function(_army)
 	
 	if _army.beAgressive ~= nil then
 	
-		AI.Army_BeAlwaysAggressive(_army.player,_army.id)
+		AI.Army_BeAlwaysAggressive(_army.player, _army.id)
 		
 	end
 	
@@ -353,8 +342,8 @@ SetupArmy = function(_army)
 end
 Advance = function(_army, _flag)
 
-	local distanceToEnemy = AI.Army_GetDistanceBetweenAnchorAndEnemy(_army.player,_army.id)
-	AI.Army_SetAnchorRodeLength(_army.player,_army.id,distanceToEnemy)
+	local distanceToEnemy = AI.Army_GetDistanceBetweenAnchorAndEnemy(_army.player, _army.id)
+	AI.Army_SetAnchorRodeLength(_army.player, _army.id, distanceToEnemy)
 	if not _flag and distanceToEnemy <= _army.rodeLength then
 		AI_StartManualControl(_army.player, _army, 1)
 	end
@@ -397,10 +386,10 @@ ManualControl_AttackTarget = function(_player, _flag, _armyId, _id)
 	local tabname, range
 	if _flag == 0 then
 		tabname = MapEditor_Armies[_player][_armyId + 1]
-		range = tabname.manualControlRange + 500 		
+		range = tabname.manualControlRange	
 	elseif _flag == 1 then
-		tabname = ArmyTable[_player][_armyId + 1]
-		range = math.min(tabname.rodeLength or 3200, 5000)
+		tabname = ArmyTable[_player][_armyId + 1] or MapEditor_Armies[_player][_armyId + 1]
+		range = math.min(tabname.rodeLength or tabname.manualControlRange, 5000)
 	end
 	if not Logic.IsEntityAlive(_id) then
 		tabname[_id] = nil
@@ -488,7 +477,7 @@ AITroopGenerator_Condition = function(_Name, _Index)
 	-- Already enough troops
 	if 	Counter.Tick2(_Name.."Generator",4) == false or ((DataTable[_Index].ignoreAttack == nil or not DataTable[_Index].ignoreAttack) and DataTable[_Index].Attack) 
 		or
-		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= table.getn(MapEditor_Armies[DataTable[_Index].player]) *DataTable[_Index].strength then
+		AI.Player_GetNumberOfLeaders(DataTable[_Index].player) >= table.getn(MapEditor_Armies[DataTable[_Index].player]) * DataTable[_Index].strength then
 		return false
 	end
 
@@ -552,7 +541,7 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_Index)
 		local num = {}
 		num.Barracks, num.Archery, num.Stables, num.Foundry = AI.Village_GetNumberOfMilitaryBuildings(player)
 		if num.Foundry > 0 and (MilitaryBuildingIsTrainingSlotFree(({Logic.GetPlayerEntities(player, Entities.PB_Foundry1, 1)})[2]) or MilitaryBuildingIsTrainingSlotFree(({Logic.GetPlayerEntities(player, Entities.PB_Foundry2, 1)})[2])) then
-			return Entities["PV_Cannon"..math.min(math.random(1, 3), 2)]
+			return Entities["PV_Cannon"..math.random(1, 2)]
 		end
 		local armorclasspercT = GetPercentageOfLeadersPerArmorClass(AIEnemiesAC[player])
 		for i = 1,7 do
@@ -578,50 +567,3 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_Index)
 		end
 	end
 end
---[[AITroopGenerator_CheckForPriority = function(_Index)
-	local copy = DataTable[_Index].AllowedTypes
-	local eTyp, UpgradeCategoryIndex
-	local numBarr, numArch, numStab, numFoun = AI.Village_GetNumberOfMilitaryBuildings(DataTable[_Index].player)
-	local armorclasspercT = GetPercentageOfLeadersPerArmorClass(AIEnemiesAC[DataTable[_Index].player])
-	if armorclasspercT[1].count > 50 then		
-		for i = 1, 7 do
-			for k = 1, math.max(round(armorclasspercT[i].count/5), 1) do
-				local bestdclass = BS.GetBestDamageClassesByArmorClass[armorclasspercT[i].id]
-				local ucat = GetUpgradeCategoryInDamageClass(bestdclass)
-				table.insert(copy, ucat)
-			end
-		end
-		
-		if numBarr == 0 then
-			for i = 1, table.getn(copy) do
-				if copy[i] == UpgradeCategories.LeaderSword or copy[i] == UpgradeCategories.LeaderPoleArm then
-					table.remove(copy, i)
-				end
-			end
-		end
-		if numArch == 0 then
-			for i = 1, table.getn(copy) do
-				if copy[i] == UpgradeCategories.LeaderBow or copy[i] == UpgradeCategories.LeaderRifle then
-					table.remove(copy, i)
-				end
-			end
-		end
-		if numStab == 0 then
-			for i = 1, table.getn(copy) do
-				if copy[i] == UpgradeCategories.LeaderCavalry or copy[i] == UpgradeCategories.LeaderHeavyCavalry then
-					table.remove(copy, i)
-				end
-			end
-		end
-		if numFoun == 0 then
-			for i = 1, table.getn(copy) do
-				if copy[i] == Entities.PV_Cannon2 or copy[i] == Entities.PV_Cannon4 then
-					table.remove(copy, i)
-				end
-			end		
-		end
-	end
-
-	local UpgradeCategoryCount = table.getn(copy)	
-	return copy[math.random(UpgradeCategoryCount)]
-end]]

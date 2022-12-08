@@ -1356,7 +1356,7 @@ function OnAIEnemyCreated(_playerID)
 				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0) or Logic.IsSerf(entityID) == 1 then
+	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and string.find(string.lower(Logic.GetEntityTypeName(etype)), "hero") == nil) or Logic.IsSerf(entityID) == 1 then
 		AIchunks[_playerID]:AddEntity(entityID)	
 	end
 	
@@ -1377,7 +1377,7 @@ function OnAIEnemyDestroyed(_playerID)
 				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0) or Logic.IsSerf(entityID) == 1 then
+	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and string.find(string.lower(Logic.GetEntityTypeName(etype)), "hero") == nil) or Logic.IsSerf(entityID) == 1 then
 		AIchunks[_playerID]:RemoveEntity(entityID)		
 	end
 	

@@ -1994,7 +1994,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 		AIchunks.time[player] = Logic.GetTimeMs()
 	end
 	local etype = Logic.GetEntityType(_eID)	
-	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1)
+	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1 and Logic.GetFoundationTop(_eID) ~= 0)
 	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
 	local posX, posY = Logic.GetEntityPosition(_eID)	
 	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
@@ -2082,6 +2082,9 @@ function CheckForBetterTarget(_eID, _target, _range)
 	return _target
 end
 function GetPositionClump(_postable, _infrange, _step)
+	assert(type(_postable) == "table", "first input param type must be a table")
+	assert(type(_infrange) == "number", "second input param type must be a number")
+	assert(type(_step) == "number", "third input param type must be a number")
 	local tab = {}
 	for k, v in pairs(_postable) do
 		v.pos.X = dekaround(v.pos.X)
@@ -2110,6 +2113,8 @@ function GetPositionClump(_postable, _infrange, _step)
 	return clumppos, highscore
 end
 function GetPercentageOfLeadersPerArmorClass(_table)
+	assert(type(_table) == "table", "input type must be a table")
+	assert(_table.total ~= nil, "invalid input")
 	local perctable = {}
 	for i = 1,7 do
 		perctable[i] = {id = i, count = table.getn(_table[i]) * 100 / _table.total}
@@ -2119,24 +2124,6 @@ function GetPercentageOfLeadersPerArmorClass(_table)
 	end)
 	return perctable
 end
---[[function GetPercentageOfLeadersPerArmorClass(_table)
-	local perctable = {}
-	for i = 1,7 do
-		perctable[i] = {id = i, count = 0}
-	end
-	for i = 1, table.getn(_table) do
-		local etype = Logic.GetEntityType(_table[i])
-		local armorclass = GetEntityTypeArmorClass(etype)
-		perctable[armorclass].count = perctable[armorclass].count + 1
-	end
-	table.sort(perctable, function(p1, p2)
-		return p1.count > p2.count
-	end)
-	for i = 1,7 do
-		perctable[i].count = perctable[i].count * 100 / table.getn(_table)
-	end
-	return perctable
-end]]
 BS.GetBestDamageClassesByArmorClass = {	[1] = {{id = 2, val = 6}, {id = 7, val = 2}, {id = 1, val = 2}},
 										[2] = {{id = 7, val = 6}, {id = 1, val = 4}},
 										[3] = {{id = 3, val = 3}, {id = 1, val = 3}, {id = 8, val = 2}, {id = 9, val = 2}},
