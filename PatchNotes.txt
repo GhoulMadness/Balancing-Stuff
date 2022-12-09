@@ -645,3 +645,7 @@ Allen Kooperationskarten wurden Schatztruhen hinzugefügt. Damit sich der Schwie
 Das KI-Verhalten wurde überarbeitet.
 
 Zusätzliche Statistiken für abgebautes Silber sind nun verfügbar.
+
+Es wurde ein Fehler im Zusammenhang mit Erebos dritter Fähigkeit behoben.
+
+Es wurde ein Fehler behoben, der auf Karten mit Schwierigkeitsauswahl auftreten konnte, durch den der Lebensbalke und der Name von Einheiten nicht mehr korrekt angezeigt wurde.

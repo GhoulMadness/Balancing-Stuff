@@ -715,6 +715,13 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 
 end
 
+ResumeEntityOrig = Logic.ResumeEntity
+Logic.ResumeEntity = function(_id)
+	ResumeEntityOrig(_id)
+	if Logic.IsHero(_id) == 1 or Logic.IsLeader(_id) == 1 or Logic.IsSerf(_id) == 1 or Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or Logic.IsWorker(_id) == 1 then
+		Logic.SetEntityScriptingValue(_id, 72, 1)
+	end
+end
 function Unmuting()
 
 	GUI.SetFeedbackSoundOutputState(1)	
@@ -1178,11 +1185,19 @@ function GetCurrentWeatherGfxSet()
 	
 end
 
-NighttimeGFXSets = {9,13,14,19,20,21,28}
+NighttimeGFXSets = {[1] = {9, 19},
+					[2] = {13, 20, 28},
+					[3] = {14, 21}}
 function IsNighttime()
 	
-	return table.findvalue(NighttimeGFXSets, GetCurrentWeatherGfxSet()) ~= 0
-	
+	local found = 0
+	for i = 1, table.getn(NighttimeGFXSets) do
+		found = table.findvalue(NighttimeGFXSets[i], GetCurrentWeatherGfxSet()) 
+		if found ~= 0 then
+			return true
+		end
+	end
+	return found ~= 0
 end
 
 function SetInternalClippingLimitMax(_val)
