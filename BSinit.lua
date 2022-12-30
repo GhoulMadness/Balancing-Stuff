@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.730
+	BS.Version = 0.731
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -327,6 +327,7 @@
 			"Lightning",
 			"DZTradePunishment",
 			"SilversmithGrievance",
+			"ChunkWrapper",
 			"AI",
 			"Castle",
 			"Tower",
@@ -421,7 +422,6 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
 	--Trigger for AI target redirection
 	AIchunks = {}
-	AIchunks.time = {}
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
 	--internal payday activation (for treasury technology - debenture)

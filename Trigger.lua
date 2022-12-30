@@ -770,8 +770,10 @@ Hero13_StoneArmor_ApplyDamage = function(_heroID,_starttime)
 	if time > (_starttime + duration) then
 		local posX,posY = Logic.GetEntityPosition(_heroID)
 		Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)	
-		Logic.HurtEntity(_heroID, gvHero13.AbilityProperties.StoneArmor.DamageStored[player]*gvHero13.AbilityProperties.StoneArmor.DamageFactor)	
-		gvHero13.AbilityProperties.StoneArmor.DamageStored[player] = 0	
+		if gvHero13.AbilityProperties.StoneArmor.DamageStored and gvHero13.AbilityProperties.StoneArmor.DamageStored[player] then
+			Logic.HurtEntity(_heroID, gvHero13.AbilityProperties.StoneArmor.DamageStored[player]*gvHero13.AbilityProperties.StoneArmor.DamageFactor)	
+			gvHero13.AbilityProperties.StoneArmor.DamageStored[player] = 0	
+		end
 		gvHero13.TriggerIDs.StoneArmor.DamageApply[player] = nil
 		Trigger.UnrequestTrigger(gvHero13.TriggerIDs.StoneArmor.DamageStoring[player])
 		gvHero13.TriggerIDs.StoneArmor.DamageStoring[player] = nil
@@ -1307,9 +1309,9 @@ function OnVictoryStatue3Destroyed()
 	
 end
 
-gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1000, 
-								[Entities.PV_Cannon4] = 1000, 
-								[Entities.PV_Catapult] = 1000}
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500, 
+								[Entities.PV_Cannon4] = 1800, 
+								[Entities.PV_Catapult] = 2000}
 for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k) 
 end
@@ -1350,14 +1352,14 @@ function OnAIEnemyCreated(_playerID)
 		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
 		for i = 1, table.getn(enemies) do
 			if playerID == enemies[i] then
-				AIchunks[_playerID]:AddEntity(entityID)
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
 				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and string.find(string.lower(Logic.GetEntityTypeName(etype)), "hero") == nil) or Logic.IsSerf(entityID) == 1 then
-		AIchunks[_playerID]:AddEntity(entityID)	
+	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+		ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)	
 	end
 	
 end
@@ -1371,14 +1373,14 @@ function OnAIEnemyDestroyed(_playerID)
 		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
 		for i = 1, table.getn(enemies) do
 			if playerID == enemies[i] then
-				AIchunks[_playerID]:RemoveEntity(entityID)
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
 				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and string.find(string.lower(Logic.GetEntityTypeName(etype)), "hero") == nil) or Logic.IsSerf(entityID) == 1 then
-		AIchunks[_playerID]:RemoveEntity(entityID)		
+	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+		ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)		
 	end
 	
 end
