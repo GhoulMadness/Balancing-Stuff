@@ -253,11 +253,11 @@ Defend = function(_army)
 	end		
 end
 Advance = function(_army)
-
+	
 	for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 		if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-			if GetDistance(GetPosition(id), pos) < 1500 then
+			if GetDistance(GetPosition(id), _army.position) < 1500 then
 				ManualControl_AttackTarget(_army.player, _army.id + 1, id)
 			end
 		end
@@ -276,9 +276,9 @@ FrontalAttack = function(_army, _target)
 	if enemyId ~= 0 then	
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]			
-			ArmyTable[_army.player][_army.id][id] = ArmyTable[_army.player][_army.id][id] or {}
-			ArmyTable[_army.player][_army.id][id].currenttarget = enemyId
-			ArmyTable[_army.player][_army.id][id].lasttime = Logic.GetTime()
+			ArmyTable[_army.player][_army.id + 1][id] = ArmyTable[_army.player][_army.id + 1][id] or {}
+			ArmyTable[_army.player][_army.id + 1][id].currenttarget = enemyId
+			ArmyTable[_army.player][_army.id + 1][id].lasttime = Logic.GetTime()
 			Logic.GroupAttack(id, enemyId)
 		end
 	end
