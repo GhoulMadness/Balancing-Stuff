@@ -616,22 +616,26 @@ function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 												_range,
 												_amount)}
 
+	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
 	local Count = 0
 	local i
 	
 	for i=2, Data[1]+1 do
-		if Logic.IsBuilding(Data[i]) == 1 then
-			if Logic.IsConstructionComplete(Data[i]) == 1 and not IsInappropiateBuilding(Data[i]) and Logic.IsEntityInCategory(Data[i], EntityCategories.Wall) == 0 then
-				Count = Count + 1
-			end
+		local posX, posY = Logic.GetEntityPosition(Data[i])
+		if CUtil.GetSector(posX /100, posY /100) == sector then
+			if Logic.IsBuilding(Data[i]) == 1 then
+				if Logic.IsConstructionComplete(Data[i]) == 1 and not IsInappropiateBuilding(Data[i]) and Logic.IsEntityInCategory(Data[i], EntityCategories.Wall) == 0 then
+					Count = Count + 1
+				end
 
-		elseif Logic.IsHero(Data[i]) == 1 then				
-			if Logic.IsEntityAlive(Data[i]) then
-				Count = Count + 1
-			end
-		else
-			if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xs") then
-				Count = Count + 1
+			elseif Logic.IsHero(Data[i]) == 1 then				
+				if Logic.IsEntityAlive(Data[i]) then
+					Count = Count + 1
+				end
+			else
+				if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xs") then
+					Count = Count + 1
+				end
 			end
 		end
 
