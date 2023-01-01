@@ -99,7 +99,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 	MapEditor_Armies[_playerId].id					=	0
 	MapEditor_Armies[_playerId].strength			=	_strength+5
 	MapEditor_Armies[_playerId].position			=	position
-	MapEditor_Armies[_playerId].rodeLength			=	(_range*2)/3
+	MapEditor_Armies[_playerId].rodeLength			=	_range
 	MapEditor_Armies[_playerId].aggressiveLVL		=	_aggressiveLevel
 	MapEditor_Armies[_playerId].baseDefenseRange	=	(_range*2)/3
 	MapEditor_Armies[_playerId].outerDefenseRange	=	_range
