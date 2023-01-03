@@ -1347,42 +1347,42 @@ function OnAIEnemyCreated(_playerID)
 	local entityID = Event.GetEntityID()		
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
 	
-	if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
-		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
-		for i = 1, table.getn(enemies) do
-			if playerID == enemies[i] then
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then				
 				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
 				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)	
+				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
-		ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)	
 	end
-	
 end
 function OnAIEnemyDestroyed(_playerID)
 	
 	local entityID = Event.GetEntityID()		
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
-	
-	if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
-		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
-		for i = 1, table.getn(enemies) do
-			if playerID == enemies[i] then
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
+		
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then	
 				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
 				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)	
+				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
-		ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)		
 	end
-	
 end
 function AITower_RedirectTarget()
 

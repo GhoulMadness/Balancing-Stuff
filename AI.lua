@@ -171,9 +171,11 @@ ControlMapEditor_Armies = function(_playerId)
 		else
 			for i = 1, table.getn(MapEditor_Armies[_playerId].IDs) do
 				local id = MapEditor_Armies[_playerId].IDs[i]
-				if GetDistance(GetPosition(id), pos) > 1500 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
-					local anchor = ArmyHomespots[_playerId].recruited[math.random(1, table.getn(ArmyHomespots[_playerId].recruited))]
-					Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
+				if MapEditor_Armies[_playerId][id] and MapEditor_Armies[_playerId][id].lasttime then
+					if GetDistance(GetPosition(id), pos) > 1500 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
+						local anchor = ArmyHomespots[_playerId].recruited[math.random(1, table.getn(ArmyHomespots[_playerId].recruited))]
+						Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
+					end
 				end
 			end
 		end	
@@ -394,7 +396,9 @@ AITroopGenerator_Condition = function(_Name, _player)
 					
 								if MilitaryBuildingID ~= 0	then		
 									if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
-										Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
+										if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(eID) == Logic.LeaderGetMaxNumberOfSoldiers(eID)) then
+											Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
+										end
 									end
 								end
 							end

@@ -2229,7 +2229,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
 				local mul = 1
 				if Logic.IsLeader(entities[i]) == 1 then
-					mul = (({Logic.GetSoldiersAttachedToLeader(entities[i])})[1] or 0) + 1
+					mul = 1 + Logic.LeaderGetNumberOfSoldiers(entities[i])
 				end
 				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul + (threatbonus or 0)})			
 			end						

@@ -139,4 +139,4 @@ end;
 if not CHUNKWRAPPER_TRIGGER then
 	CHUNKWRAPPER_TRIGGER = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "ChunkWrapper_OnEntityDied", 1);
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "ChunkWrapper_OnEntityCreated", 1);
-end;
+end
