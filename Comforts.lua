@@ -1381,7 +1381,7 @@ function GetWeatherSpeedModifier(_weatherstate)
 			BS.MemValues.WeatherSpeedModifier = {}
 		end
 		if not BS.MemValues.WeatherSpeedModifier[_weatherstate] then
-			BS.MemValues.WeatherSpeedModifier[_weatherstate] = GetLogicPropertiesPointer[36-3*_weatherstate]:GetFloat()
+			BS.MemValues.WeatherSpeedModifier[_weatherstate] = GetLogicPropertiesPointer()[36-3*_weatherstate]:GetFloat()
 		end
 		return BS.MemValues.WeatherSpeedModifier[_weatherstate]
 	end

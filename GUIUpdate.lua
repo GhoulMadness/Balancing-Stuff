@@ -11,7 +11,7 @@ function GUIUpdate_AttackRange()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	local EntityID = GUI.GetSelectedEntity()	
-	local PID = GUI.GetPlayerID()	
+	local PID = Logic.EntityGetPlayer(EntityID)
 	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))	
 	local pos = GetPosition(EntityID)	
 	local num,towerID = Logic.GetPlayerEntitiesInArea(PID, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)	
@@ -52,7 +52,7 @@ function GUIUpdate_MoveSpeed()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	local EntityID = GUI.GetSelectedEntity()	
-	local PID = GUI.GetPlayerID()	
+	local PID = Logic.EntityGetPlayer(EntityID)
 	local Speed = round(GetSettlerCurrentMovementSpeed(EntityID,PID))			
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..Speed)	
 	
@@ -70,7 +70,6 @@ function GUIUpdate_Experience()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()		
 	local EntityID = GUI.GetSelectedEntity()	
-	local PID = GUI.GetPlayerID()	
 	local XP = math.min(CEntity.GetLeaderExperience(EntityID), 1000)	
 	local LVL
 	
@@ -195,9 +194,9 @@ end
 
 function GUIUpdate_LightningRod()
 
-	local PlayerID = GUI.GetPlayerID()	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local BuildingID = GUI.GetSelectedEntity()	
+	local PlayerID = Logic.EntityGetPlayer(BuildingID)
 	local TimePassed = math.floor((Logic.GetTimeMs()- gvLastTimeLightningRodUsed)/2400)	
 	local RechargeTime = 100
 
@@ -222,9 +221,9 @@ end
 
 function GUIUpdate_LevyTaxes()
 
-	local PlayerID = GUI.GetPlayerID()	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local BuildingID = GUI.GetSelectedEntity()	
+	local PlayerID = Logic.EntityGetPlayer(BuildingID)
 	local TimePassed = math.floor((Logic.GetTimeMs()- gvLastTimeButtonPressed)/2400)	
 	local RechargeTime = 100
 
@@ -313,10 +312,10 @@ function GUIUpdate_LighthouseTroops()
 end
 
 function GUIUpdate_MercenaryTower(_button)
-
-	local PlayerID = GUI.GetPlayerID()	
+		
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local BuildingID = GUI.GetSelectedEntity()	
+	local PlayerID = Logic.EntityGetPlayer(BuildingID)
 	local TimePassed = math.floor(Logic.GetTime()- gvMercenaryTower.LastTimeUsed)
 	local RechargeTime = gvMercenaryTower.Cooldown[_button]
 
@@ -347,6 +346,11 @@ function GUIUpdate_SumOfTaxes()
 	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == BS.SpectatorPID then	
+		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then		
+			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())			
+		end
+	end
 	local GrossPayday = Logic.GetPlayerPaydayCost(PlayerID)		
 	local factor = 1	
 	local workers 
@@ -375,7 +379,6 @@ function GUIUpdate_TaxPaydayIncome()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
-	
 	if PlayerID == BS.SpectatorPID then	
 		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then		
 			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())			
@@ -420,6 +423,11 @@ function GUIUpdate_TaxSumOfTaxes()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == BS.SpectatorPID then	
+		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then		
+			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())			
+		end
+	end
 	local TaxIncome = Logic.GetPlayerPaydayCost(PlayerID)		
 	local factor = 1	
 	local workers 
@@ -448,6 +456,11 @@ function GUIUpdate_TaxLeaderCosts()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()	
+	if PlayerID == BS.SpectatorPID then	
+		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then		
+			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())			
+		end
+	end
 	local LeaderCosts = -(Logic.GetPlayerPaydayLeaderCosts(PlayerID))	
 	local factor = 1	
 	local workers 
@@ -476,11 +489,11 @@ function GUIUpdate_MintTaxBonus()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local PlayerID = GUI.GetPlayerID()
-	
 	if PlayerID == BS.SpectatorPID then	
-		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())		
+		if GUI.GetSelectedEntity() ~= nil and GUI.GetSelectedEntity() ~= 0 then		
+			PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())			
+		end
 	end
-	
 	local NumOfMints = 0	
 	local workers 
 	
@@ -503,7 +516,6 @@ end
 
 function GUIUpdate_Hero13Ability(_Ability)
 
-	local PlayerID = GUI.GetPlayerID()	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local ProgressBarWidget = gvHero13.GetRechargeButtonByAbilityName(_Ability)	
 	local HeroID = GUI.GetSelectedEntity()	
@@ -526,6 +538,9 @@ function GUIUpdate_Hero14Ability(_Ability)
 
 	local PlayerID = GUI.GetPlayerID()	
 	local HeroID = GUI.GetSelectedEntity()	
+	if PlayerID == BS.SpectatorPID then	
+		PlayerID = Logic.EntityGetPlayer(HeroID)			
+	end
 	local pos = GetPosition(HeroID)	
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
 	local ProgressBarWidget = gvHero14.GetRechargeButtonByAbilityName(_Ability)	
