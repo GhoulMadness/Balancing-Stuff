@@ -700,6 +700,7 @@ function GUIUpdate_ArmyCreatorTroopAmount(_playerID,_entityType)
 	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), " @center "..ArmyCreator.PlayerTroops[_playerID][_entityType])
 	
 end
+-------------------------------------------------------------------------------------------------
 function GUIUpdate_SelectionName()
 	
 	local EntityId = GUI.GetSelectedEntity()	
@@ -797,6 +798,68 @@ function GUIUpdate_MultiSelectionButton()
 			XGUIEng.SetMaterialColor(SourceButton,i, BS.DefaultColorValues.White.r, BS.DefaultColorValues.White.g, BS.DefaultColorValues.White.b, BS.DefaultColorValues.White.a)
 		end	
 	end
+end
+function GUIUpdate_TroopOffer(_SlotIndex)
+			
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local AmountOfOffers = Logic.GetNumerOfMerchantOffers(SelectedTroopMerchantID) 		
+	local LeaderType, Amount = Logic.GetMercenaryOffer(SelectedTroopMerchantID,_SlotIndex, InterfaceGlobals.CostTable)   
+    local SourceButton 
+    
+	if LeaderType == Entities.CU_VeteranLieutenant then	
+		SourceButton = "BuyLeaderElite"
+	elseif LeaderType == Entities.CU_BanditLeaderBow1 then	
+		SourceButton = "BuyLeaderBanditBow"
+	elseif LeaderType == Entities.CU_BanditLeaderSword1 or LeaderType == Entities.CU_BanditLeaderSword2 then	
+		SourceButton = "BuyLeaderBanditSword"
+	elseif LeaderType == Entities.CU_Barbarian_LeaderClub1 or LeaderType == Entities.CU_Barbarian_LeaderClub2 then	
+		SourceButton = "BuyLeaderBarbarian"	
+	elseif LeaderType == Entities.CU_BlackKnight_LeaderMace1 or LeaderType == Entities.CU_BlackKnight_LeaderMace2 then	
+		SourceButton = "BuyLeaderBlackKnight"
+	elseif LeaderType == Entities.CU_BlackKnight_LeaderSword3 then	
+		SourceButton = "BuyLeaderBlackSword"
+	elseif LeaderType == Entities.CU_Evil_LeaderBearman1 then	
+		SourceButton = "BuyLeaderEvilBear"
+	elseif LeaderType == Entities.CU_Evil_LeaderSkirmisher1 then	
+		SourceButton = "BuyLeaderEvilSkir"
+	elseif LeaderType == Entities.PV_Catapult then	
+		SourceButton = "Buy_Catapult"
+	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Bow) == 1 then
+		SourceButton = "Buy_LeaderBow"
+	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Spear)== 1 then
+		SourceButton = "Buy_LeaderSpear"
+	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.CavalryHeavy)== 1 then
+		SourceButton = "Buy_LeaderCavalryHeavy"
+	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.CavalryLight) == 1 then
+		SourceButton = "Buy_LeaderCavalryLight"
+	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Rifle) == 1 then	
+		SourceButton = "Buy_LeaderRifle"		
+	elseif LeaderType == Entities.PV_Cannon1 then	
+		SourceButton = "Buy_Cannon1"		
+	elseif LeaderType == Entities.PV_Cannon2 then	
+		SourceButton = "Buy_Cannon2"		
+	elseif LeaderType == Entities.PV_Cannon3 then	
+		SourceButton = "Buy_Cannon3"		
+	elseif LeaderType == Entities.PV_Cannon4 then	
+		SourceButton = "Buy_Cannon4"		
+	elseif LeaderType == Entities.PU_Serf then
+		SourceButton = "Buy_Serf"
+	elseif LeaderType == Entities.PU_Thief then
+		SourceButton = "Buy_Thief"				
+	elseif LeaderType == Entities.PU_Scout then
+		SourceButton = "Buy_Scout"				
+	else
+		SourceButton = "Buy_LeaderSword"
+	end
+	
+	XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
+	
+	if Amount == -1 then
+		Amount = "00"
+	end
+	
+	XGUIEng.SetText(gvGUI_WidgetID.TroopMerchantOfferAmount[_SlotIndex], "@ra " .. Amount)
+	
 end
 function GUIUpdate_Forester_WorkChange(_flag)
 
