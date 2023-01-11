@@ -42,6 +42,7 @@ WCutter.StartWork = function(_id, _treeid)
 end
 WCutter_ArrivedAtTreeCheck = function(_id, _treeid)
 	if IsNear(_id, _treeid, WCutter.ApproachRange) then
+		WCutter.TriggerIDs.StartWork[_id] = nil
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.StartWork[_id])
 		WCutter.CutTree(_id, _treeid)		
 		return true
@@ -83,6 +84,7 @@ WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
 		end 
 		if newID then
 			--TODO: SubAnim ChopTree ausführen
+			WCutter.TriggerIDs.CutTree[_id] = nil
 			Trigger.UnrequestTrigger(WCutter.TriggerIDs.CutTree[_id])
 			WCutter.TriggerIDs.RemoveTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "WCutter_RemoveTree", 1, {}, {_id, newID, _res_amount})
 			return true
@@ -94,6 +96,7 @@ WCutter_RemoveTree = function(_id, _treeid, _res_amount)
 		Logic.DestroyEntity(_treeid)
 		Logic.AddToPlayersGlobalResource(Logic.EntityGetPlayer(_id), ResourceType.WoodRaw, _res_amount)
 		WCutter.EndWorkCycle(_id)
+		WCutter.TriggerIDs.RemoveTree[_id] = nil
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.RemoveTree[_id])
 		return true
 	end

@@ -1917,6 +1917,45 @@ function dekaround(_n)
 	assert(type(_n) == "number", "round val needs to be a number")
 	return math.floor( _n / 100 + 0.5 ) * 100	
 end
+CategoriesOfEntities = {}
+function GetAllCategoriesOfEntity(id)
+    local type = Logic.GetEntityType(id)
+    if not CategoriesOfEntities[type] then
+        local cats = {}
+        for k, v in pairs(EntityCategories) do
+            if Logic.IsEntityInCategory(id, v) == 1 then
+                cats[v] = true
+            end
+        end
+        CategoriesOfEntities[type] = cats
+    end
+    
+    return CategoriesOfEntities[type]
+end
+GetAllEntityTypesInEntityCategory = function(_entityCat)
+	local tab = {}
+	for k, v in pairs(Entities) do
+		if Logic.IsEntityTypeInCategory(v, _entityCat) == 1 then
+			table.insert(tab, v)
+		end
+	end
+	return tab
+end
+GetAllPlayerEntitiesOfCategory = function(_playerID, _entityCat)
+	local eTypes = GetAllEntityTypesInEntityCategory(_entityCat)
+	local playerEntities = {}
+	for i = 1, table.getn(eTypes) do
+		local n,eID = Logic.GetPlayerEntities(_playerID, eTypes[i], 1)
+		if (n > 0) then
+			local firstEntity = eID
+			repeat
+				table.insert(playerEntities,eID)
+				eID = Logic.GetNextEntityOfPlayerOfType(eID)
+			until (firstEntity == eID)
+		end
+	end
+	return playerEntities
+end
 function GetPlayerEntities(_playerID, _entityType)
 	local playerEntities = {}
 	if _entityType ~= nil then
@@ -2029,7 +2068,7 @@ end
 function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)	
 	local playerID = Logic.EntityGetPlayer(_heroID)
 	ExtendedStatistics.Players[playerID][_scoretype] = ExtendedStatistics.Players[playerID][_scoretype] + (math.min(_damage, _maxdmg))
-	ExtendedStatistics.Players[player]["Damage"] = ExtendedStatistics.Players[player]["Damage"] + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[playerID]["Damage"] = ExtendedStatistics.Players[playerID]["Damage"] + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage, ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID])	
 end

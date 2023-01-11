@@ -641,10 +641,13 @@ function OnSpecBeautiCreated()
 end
 function BeautiAnimCheck()
 
-    for k,v in pairs(gvBeautiAnim.IDs) do		
-		Logic.SetBuildingSubAnim(v, 1, gvBeautiAnim.AnimByType[Logic.GetEntityType(v)])				
-	end
-	
+    for i = table.getn(gvBeautiAnim.IDs), 1, -1 do			
+		local id = gvBeautiAnim.IDs[i]
+		if Logic.IsConstructionComplete(id) == 1 then
+			CUtil.SetBuildingSubAnimExtended(id, 1, gvBeautiAnim.AnimByType[Logic.GetEntityType(id)], false, true)
+			table.remove(gvBeautiAnim.IDs, i)
+		end
+	end	
 	StartCountdown(gvBeautiAnim.Delay, BeautiAnimCheck, false)
 	
 end
