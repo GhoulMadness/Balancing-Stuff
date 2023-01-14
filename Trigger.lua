@@ -1210,7 +1210,7 @@ function OnArchers_Tower_OccupiedTroopDied()
 				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
 					
 					for k,v in pairs(gvArchers_Tower.SlotData) do						
-						local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+						local slot = table_findvalue(gvArchers_Tower.SlotData[k],entityID)
 				
 						if  slot ~= 0 then						
 							gvArchers_Tower.SlotData[k][slot] = nil
@@ -1235,7 +1235,7 @@ function OnArchers_Tower_OccupiedTroopDied()
 					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then		
 					
 						for k,v in pairs(gvArchers_Tower.SlotData) do						
-							local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+							local slot = table_findvalue(gvArchers_Tower.SlotData[k],entityID)
 					
 							if  slot ~= 0 then							
 								gvArchers_Tower.SlotData[k][slot] = nil

@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.731
+	BS.Version = 0.732
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -352,7 +352,7 @@
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
-	
+	BS.GfxInit()
 	--disables the creation of fow (needed for minimap)
 	CUtil.DisableFoW()
 	--larger zoom factor (default 1.0)
@@ -425,11 +425,9 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
 	--internal payday activation (for treasury technology - debenture)
-	if CUtil then 
-		for i = 1,16 do 
-			CUtil.Payday_SetActive(i, true) 
-		end 
-	end
+	for i = 1,16 do 
+		CUtil.Payday_SetActive(i, true) 
+	end 
 	--initializing dz trade punishment
 	DZTrade_Init()
 	--initializing animations for beautifications
@@ -490,7 +488,7 @@
 	--give players their respective favorite color (if given/set in simis mp QoL)
 	if not CNetwork then
 		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
-			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer");
-			Display.SetPlayerColorMapping(1, PlayerColor);
+			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
+			Display.SetPlayerColorMapping(1, PlayerColor)
 		end
-	end;	
+	end	

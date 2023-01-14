@@ -254,7 +254,7 @@ function SetPlayerName(_playerId, _name)
 
 end
 
-function table.findvalue(_tid,_value)
+function table_findvalue(_tid,_value)
 
 	local tpos
 	
@@ -1350,7 +1350,7 @@ function IsNighttime()
 	
 	local found = 0
 	for i = 1, table.getn(NighttimeGFXSets) do
-		found = table.findvalue(NighttimeGFXSets[i], GetCurrentWeatherGfxSet()) 
+		found = table_findvalue(NighttimeGFXSets[i], GetCurrentWeatherGfxSet()) 
 		if found ~= 0 then
 			return true
 		end
@@ -2166,7 +2166,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		end
 		while (table.getn(ArmyHomespots[_player].recruited) < 20 and steps < 1000) do
 			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			if CUtil.GetSector(X/100, Y/100) ~= 0 and table.findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then			
+			if CUtil.GetSector(X/100, Y/100) ~= 0 and table_findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then			
 				table.insert(ArmyHomespots[_player].recruited, {X = X, Y = Y})
 			end
 			steps = steps + 1
@@ -2177,7 +2177,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		end
 		while (table.getn(ArmyHomespots[_player][_army]) < 20 and steps < 1000) do
 			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			if CUtil.GetSector(X/100, Y/100) ~= 0 and table.findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then			
+			if CUtil.GetSector(X/100, Y/100) ~= 0 and table_findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then			
 				table.insert(ArmyHomespots[_player][_army], {X = X, Y = Y})
 			end
 			steps = steps + 1
@@ -2307,7 +2307,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 				return p1.clumpscore + p1.factor - distval(p1.dist, maxrange) > p2.clumpscore + p2.factor - distval(p2.dist, maxrange)
 			end
 		else
-			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN / 2) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN / 2)
+			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN)
 		end
 	end)
 	if calcT[1] then

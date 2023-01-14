@@ -263,7 +263,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		end		
 		local count
 		if ExtendedStatistics then
-			if not count and gvLightning.IsLightningProofBuilding(eID) ~= true then
+			if not count and IsValid(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then
 				ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes + 1
 				count = true
 			end

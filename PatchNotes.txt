@@ -652,6 +652,18 @@ Es wurde ein Fehler behoben, der auf Karten mit Schwierigkeitsauswahl auftreten 
 
 --- Version 0.731
 
-Es wurden mehrere Fehler in Zusammenhang mit der KI-Überarbeitung behoben.
+Es wurden mehrere Fehler im Zusammenhang mit der KI-Überarbeitung behoben.
 
 Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbars Göttlicher Segen benutzt wurde und Dovbar nach Ablauf der Zeit keinerlei Schaden erlitten hatte.
+
+--- Version 0.732
+
+Es wurden Fehler im Zusammenhang mit den erweiterten Statistiken behoben.
+
+Der Maximalwert von Truppen rekrutierender KIs wurde reduziert.
+
+Es wurde ein Fehler behoben, durch den die Modelle der alten Dorfhalle sowie der Leuchtturm-Fundamente nicht korrekt dargestellt wurden.
+
+Die Kompatibilität vom Laden von Spielständen wurde erhöht.
+
+Die Performance von Spawn-Armeen wurde verbessert.
