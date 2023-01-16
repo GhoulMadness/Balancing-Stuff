@@ -131,9 +131,9 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		AI_AddEnemiesToChunkData(_playerId)
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_playerId})
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_playerId})
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_playerId})
 	end
 end
-
 function StartMapEditor_ArmyAttack(_playerId, _delay)
 
 	if Counter.Tick2("StartMapEditor_ArmyAttack".._playerId, _delay) then		
@@ -142,7 +142,6 @@ function StartMapEditor_ArmyAttack(_playerId, _delay)
 	end
 
 end
-
 ControlMapEditor_Armies = function(_playerId)
 					
 	if MapEditor_Armies[_playerId] ~= nil then	
@@ -181,7 +180,6 @@ ControlMapEditor_Armies = function(_playerId)
 		end	
 	end			
 end
-		
 AI_AddEnemiesToChunkData = function(_playerId)
 
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(_playerId))), CEntityIterator.IsSettlerOrBuildingFilter()) do
@@ -193,6 +191,22 @@ AI_AddEnemiesToChunkData = function(_playerId)
 		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0) or Logic.IsSerf(eID) == 1 then
 			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
 		end
+	end
+end
+ReinitChunkData = function(_playerId)
+	local eIDs = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_playerId], Mapsize/2, Mapsize/2, Mapsize/2) 
+	if eIDs and table.getn(eIDs) then
+		for i = 1, table.getn(eIDs) do
+			local etype = Logic.GetEntityType(eIDs[i])
+			if IsMilitaryLeader(eIDs[i]) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then	
+				ChunkWrapper.RemoveEntity(AIchunks[_playerId], eIDs[i])
+				removetablekeyvalue(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eIDs[i])
+				AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total - 1
+			elseif (Logic.IsBuilding(eIDs[i]) == 1 and Logic.IsEntityInCategory(eIDs[i], EntityCategories.Wall) == 0 and not IsInappropiateBuilding(eIDs[i])) or Logic.IsSerf(eIDs[i]) == 1 then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerId], eIDs[i])	
+			end
+		end
+		AI_AddEnemiesToChunkData(_playerId)
 	end
 end
 SetupArmy = function(_army)
@@ -211,6 +225,7 @@ SetupArmy = function(_army)
 		AI_AddEnemiesToChunkData(_army.player)
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_army.player})
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_army.player})
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_army.player})
 	end	
 end
 EnlargeArmy = function(_army,_troop)

@@ -1387,6 +1387,15 @@ function OnAIEnemyDestroyed(_playerID)
 		end
 	end
 end
+function OnAIDiplomacyChanged(_playerID)
+	local p = Event.GetSourcePlayerID()
+	local p2 = Event.GetTargetPlayerID()
+	local state = Event.GetDiplomacyState()
+	
+	if p == _playerID or p2 == _playerID then
+		ReinitChunkData(_playerID)
+	end
+end
 function AITower_RedirectTarget()
 
 	local attacker = Event.GetEntityID1()
