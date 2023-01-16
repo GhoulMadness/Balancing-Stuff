@@ -667,3 +667,5 @@ Es wurde ein Fehler behoben, durch den die Modelle der alten Dorfhalle sowie der
 Die Kompatibilität vom Laden von Spielständen wurde erhöht.
 
 Die Performance von Spawn-Armeen wurde verbessert.
+
+Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien ändern.
