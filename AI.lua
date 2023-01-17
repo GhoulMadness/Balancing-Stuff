@@ -219,7 +219,8 @@ SetupArmy = function(_army)
 	end
 	ArmyTable[_army.player][_army.id + 1] = ArmyTable[_army.player][_army.id + 1] or _army
 	EvaluateArmyHomespots(_army.player, _army.position, _army.id + 1)
-	
+	AI.Army_SetScatterTolerance(_army.player, _army.id, 0)
+	AI.Army_SetSize(_army.player, _army.id, 0)
 	if not AIchunks[_army.player] then
 		AIchunks[_army.player] = ChunkWrapper.new()
 		AI_AddEnemiesToChunkData(_army.player)
@@ -236,7 +237,9 @@ EnlargeArmy = function(_army,_troop)
 	local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 	local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or 0, anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
 	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, id)
-	Logic.LeaderChangeFormationType(id, math.random(1, 7))
+	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
+		Logic.LeaderChangeFormationType(id, math.random(1, 7))
+	end
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, id, _army.id + 1})
 
 end
@@ -260,14 +263,8 @@ Defend = function(_army)
 			end							
 		end
 	else
-		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
-			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-			if GetDistance(GetPosition(id), pos) > 1500 then
-				local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
-				Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
-			end
-		end
-	end		
+		Retreat(_army)
+	end
 end
 Advance = function(_army)
 	
@@ -290,6 +287,8 @@ Advance = function(_army)
 				end
 			end
 		end
+	else
+		Retreat(_army)
 	end
 end
 FrontalAttack = function(_army, _target)
@@ -306,6 +305,8 @@ FrontalAttack = function(_army, _target)
 				Logic.GroupAttack(id, enemyId)
 			end
 		end
+	else
+		Retreat(_army)
 	end
 end
 Retreat = function(_army, _rodeLength)
@@ -316,7 +317,7 @@ Retreat = function(_army, _rodeLength)
 	local pos = _army.position
 	for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-		if GetDistance(GetPosition(id), pos) > 1500 then
+		if GetDistance(GetPosition(id), pos) > 1500 and (Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE") then
 			local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 			Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
 		end
