@@ -118,6 +118,7 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.XD_OSO_Wall_Corner2] = true,
 		[Entities.XD_OSO_Wall_Corner_Small1] = true,
 		[Entities.XD_OSO_Wall_Corner_Small2] = true,
+		[Entities.XD_OSO_Wall_Corner_Small3] = true,
 		[Entities.XD_OSO_Wall_Tower2] = true,
 		[Entities.ZB_ConstructionSite1] = true, 
 		[Entities.ZB_ConstructionSite2] = true,
