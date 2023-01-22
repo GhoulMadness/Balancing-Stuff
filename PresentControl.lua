@@ -1,3 +1,10 @@
+--load widgets
+WidgetHelper.AddPreCommitCallback(
+function()
+	CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/PresentProgressScreen.xml", "Normal")
+	CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/PresentProgressScreenSpectator.xml", "Normal")
+end)
+--initializing table
 gvPresent = gvPresent or {}
 --Geschenke-Funktionen initialisieren
 --Trigger IDs

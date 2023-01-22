@@ -1,6 +1,10 @@
 	BS = BS or {}
 
+<<<<<<< Updated upstream
 	BS.Version = 0.730
+=======
+	BS.Version = 0.733
+>>>>>>> Stashed changes
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -89,7 +93,8 @@
 					["(4) emsbs hasenjagd"] = true,
 					["(4) emsbs der taktiker"] = true,
 					["(4) emsbs winterzauber"] = true,
-					["(4) emsbs sparrowdale"] = true
+					["(4) emsbs sparrowdale"] = true,
+					["(4) emsbs osterfieber"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
@@ -279,20 +284,11 @@
 		end
 	end
 	
-	if CNetwork then
-			
-		if BS.ValidateMap() ~= true then
-		
-			Framework.CloseGame()
-			
-		end
-		
-	end
-	
-	--additionaly load this script if there are any presents to steal on the map
-	if gvXmasEventFlag == 1 then
-		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
-	end															   
+	if CNetwork then			
+		if BS.ValidateMap() ~= true then		
+			Framework.CloseGame()			
+		end		
+	end												   
 	-- Score stuff
 	if not Score.Player[0] then
 		Score.Player[0] = {
@@ -359,11 +355,23 @@
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
 	--cooldown handling levy taxes
-	gvLastTimeButtonPressed = -240000 	
-	
+	gvLastTimeButtonPressed = -240000 		
 	--additional chat taunts added
-	BonusKeys()
-	
+	BonusKeys()	
+	--internal payday activation (for treasury technology - debenture)
+	for i = 1,16 do 
+		CUtil.Payday_SetActive(i, true) 
+	end 
+	--initializing dz trade punishment
+	DZTrade_Init()
+	--initializing animations for beautifications
+	BeautiAnimCheck()
+	--loading widget helper
+	Script.Load("MP_SettlerServer/WidgetHelper.lua")
+	--additionaly load this script if there are any presents to steal on the map
+	if gvXmasEventFlag == 1 then
+		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
+	end	
 	------------------------------------ initializing triggers -------------------------------------------------------
 	--Trigger for trading
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
@@ -421,6 +429,7 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
 	--Trigger for AI target redirection
 	AIchunks = {}
+<<<<<<< Updated upstream
 	AIchunks.time = {}
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
@@ -435,9 +444,11 @@
 	--initializing animations for beautifications
 
 	BeautiAnimCheck()
+=======
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
+>>>>>>> Stashed changes
 	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------		
 	if not gvEMSFlag then
-		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")	
 		function Sync.Send(_str)
 			if CNetwork then
@@ -459,26 +470,18 @@
 			Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 		end
 	else
-		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	
 	end
+	CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	-- check for valid texture quality settings
-	if BS.ValidateTextureQuality() ~= true then
-		
-		local text
-	
-		if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
-		
-			text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"
-			
-		else
-		
-			text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"
-			
-		end
-		
-		GUI.AddStaticNote(text)
-			
+	if BS.ValidateTextureQuality() ~= true then		
+		local text	
+		if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then		
+			text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"			
+		else		
+			text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"			
+		end		
+		GUI.AddStaticNote(text)			
 	end
 	BS.VersionCheck.Setup()
 	-- asynchronous check for achievements

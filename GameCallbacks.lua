@@ -10,6 +10,35 @@ HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
 GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged;
 GameCallback_UnknownTaskOrig = GameCallback_UnknownTask
 
+<<<<<<< Updated upstream
+=======
+function Mission_OnSaveGameLoaded()
+	Mission_OnSaveGameLoadedOrig() 
+	MultiplayerTools.OnSaveGameLoaded = function()
+	end
+	BS.GfxInit()
+	CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
+	if not CNetwork then
+		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
+			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
+			Display.SetPlayerColorMapping(1, PlayerColor)
+		end
+	end	
+	for i = 1,16 do 
+		CUtil.Payday_SetActive(i, true) 
+	end 
+	local PIDs = GetAllAIs()
+	for i = 1,table.getn(PIDs) do
+		if gvPlayerName[PIDs[i]] then
+			Logic.SetPlayerRawName(PIDs[i], gvPlayerName[PIDs[i]])
+		else
+			Logic.SetPlayerRawName(PIDs[i], "AI"..i)
+		end
+		Logic.PlayerSetIsHumanFlag(PIDs[i], 1)
+		Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
+	end
+end  
+>>>>>>> Stashed changes
 -- 3 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
 	function GameCallback_PreBuyLeader(_buildingID, _uCat)
@@ -145,7 +174,9 @@ function GameCallback_GUI_SelectionChanged()
 			if 	UpgradeCategory == UpgradeCategories.SilverMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silvermine"),1)					
 				ButtonStem =  "Upgrade_Silvermine"	
-
+			--Is Entity a outpost?	
+			elseif  UpgradeCategory == UpgradeCategories.Outpost then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)											
 			--Is EntityType the Goldmine?
 			elseif 	UpgradeCategory == UpgradeCategories.GoldMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)					
