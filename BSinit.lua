@@ -1,7 +1,11 @@
 	BS = BS or {}
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	BS.Version = 0.730
+=======
+	BS.Version = 0.733
+>>>>>>> Stashed changes
 =======
 	BS.Version = 0.733
 >>>>>>> Stashed changes
@@ -430,6 +434,7 @@
 	--Trigger for AI target redirection
 	AIchunks = {}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	AIchunks.time = {}
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	---------------------------------------------------------------------------------------------------------------------------------------------
@@ -444,6 +449,9 @@
 	--initializing animations for beautifications
 
 	BeautiAnimCheck()
+=======
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
+>>>>>>> Stashed changes
 =======
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
 >>>>>>> Stashed changes
