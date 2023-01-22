@@ -1,3 +1,10 @@
+--load widgets
+WidgetHelper.AddPreCommitCallback(
+function()
+	CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/ArmyCreator.xml", "Normal")
+end)
+CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
+--initializing table
 ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.PU_LeaderSword2] = 5,
 												[Entities.PU_LeaderSword3] = 8,

@@ -2130,6 +2130,9 @@ end
 gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Headquarters2] = true,
 					[Entities.PB_Headquarters3] = true,
+					[Entities.PB_Outpost1] = true,
+					[Entities.PB_Outpost2] = true,
+					[Entities.PB_Outpost3] = true,
 					[Entities.PB_Castle1] = true,
 					[Entities.PB_Castle2] = true,
 					[Entities.PB_Castle3] = true,
@@ -2441,12 +2444,35 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 		end
 		return count < 3
 	end
-end
-	 
+end 
 RotateOffset = function(_x, _y, _rot)
 	
 	_rot = math.rad(_rot)
 	return _x * math.cos(_rot) - _y * math.sin(_rot), _x * math.sin(_rot) + _y * math.cos(_rot)
+end
+EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
+	local xmax, ymax = Logic.WorldGetSize()
+	local dmin, xspawn, yspawn
+
+	for y_ = _posY - _offset, _posY + _offset, _step do		
+		for x_ = _posX - _offset, _posX + _offset, _step do			
+			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
+				
+				local d = (x_ - _posX)^2 + (y_ - _posY)^2
+				
+				if CUtil.GetSector(x_/100, y_/100) ~= 0 then
+				
+					if not dmin or dmin > d then
+						dmin = d						
+						xspawn = x_
+						yspawn = y_
+					end
+					
+				end
+			end
+		end
+	end
+	return xspawn, yspawn
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- RANDOM CHESTS ---------------------------------------------------------------------------

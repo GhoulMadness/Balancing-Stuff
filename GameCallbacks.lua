@@ -16,11 +16,7 @@ function Mission_OnSaveGameLoaded()
 	MultiplayerTools.OnSaveGameLoaded = function()
 	end
 	BS.GfxInit()
-	if not gvEMSFlag then
-		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
-	else
-		CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_EMS_GUI.xml")
-	end
+	CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	if not CNetwork then
 		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
 			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
@@ -176,7 +172,9 @@ function GameCallback_GUI_SelectionChanged()
 			if 	UpgradeCategory == UpgradeCategories.SilverMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silvermine"),1)					
 				ButtonStem =  "Upgrade_Silvermine"	
-
+			--Is Entity a outpost?	
+			elseif  UpgradeCategory == UpgradeCategories.Outpost then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)											
 			--Is EntityType the Goldmine?
 			elseif 	UpgradeCategory == UpgradeCategories.GoldMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)					
