@@ -9,9 +9,8 @@ GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstru
 HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
 GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged;
 GameCallback_UnknownTaskOrig = GameCallback_UnknownTask
+Mission_OnSaveGameLoadedOrig = Mission_OnSaveGameLoaded
 
-<<<<<<< Updated upstream
-=======
 function Mission_OnSaveGameLoaded()
 	Mission_OnSaveGameLoadedOrig() 
 	MultiplayerTools.OnSaveGameLoaded = function()
@@ -38,7 +37,6 @@ function Mission_OnSaveGameLoaded()
 		Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 	end
 end  
->>>>>>> Stashed changes
 -- 3 Diebe max. auf der Weihnachtsmap; 
 if gvXmasEventFlag == 1 then
 	function GameCallback_PreBuyLeader(_buildingID, _uCat)
@@ -820,7 +818,7 @@ function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
 	-- needed when troop on top of the archers tower is upgraded
 	for k,v in pairs(gvArchers_Tower.SlotData) do
 						
-		local slot = table.findvalue(gvArchers_Tower.SlotData[k],_OldID)
+		local slot = table_findvalue(gvArchers_Tower.SlotData[k],_OldID)
 		
 		if slot ~= 0 then		
 			gvArchers_Tower.SlotData[k][slot] = _NewID			

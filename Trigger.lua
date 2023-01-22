@@ -641,10 +641,13 @@ function OnSpecBeautiCreated()
 end
 function BeautiAnimCheck()
 
-    for k,v in pairs(gvBeautiAnim.IDs) do		
-		Logic.SetBuildingSubAnim(v, 1, gvBeautiAnim.AnimByType[Logic.GetEntityType(v)])				
-	end
-	
+    for i = table.getn(gvBeautiAnim.IDs), 1, -1 do			
+		local id = gvBeautiAnim.IDs[i]
+		if Logic.IsConstructionComplete(id) == 1 then
+			CUtil.SetBuildingSubAnimExtended(id, 1, gvBeautiAnim.AnimByType[Logic.GetEntityType(id)], false, true)
+			table.remove(gvBeautiAnim.IDs, i)
+		end
+	end	
 	StartCountdown(gvBeautiAnim.Delay, BeautiAnimCheck, false)
 	
 end
@@ -770,8 +773,10 @@ Hero13_StoneArmor_ApplyDamage = function(_heroID,_starttime)
 	if time > (_starttime + duration) then
 		local posX,posY = Logic.GetEntityPosition(_heroID)
 		Logic.CreateEffect(GGL_Effects.FXMaryDemoralize,posX,posY)	
-		Logic.HurtEntity(_heroID, gvHero13.AbilityProperties.StoneArmor.DamageStored[player]*gvHero13.AbilityProperties.StoneArmor.DamageFactor)	
-		gvHero13.AbilityProperties.StoneArmor.DamageStored[player] = 0	
+		if gvHero13.AbilityProperties.StoneArmor.DamageStored and gvHero13.AbilityProperties.StoneArmor.DamageStored[player] then
+			Logic.HurtEntity(_heroID, gvHero13.AbilityProperties.StoneArmor.DamageStored[player]*gvHero13.AbilityProperties.StoneArmor.DamageFactor)	
+			gvHero13.AbilityProperties.StoneArmor.DamageStored[player] = 0	
+		end
 		gvHero13.TriggerIDs.StoneArmor.DamageApply[player] = nil
 		Trigger.UnrequestTrigger(gvHero13.TriggerIDs.StoneArmor.DamageStoring[player])
 		gvHero13.TriggerIDs.StoneArmor.DamageStoring[player] = nil
@@ -1205,7 +1210,7 @@ function OnArchers_Tower_OccupiedTroopDied()
 				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
 					
 					for k,v in pairs(gvArchers_Tower.SlotData) do						
-						local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+						local slot = table_findvalue(gvArchers_Tower.SlotData[k],entityID)
 				
 						if  slot ~= 0 then						
 							gvArchers_Tower.SlotData[k][slot] = nil
@@ -1230,7 +1235,7 @@ function OnArchers_Tower_OccupiedTroopDied()
 					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then		
 					
 						for k,v in pairs(gvArchers_Tower.SlotData) do						
-							local slot = table.findvalue(gvArchers_Tower.SlotData[k],entityID)
+							local slot = table_findvalue(gvArchers_Tower.SlotData[k],entityID)
 					
 							if  slot ~= 0 then							
 								gvArchers_Tower.SlotData[k][slot] = nil
@@ -1307,9 +1312,9 @@ function OnVictoryStatue3Destroyed()
 	
 end
 
-gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1000, 
-								[Entities.PV_Cannon4] = 1000, 
-								[Entities.PV_Catapult] = 1000}
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500, 
+								[Entities.PV_Cannon4] = 1800, 
+								[Entities.PV_Catapult] = 2000}
 for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k) 
 end
@@ -1345,42 +1350,51 @@ function OnAIEnemyCreated(_playerID)
 	local entityID = Event.GetEntityID()		
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
 	
-	if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
-		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
-		for i = 1, table.getn(enemies) do
-			if playerID == enemies[i] then
-				AIchunks[_playerID]:AddEntity(entityID)
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then				
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
 				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)	
+				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0) or Logic.IsSerf(entityID) == 1 then
-		AIchunks[_playerID]:AddEntity(entityID)	
 	end
-	
 end
 function OnAIEnemyDestroyed(_playerID)
 	
 	local entityID = Event.GetEntityID()		
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
-	
-	if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
-		local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
-		for i = 1, table.getn(enemies) do
-			if playerID == enemies[i] then
-				AIchunks[_playerID]:RemoveEntity(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
+		
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then	
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
 				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)	
+				break
 			end
 		end
-	elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0) or Logic.IsSerf(entityID) == 1 then
-		AIchunks[_playerID]:RemoveEntity(entityID)		
 	end
+end
+function OnAIDiplomacyChanged(_playerID)
+	local p = Event.GetSourcePlayerID()
+	local p2 = Event.GetTargetPlayerID()
+	local state = Event.GetDiplomacyState()
 	
+	if p == _playerID or p2 == _playerID then
+		ReinitChunkData(_playerID)
+	end
 end
 function AITower_RedirectTarget()
 

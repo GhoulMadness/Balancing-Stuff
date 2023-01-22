@@ -560,7 +560,7 @@ function GUIAction_Archers_Tower_AddSlot()
 			
 		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(player), CEntityIterator.OfAnyTypeFilter(unpack(gvArchers_Tower.AllowedTypes)), CEntityIterator.InCircleFilter(position.X, position.Y, gvArchers_Tower.Troop_SearchRadius)) do
 			
-			local slot = (table.findvalue(gvArchers_Tower.SlotData[entity],eID) ~= 0)
+			local slot = (table_findvalue(gvArchers_Tower.SlotData[entity],eID) ~= 0)
 				
 			if  not slot then										
 				if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) ~= 1 then				

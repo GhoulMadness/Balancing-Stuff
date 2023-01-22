@@ -1,18 +1,6 @@
 	BS = BS or {}
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	BS.Version = 0.730
-=======
 	BS.Version = 0.733
->>>>>>> Stashed changes
-=======
-	BS.Version = 0.733
->>>>>>> Stashed changes
-=======
-	BS.Version = 0.733
->>>>>>> Stashed changes
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -331,6 +319,7 @@
 			"Lightning",
 			"DZTradePunishment",
 			"SilversmithGrievance",
+			"ChunkWrapper",
 			"AI",
 			"Castle",
 			"Tower",
@@ -355,7 +344,7 @@
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
-	
+	BS.GfxInit()
 	--disables the creation of fow (needed for minimap)
 	CUtil.DisableFoW()
 	--larger zoom factor (default 1.0)
@@ -437,32 +426,7 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
 	--Trigger for AI target redirection
 	AIchunks = {}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	AIchunks.time = {}
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
-	---------------------------------------------------------------------------------------------------------------------------------------------
-	--internal payday activation (for treasury technology - debenture)
-	if CUtil then 
-		for i = 1,16 do 
-			CUtil.Payday_SetActive(i, true) 
-		end 
-	end
-	--initializing dz trade punishment
-	DZTrade_Init()
-	--initializing animations for beautifications
-
-	BeautiAnimCheck()
-=======
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
->>>>>>> Stashed changes
-=======
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
->>>>>>> Stashed changes
-=======
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
->>>>>>> Stashed changes
 	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------		
 	if not gvEMSFlag then
 		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")	
@@ -509,7 +473,7 @@
 	--give players their respective favorite color (if given/set in simis mp QoL)
 	if not CNetwork then
 		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
-			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer");
-			Display.SetPlayerColorMapping(1, PlayerColor);
+			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
+			Display.SetPlayerColorMapping(1, PlayerColor)
 		end
-	end;	
+	end	

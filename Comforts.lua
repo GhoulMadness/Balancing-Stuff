@@ -254,14 +254,15 @@ function SetPlayerName(_playerId, _name)
 
 end
 
-function table.findvalue(_tid,_value)
+function table_findvalue(_tid,_value)
 
 	local tpos
 	
 	if type(_value) == "number" then	
 		for i,val in pairs(_tid) do		
 			if val == _value then			
-				tpos = i				
+				tpos = i	
+				break
 			end			
 		end	
 		
@@ -270,7 +271,8 @@ function table.findvalue(_tid,_value)
 			if _tid[1].X and _tid[1].Y then			
 				for i,_ in pairs(_tid) do				
 					if _tid[i].X == _value.X and _tid[i].Y == _value.Y then					
-						tpos = i						
+						tpos = i	
+						break
 					end					
 				end	
 				
@@ -279,7 +281,8 @@ function table.findvalue(_tid,_value)
 				for i,_ in pairs(_tid) do				
 					for k,_ in pairs(_tid[i]) do					
 						if _tid[i][k] == _value then						
-							tpos = i							
+							tpos = i	
+							break
 						end						
 					end					
 				end	
@@ -290,7 +293,8 @@ function table.findvalue(_tid,_value)
 		
 			for i,_ in pairs(_tid) do			
 				if _tid[i] == _value then				
-					tpos = i					
+					tpos = i	
+					break
 				end				
 			end	
 			
@@ -309,14 +313,16 @@ function removetablekeyvalue(_tid,_key)
 	if type(_key) == "string" then	
 		for i,_ in pairs(_tid) do		
 			if string.find(_tid[i],_key) ~= nil then			
-				tpos = i				
+				tpos = i	
+				break
 			end			
 		end
 		
 	elseif type(_key) == "number" then	
 		for i,_ in pairs(_tid) do		
 			if _tid[i] == _key then			
-				tpos = i				
+				tpos = i	
+				break
 			end			
 		end	
 		
@@ -325,7 +331,8 @@ function removetablekeyvalue(_tid,_key)
 			if _tid[1].X and _tid[1].Y then			
 				for i,_ in pairs(_tid) do				
 					if _tid[i].X == _key.X and _tid[i].Y == _key.Y then				
-						tpos = i						
+						tpos = i	
+						break
 					end					
 				end	
 				
@@ -334,7 +341,8 @@ function removetablekeyvalue(_tid,_key)
 				for i,_ in pairs(_tid) do				
 					for k,_ in pairs(_tid[i]) do					
 						if _tid[i][k] == _key then						
-							tpos = i							
+							tpos = i	
+							break
 						end						
 					end					
 				end					
@@ -344,17 +352,15 @@ function removetablekeyvalue(_tid,_key)
 		
 			for i,_ in pairs(_tid) do			
 				if _tid[i] == _key then				
-					tpos = i					
+					tpos = i	
+					break
 				end				
 			end	
 			
 		end
 		
-	else
-	
-		LuaDebugger.Log("Invalid Input for removetablekeyvalue!")		
-		return
-		
+	else	
+		return		
 	end
 	
 	table.remove(_tid,tpos)	
@@ -601,7 +607,43 @@ function GetEntityHealth( _entity )
     return ( Health / MaxHealth ) * 100
 	
 end
+function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 
+	local Data = {	Logic.GetPlayerEntitiesInArea(	_player,
+												_entityType,
+												_position.X,
+												_position.Y,
+												_range,
+												_amount)}
+
+	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
+	local Count = 0
+	local i
+	
+	for i=2, Data[1]+1 do
+		local posX, posY = Logic.GetEntityPosition(Data[i])
+		if CUtil.GetSector(posX /100, posY /100) == sector then
+			if Logic.IsBuilding(Data[i]) == 1 then
+				if Logic.IsConstructionComplete(Data[i]) == 1 and not IsInappropiateBuilding(Data[i]) and Logic.IsEntityInCategory(Data[i], EntityCategories.Wall) == 0 then
+					Count = Count + 1
+				end
+
+			elseif Logic.IsHero(Data[i]) == 1 then				
+				if Logic.IsEntityAlive(Data[i]) then
+					Count = Count + 1
+				end
+			else
+				if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xs") then
+					Count = Count + 1
+				end
+			end
+		end
+
+	end
+
+	return Count >= _amount
+
+end
 function AreEntitiesOfDiplomacyStateInArea( _player, _position, _range, _state )
 	
 	local maxplayers = 8
@@ -715,6 +757,104 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 
 end
 
+ResumeEntityOrig = Logic.ResumeEntity
+Logic.ResumeEntity = function(_id)
+	ResumeEntityOrig(_id)
+	if Logic.IsHero(_id) == 1 or Logic.IsLeader(_id) == 1 or Logic.IsSerf(_id) == 1 or Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or Logic.IsWorker(_id) == 1 then
+		Logic.SetEntityScriptingValue(_id, 72, 1)
+	end
+end
+
+GetFoundationTopOrig = Logic.GetFoundationTop
+Logic.GetFoundationTop = function(_id)
+	assert(IsValid(_id))
+	return GetFoundationTopOrig(_id)
+end
+
+GetAttachedEntitiesOrig = CEntity.GetAttachedEntities
+CEntity.GetAttachedEntities = function(_id)
+	assert(IsValid(_id))
+	return GetAttachedEntitiesOrig(_id)
+end
+
+Entity_ConnectLeaderOrig = AI.Entity_ConnectLeader
+AI.Entity_ConnectLeader = function(_id, _armyID)
+	assert(IsValid(_id))
+	assert(_armyID >= -1 and _armyID <= 8)
+	return Entity_ConnectLeaderOrig(_id, _armyID)
+end
+
+GroupAttackOrig = Logic.GroupAttack
+Logic.GroupAttack = function(_id, _target)
+	assert(IsValid(_id))
+	assert(IsValid(_target))
+	assert((Logic.IsEntityInCategory(_id, EntityCategories.MilitaryBuilding) == 1) or (Logic.GetSector(_id) == Logic.GetSector(_target)))
+	assert((Logic.IsWorker(_target) == 0) or (Logic.IsSettlerAtWork(_target) == 0 and Logic.IsSettlerAtFarm(_target) == 0 and Logic.IsSettlerAtResidence(_target) == 0))
+	return GroupAttackOrig(_id, _target)
+end
+IsDead = function(_name)
+
+
+	if type(_name) == "table" then
+
+		if ArmyTable and ArmyTable[_name.player] and ArmyTable[_name.player][_name.id + 1] then
+			return table.getn(ArmyTable[_name.player][_name.id + 1].IDs) == 0
+		else
+			return AI.Army_GetNumberOfTroops(_name.player,_name.id) == 0
+		end	
+	end
+
+	local entityId = 0
+
+	if type(_name) == "string" then
+
+		if Logic.IsEntityDestroyed(_name) then
+			return true
+		end		
+		entityId = Logic.GetEntityIDByName(_name)
+
+	else		
+		entityId = _name		
+	end
+	
+	if entityId == 0 then
+		return true
+	end
+		
+	if AI.Entity_IsDead(entityId) == 1 then
+		return true
+	end
+					
+	return false
+	
+end
+HasFullStrength = function(_army)
+	
+	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
+		return table.getn(ArmyTable[_army.player][_army.id + 1].IDs) >= _army.strength
+	else
+		return AI.Army_GetNumberOfTroops(_army.player,_army.id) >= _army.strength
+	end
+	return false
+
+end
+IsWeak = function(_army)
+
+	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
+		return table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < _army.strength
+	else
+		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < _army.strength
+	end
+
+end
+IsVeryWeak = function(_army)
+	
+	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
+		return table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / 3)
+	else
+		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / 3)
+	end
+end
 function Unmuting()
 
 	GUI.SetFeedbackSoundOutputState(1)	
@@ -1171,6 +1311,31 @@ function CreateSoldiersForLeader( _LeaderID, _SoldierAmount )
 	return _SoldierAmount
 	
 end
+-------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------- Mem reading/writing --------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------
+BS.MemValues = BS.MemValues or {}
+-------------------------------------------------- pointer --------------------------------------------------------------------------------------
+function GetEntityTypePointer(_entityType)
+	return CUtilMemory.GetMemory(tonumber("0x895DB0", 16))[0][16][_entityType * 8 + 2]
+end
+function GetPlayerStatusPointer(_playerID)
+	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][10][_playerID*2+1]
+end
+function GetDamageModifierPointer()
+	return CUtilMemory.GetMemory(tonumber("0x85A3DC", 16))[0][2]
+end
+function GetTechnologyPointer(_techID)
+	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][13][1][_techID-1]
+end
+function GetLogicPropertiesPointer()
+	return CUtilMemory.GetMemory(tonumber("0x85A3E0", 16))[0]
+end
+function GetArmyObjectPointer()
+	return CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][1]
+end
+--------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------- misc -----------------------------------------------------------------------------------------
 -- returns the current weather gfx 
 function GetCurrentWeatherGfxSet()
 
@@ -1178,11 +1343,19 @@ function GetCurrentWeatherGfxSet()
 	
 end
 
-NighttimeGFXSets = {9,13,14,19,20,21,28}
+NighttimeGFXSets = {[1] = {9, 19},
+					[2] = {13, 20, 28},
+					[3] = {14, 21}}
 function IsNighttime()
 	
-	return table.findvalue(NighttimeGFXSets, GetCurrentWeatherGfxSet()) ~= 0
-	
+	local found = 0
+	for i = 1, table.getn(NighttimeGFXSets) do
+		found = table_findvalue(NighttimeGFXSets[i], GetCurrentWeatherGfxSet()) 
+		if found ~= 0 then
+			return true
+		end
+	end
+	return found ~= 0
 end
 
 function SetInternalClippingLimitMax(_val)
@@ -1204,35 +1377,286 @@ function GetWeatherSpeedModifier(_weatherstate)
 	if _weatherstate == 1 then
 		return _weatherstate
 	else
-		return GetLogicPropertiesPointer[36-3*_weatherstate]:GetFloat()
+		if not BS.MemValues.WeatherSpeedModifier then
+			BS.MemValues.WeatherSpeedModifier = {}
+		end
+		if not BS.MemValues.WeatherSpeedModifier[_weatherstate] then
+			BS.MemValues.WeatherSpeedModifier[_weatherstate] = GetLogicPropertiesPointer()[36-3*_weatherstate]:GetFloat()
+		end
+		return BS.MemValues.WeatherSpeedModifier[_weatherstate]
 	end
 end
 -- returns the technology raw speed modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologySpeedModifier(_techID)
-	return GetTechnologyPointer(_techID)[56]:GetFloat(), CUtilBit32.BitAnd(GetTechnologyPointer(_techID)[58]:GetInt(), 2^8-1)-42
+	if not BS.MemValues.TechnologySpeedModifier then
+		BS.MemValues.TechnologySpeedModifier = {}
+	end
+	if not BS.MemValues.TechnologySpeedModifier[_techID] then
+		BS.MemValues.TechnologySpeedModifier[_techID] = GetTechnologyPointer(_techID)[56]:GetFloat(), CUtilBit32.BitAnd(GetTechnologyPointer(_techID)[58]:GetInt(), 2^8-1)-42
+	end
+	return BS.MemValues.TechnologySpeedModifier[_techID]
 end
 -- returns the technology raw attack range modifier and the operation (+/*), both defined in the respective xml
 function GetTechnologyAttackRangeModifier(_techID)
-	return GetTechnologyPointer(_techID)[88]:GetFloat(), CUtilBit32.BitAnd(GetTechnologyPointer(_techID)[90]:GetInt(), 2^8-1)-42
+	if not BS.MemValues.TechnologyAttackRangeModifier then
+		BS.MemValues.TechnologyAttackRangeModifier = {}
+	end
+	if not BS.MemValues.TechnologyAttackRangeModifier[_techID] then
+		BS.MemValues.TechnologyAttackRangeModifier[_techID] = GetTechnologyPointer(_techID)[88]:GetFloat(), CUtilBit32.BitAnd(GetTechnologyPointer(_techID)[90]:GetInt(), 2^8-1)-42
+	end
+	return BS.MemValues.TechnologyAttackRangeModifier[_techID]
 end
-function GetEntityTypePointer(_entityType)
-	return CUtilMemory.GetMemory(tonumber("0x895DB0", 16))[0][16][_entityType * 8 + 2]
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------ entity Type related -----------------------------------------------------------------------------
+-- table with entityTypes with leaderBehavior two places further (index 8 instead of 6)
+BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
+										[Entities.PU_Hero1a] = true,										
+										[Entities.PU_Hero1b] = true,										
+										[Entities.PU_Hero1c] = true,										
+										[Entities.PU_Hero11] = true,										
+										[Entities.PU_Hero13] = true,										
+										[Entities.CU_Mary_de_Mortfichet] = true,										
+										[Entities.PU_Serf] = true										
+									}
+
+-- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
+function GetEntityTypeBaseAttackSpeed(_entityType)
+
+	assert( _entityType ~= 0 , "invalid entityType" )
+	if not BS.MemValues.EntityTypeBaseAttackSpeed then
+		BS.MemValues.EntityTypeBaseAttackSpeed = {}
+	end
+	if BS.MemValues.EntityTypeBaseAttackSpeed[_entityType] then
+		return BS.MemValues.EntityTypeBaseAttackSpeed[_entityType]
+	else
+		local behavior_pos	
+		if not BehaviorExceptionEntityTypeTable[_entityType] then		
+			if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+				behavior_pos = 4	
+			elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+				behavior_pos = 0
+			else		
+				behavior_pos = 6			
+			end		
+		else	
+			behavior_pos = 8		
+		end
+		BS.MemValues.EntityTypeBaseAttackSpeed[_entityType] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][21]:GetInt()	
+		return BS.MemValues.EntityTypeBaseAttackSpeed[_entityType]
+	end
 end
-function GetPlayerStatusPointer(_playerID)
-	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][10][_playerID*2+1]
+-- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
+function GetEntityTypeBaseAttackRange(_entityType)
+
+	assert( _entityType ~= 0 , "invalid entityType" )
+	if not BS.MemValues.EntityTypeBaseAttackRange then
+		BS.MemValues.EntityTypeBaseAttackRange = {}
+	end
+	if BS.MemValues.EntityTypeBaseAttackRange[_entityType] then
+		return BS.MemValues.EntityTypeBaseAttackRange[_entityType]
+	else
+		local behavior_pos
+		if not BehaviorExceptionEntityTypeTable[_entityType] then	
+			if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+				behavior_pos = 4	
+			elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+				behavior_pos = 0
+				if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
+					return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][11]:GetFloat()	
+				end
+			else		
+				behavior_pos = 6			
+			end		
+		else	
+			behavior_pos = 8				
+		end
+		BS.MemValues.EntityTypeBaseAttackRange[_entityType] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][23]:GetFloat()
+		return BS.MemValues.EntityTypeBaseAttackRange[_entityType]
+	end
 end
-function GetDamageModifierPointer()
-	return CUtilMemory.GetMemory(tonumber("0x85A3DC", 16))[0][2]
+function GetEntityTypeBaseMinAttackRange(_entityType)
+
+	assert( _entityType ~= 0 , "invalid entityType" )
+	if not BS.MemValues.EntityTypeBaseMinAttackRange then
+		BS.MemValues.EntityTypeBaseMinAttackRange = {}
+	end
+	if BS.MemValues.EntityTypeBaseMinAttackRange[_entityType] then
+		return BS.MemValues.EntityTypeBaseMinAttackRange[_entityType]
+	else
+		local behavior_pos
+		if not BehaviorExceptionEntityTypeTable[_entityType] then	
+			if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+				behavior_pos = 4	
+			elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+				behavior_pos = 0
+				if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
+					return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][12]:GetFloat()	
+				end
+			else		
+				behavior_pos = 6			
+			end		
+		else	
+			behavior_pos = 8				
+		end
+		BS.MemValues.EntityTypeBaseMinAttackRange[_entityType] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][24]:GetFloat()	
+		return BS.MemValues.EntityTypeBaseMinAttackRange[_entityType]
+	end
 end
-function GetTechnologyPointer(_techID)
-	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][13][1][_techID-1]
+function GetEntityTypeMaxAttackRange(_entity,_player)
+
+	local entityType = Logic.GetEntityType(_entity)	
+	local RangeTechBonusFlat
+	local RangeTechBonusMultiplier
+	--Check auf Technologie Modifikatoren		
+	for k,v in pairs(BS.EntityCatModifierTechs.AttackRange) do		
+		if Logic.IsEntityInCategory(_entity, k) == 1 then
+			RangeTechBonusFlat = 0
+			RangeTechBonusMultiplier = 1
+			for i = 1,table.getn(v) do			
+				if Logic.GetTechnologyState(_player,v[i]) == 4 then				
+					local val, op = GetTechnologyAttackRangeModifier(v[i])
+					if op == 0 then
+						RangeTechBonusMultiplier = RangeTechBonusMultiplier + (val -1)
+					elseif op == 1 then
+						RangeTechBonusFlat = RangeTechBonusFlat + val
+					end
+				end				
+			end	
+		end		
+	end
+	
+	return GetEntityTypeBaseAttackRange(entityType) + (RangeTechBonusFlat or 0) * (RangeTechBonusMultiplier or 1)
 end
-function GetLogicPropertiesPointer()
-	return CUtilMemory.GetMemory(tonumber("0x85A3E0", 16))[0]
+-- gets entity type damage range (only use for types with given damage range!)
+function GetEntityTypeDamageRange(_entityType)
+
+	assert(_entityType ~= nil, "invalid entityType")
+	if not BS.MemValues.EntityTypeDamageRange then
+		BS.MemValues.EntityTypeDamageRange = {}
+	end
+	if BS.MemValues.EntityTypeDamageRange[_entityType] then
+		return BS.MemValues.EntityTypeDamageRange[_entityType]
+	else
+		local behavior_pos
+		if not BehaviorExceptionEntityTypeTable[_entityType] then	
+			if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+				behavior_pos = 4	
+			elseif string.find(Logic.GetEntityTypeName(_entityType), "Tower") ~= nil then	
+				behavior_pos = 0
+				if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
+					return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][15]:GetFloat()	
+				end
+			else		
+				behavior_pos = 6			
+			end		
+		else	
+			behavior_pos = 8				
+		end
+		BS.MemValues.EntityTypeDamageRange[_entityType] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][16]:GetFloat()	
+		return BS.MemValues.EntityTypeDamageRange[_entityType]
+	end
 end
-function GetArmyObjectPointer()
-	return CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][1]
+-- gets entity type damage class
+function GetEntityTypeDamageClass(_entityType)
+
+	assert(_entityType ~= nil, "invalid entityType")
+	if not BS.MemValues.EntityTypeDamageClass then
+		BS.MemValues.EntityTypeDamageClass = {}
+	end
+	if BS.MemValues.EntityTypeDamageClass[_entityType] then
+		return BS.MemValues.EntityTypeDamageClass[_entityType]
+	else
+		local behavior_pos
+		if not BehaviorExceptionEntityTypeTable[_entityType] then	
+			if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
+				behavior_pos = 4			
+			elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
+				behavior_pos = 0
+			else
+				behavior_pos = 6			
+			end		
+		else	
+			behavior_pos = 8				
+		end	
+		BS.MemValues.EntityTypeDamageClass[_entityType] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][13]:GetInt()
+		return BS.MemValues.EntityTypeDamageClass[_entityType]
+	end
 end
+-- gets entity type armor class
+function GetEntityTypeArmorClass(_entityType)
+	assert(_entityType ~= nil , "invalid entityType")
+	if not BS.MemValues.EntityTypeArmorClass then
+		BS.MemValues.EntityTypeArmorClass = {}
+	end
+	if BS.MemValues.EntityTypeArmorClass[_entityType] then
+		return BS.MemValues.EntityTypeArmorClass[_entityType]
+	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 102
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 60
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 102
+		end
+		BS.MemValues.EntityTypeArmorClass[_entityType] = pointer[behpos]:GetInt()
+		return BS.MemValues.EntityTypeArmorClass[_entityType]
+	end
+end
+-- gets damage factor related to the damageclass/armorclass
+function GetDamageFactor(_damageclass, _armorclass)
+	assert(_damageclass > 0 and _damageclass <= 9, "invalid damageclass")
+	assert(_armorclass > 0 and _armorclass <= 7, "invalid armorclass")
+	return GetDamageModifierPointer()[_damageclass][_armorclass]:GetFloat()
+end
+-- gets entityType attraction places provided (e.g. village center)
+function GetAttractionPlacesProvided(_entityType)
+	assert(_entityType ~= nil , "invalid entityType")
+	if not BS.MemValues.EntityTypeAttractionPlacesProvided then
+		BS.MemValues.EntityTypeAttractionPlacesProvided = {}
+	end
+	if BS.MemValues.EntityTypeAttractionPlacesProvided[_entityType] then
+		return BS.MemValues.EntityTypeAttractionPlacesProvided[_entityType]
+	else
+		BS.MemValues.EntityTypeAttractionPlacesProvided[_entityType] = GetEntityTypePointer(_entityType)[44]:GetInt()
+		return BS.MemValues.EntityTypeAttractionPlacesProvided[_entityType]
+	end
+end
+-- gets building type blocking properties, returns Blocked1X, Blocked1Y, Blocked2X, Blocked2Y
+function GetBuildingTypeBlockingArea(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeBlockingArea then
+		BS.MemValues.BuildingTypeBlockingArea = {}
+	end
+	if BS.MemValues.BuildingTypeBlockingArea[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeBlockingArea[_entityType])
+	else
+		BS.MemValues.BuildingTypeBlockingArea[_entityType] = {}
+		for i = 1,4 do
+			table.insert(BS.MemValues.BuildingTypeBlockingArea[_entityType], GetEntityTypePointer(_entityType)[35][i-1]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeBlockingArea[_entityType])
+	end
+end
+-- gets building type terrain pos properties, returns TerrainPos1X, TerrainPos1Y, TerrainPos2X, TerrainPos2Y
+function GetBuildingTypeTerrainPosArea(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeTerrainPosArea then
+		BS.MemValues.BuildingTypeTerrainPosArea = {}
+	end
+	if BS.MemValues.BuildingTypeTerrainPosArea[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
+	else
+		BS.MemValues.BuildingTypeTerrainPosArea[_entityType] = {}
+		for i = 1,4 do
+			table.insert(BS.MemValues.BuildingTypeTerrainPosArea[_entityType], GetEntityTypePointer(_entityType)[37 + i]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
+	end
+end
+------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------- entity id related --------------------------------------------------------------------------
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
 
@@ -1264,7 +1688,7 @@ BS.EntityCatModifierTechs = {["Speed"] = {	[EntityCategories.Hero] = {Technologi
 												}										
 							}
 -- return settler movement speed
-function GetSettlerCurrentMovementSpeed(_entityID,_player)
+function GetSettlerCurrentMovementSpeed(_entityID, _player)
 
 	local BaseSpeed = round(GetSettlerBaseMovementSpeed(_entityID))	
 	local SpeedTechBonus, SpeedHeroMultiplier	
@@ -1286,155 +1710,47 @@ function GetSettlerCurrentMovementSpeed(_entityID,_player)
 					elseif op == 1 then
 						SpeedTechBonus = SpeedTechBonus + val
 					end
-				end
-				
-			end	
-		end
-		
-	end
-	
-	return (BaseSpeed + (SpeedTechBonus or 0)) * (SpeedWeatherFactor or 1) * (SpeedHeroMultiplier or 1)
-	
-end
--- table with entityTypes with leaderBehavior two places further (index 8 instead of 6)
-BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
-										[Entities.PU_Hero1a] = true,										
-										[Entities.PU_Hero1b] = true,										
-										[Entities.PU_Hero1c] = true,										
-										[Entities.PU_Hero11] = true,										
-										[Entities.PU_Hero13] = true,										
-										[Entities.CU_Mary_de_Mortfichet] = true,										
-										[Entities.PU_Serf] = true										
-									}
-
--- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
-function GetEntityTypeBaseAttackSpeed(_entityType)
-
-	assert( _entityType ~= 0 , "invalid entityType" )
-	local behavior_pos	
-	if not BehaviorExceptionEntityTypeTable[_entityType] then		
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4	
-		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
-			behavior_pos = 0
-		else		
-			behavior_pos = 6			
-		end		
-	else	
-		behavior_pos = 8		
-	end
-	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][21]:GetInt()	
-end
--- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
-function GetEntityTypeBaseAttackRange(_entityType)
-
-	assert( _entityType ~= 0 , "invalid entityType" )
-	local behavior_pos
-	if not BehaviorExceptionEntityTypeTable[_entityType] then	
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4	
-		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
-			behavior_pos = 0
-			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
-				return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][11]:GetFloat()	
-			end
-		else		
-			behavior_pos = 6			
-		end		
-	else	
-		behavior_pos = 8				
-	end
-	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][23]:GetFloat()	
-end
-function GetEntityTypeBaseMinAttackRange(_entityType)
-
-	assert( _entityType ~= 0 , "invalid entityType" )
-	local behavior_pos
-	if not BehaviorExceptionEntityTypeTable[_entityType] then	
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4	
-		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
-			behavior_pos = 0
-			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
-				return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][12]:GetFloat()	
-			end
-		else		
-			behavior_pos = 6			
-		end		
-	else	
-		behavior_pos = 8				
-	end
-	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][24]:GetFloat()	
-end
-function GetEntityTypeMaxAttackRange(_entity,_player)
-
-	local entityType = Logic.GetEntityType(_entity)	
-	local RangeTechBonusFlat
-	local RangeTechBonusMultiplier
-	--Check auf Technologie Modifikatoren		
-	for k,v in pairs(BS.EntityCatModifierTechs.AttackRange) do		
-		if Logic.IsEntityInCategory(_entity, k) == 1 then
-			RangeTechBonusFlat = 0
-			RangeTechBonusMultiplier = 1
-			for i = 1,table.getn(v) do			
-				if Logic.GetTechnologyState(_player,v[i]) == 4 then				
-					local val, op = GetTechnologyAttackRangeModifier(v[i])
-					if op == 0 then
-						RangeTechBonusMultiplier = RangeTechBonusMultiplier + (val -1)
-					elseif op == 1 then
-						RangeTechBonusFlat = RangeTechBonusFlat + val
-					end
 				end				
 			end	
 		end		
-	end
-	
-	return GetEntityTypeBaseAttackRange(entityType) + (RangeTechBonusFlat or 0) * (RangeTechBonusMultiplier or 1)
+	end	
+	return (BaseSpeed + (SpeedTechBonus or 0)) * (SpeedWeatherFactor or 1) * (SpeedHeroMultiplier or 1)	
 end
 -- get the current task, logic cant return animal tasks, returns number, not string
 function GetEntityCurrentTask(_entityID)
-
 	assert( IsValid(_entityID) , "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()	
 end
 -- set entity current task
 function SetEntityCurrentTask(_entityID, _num)
-
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_num) == "number", "task needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:SetInt(_num)	
 end
 -- get entity current task sub-index
 function GetEntityCurrentTaskIndex(_entityID)
-
 	assert( IsValid(_entityID) , "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()	
 end
 -- set entity current task sub-index
 function SetEntityCurrentTaskIndex(_entityID, _index)
-
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_index) == "number", "index needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)	
 end
-
+-- get entity size (relative to 1)
 function GetEntitySize(_entityID)
-
 	assert( IsValid(_entityID) , "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()	
 end
---[[GetMilitaryBuildingMaxTrainSlots
-CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]
-
+-- set entity size (relative to 1)
 function SetEntitySize(_entityID,_size)
-
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_size) == "number", "size needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)	
 end
+--[[GetMilitaryBuildingMaxTrainSlots
+CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]
 gvVisibilityStates = {	[0] = 257,
 						[1] = 65793
 					}
@@ -1453,71 +1769,8 @@ function SetEntityVisibility(_entityID, _flag)
 	assert( type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))		
 end
--- gets entity type damage range (only use for types with given damage range!)
-function GetEntityTypeDamageRange(_entityType)
-
-	assert(_entityType ~= nil, "invalid entityType")
-	local behavior_pos
-	if not BehaviorExceptionEntityTypeTable[_entityType] then	
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4	
-		elseif string.find(Logic.GetEntityTypeName(_entityType), "Tower") ~= nil then	
-			behavior_pos = 0
-			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][0]:GetInt() == tonumber("778CD4", 16) then
-				return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][15]:GetFloat()	
-			end
-		else		
-			behavior_pos = 6			
-		end		
-	else	
-		behavior_pos = 8				
-	end
-	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][16]:GetFloat()	
-end
--- gets entity type damage class
-function GetEntityTypeDamageClass(_entityType)
-
-	assert(_entityType ~= nil, "invalid entityType")
-	local behavior_pos
-	if not BehaviorExceptionEntityTypeTable[_entityType] then	
-		if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then		
-			behavior_pos = 4			
-		elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then	
-			behavior_pos = 0
-		else
-			behavior_pos = 6			
-		end		
-	else	
-		behavior_pos = 8				
-	end
-	
-	return CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][13]:GetInt()	
-end
--- gets entity type armor class
-function GetEntityTypeArmorClass(_entityType)
-	assert(_entityType ~= nil , "invalid entityType")
-	local pointer = GetEntityTypePointer(_entityType)
-	local behpos
-	if pointer[0]:GetInt() == tonumber("76EC78", 16) then
-		behpos = 102
-	elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
-		behpos = 60
-	elseif pointer[0]:GetInt() == tonumber("778148", 16) then
-		behpos = 102
-	end
-	return pointer[behpos]:GetInt()	
-end
--- gets damage factor related to the damageclass/armorclass
-function GetDamageFactor(_damageclass, _armorclass)
-	assert(_damageclass > 0 and _damageclass <= 9, "invalid damageclass")
-	assert(_armorclass > 0 and _armorclass <= 7, "invalid armorclass")
-	return GetDamageModifierPointer()[_damageclass][_armorclass]:GetFloat()
-end
-function GetAttractionPlacesProvided(_entityType)
-	assert(_entityType ~= nil , "invalid entityType")
-	return GetEntityTypePointer(_entityType)[44]:GetInt()
-end
+-------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------- statistics -----------------------------------------------------------------------------
 -- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
 function GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	assert(type(_playerID) == "number", "PlayerID needs to be a number")
@@ -1545,24 +1798,8 @@ function AddValueToPlayerKillStatistic(_playerID, _statistic, _value)
 	local currstat = GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	SetPlayerKillStatisticsProperties(_playerID, _statistic, currstat + _value)
 end
--- gets building type blocking properties, returns Blocked1X, Blocked1Y, Blocked2X, Blocked2Y
-function GetBuildingTypeBlockingArea(_entityType)
-	assert(_entityType ~= 0, "invalid entity type")
-	local tab = {}
-	for i = 1,4 do
-		table.insert(tab, GetEntityTypePointer(_entityType)[35][i-1]:GetFloat())
-	end
-	return unpack(tab)
-end
--- gets building type terrain pos properties, returns TerrainPos1X, TerrainPos1Y, TerrainPos2X, TerrainPos2Y
-function GetBuildingTypeTerrainPosArea(_entityType)
-	assert(_entityType ~= 0, "invalid entity type")
-	local tab = {}
-	for i = 1,4 do
-		table.insert(tab, GetEntityTypePointer(_entityType)[37 + i]:GetFloat())
-	end
-	return unpack(tab)
-end
+---------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------- army related ----------------------------------------------------------------------
 function GetArmyPlayerObjectLength()
 	local vstart = CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][1]:GetInt()
 	local vend = CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][2]:GetInt()
@@ -1579,47 +1816,32 @@ function GetArmyPlayerObjectOffset(_playerID)
 	end
 	return playerOffset
 end
---[[armyobj_vtable:tonumber("0x766A70", 16)
-0 vtable
-3 lfd army ID
-5 = 11 Bitfield?
-6 Pos?
-7 = ~15-20 float?
-11 = -1.0 float?
-12 Army PosX (Siedler-Meter)
-13 Army PosY (Siedler-Meter)
-14 = -1.0 bis 1.0 float?
-15 = -1.0 bis 1.0 float?
-19 = 0.0 - 1.0 float? (0.25 steps?)
-20 = 30.0 float?
-23 Target PosX (Siedler-Meter)
-24 Target PosY (Siedler-Meter)
-26 Pos?
-27 = 0.25 float?
-29 Target ID
-38 = 15 Bitfield?
-50 id slot 1
-51 id slot 2
-56 id slot 3
-57 id slot 4
-62 id slot 5
-63 id slot 6
-65 = 2 Bitfield?
-68 id slot 7
-69 id slot 8
-71 Target PID
-72 anzahl belegte slots
-73 anzahl alive slots
-76 PosX?
-77 PosY?
-78 = 1.0 float?	
-]]
+function AI.Army_SetEntityActiveFlag(_id, _flag)
+	assert(IsValid(_id))
+	assert(_flag == 0 or _flag == 1)
+	local adress = CUtilMemory.GetMemory(tonumber("0x8539D4", 16))[0][1][6]
+	for i = 1, 10 do
+		if adress[i-1]:GetInt() ~= 0 then
+			for k = 1, 20 do
+				if adress[i-1][0+(48*(k-1))]:GetInt() == tonumber("0x766A70", 16) and adress[i-1][1+(48*(k-1))]:GetInt() == tonumber("0x853B74", 16) then
+					LuaDebugger.Break()
+					if adress[i-1][4+(48*(k-1))]:GetInt() == _id then
+						adress[i-1][13+(48*(k-1))]:SetInt(_flag)
+						return
+					end
+				end
+			end
+		end
+	end
+end
 --AI.Army_GetOccupancyRate(_player, _armyId) %-Wert alive-slots/gesamt-slots
 function AI.Army_GetNextFreeSlot(_playerID)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
 	local slot
+	local tabname = MapEditor_Armies[_playerID] or ArmyTable[_playerID]
 	for i = 9, 1, -1 do
 		if AI.Army_GetOccupancyRate(_playerID, i - 1) < 100 then
-			if MapEditor_Armies[_playerID][i] and MapEditor_Armies[_playerID][i].id then
+			if tabname[i] and tabname[i].id then
 				slot = i - 1
 				break
 			end
@@ -1627,7 +1849,6 @@ function AI.Army_GetNextFreeSlot(_playerID)
 	end
 	return slot or false
 end
-
 function AI.Army_GetLeaderIDs(_playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
@@ -1647,6 +1868,7 @@ end
 function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
+	assert(IsValid(_id))
 	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
 	local adress = GetArmyObjectPointer()
 	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
@@ -1658,10 +1880,13 @@ function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
 			break
 		end
 	end
+	AI.Entity_ConnectLeader(_id, -1)
+	AI.Army_SetEntityActiveFlag(_id, 0)
 end
 function AI.Entity_AddToArmy(_id, _playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
+	assert(IsValid(_id))
 	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
 	local adress = GetArmyObjectPointer()
 	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
@@ -1673,6 +1898,7 @@ function AI.Entity_AddToArmy(_id, _playerID, _armyID)
 			break
 		end
 	end
+	AI.Entity_ConnectLeader(_id, _armyID)
 end
 function AI.Army_GetInternalID(_playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
@@ -1691,7 +1917,45 @@ function dekaround(_n)
 	assert(type(_n) == "number", "round val needs to be a number")
 	return math.floor( _n / 100 + 0.5 ) * 100	
 end
-
+CategoriesOfEntities = {}
+function GetAllCategoriesOfEntity(id)
+    local type = Logic.GetEntityType(id)
+    if not CategoriesOfEntities[type] then
+        local cats = {}
+        for k, v in pairs(EntityCategories) do
+            if Logic.IsEntityInCategory(id, v) == 1 then
+                cats[v] = true
+            end
+        end
+        CategoriesOfEntities[type] = cats
+    end
+    
+    return CategoriesOfEntities[type]
+end
+GetAllEntityTypesInEntityCategory = function(_entityCat)
+	local tab = {}
+	for k, v in pairs(Entities) do
+		if Logic.IsEntityTypeInCategory(v, _entityCat) == 1 then
+			table.insert(tab, v)
+		end
+	end
+	return tab
+end
+GetAllPlayerEntitiesOfCategory = function(_playerID, _entityCat)
+	local eTypes = GetAllEntityTypesInEntityCategory(_entityCat)
+	local playerEntities = {}
+	for i = 1, table.getn(eTypes) do
+		local n,eID = Logic.GetPlayerEntities(_playerID, eTypes[i], 1)
+		if (n > 0) then
+			local firstEntity = eID
+			repeat
+				table.insert(playerEntities,eID)
+				eID = Logic.GetNextEntityOfPlayerOfType(eID)
+			until (firstEntity == eID)
+		end
+	end
+	return playerEntities
+end
 function GetPlayerEntities(_playerID, _entityType)
 	local playerEntities = {}
 	if _entityType ~= nil then
@@ -1722,7 +1986,6 @@ function GetPlayerEntities(_playerID, _entityType)
 		return playerEntities
 	end
 end
-
 function RemoveVillageCenters()
 	StartVillageCenters = {{},{},{}}
 	local vcId
@@ -1747,7 +2010,6 @@ function RemoveVillageCenters()
 		end
 	end
 end
-
 function RecreateVillageCenters()
 	local vcdata, eId
 	for i = 1,3 do
@@ -1757,7 +2019,6 @@ function RecreateVillageCenters()
 		end
 	end
 end
-
 function SetPlayerEntitiesNonSelectable()
 	StartAllPlayerEntities = {}
 	local eId
@@ -1777,7 +2038,6 @@ function SetPlayerEntitiesNonSelectable()
 		end
 	end
 end
-
 function SetPlayerEntitiesSelectable()
 	for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		StartAllPlayerEntities[k] = GetPlayerEntities(k)
@@ -1786,7 +2046,6 @@ function SetPlayerEntitiesSelectable()
 		end
 	end
 end
-
 function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)	
 	if Logic.GetDiplomacyState(_attackerPID, _targetPID) == Diplomacy.Hostile then
 		if _scoretype == "Settler" then
@@ -1809,11 +2068,10 @@ end
 function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)	
 	local playerID = Logic.EntityGetPlayer(_heroID)
 	ExtendedStatistics.Players[playerID][_scoretype] = ExtendedStatistics.Players[playerID][_scoretype] + (math.min(_damage, _maxdmg))
-	ExtendedStatistics.Players[player]["Damage"] = ExtendedStatistics.Players[player]["Damage"] + (math.min(_damage, _maxdmg))
+	ExtendedStatistics.Players[playerID]["Damage"] = ExtendedStatistics.Players[playerID]["Damage"] + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage, ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID])	
 end
-
 BS.GetAllEnemyPlayerIDs = function(_playerID)
 	
 	local playerIDTable = {}
@@ -1834,7 +2092,6 @@ BS.GetAllEnemyPlayerIDs = function(_playerID)
 	return playerIDTable
 	
 end
-
 BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 
 	if not Logic.IsEntityAlive(_entity) then	
@@ -1846,12 +2103,14 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 	local distancepow2table	= {}
 	
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(playerID))), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(posX, posY, _range)) do
-		local _X, _Y = Logic.GetEntityPosition(eID)	
-		local distancepow2 = (_X - posX)^2 + (_Y - posY)^2	
-		if Logic.GetFoundationTop(eID) ~= 0 then
-			distancepow2 = distancepow2 / 2
+		if Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(eID) then
+			local _X, _Y = Logic.GetEntityPosition(eID)	
+			local distancepow2 = (_X - posX)^2 + (_Y - posY)^2	
+			if Logic.GetFoundationTop(eID) ~= 0 then
+				distancepow2 = distancepow2 / 2
+			end
+			table.insert(distancepow2table, {id = eID, dist = distancepow2})
 		end
-		table.insert(distancepow2table, {id = eID, dist = distancepow2})
 	end
 			
 	table.sort(distancepow2table, function(p1, p2)
@@ -1862,7 +2121,6 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 		return distancepow2table[1].id 
 	end
 end
-
 BS.GetTableStrByHeroType = function(_type)
 	
 	local typename = Logic.GetEntityTypeName(_type)
@@ -1881,60 +2139,52 @@ gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Castle4] = true,
 					[Entities.PB_Castle5] = true
 				}
-
-function GetApprTimeNeededToReachPos(_eID, _posX, _posY)
-
-	local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_posX, _posY)
-    if sector == 0 or blockingtype ~= 0 then
-		LuaDebugger.Log("Position blocked; not reachable")
-		return 0
-	end
-	if (height <= CUtil.GetWaterHeight(_posX/100, _posY/100)) and Logic.GetWeatherState() ~= 3 then
-		LuaDebugger.Log("Position at water; not reachable")
-		return 0
-	end
-	local fakeetype = Entities.CU_Merchant
-	local starttime = Logic.GetTimeMs()
-	local posX, posY = Logic.GetEntityPosition(_eID)
-	local fakeID = Logic.CreateEntity(fakeetype, posX, posY, 0, Logic.EntityGetPlayer(_eID))
-	SetSettlerBaseMovementSpeed(fakeID, 10000)	
-	Logic.MoveSettler(fakeID, _posX, _posY)
-	local trID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "ReachPos_Job", 1, {}, {_eID, fakeID, starttime, _posX, _posY})		
-	
-	--[[while GetDistance(GetPosition(fakeID), {X = _posX, Y = _posY}) > 100 do
-		if Logic.IsEntityMoving(fakeID) == 0 then
-			Logic.MoveSettler(fakeID, _posX, _posY)
-		end
-		if Logic.GetTimeMs() - starttime > 200 then
-			LuaDebugger.Log("Position either not reachable or too far away")
-			break
-		end
-	end]]
-	local fakespeed = GetSettlerCurrentMovementSpeed(fakeID)
-	Logic.DestroyEntity(fakeID)
-	local realspeed = GetSettlerCurrentMovementSpeed(_eID)
-	return (Logic.GetTimeMs() - starttime) * (fakespeed/realspeed)
-end		
-function ReachPos_Job(_eID, _fakeID, _starttime, _posX, _posY)
-	if GetDistance(GetPosition(_fakeID), {X = _posX, Y = _posY}) > 100 then
-		if Logic.IsEntityMoving(_fakeID) == 0 then
-			Logic.MoveSettler(_fakeID, _posX, _posY)
-		end
-		if Logic.GetTimeMs() - _starttime > 200 then
-			LuaDebugger.Log("Position either not reachable or too far away")
-			return true
-		end
-	end
-	local fakespeed = GetSettlerCurrentMovementSpeed(_fakeID)
-	Logic.DestroyEntity(_fakeID)
-	local realspeed = GetSettlerCurrentMovementSpeed(_eID)
-	return GetApprTimeNeededToReachPos(_eID, _posX, _posY, (Logic.GetTimeMs() - _starttime) * (fakespeed/realspeed))
-end	
+function IsInappropiateBuilding(_id)
+	local str = string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(_id)))
+	return (string.find(str, "hero") ~= nil or string.find(str, "zb") ~= nil)
+end
 DamageFactorToArmorClass = {}
 for i = 1,9 do
 	DamageFactorToArmorClass[i] = {}
 	for k = 1,7 do
 		DamageFactorToArmorClass[i][k] = GetDamageFactor(i, k)
+	end
+end
+EvaluateArmyHomespots = function(_player, _pos, _army)
+	assert(type(_pos) == "table" and _pos.X and _pos.Y)
+	if not ArmyHomespots then 
+		ArmyHomespots = {}
+	end	
+	if not ArmyHomespots[_player] then
+		ArmyHomespots[_player] = {}
+	end
+	local calcP = function(_XY)
+		local size = Logic.WorldGetSize()
+		return math.max(math.min(_XY + (20 * math.random(-60, 60)), size - 1), 1)
+	end
+	local steps = 0
+	if not _army then	
+		if not ArmyHomespots[_player].recruited then
+			ArmyHomespots[_player].recruited = {}
+		end
+		while (table.getn(ArmyHomespots[_player].recruited) < 20 and steps < 1000) do
+			local X, Y = calcP(_pos.X), calcP(_pos.Y)
+			if CUtil.GetSector(X/100, Y/100) ~= 0 and table_findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then			
+				table.insert(ArmyHomespots[_player].recruited, {X = X, Y = Y})
+			end
+			steps = steps + 1
+		end
+	else
+		if not ArmyHomespots[_player][_army] then
+			ArmyHomespots[_player][_army] = {}
+		end
+		while (table.getn(ArmyHomespots[_player][_army]) < 20 and steps < 1000) do
+			local X, Y = calcP(_pos.X), calcP(_pos.Y)
+			if CUtil.GetSector(X/100, Y/100) ~= 0 and table_findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then			
+				table.insert(ArmyHomespots[_player][_army], {X = X, Y = Y})
+			end
+			steps = steps + 1
+		end
 	end
 end
 function GetNearestTarget(_player, _id)
@@ -1945,13 +2195,9 @@ function GetNearestTarget(_player, _id)
 	local range = 5000
 	local maxrange = ({Logic.WorldGetSize()})[1]
 	local sector = Logic.GetSector(_id)
-	local currtime = Logic.GetTimeMs()
-	if AIchunks.time[_player] ~= currtime then
-		AIchunks[_player]:UpdatePositions()
-		AIchunks.time[_player] = Logic.GetTimeMs()
-	end
+	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	repeat		
-		local entities = AIchunks[_player]:GetEntitiesInAreaInCMSorted(posX, posY, range)
+		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], posX, posY, range)
 		for i = 1, table.getn(entities) do
 			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == sector and Logic.GetDiplomacyState(_player, Logic.EntityGetPlayer(entities[i])) == Diplomacy.Hostile then
 				return entities[i]
@@ -1959,27 +2205,15 @@ function GetNearestTarget(_player, _id)
 		end
 		range = range + 3000
 	until range >= maxrange
-	for i = 9, 1, -1 do
-		local target = AI.Army_GetEntityIdOfEnemy(_player, i - 1)
-		if target ~= nil and target > 0 and Logic.IsEntityAlive(target) and Logic.GetSector(target) == sector then
-			return target
-		end
-	end
 	do
 		local enemies = BS.GetAllEnemyPlayerIDs(_player)
 		for i = 1, table.getn(enemies) do
 			IDs = {Logic.GetPlayerEntities(enemies[i], 0, 16)}
 			for k = 1, IDs[1] do
-				if Logic.IsBuilding(IDs[k]) == 1 and Logic.GetSector(IDs[k]) == sector then
+				if Logic.IsBuilding(IDs[k]) == 1 and Logic.GetSector(IDs[k]) == sector and Logic.IsEntityInCategory(IDs[k], EntityCategories.Wall) == 0 and not IsInappropiateBuilding(IDs[k]) then
 					return IDs[k]
 				end
 			end
-		end
-	end
-	do
-		local slot = AI.Army_GetNextFreeSlot(_player)
-		if slot then
-			AI.Entity_AddToArmy(_id, _player, slot)
 		end
 	end
 	return false
@@ -1990,14 +2224,10 @@ function CheckForBetterTarget(_eID, _target, _range)
 		return
 	end
 
-	local currtime = Logic.GetTimeMs()
+	local sector = Logic.GetSector(_eID)
 	local player = Logic.EntityGetPlayer(_eID)
-	if AIchunks.time[player] ~= currtime then
-		AIchunks[player]:UpdatePositions()
-		AIchunks.time[player] = Logic.GetTimeMs()
-	end
 	local etype = Logic.GetEntityType(_eID)	
-	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1)
+	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1 and Logic.GetFoundationTop(_eID) ~= 0)
 	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
 	local posX, posY = Logic.GetEntityPosition(_eID)	
 	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
@@ -2011,7 +2241,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 				return BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
 			end		
 		end
-		if Logic.IsEntityAlive(_target) then
+		if Logic.IsEntityAlive(_target) and sector == Logic.GetSector(_target) then
 			calcT[1] = {id = _target, factor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(_target))], dist = GetDistance(_eID, _target)}
 		end
 	else
@@ -2023,25 +2253,29 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local postable = {}	
 	local clumpscore
 	local attach
-	local entities = AIchunks[player]:GetEntitiesInAreaInCMSorted(posX, posY, (_range or maxrange) + 500)
+	ChunkWrapper.UpdatePositions(AIchunks[player])
+	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[player], posX, posY, _range or maxrange + 500)
 	
 	if not entities[1] then
-		return _target
+		return 
 	end
 	for i = 1, table.getn(entities) do
 		if Logic.IsEntityAlive(entities[i]) then
 			local ety = Logic.GetEntityType(entities[i])
 			local threatbonus
-			if Logic.GetFoundationTop(entities[i]) ~= 0 or GetEntityTypeDamageRange(ety) > 0 then
+			if Logic.GetFoundationTop(entities[i]) ~= 0 or (Logic.IsBuilding(entities[i]) == 0 and GetEntityTypeDamageRange(ety) > 0) then
 				threatbonus = 1
 			end
 			attach = CEntity.GetAttachedEntities(entities[i])[37]
-			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]	
-			local mul = (({Logic.GetSoldiersAttachedToLeader(entities[i])})[1] or 0) + 1
+			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]				
 			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
-				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul + (threatbonus or 0)})	
+				local mul = 1
+				if Logic.IsLeader(entities[i]) == 1 then
+					mul = 1 + Logic.LeaderGetNumberOfSoldiers(entities[i])
+				end
+				table.insert(postable, {pos = GetPosition(entities[i]), factor = damagefactor * mul + (threatbonus or 0)})			
 			end						
-			table.insert(calcT, {id = entities[i], factor = damagefactor * mul + (threatbonus or 0), dist = GetDistance(_eID, entities[i])})	
+			table.insert(calcT, {id = entities[i], factor = damagefactor + (threatbonus or 0), dist = GetDistance(_eID, entities[i])})	
 		end
 	end
 	local attachN = attach and table.getn(attach) or 0
@@ -2076,15 +2310,21 @@ function CheckForBetterTarget(_eID, _target, _range)
 				return p1.clumpscore + p1.factor - distval(p1.dist, maxrange) > p2.clumpscore + p2.factor - distval(p2.dist, maxrange)
 			end
 		else
-			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN / 2) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN / 2)
+			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN)
 		end
 	end)
 	if calcT[1] then
-		return calcT[1].id
+		for i = 1, table.getn(calcT) do
+			if sector == Logic.GetSector(calcT[i].id) then
+				return calcT[i].id
+			end
+		end
 	end
-	return _target
 end
 function GetPositionClump(_postable, _infrange, _step)
+	assert(type(_postable) == "table", "first input param type must be a table")
+	assert(type(_infrange) == "number", "second input param type must be a number")
+	assert(type(_step) == "number", "third input param type must be a number")
 	local tab = {}
 	for k, v in pairs(_postable) do
 		v.pos.X = dekaround(v.pos.X)
@@ -2113,6 +2353,8 @@ function GetPositionClump(_postable, _infrange, _step)
 	return clumppos, highscore
 end
 function GetPercentageOfLeadersPerArmorClass(_table)
+	assert(type(_table) == "table", "input type must be a table")
+	assert(_table.total ~= nil, "invalid input")
 	local perctable = {}
 	for i = 1,7 do
 		perctable[i] = {id = i, count = table.getn(_table[i]) * 100 / _table.total}
@@ -2122,24 +2364,6 @@ function GetPercentageOfLeadersPerArmorClass(_table)
 	end)
 	return perctable
 end
---[[function GetPercentageOfLeadersPerArmorClass(_table)
-	local perctable = {}
-	for i = 1,7 do
-		perctable[i] = {id = i, count = 0}
-	end
-	for i = 1, table.getn(_table) do
-		local etype = Logic.GetEntityType(_table[i])
-		local armorclass = GetEntityTypeArmorClass(etype)
-		perctable[armorclass].count = perctable[armorclass].count + 1
-	end
-	table.sort(perctable, function(p1, p2)
-		return p1.count > p2.count
-	end)
-	for i = 1,7 do
-		perctable[i].count = perctable[i].count * 100 / table.getn(_table)
-	end
-	return perctable
-end]]
 BS.GetBestDamageClassesByArmorClass = {	[1] = {{id = 2, val = 6}, {id = 7, val = 2}, {id = 1, val = 2}},
 										[2] = {{id = 7, val = 6}, {id = 1, val = 4}},
 										[3] = {{id = 3, val = 3}, {id = 1, val = 3}, {id = 8, val = 2}, {id = 9, val = 2}},
@@ -2560,16 +2784,16 @@ ChestRandomPositions.ChestType = Entities.XD_ChestGold
 -- default script name given to created chests
 ChestRandomPositions.ScriptNamePattern = "RandomPosChest"
 ChestRandomPositions.GetRandomPositions = function(_amount)
-    local chunks = CUtil.Chunks.new()
+    local chunks = ChunkWrapper.new()
     for id in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes))) do
-        chunks:AddEntity(id)
+        ChunkWrapper.AddEntity(chunks, id)
     end
-    chunks:UpdatePositions()
+    ChunkWrapper.UpdatePositions(chunks)
     local sizeX, sizeY = Logic.WorldGetSize()
     local postable = {}
     while table.getn(postable) < _amount do
         local X, Y = math.random(sizeX), math.random(sizeY)
-        local entities = chunks:GetEntitiesInAreaInCMSorted(X, Y, ChestRandomPositions.SearchRange)
+        local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(chunks, X, Y, ChestRandomPositions.SearchRange)
         -- shuffle
         for i = table.getn(entities), 2, - 1 do
             local j = math.random(i)

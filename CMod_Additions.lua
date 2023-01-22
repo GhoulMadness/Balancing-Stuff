@@ -5,6 +5,7 @@ if XNetwork.Manager_DoesExist() ~= 0 then
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
 		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
+		Logic.SetTechnologyState(i,Technologies.MU_Catapult,0)
 		if gvXmasEventFlag or gvTutorialFlag then
 			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0) 
 		end
@@ -218,6 +219,7 @@ if CNetwork then
 		ExtendedStatistics.Players[player].UnitsLostThroughLightning = 0
 		ExtendedStatistics.Players[player].Silver = 0
 		ExtendedStatistics.Players[player].SilverLast = 0
+		ExtendedStatistics.Players[player].ExchangedResources.Silver = 0
 	end
 	CUtilStatistics.AddStatistic("DamageTakenByLightning", "Damage Taken By Lightning Strikes", "Damage/Attacks", "ExtendedStatistics_Callback_DamageTakenByLightning");
 	CUtilStatistics.SetStatisticWidgetValues("normal",  "DamageTakenByLightning", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 0, 1));

@@ -1,13 +1,14 @@
 function GUITooltip_ExtraDuties()
 				
 	local PlayerID = GUI.GetPlayerID()
-	local TaxAmount = Logic.GetPlayerTaxIncome( PlayerID )
+	if PlayerID == BS.SpectatorPID then	
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())		
+	end
+	local TaxAmount = Logic.GetPlayerTaxIncome(PlayerID)
 	local TaxBonus = 1
 	
-	for i = 1, gvVictoryStatue3.Amount[PlayerID] do
-	
-		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
-	
+	for i = 1, gvVictoryStatue3.Amount[PlayerID] do	
+		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))	
 	end
 	local TaxName = ""
 	local TextString = ""
@@ -24,7 +25,6 @@ function GUITooltip_ExtraDuties()
 	
 end
 function GUITooltip_Outpost_Serf()
-
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Kauft einen Leibeigenen @cr @color:255,255,255,255  Ein Lebeigener sammelt Ressourcen, baut und repariert Häuser und kann die Gegend erkunden. Er braucht kein Haus und keinen Bauernhof! ")
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,"@color:255,255,255,255 Taler: 50")
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")

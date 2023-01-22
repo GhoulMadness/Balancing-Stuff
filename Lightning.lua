@@ -257,13 +257,13 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 			end
 		end
 		-- Signal für den Spieler + Begrenzung Ton nur 1/sek
-		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) then
+		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then
 			gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
 			GUI.ScriptSignal(_posX, _posY, 0)
 		end		
 		local count
 		if ExtendedStatistics then
-			if not count then
+			if not count and IsValid(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then
 				ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes + 1
 				count = true
 			end

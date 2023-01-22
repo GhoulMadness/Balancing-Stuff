@@ -11,8 +11,8 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				local calcvalue = xp/hppercent
 				local playerID = Logic.EntityGetPlayer(_heroID)
 				local pos = GetPosition(_heroID)
-				if IsNighttime then
-					calcvalue = calcvalue * 2
+				if IsNighttime() then
+					calcvalue = calcvalue * 2.5
 				end
 				if calcvalue < 10 then					
 					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
@@ -58,8 +58,10 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 						end
 					end
 				else
-					if Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.PU_Hero14_EvilTower) + Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.CB_Evil_Tower1) >= gvHero14.RisingEvil.TowerTreshold then
-						Logic.AddWeatherElement(1, 300, 1, NighttimeGFXSets[math.random(1,7)], 5, 15)
+					local num = Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.PU_Hero14_EvilTower) + Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, Entities.CB_Evil_Tower1)
+					if num >= gvHero14.RisingEvil.TowerTreshold then
+						local wtype = Logic.GetWeatherState()
+						Logic.AddWeatherElement(wtype, math.min(120 + num * 15, 360), 0, NighttimeGFXSets[wtype][math.random(1, table.getn(NighttimeGFXSets[wtype]))], 5, 15)
 					end
 				end
 			end},

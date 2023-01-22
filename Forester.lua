@@ -318,7 +318,7 @@ Forester.FindNextTreePos = function(_id)
 				
 				if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
 					
-					if Forester.TreeGrowingBlockedPos[1] == nil or table.findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then		
+					if Forester.TreeGrowingBlockedPos[1] == nil or table_findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then		
 						if Forester.GetDistanceToNextPlantedTree(x_, y_) >= Forester.AllowedInferenceRange then
 							if not dmin or dmin > d then
 							
