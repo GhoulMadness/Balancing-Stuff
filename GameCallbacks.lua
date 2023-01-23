@@ -169,28 +169,33 @@ function GameCallback_GUI_SelectionChanged()
 			local ButtonStem = ""
 			
 			--Is EntityType the Silvermine?
-			if 	UpgradeCategory == UpgradeCategories.SilverMine then
+			if UpgradeCategory == UpgradeCategories.SilverMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silvermine"),1)					
-				ButtonStem =  "Upgrade_Silvermine"	
+				ButtonStem = "Upgrade_Silvermine"
 			--Is Entity a outpost?	
-			elseif  UpgradeCategory == UpgradeCategories.Outpost then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)											
+			elseif UpgradeCategory == UpgradeCategories.Outpost then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)				
+				ButtonStem = "Upgrade_Outpost"
+				if Logic.GetTechnologyState(Logic.EntityGetPlayer(EntityId), Technologies.GT_Literacy) == 4 and XGUIEng.IsWidgetShown(XGUIEng.GetWidgetID("HQTaxes_OP")) == 0 then
+					XGUIEng.ShowWidget(XGUIEng.GetWidgetID("HQTaxes_OP"),1)
+				end
 			--Is EntityType the Goldmine?
-			elseif 	UpgradeCategory == UpgradeCategories.GoldMine then
+			elseif UpgradeCategory == UpgradeCategories.GoldMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)					
-				ButtonStem =  "Upgrade_Goldmine"	
-				
-			elseif 	UpgradeCategory == UpgradeCategories.Beautification07 then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MechanicalClock"),1)					
+				ButtonStem =  "Upgrade_Goldmine"
+	
+			elseif UpgradeCategory == UpgradeCategories.Beautification07 then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MechanicalClock"),1)
 			
-			elseif 	UpgradeCategory == UpgradeCategories.VillageHall then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("VillageHall"),1)		
+			elseif UpgradeCategory == UpgradeCategories.VillageHall then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("VillageHall"),1)
 			
-			elseif 	UpgradeCategory == UpgradeCategories.Archers_Tower then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Archers_Tower"),1)		
+			elseif UpgradeCategory == UpgradeCategories.Archers_Tower then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Archers_Tower"),1)
 				
 			--Is EntityType the Market?
-			elseif 	UpgradeCategory == UpgradeCategories.Market then
+			elseif UpgradeCategory == UpgradeCategories.Market then
 			
 				--You can only trade at market level 2 or higher
 				if EntityType == Entities.PB_Market2 or EntityType == Entities.PB_Market3 then
@@ -217,32 +222,32 @@ function GameCallback_GUI_SelectionChanged()
 				end
 			
 			
-			elseif 	UpgradeCategory == UpgradeCategories.Castle then
+			elseif UpgradeCategory == UpgradeCategories.Castle then
 			
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Castle"),1)	
 				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
 				ButtonStem =  "Upgrade_Castle"
 				
 			--Is EntityType the weathermanipulator?
-			elseif 	UpgradeCategory == UpgradeCategories.Weathermanipulator then				
+			elseif UpgradeCategory == UpgradeCategories.Weathermanipulator then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Weathermachine"),1)	
 			--Is EntityType the Lighthouse?
-			elseif 	UpgradeCategory == UpgradeCategories.Lighthouse then				
+			elseif UpgradeCategory == UpgradeCategories.Lighthouse then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Lighthouse"),1)	
 				ButtonStem =  "Upgrade_Lighthouse"
 			--Is EntityType the MercenaryTower?
-			elseif 	UpgradeCategory == UpgradeCategories.Mercenary then				
+			elseif UpgradeCategory == UpgradeCategories.Mercenary then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MercenaryTower"),1)	
 			--Is EntityType the Mint?
-			elseif 	UpgradeCategory == UpgradeCategories.Mint then				
+			elseif UpgradeCategory == UpgradeCategories.Mint then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Mint"),1)	
 			--Is EntityType the Silversmith?
-			elseif 	UpgradeCategory == UpgradeCategories.Silversmith then				
+			elseif UpgradeCategory == UpgradeCategories.Silversmith then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silversmith"),1)	
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("OvertimesButtonEnable"),0)
 				ButtonStem =  "Upgrade_Silversmith"
 			--Is EntityType the Forester?
-			elseif 	UpgradeCategory == UpgradeCategories.Forester then				
+			elseif UpgradeCategory == UpgradeCategories.Forester then				
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Forester"),1)	
 			end
 			--Update Upgrade Buttons

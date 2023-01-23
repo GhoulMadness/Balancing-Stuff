@@ -2454,20 +2454,20 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
 
-	for y_ = _posY - _offset, _posY + _offset, _step do		
-		for x_ = _posX - _offset, _posX + _offset, _step do			
+	for y_ = _posY - _offset, _posY + _offset, _step do
+		for x_ = _posX - _offset, _posX + _offset, _step do
 			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
 				
-				local d = (x_ - _posX)^2 + (y_ - _posY)^2
-				
-				if CUtil.GetSector(x_/100, y_/100) ~= 0 then
-				
+				local d = (x_ - _posX)^2 + (y_ - _posY)^2		
+				local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)               
+				if sector > 0 and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
+
 					if not dmin or dmin > d then
-						dmin = d						
+						dmin = d
 						xspawn = x_
 						yspawn = y_
 					end
-					
+
 				end
 			end
 		end
