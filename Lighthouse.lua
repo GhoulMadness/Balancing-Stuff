@@ -39,7 +39,7 @@ else
 		gvLighthouse.starttime[i] = 0
 	end
 end
-gvLighthouse.RotationOffsets = {	[0] = {X = -700, Y = -100},
+gvLighthouse.RotationOffsets = {[0] = {X = -700, Y = -100},
 								[90] = {X = 100, Y = -800},
 								[180] = {X = 600, Y = 100},
 								[270] = {X = -100, Y = 600},

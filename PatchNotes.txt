@@ -675,3 +675,7 @@ Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien änder
 Einige GUI-Elemente wurden ausgelagert. Dies sollte keine Auswirkungen auf das Spielerlebnis haben und ist eine rein strukturelle Änderung.
 
 Vorbereitungen für das kommende Osterturnier.
+
+--- Version 0.734
+
+Limitierungen der Anzahl von Türmen und deren Mindestabstand zueinander gelten nun auch für von Erebos erzeugte Wohnstätten.

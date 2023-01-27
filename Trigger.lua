@@ -265,7 +265,10 @@ function OnTowerCreated()
 	local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)	
 	
-	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then
+	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 
+	or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 
+	or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 
+	or entityType == Entities.PU_Hero14_EvilTower then
 		    
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
@@ -284,7 +287,10 @@ function OnTowerDestroyed()
 	local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)	
 	
-	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then   
+	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 
+	or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 
+	or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 
+	or entityType == Entities.PU_Hero14_EvilTower then   
 		
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
