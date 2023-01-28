@@ -803,23 +803,23 @@ Hero13_DMGBonus_Trigger = function(_heroID,_starttime)
 	local time = Logic.GetTimeMs()	
 	-- Dauer der Fähigkeit in Millisekunden
 	local duration = gvHero13.AbilityProperties.DivineJudgment.DMGBonus.Duration
-	
+	local player = Logic.EntityGetPlayer(_heroID)
+
 	if time <= (_starttime + duration) then
-		
+
 		if attacker == _heroID then		
-			local player = Logic.EntityGetPlayer(_heroID)	
 			local dmg = CEntity.TriggerGetDamage()
 			CEntity.TriggerSetDamage(dmg*gvHero13.AbilityProperties.DivineJudgment.DMGBonus.Multiplier)		
 			gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
 			return true
 		end
-		
+
 	else	
 		gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
 		return true
 	end
 end
-	
+
 Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _starttime)
 
 	if not Logic.IsEntityAlive(_heroID) then
