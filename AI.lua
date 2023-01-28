@@ -317,7 +317,9 @@ Retreat = function(_army, _rodeLength)
 	local pos = _army.position
 	for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-		if GetDistance(GetPosition(id), pos) > 1500 and (Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE") then
+		if GetDistance(GetPosition(id), pos) > 1500 and (Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" 
+		or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" or Logic.GetCurrentTaskList(id) == "TL_LEADER_WALK"
+		or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_DRIVE") then
 			local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 			Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
 		end
@@ -372,7 +374,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id)
 		newtarget = CheckForBetterTarget(_id, nil, nil) or GetNearestTarget(_player, _id)
 	end
 	tabname[_id] = tabname[_id] or {}
-	if newtarget then		
+	if newtarget and CUtil.GetSector(newtarget) == CUtil.GetSector(_id) then		
 		tabname[_id].currenttarget = newtarget
 		tabname[_id].lasttime = Logic.GetTime() 		
 		Logic.GroupAttack(_id, newtarget)	
