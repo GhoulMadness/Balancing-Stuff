@@ -8,6 +8,7 @@
 				[1] =	{
 					},
 				[2] =	{
+					["(2) bs testmap"] = true,
 					["(2) bs koop canyon"] = true,
 					["(2) bs koop castrum"] = true,
 					["(2) bs koop eisiger fjord"] = true,
