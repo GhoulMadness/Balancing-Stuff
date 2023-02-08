@@ -12,22 +12,24 @@ gvHero10 = {SnipeAbilityValues = {CriticalRange = 800, AboveCriticalRange = {Max
 function DrakeHeadshotDamage() 
 
 	local attacker = Event.GetEntityID1()	
-	local attackerpos = GetPosition(attacker)	
-    local target = Event.GetEntityID2()	
-	local targetpos = GetPosition(target)	
 	local attype = Logic.GetEntityType(attacker)	
-	local task = Logic.GetCurrentTaskList(attacker)	
-	local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilitySniper)	
-    local max = Logic.GetEntityMaxHealth(target)	
-    local dmg = CEntity.TriggerGetDamage()
-	local attackerdmg = Logic.GetEntityDamage(attacker)
 	
-	if attype == Entities.PU_Hero10 and task == "TL_SNIPE_SPECIAL" then	
-		if max == dmg then 	
-			local distance = math.abs(GetDistance(attackerpos,targetpos))
-			local str = gvHero10.GetCriticalStateByDistance(distance)
-			CEntity.TriggerSetDamage(math.floor((max * gvHero10.SnipeAbilityValues[str].MaxHealthDMG) + (attackerdmg*gvHero10.SnipeAbilityValues[str].DMGMultiplier)))			
-		end	
+	if attype == Entities.PU_Hero10 then
+		local attackerpos = GetPosition(attacker)	
+		local target = Event.GetEntityID2()	
+		local targetpos = GetPosition(target)
+		local task = Logic.GetCurrentTaskList(attacker)	
+		local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilitySniper)	
+		local max = Logic.GetEntityMaxHealth(target)	
+		local dmg = CEntity.TriggerGetDamage()
+		local attackerdmg = Logic.GetEntityDamage(attacker)
+		if task == "TL_SNIPE_SPECIAL" then	
+			if max == dmg then 	
+				local distance = math.abs(GetDistance(attackerpos,targetpos))
+				local str = gvHero10.GetCriticalStateByDistance(distance)
+				CEntity.TriggerSetDamage(math.floor((max * gvHero10.SnipeAbilityValues[str].MaxHealthDMG) + (attackerdmg*gvHero10.SnipeAbilityValues[str].DMGMultiplier)))			
+			end
+		end
 	end	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -64,13 +66,13 @@ gvPoisonDoT.TriggerIDs = {}
 
 function PoisonDamageCreateDoT() 
 
-	local attacker = Event.GetEntityID1()	
-	local attackerpos = GetPosition(attacker)	
-	local attackerPID = Logic.EntityGetPlayer(attacker)	
+	local attacker = Event.GetEntityID1()
 	local attype = Logic.GetEntityType(attacker)	
-	local task = Logic.GetCurrentTaskList(attacker)
 	
 	if gvPoisonDoT.PoisonUsers[attype] then
+		local attackerpos = GetPosition(attacker)	
+		local attackerPID = Logic.EntityGetPlayer(attacker)	
+		local task = Logic.GetCurrentTaskList(attacker)
 		if gvPoisonDoT.GetNeededTaskByEntityType(attype) == task then		
 			if not gvPoisonDoT.TriggerIDs[attacker] then			
 				gvPoisonDoT.TriggerIDs[attacker] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "PoisonDoT_Job", 1, {}, {attacker,attackerPID,attype,attackerpos.X,attackerpos.Y})				
@@ -127,31 +129,33 @@ end
 gvHero11 = {ShurikenValues = {CriticalAngle = 45, DMGMultiplier = 2, AmpDMGMultiplier = 5, MaxDelay = 10, CooldownReset = 15}}
 function YukiShurikenBonusDamage() 
 
-	local attacker = Event.GetEntityID1()	
-    local target = Event.GetEntityID2()	
+	local attacker = Event.GetEntityID1()		
 	local attype = Logic.GetEntityType(attacker)	
-	local rotattacker = Logic.GetEntityOrientation(attacker)	
-	local rottarget = Logic.GetEntityOrientation(target)	
-	local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear)	
-	local maxhp = Logic.GetEntityHealth(target)	
-    local dmg = CEntity.TriggerGetDamage()	
-	local ampdmg 	
-	local dmgtype = CEntity.HurtTrigger.GetDamageSourceType()
 	
-	if attype == Entities.PU_Hero11 and dmgtype ~= 0 then	
-		if cooldown <= gvHero11.ShurikenValues.MaxDelay then		
-			if math.abs(rotattacker - rottarget) <= gvHero11.ShurikenValues.CriticalAngle then		
-				ampdmg = math.floor(dmg * gvHero11.ShurikenValues.AmpDMGMultiplier)									
-			else			
-				ampdmg = math.floor(dmg * gvHero11.ShurikenValues.DMGMultiplier)									
-			end
-			
-			CEntity.TriggerSetDamage(ampdmg)
+	if attype == Entities.PU_Hero11 then
+		local target = Event.GetEntityID2()
+		local rotattacker = Logic.GetEntityOrientation(attacker)	
+		local rottarget = Logic.GetEntityOrientation(target)	
+		local cooldown = Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityInflictFear)	
+		local maxhp = Logic.GetEntityHealth(target)	
+		local dmg = CEntity.TriggerGetDamage()	
+		local ampdmg 	
+		local dmgtype = CEntity.HurtTrigger.GetDamageSourceType()
+		if dmgtype ~= 0 then	
+			if cooldown <= gvHero11.ShurikenValues.MaxDelay then		
+				if math.abs(rotattacker - rottarget) <= gvHero11.ShurikenValues.CriticalAngle then		
+					ampdmg = math.floor(dmg * gvHero11.ShurikenValues.AmpDMGMultiplier)									
+				else			
+					ampdmg = math.floor(dmg * gvHero11.ShurikenValues.DMGMultiplier)									
+				end
 				
-			if ampdmg >= maxhp then			
-				Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + gvHero11.ShurikenValues.CooldownReset, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))			
-			end			
-		end		
+				CEntity.TriggerSetDamage(ampdmg)
+					
+				if ampdmg >= maxhp then			
+					Logic.HeroSetAbilityChargeSeconds(attacker, Abilities.AbilityShuriken, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, Abilities.AbilityShuriken) + gvHero11.ShurikenValues.CooldownReset, Logic.HeroGetAbilityRechargeTime(attacker, Abilities.AbilityShuriken)))			
+				end			
+			end		
+		end
 	end	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -163,30 +167,31 @@ gvHero7 = {ArmorDiffPassive = {DMGMultiplierAddPerDiff = 0.2, CooldownResetPerDi
 function KerberosAttackAdditions() 
 
 	local attacker = Event.GetEntityID1()	
-    local target = Event.GetEntityID2()	
-	local attype = Logic.GetEntityType(attacker)	
-	local defattacker = Logic.GetEntityArmor(attacker)	
-	local deftarget	= Logic.GetEntityArmor(target) or 0 	
-	local defdiff = defattacker - math.max(deftarget, 0)	
-	local dmg = CEntity.TriggerGetDamage()	
-	local ampdmg 
+	local attype = Logic.GetEntityType(attacker)
+	if attype == Entities.CU_BlackKnight then
+		local target = Event.GetEntityID2()	
+		local defattacker = Logic.GetEntityArmor(attacker)	
+		local deftarget	= Logic.GetEntityArmor(target) or 0 	
+		local defdiff = defattacker - math.max(deftarget, 0)	
+		local dmg = CEntity.TriggerGetDamage()	
+		local ampdmg 
 	
-	if attype == Entities.CU_BlackKnight and defattacker > deftarget then	
-		ampdmg = dmg * (1 + (gvHero7.ArmorDiffPassive.DMGMultiplierAddPerDiff * defdiff))
-		
-		for k, v in pairs(gvHero7.Abilities) do
-			if Logic.HeroGetAbiltityChargeSeconds(attacker, v) ~= Logic.HeroGetAbilityRechargeTime(attacker, v) then		
-				Logic.HeroSetAbilityChargeSeconds(attacker, v, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, v) + (defdiff * gvHero7.ArmorDiffPassive.CooldownResetPerDiff[v]), Logic.HeroGetAbilityRechargeTime(attacker, v)))			
+		if defattacker > deftarget then	
+			ampdmg = dmg * (1 + (gvHero7.ArmorDiffPassive.DMGMultiplierAddPerDiff * defdiff))
+			
+			for k, v in pairs(gvHero7.Abilities) do
+				if Logic.HeroGetAbiltityChargeSeconds(attacker, v) ~= Logic.HeroGetAbilityRechargeTime(attacker, v) then		
+					Logic.HeroSetAbilityChargeSeconds(attacker, v, math.min(Logic.HeroGetAbiltityChargeSeconds(attacker, v) + (defdiff * gvHero7.ArmorDiffPassive.CooldownResetPerDiff[v]), Logic.HeroGetAbilityRechargeTime(attacker, v)))			
+				end
 			end
-		end
-		
-		if Logic.GetEntityHealth(attacker) < Logic.GetEntityMaxHealth(attacker) then		
-			Logic.HealEntity(attacker, ampdmg - dmg)			
-			Logic.CreateEffect(GGL_Effects.FXSalimHeal,Logic.GetEntityPosition(attacker))			
-		end
-		
-		CEntity.TriggerSetDamage(ampdmg)
-		
+			
+			if Logic.GetEntityHealth(attacker) < Logic.GetEntityMaxHealth(attacker) then		
+				Logic.HealEntity(attacker, ampdmg - dmg)			
+				Logic.CreateEffect(GGL_Effects.FXSalimHeal,Logic.GetEntityPosition(attacker))			
+			end
+			
+			CEntity.TriggerSetDamage(ampdmg)
+		end		
 	end	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -204,12 +209,12 @@ CatapultStoneOnHitEffects = {	[1] = GGL_Effects.FXFireTemp,
 
 function CatapultStoneHitEffects() 
 
-	local attacker = Event.GetEntityID1()	
-    local target = Event.GetEntityID2()	
-	local targetpos = GetPosition(target)	
+	local attacker = Event.GetEntityID1()		
 	local attype = Logic.GetEntityType(attacker)
 	
 	if attype == Entities.PV_Catapult then	
+		local target = Event.GetEntityID2()	
+		local targetpos = GetPosition(target)
 		Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1, table.getn(CatapultStoneOnHitEffects))],targetpos.X,targetpos.Y)		
 	end
 	
@@ -260,7 +265,10 @@ function OnTowerCreated()
 	local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)	
 	
-	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then
+	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 
+	or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 
+	or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 
+	or entityType == Entities.PU_Hero14_EvilTower then
 		    
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
@@ -279,7 +287,10 @@ function OnTowerDestroyed()
 	local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)	
 	
-	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 then   
+	if entityType == Entities.PB_Tower1 or entityType == Entities.PB_Tower2 
+	or entityType == Entities.PB_Tower3 or entityType == Entities.PB_DarkTower1 
+	or entityType == Entities.PB_DarkTower2 or entityType == Entities.PB_DarkTower3 
+	or entityType == Entities.PU_Hero14_EvilTower then   
 		
 		local playerID = GetPlayer(entityID)	
 		local posX,posY = Logic.GetEntityPosition(entityID)	
@@ -360,17 +371,18 @@ end
 ----------------------------------------- Set correct cooldowns when Dovbar and Erebos (and future heroes?) resurrects ------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function OnHeroDied()
-
-	local attacker = Event.GetEntityID1()	
+	
     local target = Event.GetEntityID2()
 	local targettype = Logic.GetEntityType(target)	
-	local health = Logic.GetEntityHealth(target)	
-	local damage = CEntity.TriggerGetDamage()	
-    local playerID = GetPlayer(target)
 	
-	if (targettype == Entities.PU_Hero13 or targettype == Entities.PU_Hero14) and damage >= health then	
-		local str = BS.GetTableStrByHeroType(targettype)
-		_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{target})			
+	if (targettype == Entities.PU_Hero13 or targettype == Entities.PU_Hero14) then
+		local health = Logic.GetEntityHealth(target)	
+		local damage = CEntity.TriggerGetDamage()
+		if damage >= health then
+			local playerID = GetPlayer(target)
+			local str = BS.GetTableStrByHeroType(targettype)
+			_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{target})
+		end
 	end	
 end
 
@@ -453,13 +465,13 @@ function SalimTrapPlaced()
 
 	local entityID = Event.GetEntityID()	
     local entityType = Logic.GetEntityType(entityID)	
-    local eplayerID = GetPlayer(entityID)	
-	local hplayerID = GUI.GetPlayerID()
 	
-	if entityType == Entities.PU_Hero3_Trap then	
+	if entityType == Entities.PU_Hero3_Trap then
+		local eplayerID = GetPlayer(entityID)	
+		local hplayerID = GUI.GetPlayerID()
 		if Logic.GetDiplomacyState(eplayerID, hplayerID) ~= Diplomacy.Friendly and eplayerID ~= hplayerID then		
 			--Model ändern und Overhead-Widget ausblenden, wenn nicht verbündet (Durch Eintrag in der models.xml gehandhabt)
-			Logic.SetModelAndAnimSet(entityID,Models.SalimTrapEnemy)			
+			Logic.SetModelAndAnimSet(entityID, Models.SalimTrapEnemy)			
 		end			
 	end
 	
@@ -492,7 +504,7 @@ function TransactionDetails()
 	end
 	
 	if Logic.GetTechnologyState(PID,Technologies.T_Scale) == 4 then	
-		local Bonus = math.ceil((TSum/10)+Logic.GetRandom((TSum/6)))		
+		local Bonus = math.ceil((TSum/10) + Logic.GetRandom((TSum/6)))		
 		Logic.AddToPlayersGlobalResource(PID, TTyp, Bonus )
 		
 		if GUI.GetPlayerID() == PID then		
@@ -740,14 +752,15 @@ end
 Hero13_StoneArmor_StoreDamage = function(_heroID,_starttime)
 	
 	local target = Event.GetEntityID2()	
-	local player = Logic.EntityGetPlayer(target)	
-	local posX,posY = Logic.GetEntityPosition(target)	
 	local time = Logic.GetTimeMs()	
 	local duration = gvHero13.AbilityProperties.StoneArmor.Duration
-	local dmg = CEntity.TriggerGetDamage()
 	
 	if time <= (_starttime + duration) then
-	
+		
+		local player = Logic.EntityGetPlayer(target)	
+		local posX,posY = Logic.GetEntityPosition(target)	
+		local dmg = CEntity.TriggerGetDamage()
+		
 		if target == _heroID then		
 			CEntity.TriggerSetDamage(0)		
 			Logic.CreateEffect(GGL_Effects.FXSalimHeal,posX,posY)	
@@ -787,33 +800,33 @@ end
 Hero13_DMGBonus_Trigger = function(_heroID,_starttime)
 
 	local attacker = Event.GetEntityID1()	
-	local player = Logic.EntityGetPlayer(_heroID)	
 	local time = Logic.GetTimeMs()	
 	-- Dauer der Fähigkeit in Millisekunden
 	local duration = gvHero13.AbilityProperties.DivineJudgment.DMGBonus.Duration
-	local dmg = CEntity.TriggerGetDamage()
-	
+	local player = Logic.EntityGetPlayer(_heroID)
+
 	if time <= (_starttime + duration) then
-	
+
 		if attacker == _heroID then		
+			local dmg = CEntity.TriggerGetDamage()
 			CEntity.TriggerSetDamage(dmg*gvHero13.AbilityProperties.DivineJudgment.DMGBonus.Multiplier)		
 			gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
 			return true
 		end
-		
+
 	else	
 		gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
 		return true
 	end
 end
-	
+
 Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _starttime)
-	
-	local currtime = Logic.GetTimeMs()		
-	-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
-	local duration = gvHero13.AbilityProperties.DivineJudgment.Judgment.Duration
 
 	if not Logic.IsEntityAlive(_heroID) then
+	
+		local currtime = Logic.GetTimeMs()		
+		-- Dauer der Fähigkeit in Millisekunden (Zeitfenster für göttliche Bestrafung)
+		local duration = gvHero13.AbilityProperties.DivineJudgment.Judgment.Duration
 	
 		if currtime <= (_starttime + duration) then
 			local delay = (currtime - _starttime)
@@ -915,36 +928,40 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 	end	
 end
 	
-Hero14_Lifesteal_Trigger = function(_heroID,_starttime)	
+Hero14_Lifesteal_Trigger = function(_heroID,_starttime)
 	
 	local heroplayer = Logic.EntityGetPlayer(_heroID)
 
-	if not Logic.IsEntityAlive(_heroID) then	
-		gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil		
-		return true	
+	if not Logic.IsEntityAlive(_heroID) then
+		gvHero14.LifestealAura.TriggerIDs[heroplayer] = nil
+		return true
 	end
-	
-	local attacker = Event.GetEntityID1()		
-	local attackerplayer = Logic.EntityGetPlayer(attacker)		
-	local heropos = GetPosition(_heroID)		
-	local attackerpos = GetPosition(attacker)		
-	local distance = GetDistance(heropos, attackerpos)		
-	local cat = Logic.IsEntityInCategory(attacker, EntityCategories.EvilLeader)		
-	local time = Logic.GetTime()	
-	local duration = gvHero14.LifestealAura.Duration		
-	local dmg = CEntity.TriggerGetDamage()		
-	local maxhp = Logic.GetEntityMaxHealth(_heroID)		
-	local currhp = Logic.GetEntityHealth(_heroID)		
+
+	local time = Logic.GetTime()
+	local duration = gvHero14.LifestealAura.Duration
 	local daytimefactor = 1
 	
-	if IsNighttime() then	
-		daytimefactor = gvHero14.LifestealAura.NighttimeFactor	
+	if IsNighttime() then
+		daytimefactor = gvHero14.LifestealAura.NighttimeFactor
 	end
 	
-	if time <= (_starttime + duration) then	
-		if attackerplayer == heroplayer then			
-			if distance <= gvHero14.LifestealAura.Range then				
-				if currhp < maxhp then					
+	if time <= (_starttime + duration) then
+		local attacker = Event.GetEntityID1()
+		local attackerplayer = Logic.EntityGetPlayer(attacker)
+		
+		if attackerplayer == heroplayer then
+			local heropos = GetPosition(_heroID)
+			local attackerpos = GetPosition(attacker)
+			local distance = GetDistance(heropos, attackerpos)
+				
+			if distance <= gvHero14.LifestealAura.Range then
+				local maxhp = Logic.GetEntityMaxHealth(_heroID)
+				local currhp = Logic.GetEntityHealth(_heroID)
+				
+				if currhp < maxhp then
+					local cat = Logic.IsEntityInCategory(attacker, EntityCategories.EvilLeader)
+					local dmg = CEntity.TriggerGetDamage()
+					
 					if cat == 1 then					
 						Logic.HealEntity(attacker, math.ceil(dmg * gvHero14.LifestealAura.LifestealAmount * gvHero14.LifestealAura.FogPeopleBonusFactor * daytimefactor))														
 					else						
@@ -1006,12 +1023,12 @@ end
 
 function OnErebos_Created()
 
-	local entityID = Event.GetEntityID()	
-    local entityType = Logic.GetEntityType(entityID)	
-    local playerID = GetPlayer(entityID)
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
 	
-	if entityType == Entities.PU_Hero14 then    	
-		gvHero14.NighttimeAura.TriggerIDs.Start[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player",1,{},{entityID})		
+	if entityType == Entities.PU_Hero14 then
+		local playerID = Logic.EntityGetPlayer(entityID)
+		gvHero14.NighttimeAura.TriggerIDs.Start[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player",1,{},{entityID})
 	end
 	
 end
@@ -1023,50 +1040,50 @@ Archers_Tower_RemoveTroop = function(_slot,_entity,_soldiers,_player)
 
 	if Counter.Tick2("Archers_Tower_RemoveTroop_Counter_".._entity.."_".._slot, gvArchers_Tower.ClimbUpTime) then
 	
-		Logic.ResumeEntity(gvArchers_Tower.SlotData[_entity][_slot])				
+		Logic.ResumeEntity(gvArchers_Tower.SlotData[_entity][_slot])
 		gvArchers_Tower.CurrentlyClimbing[_entity] = nil
 	
-		if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) ~= 1 then			
-			local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entity][_slot])}					
+		if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) ~= 1 then
+			local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_entity][_slot])}
 			table.remove(soldiers,1)
 			
-			for i = 1,table.getn(soldiers) do					
-				Logic.ResumeEntity(soldiers[i])					
+			for i = 1,table.getn(soldiers) do
+				Logic.ResumeEntity(soldiers[i])
 			end
 			
 		end
 		
 		if IsExisting(_entity) then
 		
-			local pos = GetPosition(_entity)					
-			local offset = gvArchers_Tower.GetOffset_ByOrientation(_entity)					
-			local newLeaderID					
+			local pos = GetPosition(_entity)
+			local offset = gvArchers_Tower.GetOffset_ByOrientation(_entity)
+			local newLeaderID
 			local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_entity][_slot])
 			
-			if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) == 1 then					
-				newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),{X = pos.X - offset.X, Y = pos.Y - offset.Y})					
-			else						
-				newLeaderID = CreateGroup(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), _soldiers, pos.X - offset.X, pos.Y - offset.Y, 0 , experience)						
+			if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_entity][_slot], EntityCategories.Cannon) == 1 then
+				newLeaderID = CreateEntity(_player,Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]),{X = pos.X - offset.X, Y = pos.Y - offset.Y})
+			else
+				newLeaderID = CreateGroup(_player, Logic.GetEntityType(gvArchers_Tower.SlotData[_entity][_slot]), _soldiers, pos.X - offset.X, pos.Y - offset.Y, 0 , experience)
 			end
 			
-			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_entity][_slot])					
-			gvArchers_Tower.SlotData[_entity][_slot] = nil					
+			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_entity][_slot])
+			gvArchers_Tower.SlotData[_entity][_slot] = nil
 			gvArchers_Tower.CurrentlyUsedSlots[_entity] = gvArchers_Tower.CurrentlyUsedSlots[_entity] - 1
 		
-			for i = 1,4 do					
-				XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.EmptySlot_Icon)						
-			end				
+			for i = 1,4 do
+				XGUIEng.SetMaterialTexture("Archers_Tower_Slot".._slot, i-1, gvArchers_Tower.EmptySlot_Icon)
+			end
 			
-			gvArchers_Tower.TriggerIDs.RemoveTroop[_entity.."_".._slot] = nil					
+			gvArchers_Tower.TriggerIDs.RemoveTroop[_entity.."_".._slot] = nil
 			return true
 		
 		else
 		
-			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_entity][_slot])					
-			gvArchers_Tower.SlotData[_entity][_slot] = nil					
-			gvArchers_Tower.CurrentlyUsedSlots[_entity] = gvArchers_Tower.CurrentlyUsedSlots[_entity] - 1					
-			gvArchers_Tower.TriggerIDs.RemoveTroop[_entity.."_".._slot] = nil					
-			return true				
+			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_entity][_slot])
+			gvArchers_Tower.SlotData[_entity][_slot] = nil
+			gvArchers_Tower.CurrentlyUsedSlots[_entity] = gvArchers_Tower.CurrentlyUsedSlots[_entity] - 1
+			gvArchers_Tower.TriggerIDs.RemoveTroop[_entity.."_".._slot] = nil
+			return true
 		end
 		
 	end
@@ -1077,184 +1094,183 @@ Archers_Tower_AddTroop = function(_slot,_soldiers,_player,_towerID)
 	
 	if Counter.Tick2("Archers_Tower_AddTroop_Counter_".._towerID.."_".._slot, gvArchers_Tower.ClimbUpTime) then
 		
-		Logic.ResumeEntity(gvArchers_Tower.SlotData[_towerID][_slot])				
+		Logic.ResumeEntity(gvArchers_Tower.SlotData[_towerID][_slot])
 		
 		if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) ~= 1 then
 	
-			local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_towerID][_slot])}					
+			local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[_towerID][_slot])}
 			table.remove(soldiers,1)
 			
-			for i = 1,table.getn(soldiers) do					
-				Logic.ResumeEntity(soldiers[i])					
+			for i = 1,table.getn(soldiers) do
+				Logic.ResumeEntity(soldiers[i])
 			end
 		
 		end
 		
 		if IsExisting(_towerID) then
 		
-			local pos = GetPosition(_towerID)					
-			local entityType = Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot])					
-			local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_towerID][_slot])					
-			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])					
-			local newLeaderID = CreateGroup(_player, entityType, _soldiers, pos.X , pos.Y , 0 , experience)								
+			local pos = GetPosition(_towerID)
+			local entityType = Logic.GetEntityType(gvArchers_Tower.SlotData[_towerID][_slot])
+			local experience = CEntity.GetLeaderExperience(gvArchers_Tower.SlotData[_towerID][_slot])
+			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])
+			local newLeaderID = CreateGroup(_player, entityType, _soldiers, pos.X , pos.Y , 0 , experience)
 			gvArchers_Tower.SlotData[_towerID][_slot] = newLeaderID
 			
-			if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) ~= 1 then					
-				local TroopIDs = {Logic.GetSoldiersAttachedToLeader(newLeaderID)}						
-				table.remove(TroopIDs,1)						
+			if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[_towerID][_slot], EntityCategories.Cannon) ~= 1 then
+				local TroopIDs = {Logic.GetSoldiersAttachedToLeader(newLeaderID)}
+				table.remove(TroopIDs,1)
 				table.insert(TroopIDs,newLeaderID)
 				
-				for i = 1,table.getn(TroopIDs) do							
-					CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)							
-					CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)							
-					CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),_player)*gvArchers_Tower.MaxRangeFactor)						
+				for i = 1,table.getn(TroopIDs) do
+					CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
+					CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
+					CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),_player)*gvArchers_Tower.MaxRangeFactor)
 				end
-				
-			else			
-				CEntity.SetDamage(newLeaderID,Logic.GetEntityDamage(newLeaderID)*gvArchers_Tower.DamageFactor)						
-				CEntity.SetArmor(newLeaderID,Logic.GetEntityArmor(newLeaderID)*gvArchers_Tower.ArmorFactor)						
+
+			else
+				CEntity.SetDamage(newLeaderID,Logic.GetEntityDamage(newLeaderID)*gvArchers_Tower.DamageFactor)
+				CEntity.SetArmor(newLeaderID,Logic.GetEntityArmor(newLeaderID)*gvArchers_Tower.ArmorFactor)
 				CEntity.SetAttackRange(newLeaderID,GetEntityTypeMaxAttackRange(newLeaderID,_player)*gvArchers_Tower.MaxRangeFactor)
-				
+
 			end
 			
 			gvArchers_Tower.CurrentlyClimbing[_towerID] = nil
-			gvArchers_Tower.TriggerIDs.AddTroop[_towerID.."_".._slot] = nil					
+			gvArchers_Tower.TriggerIDs.AddTroop[_towerID.."_".._slot] = nil
 			return true
 			
 		else
 			
 			gvArchers_Tower.CurrentlyClimbing[_towerID] = nil
-			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])					
-			gvArchers_Tower.SlotData[_towerID][_slot] = nil					
-			gvArchers_Tower.TriggerIDs.AddTroop[_towerID.."_".._slot] = nil						
-			gvArchers_Tower.CurrentlyUsedSlots[_towerID] = gvArchers_Tower.CurrentlyUsedSlots[_towerID] - 1					
+			Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[_towerID][_slot])
+			gvArchers_Tower.SlotData[_towerID][_slot] = nil
+			gvArchers_Tower.TriggerIDs.AddTroop[_towerID.."_".._slot] = nil
+			gvArchers_Tower.CurrentlyUsedSlots[_towerID] = gvArchers_Tower.CurrentlyUsedSlots[_towerID] - 1
 			return true
-			
+
 		end
-	
+
 	end
-	
+
 end
 
 function OnArchers_TowerDestroyed()
-	
-    local entityID = Event.GetEntityID()	
+
+    local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
-	
-    if entityType == Entities.PB_Archers_Tower then       		
-		for i = 1,gvArchers_Tower.MaxSlots do	
-		
-			if gvArchers_Tower.SlotData[entityID][i] ~= nil then			
+
+    if entityType == Entities.PB_Archers_Tower then
+		for i = 1,gvArchers_Tower.MaxSlots do
+
+			if gvArchers_Tower.SlotData[entityID][i] ~= nil then
 				Logic.ResumeEntity(gvArchers_Tower.SlotData[entityID][i])
-				
-				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entityID][i], EntityCategories.Cannon) ~= 1 then				
-					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entityID][i])}					
-					table.remove(soldiers,1)					
-					
-					for k = 1,table.getn(soldiers) do					
-						Logic.ResumeEntity(soldiers[k])					
+
+				if Logic.IsEntityInCategory(gvArchers_Tower.SlotData[entityID][i], EntityCategories.Cannon) ~= 1 then
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[entityID][i])}
+					table.remove(soldiers,1)
+
+					for k = 1,table.getn(soldiers) do
+						Logic.ResumeEntity(soldiers[k])
 					end
-				
+
 				end
-				
+
 				Logic.DestroyGroupByLeader(gvArchers_Tower.SlotData[entityID][i])
-				
-				if gvArchers_Tower.TriggerIDs.RemoveTroop[entityID.."_"..i] then				
+
+				if gvArchers_Tower.TriggerIDs.RemoveTroop[entityID.."_"..i] then
 					Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.RemoveTroop[entityID.."_"..i])
 				end
-				
-				if gvArchers_Tower.TriggerIDs.AddTroop[entityID.."_"..i] then				
-					Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.AddTroop[entityID.."_"..i])				
+
+				if gvArchers_Tower.TriggerIDs.AddTroop[entityID.."_"..i] then
+					Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.AddTroop[entityID.."_"..i])
 				end
-				
-				if gvArchers_Tower.CurrentlyClimbing[entityID] then				
-					gvArchers_Tower.CurrentlyClimbing[entityID] = nil					
+
+				if gvArchers_Tower.CurrentlyClimbing[entityID] then
+					gvArchers_Tower.CurrentlyClimbing[entityID] = nil
 				end
-				
-				gvArchers_Tower.SlotData[entityID][i] = nil				
+
+				gvArchers_Tower.SlotData[entityID][i] = nil
 				gvArchers_Tower.CurrentlyUsedSlots[entityID] = nil
-				
+
 			end
-		
+
 		end
-		
-		gvArchers_Tower.SlotData[entityID] = nil		
+
+		gvArchers_Tower.SlotData[entityID] = nil
 		gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] = gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] - 1
-		
+
 	end
 
 end
 
 function OnArchers_TowerCreated()
-	
-    local entityID = Event.GetEntityID()	
+
+    local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
-	
-    if entityType == Entities.PB_Archers_Tower then       		
-		gvArchers_Tower.CurrentlyUsedSlots[entityID] = 0		
-		gvArchers_Tower.SlotData[entityID] = {}				
-		gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] = gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] + 1		
+
+    if entityType == Entities.PB_Archers_Tower then
+		gvArchers_Tower.CurrentlyUsedSlots[entityID] = 0
+		gvArchers_Tower.SlotData[entityID] = {}
+		gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] = gvArchers_Tower.AmountOfTowers[Logic.EntityGetPlayer(entityID)] + 1
 	end
 
 end
 
 function OnArchers_Tower_OccupiedTroopDied()
 
-	local entityID = Event.GetEntityID()	
-	local playerID = Logic.EntityGetPlayer(entityID)	
-	local pos = GetPosition(entityID)
-	
-	if playerID ~= 0 then	
-		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) ~= 0 then	
-			if Logic.IsLeader(entityID) == 1 then		
+	local entityID = Event.GetEntityID()
+	local playerID = Logic.EntityGetPlayer(entityID)
+
+	if playerID ~= 0 then
+		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) ~= 0 then
+			if Logic.IsLeader(entityID) == 1 then
 				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
-					
-					for k,v in pairs(gvArchers_Tower.SlotData) do						
+
+					for k,v in pairs(gvArchers_Tower.SlotData) do
 						local slot = table_findvalue(gvArchers_Tower.SlotData[k],entityID)
-				
-						if  slot ~= 0 then						
+
+						if  slot ~= 0 then
 							gvArchers_Tower.SlotData[k][slot] = nil
-							
-							if gvArchers_Tower.CurrentlyUsedSlots[k] ~= nil then								
-								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1								
+
+							if gvArchers_Tower.CurrentlyUsedSlots[k] ~= nil then
+								gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1		
 							end
-							
-							if gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot] then							
-								Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot])								
+
+							if gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot] then
+								Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot])
 							end
-							
-						end						
-					end					
-				end				
+
+						end	
+					end	
+				end	
 			end
-			
+
 		else
-		
-			if playerID == 1 then			
-				if Logic.IsLeader(entityID) == 1 then		
-					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then		
-					
-						for k,v in pairs(gvArchers_Tower.SlotData) do						
+
+			if playerID == 1 then
+				if Logic.IsLeader(entityID) == 1 then
+					if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
+
+						for k,v in pairs(gvArchers_Tower.SlotData) do
 							local slot = table_findvalue(gvArchers_Tower.SlotData[k],entityID)
-					
-							if  slot ~= 0 then							
+
+							if  slot ~= 0 then
 								gvArchers_Tower.SlotData[k][slot] = nil
-								
-								if gvArchers_Tower.CurrentlyUsedSlots[k] then									
-									gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1									
+
+								if gvArchers_Tower.CurrentlyUsedSlots[k] then
+									gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] - 1
 								end
-								
-								if gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot] then							
-									Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot])								
+
+								if gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot] then
+									Trigger.UnrequestTrigger(gvArchers_Tower.TriggerIDs.RemoveTroop[k.."_"..slot])
 								end
-								
-							end							
-						end						
-					end					
-				end				
-			end		
-		end		
-	end	
+
+							end
+						end
+					end
+				end
+			end
+		end
+	end
 end
 
 function OnArchers_Tower_OccupiedTroopAttacked()
@@ -1263,60 +1279,60 @@ function OnArchers_Tower_OccupiedTroopAttacked()
 	local attype = Logic.GetEntityType(attacker)
 	for _type, _range in pairs(gvAntiBuildingCannonsRange) do
 		if attype == _type then
-			local target = Event.GetEntityID2()				
+			local target = Event.GetEntityID2()
 			local playerID = Logic.EntityGetPlayer(target)
-			
+
 			if gvArchers_Tower.AmountOfTowers[playerID] then
-			
-				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then			
-					local posX,posY = Logic.GetEntityPosition(target)			
-					local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]				
+
+				if gvArchers_Tower.AmountOfTowers[playerID] > 0 then
+					local posX,posY = Logic.GetEntityPosition(target)
+					local towerID = ({Logic.GetEntitiesInArea(Entities.PB_Archers_Tower, posX, posY, gvArchers_Tower.OccupiedTroop.TowerSearchRange, 1)})[2]
 					local soldiers = {}
-					
-					if towerID then	
-						
-						for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do	
+
+					if towerID then
+
+						for k,v in pairs(gvArchers_Tower.SlotData[towerID]) do
 							soldiers[k] = {Logic.GetSoldiersAttachedToLeader(v)}
 							table.remove(soldiers[k],1)
-							
+
 							for n,m in pairs(soldiers[k]) do
-							
-								if target == soldiers[k][n] then	
+
+								if target == soldiers[k][n] then
 									local targettype = Logic.GetEntityType(v)
-									local dmg = CEntity.TriggerGetDamage()							
+									local dmg = CEntity.TriggerGetDamage()
 									local currdmgfactor = GetDamageFactor(GetEntityTypeDamageClass(attype), GetEntityTypeArmorClass(Entities.PB_Archers_Tower))
-									local dmgfactor = GetDamageFactor(GetEntityTypeDamageClass(attype), GetEntityTypeArmorClass(targettype))	
+									local dmgfactor = GetDamageFactor(GetEntityTypeDamageClass(attype), GetEntityTypeArmorClass(targettype))
 									local dmgrange = GetEntityTypeDamageRange(attype)
 									local distance = GetDistance(GetPosition(attacker), GetPosition(target))
-									CEntity.TriggerSetDamage(math.ceil((dmg / currdmgfactor * dmgfactor) * (1-(distance/dmgrange))))	
+									CEntity.TriggerSetDamage(math.ceil((dmg / currdmgfactor * dmgfactor) * (1-(distance/dmgrange))))
 									return
-								end							
-							end						
-						end					
-					end					
-				end			
-			end		
-		end		
+								end
+							end
+						end
+					end
+				end
+			end
+		end
 	end
 end
 
 function OnVictoryStatue3Destroyed()
 
-	local entityID = Event.GetEntityID()	
-    local entityType = Logic.GetEntityType(entityID)	
-	
-	if entityType == Entities.PB_VictoryStatue3 then    
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+
+	if entityType == Entities.PB_VictoryStatue3 then
 		local playerID = GetPlayer(entityID)
-		gvVictoryStatue3.Amount[playerID] = gvVictoryStatue3.Amount[playerID] - 1		
+		gvVictoryStatue3.Amount[playerID] = gvVictoryStatue3.Amount[playerID] - 1
 	end
-	
+
 end
 
-gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500, 
-								[Entities.PV_Cannon4] = 1800, 
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500,
+								[Entities.PV_Cannon4] = 1800,
 								[Entities.PV_Catapult] = 2000}
 for k,v in pairs(gvAntiBuildingCannonsRange) do
-	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k) 
+	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
 end
 
 function AntiBuildingCannon_RedirectTarget()
@@ -1324,7 +1340,7 @@ function AntiBuildingCannon_RedirectTarget()
 	local attacker = Event.GetEntityID1()
 	local target = Event.GetEntityID2()
 	local attype = Logic.GetEntityType(attacker)
-	
+
 	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(Logic.EntityGetPlayer(attacker)) == 0 then
 		for k,v in pairs(gvAntiBuildingCannonsRange) do
 			if attype == k and Logic.IsBuilding(target) == 0 then
@@ -1346,42 +1362,42 @@ function AntiBuildingCannon_RedirectTarget()
 end
 
 function OnAIEnemyCreated(_playerID)
-	
-	local entityID = Event.GetEntityID()		
+
+	local entityID = Event.GetEntityID()
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
 	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
-	
+
 	for i = 1, table.getn(enemies) do
 		if playerID == enemies[i] then
-			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then				
+			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
 				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
 				break
 			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
-				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)	
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				break
 			end
 		end
 	end
 end
 function OnAIEnemyDestroyed(_playerID)
-	
-	local entityID = Event.GetEntityID()		
+
+	local entityID = Event.GetEntityID()
 	local playerID = Logic.EntityGetPlayer(entityID)
 	local etype = Logic.GetEntityType(entityID)
 	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
-		
+
 	for i = 1, table.getn(enemies) do
 		if playerID == enemies[i] then
-			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then	
+			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
 				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
 				break
 			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
-				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)	
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				break
 			end
 		end
@@ -1391,7 +1407,7 @@ function OnAIDiplomacyChanged(_playerID)
 	local p = Event.GetSourcePlayerID()
 	local p2 = Event.GetTargetPlayerID()
 	local state = Event.GetDiplomacyState()
-	
+
 	if p == _playerID or p2 == _playerID then
 		ReinitChunkData(_playerID)
 	end
@@ -1400,9 +1416,8 @@ function AITower_RedirectTarget()
 
 	local attacker = Event.GetEntityID1()
 	local target = Event.GetEntityID2()
-	local attype = Logic.GetEntityType(attacker)
 	local playerID = Logic.EntityGetPlayer(attacker)
-	
+
 	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) == 0 and AIchunks[playerID] then
 
 		if Logic.IsEntityInCategory(attacker, EntityCategories.MilitaryBuilding) == 1 then

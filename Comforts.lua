@@ -570,7 +570,13 @@ gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,T
 								Technologies.GT_Mathematics,Technologies.GT_Binocular,Technologies.GT_PulledBarrel,Technologies.GT_Matchlock,						
 								Technologies.GT_Taxation,Technologies.GT_Banking,Technologies.GT_Laws,Technologies.GT_Gilds},
 			MercenaryTower = {	Technologies.T_KnightsCulture, Technologies.T_BearmanCulture, Technologies.T_BanditCulture, Technologies.T_BarbarianCulture},
-			Special = {			Technologies.T_Coinage, Technologies.T_Scale, Technologies.T_WeatherForecast, Technologies.T_ChangeWeather, Technologies.T_CropCycle}
+			Special = {			Technologies.T_Coinage, Technologies.T_Scale, Technologies.T_WeatherForecast, Technologies.T_ChangeWeather, Technologies.T_CropCycle},
+			TroopUpgrades = {	Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery,
+								Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_WoodAging, Technologies.T_Turnery, Technologies.T_MasterOfSmithery,
+								Technologies.T_IronCasting, Technologies.T_Fletching, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder, Technologies.T_BlisteringCannonballs,
+								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor},
+			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
+								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}			
 				}
 				
 UniTechAmount = function(_PlayerID)
@@ -794,7 +800,6 @@ Logic.GroupAttack = function(_id, _target)
 end
 IsDead = function(_name)
 
-
 	if type(_name) == "table" then
 
 		if ArmyTable and ArmyTable[_name.player] and ArmyTable[_name.player][_name.id + 1] then
@@ -873,7 +878,7 @@ function QuickTest()
 	AddSulfur(player, val)	
 	AddClay(player, val)	
 	Logic.AddToPlayersGlobalResource(player, ResourceType.SilverRaw, val)	
-	ResearchAllTechnologies(player, true, true, true)	
+	ResearchAllTechnologies(player, true, true, true, true, true)	
 	Game.GameTimeSetFactor(6)	
 	Display.SetRenderFogOfWar(0)	
 	GUI.MiniMap_SetRenderFogOfWar(0)
@@ -884,11 +889,13 @@ function QuickTest()
 	
 end
 
-function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _SpecTechsFlag)
+function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _SpecTechsFlag, _TroopTechsFlag, _SilverTechsFlag)
 	
 	_UniTechsFlag = _UniTechsFlag or false			
 	_MercTechsFlag = _MercTechsFlag or false
 	_SpecTechsFlag = _SpecTechsFlag or false
+	_TroopTechsFlag = _TroopTechsFlag or false
+	_SilverTechsFlag = _SilverTechsFlag or false
 	
 	if _MercTechsFlag then
 		--needed to unlock all the techs properly
@@ -897,16 +904,16 @@ function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _Spec
 
 	local tabletodo = {	University = _UniTechsFlag, 
 						MercenaryTower = _MercTechsFlag,
-						Special = _SpecTechsFlag}
-						
+						Special = _SpecTechsFlag,
+						TroopUpgrades = _TroopTechsFlag,
+						SilverTechs = _SilverTechsFlag}						
 	for k,v in pairs(tabletodo) do
 		if v then
 			for i,j in pairs(gvTechTable[k]) do
 				Logic.SetTechnologyState(_PlayerID, j, 3)		
 			end
 		end
-	end	
-	--ToDo: add troop upgrades and defensive and offensive tech upgrades & silver techs (3 categories?)
+	end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function HideGUI()
@@ -1769,6 +1776,37 @@ function SetEntityVisibility(_entityID, _flag)
 	assert( type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))		
 end
+function GetMercenaryOfferLeft(id, slot)
+    assert(IsValid(id), "invalid")
+    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(id))
+    local vtable = tonumber("7782C0", 16)
+    local number = (sv[32]:GetInt() - sv[31]:GetInt()) / 4
+    for i=0,number-1 do
+        if sv[31][i]:GetInt()>0 and sv[31][i][0]:GetInt()==vtable then
+            local sv2 = sv[31][i]
+            local number2 = (sv2[8]:GetInt() - sv2[7]:GetInt()) / 4
+            assert(number2 >= slot, "slot invalid")
+            return sv2[7][slot][19]:GetInt()
+        end
+    end
+    assert(false, "behavior not found")
+end
+function SetMercenaryOfferLeft(id, slot, left)
+    assert(IsValid(id), "invalid")
+    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(id))
+    local vtable = tonumber("7782C0", 16)
+    local number = (sv[32]:GetInt() - sv[31]:GetInt()) / 4
+    for i=0,number-1 do
+        if sv[31][i]:GetInt()>0 and sv[31][i][0]:GetInt()==vtable then
+            local sv2 = sv[31][i]
+            local number2 = (sv2[8]:GetInt() - sv2[7]:GetInt()) / 4
+            assert(number2 >= slot, "slot invalid")
+            sv2[7][slot][19]:SetInt(left)
+            return
+        end
+    end
+    assert(false, "behavior not found")
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- statistics -----------------------------------------------------------------------------
 -- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
@@ -2472,20 +2510,20 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
 
-	for y_ = _posY - _offset, _posY + _offset, _step do		
-		for x_ = _posX - _offset, _posX + _offset, _step do			
+	for y_ = _posY - _offset, _posY + _offset, _step do
+		for x_ = _posX - _offset, _posX + _offset, _step do
 			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
 				
-				local d = (x_ - _posX)^2 + (y_ - _posY)^2
-				
-				if CUtil.GetSector(x_/100, y_/100) ~= 0 then
-				
+				local d = (x_ - _posX)^2 + (y_ - _posY)^2		
+				local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)               
+				if sector > 0 and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
+
 					if not dmin or dmin > d then
-						dmin = d						
+						dmin = d
 						xspawn = x_
 						yspawn = y_
 					end
-					
+
 				end
 			end
 		end

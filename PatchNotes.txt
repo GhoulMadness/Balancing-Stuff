@@ -668,9 +668,6 @@ Die Kompatibilität vom Laden von Spielständen wurde erhöht.
 
 Die Performance von Spawn-Armeen wurde verbessert.
 
-<<<<<<< Updated upstream
-Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien ändern.
-=======
 Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien ändern.
 
 --- Version 0.733
@@ -700,9 +697,4 @@ Das Rekrutierungsverhalten von Truppen wurde überarbeitet.
 
 Die erfassten Daten der KI werden nun korrekt aktualisiert, wenn deren Truppen aufgewertet werden.
 
-<<<<<<< Updated upstream
 Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
->>>>>>> Stashed changes
-=======
-Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
->>>>>>> Stashed changes

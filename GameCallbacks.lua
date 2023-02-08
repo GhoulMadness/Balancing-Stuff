@@ -1,18 +1,18 @@
-GameCallback_RefinedResourceOrig = GameCallback_RefinedResource;
-GameCallback_GainedResourcesFromMineOrig = GameCallback_GainedResourcesFromMine;
-GameCallback_ConstructBuildingOrig = GameCallback_ConstructBuilding;
-GameCallback_PlaceBuildingAdditionalCheckOrig = GameCallback_PlaceBuildingAdditionalCheck;
-GameCallback_ResearchProgressOrig = GameCallback_ResearchProgress;	
-GameCallback_GUI_SelectionChangedOrig = GameCallback_GUI_SelectionChanged;	
-GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched;	
-GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete;
-HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget;
-GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged;
+GameCallback_RefinedResourceOrig = GameCallback_RefinedResource
+GameCallback_GainedResourcesFromMineOrig = GameCallback_GainedResourcesFromMine
+GameCallback_ConstructBuildingOrig = GameCallback_ConstructBuilding
+GameCallback_PlaceBuildingAdditionalCheckOrig = GameCallback_PlaceBuildingAdditionalCheck
+GameCallback_ResearchProgressOrig = GameCallback_ResearchProgress
+GameCallback_GUI_SelectionChangedOrig = GameCallback_GUI_SelectionChanged
+GameCallback_OnTechnologyResearchedOrig = GameCallback_OnTechnologyResearched
+GameCallback_OnBuildingConstructionCompleteOrig = GameCallback_OnBuildingConstructionComplete
+HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget
+GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged
 GameCallback_UnknownTaskOrig = GameCallback_UnknownTask
 Mission_OnSaveGameLoadedOrig = Mission_OnSaveGameLoaded
 
 function Mission_OnSaveGameLoaded()
-	Mission_OnSaveGameLoadedOrig() 
+	Mission_OnSaveGameLoadedOrig()
 	MultiplayerTools.OnSaveGameLoaded = function()
 	end
 	BS.GfxInit()
@@ -22,10 +22,10 @@ function Mission_OnSaveGameLoaded()
 			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
 			Display.SetPlayerColorMapping(1, PlayerColor)
 		end
-	end	
-	for i = 1,16 do 
-		CUtil.Payday_SetActive(i, true) 
-	end 
+	end
+	for i = 1,16 do
+		CUtil.Payday_SetActive(i, true)
+	end
 	local PIDs = GetAllAIs()
 	for i = 1,table.getn(PIDs) do
 		if gvPlayerName[PIDs[i]] then
@@ -36,30 +36,27 @@ function Mission_OnSaveGameLoaded()
 		Logic.PlayerSetIsHumanFlag(PIDs[i], 1)
 		Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 	end
-end  
--- 3 Diebe max. auf der Weihnachtsmap; 
+end
+-- 3 Diebe max. auf der Weihnachtsmap
 if gvXmasEventFlag == 1 then
 	function GameCallback_PreBuyLeader(_buildingID, _uCat)
-		if not gvXmasEventFlag then
-			return
-		end
-		local player = Logic.EntityGetPlayer(_buildingID);
-		
+		local player = Logic.EntityGetPlayer(_buildingID)
+
 		if _uCat == UpgradeCategories.Thief then
-			local nthiefs = Logic.GetNumberOfEntitiesOfTypeOfPlayer(player, Entities.PU_Thief);
+			local nthiefs = Logic.GetNumberOfEntitiesOfTypeOfPlayer(player, Entities.PU_Thief)
 			if nthiefs >= 3 then
-				return false;
-			end;
-		end;
-		return true;
-	end;
+				return false
+			end
+		end
+		return true
+	end
 end
 
 function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	GameCallback_OnBuildingConstructionCompleteOrig(_BuildingID,_PlayerID)
-	
+
 	local eType = Logic.GetEntityType(_BuildingID)
-	
+
 	if eType == Entities.PB_Dome then
 		local MotiHardCap = CUtil.GetPlayersMotivationHardcap(_PlayerID)
 		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 1)
@@ -67,71 +64,69 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 	elseif eType == Entities.PB_ForestersHut1 then
 		OnForester_Created(_BuildingID)
 	elseif Scaremonger.MotiEffect[eType] then
-	
 		Scaremonger.MotiDebuff(_PlayerID,eType)
-		
 	elseif eType == Entities.PB_Beautification13 then
 		CUtil.AddToPlayersMotivationHardcap(_PlayerID, 0.25)
-		
+
 		for j=1, 16, 1 do
-			if Logic.GetDiplomacyState(_PlayerID, j) == Diplomacy.Friendly then		
+			if Logic.GetDiplomacyState(_PlayerID, j) == Diplomacy.Friendly then
 				CUtil.AddToPlayersMotivationHardcap(j, 0.25)
 				CUtil.AddToPlayersMotivationSoftcap(j, 0.25)
 				for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(j), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
-					local motivation = Logic.GetSettlersMotivation(eID) 
+					local motivation = Logic.GetSettlersMotivation(eID)
 					CEntity.SetMotivation(eID, motivation + 0.25 )
-				end				
+				end
 			end
 		end
-		
+
 	elseif eType == Entities.PB_VictoryStatue1 then
 		if CUtil.GetPlayersMotivationSoftcap(_PlayerID) < (2.0) then
 			CUtil.AddToPlayersMotivationSoftcap(_PlayerID, 2.0 - CUtil.GetPlayersMotivationSoftcap(_PlayerID))
-		
+
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_PlayerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 				CEntity.SetMotivation(eID, 2.0 )
-			end				
+			end
 		end
-		
+
 	elseif eType == Entities.PB_VictoryStatue3 then
 		gvVictoryStatue3.Amount[_PlayerID] = gvVictoryStatue3.Amount[_PlayerID] + 1
-		
+
 	elseif eType == Entities.PB_VictoryStatue4 then
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "VStatue4_CalculateDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
 	end
 end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- Selection 
+-- Selection
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function GameCallback_GUI_SelectionChanged()
 	GameCallback_GUI_SelectionChangedOrig()
-	
+
 	-- Get selected entity
 	local EntityId = GUI.GetSelectedEntity()
 	local SelectedEntities = { GUI.GetSelectedEntities() }
-	
+
 	--	
 	if EntityId == nil then
 		return
 	end
-	
+
 	-- Get entity type
 	local EntityType = Logic.GetEntityType( EntityId )
 	local EntityTypeName = Logic.GetEntityTypeName( EntityType )
-	
+
 	--Init Sounds
 	local SelectionSound = Sounds.Selection_global
 	local FunnyComment = 0
 	local RandomSelectionSound = XGUIEng.GetRandom(4)
 	-- Is selected entity a serf?
-	if Logic.IsSerf( EntityId ) == 1 then		
+	if Logic.IsSerf( EntityId ) == 1 then
 
 			FunnyComment = Sounds.VoicesSerf_SERF_FunnyComment_rnd_01
-			
+
 			local OnlySerfsSelected = 1
-			
-			local i 
-			for i=1, 20, 1 do
+
+			local i
+			for i = 1, 20, 1 do
 				local SerfEntityType = Logic.GetEntityType( SelectedEntities[i] )
 				if SelectedEntities [i] == nil then
 					break
@@ -140,58 +135,60 @@ function GameCallback_GUI_SelectionChanged()
 					break
 				end
 			end
-			
-			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionSerf,OnlySerfsSelected)						
+
+			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionSerf,OnlySerfsSelected)
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingGroup")
-			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)	
+			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)
 			--Set contrsuction menu as default and highlight the tab
-			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)		
+			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)	
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SerfConstructionMenu,1)
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
 			XGUIEng.HighLightButton(gvGUI_WidgetID.ToSerfBeatificationMenu,1)
 			XGUIEng.HighLightButton(XGUIEng.GetWidgetID("SerfToScaremongerMenu"),1)
-		
-	
+
 	-- Is selected entity a building?
 	elseif Logic.IsBuilding( EntityId ) == 1 then
-	
+
 		local UpgradeCategory = Logic.GetUpgradeCategoryByBuildingType(EntityType)
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)
-		
+
 		--Display building container
 		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionBuilding,1)
-		
-		
-		
+
 		--Check selected building Type
 		if Logic.IsConstructionComplete( EntityId ) == 1 then
-		
+
 			local ButtonStem = ""
-			
+
 			--Is EntityType the Silvermine?
-			if 	UpgradeCategory == UpgradeCategories.SilverMine then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silvermine"),1)					
-				ButtonStem =  "Upgrade_Silvermine"	
-			--Is Entity a outpost?	
-			elseif  UpgradeCategory == UpgradeCategories.Outpost then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)											
+			if UpgradeCategory == UpgradeCategories.SilverMine then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silvermine"),1)
+				ButtonStem = "Upgrade_Silvermine"
+			--Is Entity a outpost?
+			elseif UpgradeCategory == UpgradeCategories.Outpost then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
+				ButtonStem = "Upgrade_Outpost"
+				if Logic.GetTechnologyState(Logic.EntityGetPlayer(EntityId), Technologies.GT_Literacy) == 4 and XGUIEng.IsWidgetShown(XGUIEng.GetWidgetID("HQTaxes_OP")) == 0 then
+					XGUIEng.ShowWidget(XGUIEng.GetWidgetID("HQTaxes_OP"),1)
+				end
 			--Is EntityType the Goldmine?
-			elseif 	UpgradeCategory == UpgradeCategories.GoldMine then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)					
-				ButtonStem =  "Upgrade_Goldmine"	
-				
-			elseif 	UpgradeCategory == UpgradeCategories.Beautification07 then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MechanicalClock"),1)					
-			
-			elseif 	UpgradeCategory == UpgradeCategories.VillageHall then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("VillageHall"),1)		
-			
-			elseif 	UpgradeCategory == UpgradeCategories.Archers_Tower then
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Archers_Tower"),1)		
-				
+			elseif UpgradeCategory == UpgradeCategories.GoldMine then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)
+				ButtonStem =  "Upgrade_Goldmine"
+
+			elseif UpgradeCategory == UpgradeCategories.Beautification07 then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MechanicalClock"),1)
+
+			elseif UpgradeCategory == UpgradeCategories.VillageHall then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("VillageHall"),1)
+
+			elseif UpgradeCategory == UpgradeCategories.Archers_Tower then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Archers_Tower"),1)
+
 			--Is EntityType the Market?
-			elseif 	UpgradeCategory == UpgradeCategories.Market then
-			
+			elseif UpgradeCategory == UpgradeCategories.Market then
+
 				--You can only trade at market level 2 or higher
 				if EntityType == Entities.PB_Market2 or EntityType == Entities.PB_Market3 then
 					XGUIEng.ShowWidget(gvGUI_WidgetID.Trade,1)
@@ -199,56 +196,53 @@ function GameCallback_GUI_SelectionChanged()
 					if Logic.GetTransactionProgress(EntityId) ~= 100 then
 
 						XGUIEng.ShowWidget(gvGUI_WidgetID.TradeInProgress,1)
-					else			
+					else
 						XGUIEng.ShowWidget(gvGUI_WidgetID.TradeInProgress,0)
 					end
 				else
 					XGUIEng.ShowWidget(gvGUI_WidgetID.Trade,0)
 					XGUIEng.ShowWidget(gvGUI_WidgetID.TradeInProgress,0)
 				end
-				
-				
-				
-				XGUIEng.ShowWidget(gvGUI_WidgetID.Market,1)					
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.Market,1)
 				ButtonStem =  "Upgrade_Market"
-				
+
 				if EntityId ~= gvGUI.LastSelectedEntityID then
 					GUIAction_MarketClearDeals()
 				end
-			
-			
-			elseif 	UpgradeCategory == UpgradeCategories.Castle then
-			
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Castle"),1)	
+
+			elseif UpgradeCategory == UpgradeCategories.Castle then
+
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Castle"),1)
 				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
 				ButtonStem =  "Upgrade_Castle"
-				
+
 			--Is EntityType the weathermanipulator?
-			elseif 	UpgradeCategory == UpgradeCategories.Weathermanipulator then				
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Weathermachine"),1)	
+			elseif UpgradeCategory == UpgradeCategories.Weathermanipulator then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Weathermachine"),1)
 			--Is EntityType the Lighthouse?
-			elseif 	UpgradeCategory == UpgradeCategories.Lighthouse then				
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Lighthouse"),1)	
+			elseif UpgradeCategory == UpgradeCategories.Lighthouse then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Lighthouse"),1)
 				ButtonStem =  "Upgrade_Lighthouse"
 			--Is EntityType the MercenaryTower?
-			elseif 	UpgradeCategory == UpgradeCategories.Mercenary then				
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MercenaryTower"),1)	
+			elseif UpgradeCategory == UpgradeCategories.Mercenary then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MercenaryTower"),1)
 			--Is EntityType the Mint?
-			elseif 	UpgradeCategory == UpgradeCategories.Mint then				
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Mint"),1)	
+			elseif UpgradeCategory == UpgradeCategories.Mint then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Mint"),1)
 			--Is EntityType the Silversmith?
-			elseif 	UpgradeCategory == UpgradeCategories.Silversmith then				
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silversmith"),1)	
+			elseif UpgradeCategory == UpgradeCategories.Silversmith then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Silversmith"),1)
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("OvertimesButtonEnable"),0)
 				ButtonStem =  "Upgrade_Silversmith"
 			--Is EntityType the Forester?
-			elseif 	UpgradeCategory == UpgradeCategories.Forester then				
-				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Forester"),1)	
+			elseif UpgradeCategory == UpgradeCategories.Forester then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Forester"),1)
 			end
 			--Update Upgrade Buttons
-			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)								
+			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)
 		end
-	
+
 	elseif EntityType == Entities.PU_BattleSerf then
 			XGUIEng.ShowWidget("Commands_Leader", 1)
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 0)
@@ -260,41 +254,31 @@ function GameCallback_GUI_SelectionChanged()
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 1)
 		end
 	end
-			
+
 	--Update all buttons in the visible container
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
-		
 end
 gvGameSpeed = 1
 function GameCallback_GameSpeedChanged( _Speed )
---GameCallback_GameSpeedChangedOrig(_Speed)
-local Speed = _Speed * 1000
+	local Speed = _Speed * 1000
     if Speed == 0 then
 		gvGameSpeed = 0
 		if not CNetwork then
 			local PauseScreenType = Logic.GetRandom(4) + 1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		end
-       
+
     else
-    
+
 		gvGameSpeed = _Speed
 		for i = 1,5 do
-			XGUIEng.ShowWidget("PauseScreen"..i,0)   
+			XGUIEng.ShowWidget("PauseScreen"..i,0)
 		end
     end
 end
 
 function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
-	
-	if _TechnologyType == Technologies.T_HeavyThunder then	
-=======
-=======
->>>>>>> Stashed changes
 	--calculate score
 	if Score ~= nil then
 		Score.CallBackResearched( _PlayerID, _TechnologyType )	
@@ -314,54 +298,35 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	end
 	
 	if _TechnologyType == Technologies.T_HeavyThunder then
->>>>>>> Stashed changes
 		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
-		
-	elseif _TechnologyType == Technologies.T_TotalDestruction then	
+
+	elseif _TechnologyType == Technologies.T_TotalDestruction then
 		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-		
-	end
-	
-=======
 
 	end
->>>>>>> Stashed changes
-=======
-
-	end
->>>>>>> Stashed changes
 	if not gvMercTechsCheated then
-	
+
 		if _TechnologyType == Technologies.T_BarbarianCulture then
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
-			
-		elseif _TechnologyType == Technologies.T_KnightsCulture then			
+
+		elseif _TechnologyType == Technologies.T_KnightsCulture then
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
-			
-		elseif _TechnologyType == Technologies.T_BearmanCulture then			
+
+		elseif _TechnologyType == Technologies.T_BearmanCulture then
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BanditCulture,0)
-			
-		elseif _TechnologyType == Technologies.T_BanditCulture then			
+
+		elseif _TechnologyType == Technologies.T_BanditCulture then
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_KnightsCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BearmanCulture,0)
 			Logic.SetTechnologyState(_PlayerID,Technologies.T_BarbarianCulture,0)
-					
 		end
-		
-	end
-	
-	--Do not play sound on begin of the map
-	local GameTimeMS = Logic.GetTimeMs()	
-	if GameTimeMS == 0 then
-		return
+
 	end
 	
 	--Do not play sound on begin of the map
@@ -372,57 +337,54 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	
 	--Update all buttons in the visible container
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
-	
 end
 
 function GameCallback_RefinedResource(_entityID, _type, _amount)
-        
+
     local playerID = Logic.EntityGetPlayer(_entityID)
-        
+
     if _type == ResourceType.Gold then
-	
-        if Logic.GetTechnologyState(playerID, Technologies.T_BookKeeping) == 4 then               
-            local work = Logic.GetSettlersWorkBuilding(_entityID)		
+
+        if Logic.GetTechnologyState(playerID, Technologies.T_BookKeeping) == 4 then
+            local work = Logic.GetSettlersWorkBuilding(_entityID)
             _amount = (refined_resource_gold[Logic.GetEntityType(work)] or _amount)
-		
+
 		else
-		
-			if gvChallengeFlag then			
-				local work = Logic.GetSettlersWorkBuilding(_entityID)		
+
+			if gvChallengeFlag then
+				local work = Logic.GetSettlersWorkBuilding(_entityID)
 				_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
-				
 			end
-			
+
         end
-		
+
 	else
-	
-		if gvChallengeFlag then			
-			local work = Logic.GetSettlersWorkBuilding(_entityID)		
+
+		if gvChallengeFlag then
+			local work = Logic.GetSettlersWorkBuilding(_entityID)
 			_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
-				
 		end
-		
+
     end
-        
-    if GameCallback_RefinedResourceOrig then	
+
+    if GameCallback_RefinedResourceOrig then
         return GameCallback_RefinedResourceOrig(_entityID, _type, _amount)
-		
-    else	
+
+    else
         return _entityID, _type, _amount
-		
-    end	
+
+    end
 end
 
 function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 
-	local playerID = Logic.EntityGetPlayer(_extractor);	
-	local work = Logic.GetSettlersWorkBuilding(_extractor)	
-	local resremain = Logic.GetResourceAmountBelowMine(work)	
+	local playerID = Logic.EntityGetPlayer(_extractor)
+	local work = Logic.GetSettlersWorkBuilding(_extractor)
+	local resremain = Logic.GetResourceAmountBelowMine(work)
 	--respective values "mine_running_low" sound is played
-	local criticaltresholdsilver = 400	
+	local criticaltresholdsilver = 400
 	local criticaltresholdgold = 2500
-	
+
 	--Sound nur abspielen, wenn die neuen Sounds nicht initialisiert wurden
 	if Sounds.VoicesMentor_JOIN_Silversmith == nil then
 		if _type == ResourceType.SilverRaw then
@@ -436,8 +398,7 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 292)
 				end
 			end
-			
-			
+
 		elseif _type == ResourceType.GoldRaw then
 			if resremain <= criticaltresholdgold and resremain > criticaltresholdgold - _amount then
 				if GUI.GetPlayerID() == playerID then
@@ -450,390 +411,265 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 				end
 			end
 		end
-		else
 	end
-		
+
 	if Logic.GetTechnologyState(playerID, Technologies.T_PickAxe) == 4 then
 		if _e ~= nil then
-									
-			if 		_type == ResourceType.ClayRaw then
+
+			if _type == ResourceType.ClayRaw then
 				_amount = (gained_resource_clay[Logic.GetEntityType(work)] or _amount)
-							
 			elseif 	_type == ResourceType.IronRaw then
 				_amount = (gained_resource_iron[Logic.GetEntityType(work)] or _amount)
-							
 			elseif 	_type == ResourceType.StoneRaw then
 				_amount = (gained_resource_stone[Logic.GetEntityType(work)] or _amount)
-							
 			elseif 	_type == ResourceType.SulfurRaw then
 				_amount = (gained_resource_sulfur[Logic.GetEntityType(work)] or _amount)
-				
 			elseif 	_type == ResourceType.SilverRaw then
 				_amount = (gained_resource_silver[Logic.GetEntityType(work)] or _amount)
-				
 			elseif 	_type == ResourceType.GoldRaw then
 				_amount = (gained_resource_gold[Logic.GetEntityType(work)] or _amount)
-							
 			end
-		
-		end;   
-       
+
+		end
+
 	else
 
 		if gvChallengeFlag then
-		
-			if 		_type == ResourceType.ClayRaw then
+
+			if _type == ResourceType.ClayRaw then
 				_amount = (gained_resource_clay[Logic.GetEntityType(work)]-1 or _amount)
-							
 			elseif 	_type == ResourceType.IronRaw then
 				_amount = (gained_resource_iron[Logic.GetEntityType(work)]-1 or _amount)
-							
 			elseif 	_type == ResourceType.StoneRaw then
 				_amount = (gained_resource_stone[Logic.GetEntityType(work)]-1 or _amount)
-							
 			elseif 	_type == ResourceType.SulfurRaw then
 				_amount = (gained_resource_sulfur[Logic.GetEntityType(work)]-1 or _amount)
-				
 			elseif 	_type == ResourceType.SilverRaw then
 				_amount = (gained_resource_silver[Logic.GetEntityType(work)]-1 or _amount)
-				
 			elseif 	_type == ResourceType.GoldRaw then
 				_amount = ((gained_resource_gold[Logic.GetEntityType(work)]/2.5)+2 or _amount)
-							
 			end
-			
-		end
-		
-    end;
-	if GameCallback_GainedResourcesFromMineOrig then
-		return GameCallback_GainedResourcesFromMineOrig(_extractor, _e, _type, _amount);
-    end;
-	return _extractor, _e, _type, _amount;
-end
 
+		end
+
+    end
+	if GameCallback_GainedResourcesFromMineOrig then
+		return GameCallback_GainedResourcesFromMineOrig(_extractor, _e, _type, _amount)
+    end
+	return _extractor, _e, _type, _amount
+end
 function GameCallback_ConstructBuilding(_csite, _nserfs, _amount)
-	
-	local playerID = Logic.EntityGetPlayer(_csite);
-	if Logic.GetTechnologyState(playerID, Technologies.T_LightBricks) == 4 then		
+
+	local playerID = Logic.EntityGetPlayer(_csite)
+	if Logic.GetTechnologyState(playerID, Technologies.T_LightBricks) == 4 then
 		_amount = (_amount *1.2) or _amount
-	end;
-	
+	end
+
 	if GameCallback_ConstructBuildingOrig then
-        return GameCallback_ConstructBuildingOrig(_csite, _nserfs, _amount);
+        return GameCallback_ConstructBuildingOrig(_csite, _nserfs, _amount)
     else
-        return _amount;
-    end;
-end;
+        return _amount
+    end
+end
 function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _isBuildOn)
 
-    local allowed = true;
-	
+    local allowed = true
+
 	while _rotation < 0 do
-		
 		_rotation = _rotation + 360
-		
 	end
-	
+
     if GameCallback_PlaceBuildingAdditionalCheckOrig then
-	
+
         allowed = GameCallback_PlaceBuildingAdditionalCheckOrig(_eType, _x, _y, _rotation, _isBuildOn)
-		
+
         if allowed ~= false then
-		
-            allowed = true;
-			
-        end;
-		
+            allowed = true
+        end
+
     end
-	
+
 	if _eType == Entities.PB_VictoryStatue2 then
-	
+
 		return allowed and (Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(), _eType) < 1) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-		
+
 	elseif _eType == Entities.PB_Archers_Tower and not gvXmas2021ExpFlag and not gvXmasEventFlag then
-	
+
 		local checkorientation = true
-		
+
 		if _rotation == 0 or _rotation == 90 or _rotation == 180 or _rotation == 270 or _rotation == 360 then
-		
 			checkorientation = true
-			
 		else
-		
-			LuaDebugger.Log(_rotation)
-			
 			checkorientation = false
-			
 		end
-		
+
 		return allowed and checkorientation and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-	
+
 	elseif _eType == Entities.PB_ForestersHut1 then
-	
+
 		local checkorientation = true
-		
+
 		if _rotation == 0 or _rotation == 360 then
-		
 			checkorientation = true
-			
 		else
-			
 			checkorientation = false
-			
 		end
-		
+
 		return allowed and checkorientation and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1) and (Logic.GetPlayerAttractionLimit(GUI.GetPlayerID()) > 0)
-		
+
 	elseif _eType == Entities.PB_Castle1 then
-	
+
 		local checkpos = true
-		
+
 		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-		for i,_ in pairs(gvCastle.PositionTable) do
-		
-			if math.sqrt((_x - gvCastle.PositionTable[i].X)^2+(_y - gvCastle.PositionTable[i].Y)^2) <= gvCastle.BlockRange then
-			
-=======
 		for _,v in pairs(gvCastle.PositionTable) do
 
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvCastle.BlockRange then
->>>>>>> Stashed changes
-=======
-		for _,v in pairs(gvCastle.PositionTable) do
-
-			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvCastle.BlockRange then
->>>>>>> Stashed changes
 				checkpos = false
-				
 			end
-			
+
 		end
-		
+
 		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-		
+
 	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag and not gvXmasEventFlag then
 	
 		local checkpos = true
 		
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-		for i,_ in pairs(gvTower.PositionTable) do		
-		
-			if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
-			
-=======
 		for _,v in pairs(gvTower.PositionTable) do
 
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
->>>>>>> Stashed changes
-=======
-		for _,v in pairs(gvTower.PositionTable) do
-
-			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
->>>>>>> Stashed changes
 				checkpos = false
-				
 			end
-			
+
 		end
-		
+
 		return allowed and checkpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-		
+
 	elseif _eType == Entities.PB_VictoryStatue4 then
-	
+
 		local checkpos = true
-		
+
 		for _,v in pairs(gvVStatue4.PositionTable) do		
-		
+
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvVStatue4.BlockRange then
-			
 				checkpos = false
-				
 			end
-			
+
 		end
-		
+
 		return allowed and checkpos and (gvVStatue4.Amount[GUI.GetPlayerID()] < gvVStatue4.Limit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-		
+
 	else
-	
+
 		if not gvXmasEventFlag and not gvXmas2021ExpFlag then
-		
+
 			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-			
+
 		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
 		elseif gvXmasEventFlag and gvPresent then
-		
-			local checktree1 
-				
+
+			local checktree1
 			local checktree2
-			
+
 			if math.sqrt((_x - gvPresent.XmasTreePos[1].X)^2+(_y - gvPresent.XmasTreePos[1].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
-				
 				checktree1 = true
-					
 			else
-				
 				checktree1 = false
-					
 			end
-				
 			if math.sqrt((_x - gvPresent.XmasTreePos[2].X)^2+(_y - gvPresent.XmasTreePos[2].Y)^2) >= gvPresent.XmasTreeBuildBlockRange then
-				
 				checktree2 = true
-					
 			else
-				
 				checktree2 = false
-					
-			end		
-		
-			if _eType == Entities.PB_Tower1 then							
-				
-				local checktowerpos = true
-				
-				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Weihnachtsbaum-Karte auch nicht nahe der Bäume)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-				for i,_ in pairs(gvTower.PositionTable) do		
-				
-					if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
-					
-=======
-				for _,v in pairs(gvTower.PositionTable) do
-
-					if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
->>>>>>> Stashed changes
-=======
-				for _,v in pairs(gvTower.PositionTable) do
-
-					if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
->>>>>>> Stashed changes
-						checktowerpos = false
-						
-					end
-					
-				end
-				
-				return allowed and checktowerpos and (checktree1 == checktree2) and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-				
-			elseif _eType == Entities.PB_Archers_Tower then
-				
-				return allowed and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit) and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-				
-			else	
-				
-				return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-				
 			end
-			
+
+			if _eType == Entities.PB_Tower1 then
+
+				local checktowerpos = true
+
+				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Weihnachtsbaum-Karte auch nicht nahe der Bäume)
+				for _,v in pairs(gvTower.PositionTable) do
+
+					if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+						checktowerpos = false
+					end
+
+				end
+
+				return allowed and checktowerpos and (checktree1 == checktree2) and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+
+			elseif _eType == Entities.PB_Archers_Tower then
+
+				return allowed and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit) and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+
+			else
+				return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+			end
+
 		-- Auf der Experimente-Karte dürfen in der Mitte nur Dario-Statuen errichtet werden
 		elseif gvXmas2021ExpFlag and WT21 then
-		
+
 			local checkpos = true
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-			
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 			local pos = GetPosition("center")
-			
-			if _eType ~= Entities.PB_Beautification01 and _eType ~= Entities.PB_Tower1 then		
-			
+
+			if _eType ~= Entities.PB_Beautification01 and _eType ~= Entities.PB_Tower1 then
+
 				if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
-				
+
 					checkpos = false
-					
+
 				end
-				
+
 				if _eType == Entities.PB_Archers_Tower then
-				
+
 					local checktower = (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)
-					
+
 					return allowed and checktower and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-				
+
 				elseif _eType == Entities.PB_Tower1 then
-				
+
 					local checktowerpos = true
-					
+
 					-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-					for i,_ in pairs(gvTower.PositionTable) do			
-					
-						if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
-						
-=======
-					for _,v in pairs(gvTower.PositionTable) do
-=======
 					for _,v in pairs(gvTower.PositionTable) do
 
 						if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
->>>>>>> Stashed changes
 
-						if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
-
->>>>>>> Stashed changes
 							checktowerpos = false
-							
+
 						end
-						
+
 						if math.sqrt((_x - pos.X)^2+(_y - pos.Y)^2) <= WT21.CenterBlockRange then
-						
 							checkpos = false
-							
 						end
-						
 					end
-					
 					return allowed and checkpos and checktowerpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-					
 				else
-				
 					return allowed and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
-					
 				end
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-				
-			end	
-			
-=======
 			end
->>>>>>> Stashed changes
-=======
-			end
->>>>>>> Stashed changes
 		end
-		
-	end 
-	
+	end
 end
 
-function GameCallback_ResearchProgress(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)	
-	
+function GameCallback_ResearchProgress(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)
+
 	local playerID = _player
-	
-	if _technology == Technologies.T_CityGuard then	
-		_research_amount = math.floor((_max + 0.5)/120) or _research_amount		
+
+	if _technology == Technologies.T_CityGuard then
+		_research_amount = math.floor((_max + 0.5)/120) or _research_amount
 	end
-	
-	if Logic.GetTechnologyState(playerID, Technologies.T_TownGuard) == 4 then	
-		_research_amount = math.ceil(_research_amount *1.2) or _research_amount		
+
+	if Logic.GetTechnologyState(playerID, Technologies.T_TownGuard) == 4 then
+		_research_amount = math.ceil(_research_amount *1.2) or _research_amount
 	end
-			
-	if GameCallback_ResearchProgressOrig then	
-		return GameCallback_ResearchProgressOrig(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max);		
+
+	if GameCallback_ResearchProgressOrig then
+		return GameCallback_ResearchProgressOrig(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)
 	else
-	
 		return  _research_amount
-		
-	end	
+	end
 end
 
 function GameCallback_PaydayPayed(_player,_amount)
