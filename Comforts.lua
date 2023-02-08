@@ -1917,6 +1917,24 @@ function dekaround(_n)
 	assert(type(_n) == "number", "round val needs to be a number")
 	return math.floor( _n / 100 + 0.5 ) * 100	
 end
+function CreateCostDifferenceTable(_player, _ltype1, _ltype2, _stype1, _stype2, _numsol)
+	local lcost, solcost, uplcost, upsolcost = {},{},{},{}
+	local cost = {}
+	for i = 1, 17 do
+		cost[i] = 0
+	end
+	Logic.FillLeaderCostsTable(_player, _ltype1 + 2 ^ 16, lcost)
+	Logic.FillLeaderCostsTable(_player, _ltype2 + 2 ^ 16, uplcost)
+	Logic.FillSoldierCostsTable(_player, _stype1 + 2 ^ 16, solcost)
+	Logic.FillSoldierCostsTable(_player, _stype2 + 2 ^ 16, upsolcost)
+	for i = 1, 17 do
+		if lcost[i] > 0 or uplcost[i] > 0 or solcost[i] > 0 or upsolcost[i] > 0 then
+			cost[i] = uplcost[i] - lcost[i] + ((upsolcost[i] - solcost[i]) * _numsol)
+			cost[i] = math.max(cost[i], 0)
+		end
+	end
+	return cost
+end
 CategoriesOfEntities = {}
 function GetAllCategoriesOfEntity(id)
     local type = Logic.GetEntityType(id)

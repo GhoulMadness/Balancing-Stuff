@@ -254,6 +254,7 @@ function GameCallback_GUI_SelectionChanged()
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 0)
 
 	elseif Logic.IsLeader( EntityId ) == 1 then
+		XGUIEng.ShowWidget("LeaderUpgrade", 1)
 		if Logic.IsEntityInCategory(EntityId,EntityCategories.CavalryHeavy) == 1
 		or Logic.IsEntityInCategory(EntityId,EntityCategories.CavalryLight) == 1 then
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 1)
@@ -286,16 +287,43 @@ end
 
 function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 
+<<<<<<< Updated upstream
 	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
 	
 	if _TechnologyType == Technologies.T_HeavyThunder then	
+=======
+	--calculate score
+	if Score ~= nil then
+		Score.CallBackResearched( _PlayerID, _TechnologyType )	
+	end
+	
+	local PlayerID = GUI.GetPlayerID()
+	if PlayerID ~= _PlayerID then
+		return
+	end
+	
+	local BuildingID = GUI.GetSelectedEntity()
+	if BuildingID ~= 0 then
+		local TechnologyAtBuilding = Logic.GetTechnologyResearchedAtBuilding(BuildingID)
+		if  TechnologyAtBuilding == 0 then	
+			XGUIEng.ShowWidget(gvGUI_WidgetID.ResearchInProgress,0)
+		end
+	end
+	
+	if _TechnologyType == Technologies.T_HeavyThunder then
+>>>>>>> Stashed changes
 		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
 		
 	elseif _TechnologyType == Technologies.T_TotalDestruction then	
 		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
+<<<<<<< Updated upstream
 		
 	end
 	
+=======
+
+	end
+>>>>>>> Stashed changes
 	if not gvMercTechsCheated then
 	
 		if _TechnologyType == Technologies.T_BarbarianCulture then
@@ -320,6 +348,12 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 					
 		end
 		
+	end
+	
+	--Do not play sound on begin of the map
+	local GameTimeMS = Logic.GetTimeMs()	
+	if GameTimeMS == 0 then
+		return
 	end
 	
 	--Update all buttons in the visible container
@@ -541,10 +575,16 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		local checkpos = true
 		
 		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
+<<<<<<< Updated upstream
 		for i,_ in pairs(gvCastle.PositionTable) do
 		
 			if math.sqrt((_x - gvCastle.PositionTable[i].X)^2+(_y - gvCastle.PositionTable[i].Y)^2) <= gvCastle.BlockRange then
 			
+=======
+		for _,v in pairs(gvCastle.PositionTable) do
+
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvCastle.BlockRange then
+>>>>>>> Stashed changes
 				checkpos = false
 				
 			end
@@ -558,10 +598,16 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		local checkpos = true
 		
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
+<<<<<<< Updated upstream
 		for i,_ in pairs(gvTower.PositionTable) do		
 		
 			if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 			
+=======
+		for _,v in pairs(gvTower.PositionTable) do
+
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+>>>>>>> Stashed changes
 				checkpos = false
 				
 			end
@@ -624,10 +670,16 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 				local checktowerpos = true
 				
 				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Weihnachtsbaum-Karte auch nicht nahe der Bäume)
+<<<<<<< Updated upstream
 				for i,_ in pairs(gvTower.PositionTable) do		
 				
 					if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 					
+=======
+				for _,v in pairs(gvTower.PositionTable) do
+
+					if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+>>>>>>> Stashed changes
 						checktowerpos = false
 						
 					end
@@ -650,7 +702,10 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		elseif gvXmas2021ExpFlag and WT21 then
 		
 			local checkpos = true
+<<<<<<< Updated upstream
 			
+=======
+>>>>>>> Stashed changes
 			local pos = GetPosition("center")
 			
 			if _eType ~= Entities.PB_Beautification01 and _eType ~= Entities.PB_Tower1 then		
@@ -672,10 +727,17 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 					local checktowerpos = true
 					
 					-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
+<<<<<<< Updated upstream
 					for i,_ in pairs(gvTower.PositionTable) do			
 					
 						if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 						
+=======
+					for _,v in pairs(gvTower.PositionTable) do
+
+						if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+
+>>>>>>> Stashed changes
 							checktowerpos = false
 							
 						end
@@ -695,9 +757,13 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 					return allowed and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 					
 				end
+<<<<<<< Updated upstream
 				
 			end	
 			
+=======
+			end
+>>>>>>> Stashed changes
 		end
 		
 	end 
@@ -728,93 +794,62 @@ end
 function GameCallback_PaydayPayed(_player,_amount)
 
 	if _amount ~= nil then
-	
-		if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then				
-			local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)			
-			CUtil.Payday_SetFrequency(_player, frequency)			
+
+		if CUtil.Payday_GetFrequency(_player) == 1200 and Logic.GetTechnologyState(_player,Technologies.T_Debenture) == 4 then
+			local frequency = math.floor((CUtil.Payday_GetFrequency(_player))*9/10)
+			CUtil.Payday_SetFrequency(_player, frequency)
 		end
-		
+
 		-- Zahltag pro Münzstätte um 1.5% erhöht, max 15%
-		local factor = 1		
-		local workers 
-		
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do			
-			if Logic.IsConstructionComplete(eID) == 1 then			
+		local factor = 1
+		local workers
+
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player),CEntityIterator.OfTypeFilter(Entities.CB_Mint1)) do
+			if Logic.IsConstructionComplete(eID) == 1 then
 				workers = {Logic.GetAttachedWorkersToBuilding(eID)}
-				
-				if workers[1] >= BS.MintValues.WorkersNeeded then				
-					factor = math.min(factor + BS.MintValues.BonusPerMint, BS.MintValues.MaxTotalFactor)				
+
+				if workers[1] >= BS.MintValues.WorkersNeeded then
+					factor = math.min(factor + BS.MintValues.BonusPerMint, BS.MintValues.MaxTotalFactor)
 				end
-				
-			end			
-		end			
-		
+
+			end
+		end
+
 		_amount = math.floor(_amount*factor)
-		
+
 		--KI bekommt 5fachen Zahltag
 		if CNetwork and XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 0 then
-		
-			if _amount > 0 then			
-				_amount = _amount * 5				
-			else			
+
+			if _amount > 0 then
+				_amount = _amount * 5
+			else
 				--KI kann keinen negativen Zahltag haben
-				_amount = 0				
+				_amount = 0
 			end
-			
+
 		else
 		-- Sudden Death auf der Weihnachtsmap
-		
-			if gvXmasEventFlag then			
-				if gvPresent.SDPaydayFactor then						
-					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])					
-				end				
+
+			if gvXmasEventFlag then
+				if gvPresent.SDPaydayFactor then
+					_amount = math.floor(_amount * gvPresent.SDPaydayFactor[_player])
+				end
 			end
-			
+
 		end
-		
+
 		return _amount
-		
-	else	
-	
-		LuaDebugger.Log(_player)		
-		return 0
-		
-	end	
-end	
 
-
--- this maybe should be placed rather into the GUIUpdate.lua
-function HeroWidgetUpdate_ShowHeroWidget(EntityId)
-
-	local EntityType = Logic.GetEntityType(EntityId)
-	
-	if EntityType == Entities.PU_Hero13 then	
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)	
-		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)	
-		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)			
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)		
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)		
-		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero13" ) ,1)
-	
-	elseif EntityType == Entities.PU_Hero14 then	
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)	
-		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)	
-		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)			
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)		
-		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)		
-		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero14" ) ,1)
-		
-	else	
-		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
-		
-	end	
+	else		
+		return 0		
+	end
 end
-
 --------------------------------------------------------------------------------
 -- Function that is called when an entity ID changes (upgrade, ...)
 --------------------------------------------------------------------------------
 function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
 
+	local player = Logic.EntityGetPlayer(_OldID)
 	-- needed when troop on top of the archers tower is upgraded
 	for k,v in pairs(gvArchers_Tower.SlotData) do
 						
@@ -828,14 +863,45 @@ function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
 			table.insert(TroopIDs,gvArchers_Tower.SlotData[k][slot])
 			
 			for i = 1,table.getn(TroopIDs) do				
-				CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)				
-				CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)				
-				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),Logic.EntityGetPlayer(TroopIDs[i]))*gvArchers_Tower.MaxRangeFactor)			
+				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)				
+				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)				
+				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player)*gvArchers_Tower.MaxRangeFactor)			
 			end
 			
 		end	
 	end
-	
+	-- update AI data when troops upgrade
+	if ArmyTable and ArmyTable[player] then
+		for i = 1, table.getn(ArmyTable[player]) do
+			local tpos = table_findvalue(ArmyTable[player][i].IDs, _OldID)
+			if tpos ~= 0 then
+				ArmyTable[player][i].IDs[tpos] = _NewID
+				ArmyTable[player][i][_OldID] = nil
+				local enemies = BS.GetAllEnemyPlayerIDs(player)
+				for k = 1, table.getn(enemies) do
+					if AIchunks[enemies[k]] then
+						ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
+						ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+					end
+				end
+				break
+			end
+		end
+	end
+	if MapEditor_Armies and MapEditor_Armies[player] then
+		local tpos = table_findvalue(MapEditor_Armies[player].IDs, _OldID)
+		if tpos ~= 0 then
+			MapEditor_Armies[player].IDs[tpos] = _NewID
+			MapEditor_Armies[player][_OldID] = nil
+			local enemies = BS.GetAllEnemyPlayerIDs(player)
+			for k = 1, table.getn(enemies) do
+				if AIchunks[enemies[k]] then
+					ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
+					ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+				end
+			end
+		end
+	end
 	GameCallback_GUI_EntityIDChangedOrig(_OldID,_NewID)	
 end
 

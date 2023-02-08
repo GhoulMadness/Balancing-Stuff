@@ -668,4 +668,37 @@ Die Kompatibilität vom Laden von Spielständen wurde erhöht.
 
 Die Performance von Spawn-Armeen wurde verbessert.
 
+<<<<<<< Updated upstream
 Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien ändern.
+=======
+Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien ändern.
+
+--- Version 0.733
+
+Einige GUI-Elemente wurden ausgelagert. Dies sollte keine Auswirkungen auf das Spielerlebnis haben und ist eine rein strukturelle Änderung.
+
+Vorbereitungen für das kommende Osterturnier.
+
+Eine erste Version der Osterturnier-Map ist ab sofort verfügbar. 
+Bedenkt jedoch, dass es hier infolge von künftigen Abstimmungen noch zu diversen Änderungen kommen kann.
+
+--- Version 0.734
+
+Limitierungen der Anzahl von Türmen und deren Mindestabstand zueinander gelten nun auch für von Erebos erzeugte Wohnstätten.
+
+Es wurde ein Fehler im Zusammenhang mit Dovbar behoben.
+
+Es wurde eine 2-Spieler-Version der BS-Testmap hinzugefügt.
+
+--- Version 0.735
+
+Für die angepasste KI kann nun ein Spawn-Generator verwendet werden.
+
+Es wurde ein Fehler behoben, durch den der Außenposten (Festung) nicht für die Voraussetzungen der Technologie Steuereintreibung galt.
+
+Das Rekrutierungsverhalten von Truppen wurde überarbeitet.
+
+Die erfassten Daten der KI werden nun korrekt aktualisiert, wenn deren Truppen aufgewertet werden.
+
+Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
+>>>>>>> Stashed changes

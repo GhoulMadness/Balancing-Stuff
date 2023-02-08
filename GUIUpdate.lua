@@ -893,11 +893,158 @@ function GUIUpdate_Forester_WorkChange(_flag)
 			XGUIEng.ShowWidget(CurrentWidgetID, 1)
 			
 		elseif Forester.WorkActiveState[EntityID] == 1 then
-		
+
 			XGUIEng.ShowWidget(CurrentWidgetID, 0)
-		
+
 		end
-		
+
 	end
+
+end
+function HeroWidgetUpdate_ShowHeroWidget(EntityId)
+
+	local EntityType = Logic.GetEntityType(EntityId)
 	
+	if EntityType == Entities.PU_Hero13 then	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)	
+		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)	
+		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)			
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)		
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero13" ) ,1)
+	
+	elseif EntityType == Entities.PU_Hero14 then	
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHero,1)	
+		XGUIEng.DisableButton(gvGUI_WidgetID.ExpelSettler,1)	
+		XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionHero,0)			
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionHeroGeneric,1)		
+		XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader,0)		
+		XGUIEng.ShowWidget(XGUIEng.GetWidgetID( "Selection_Hero14" ) ,1)
+		
+	else	
+		HeroWidgetUpdate_ShowHeroWidgetOrig(EntityId)
+		
+	end	
+end
+function GUIUpdate_BuyMilitaryUnitButtons(_Button, _Technology, _BuildingType)
+
+	local PlayerID = GUI.GetPlayerID()
+	local SelectedBuildingType = Logic.GetEntityType(GUI.GetSelectedEntity())
+	local TechState = Logic.GetTechnologyState(PlayerID, _Technology)
+	local UpgradeCategory = Logic.GetUpgradeCategoryByBuildingType(_BuildingType)
+	local EntityTypes = {Logic.GetBuildingTypesInUpgradeCategory(UpgradeCategory)}
+	local PositionOfSelectedEntityInTable, PositionOfNeededEntityInTable = 0, 0
+
+	for i = 1, EntityTypes[1] do
+		if EntityTypes[i+1] == SelectedBuildingType then
+			PositionOfSelectedEntityInTable = i + 1
+		end
+		if EntityTypes[i+1] == _BuildingType then
+			PositionOfNeededEntityInTable = i + 1
+		end
+	end
+	--Unit type is interdicted
+	if TechState == 0 then
+		XGUIEng.DisableButton(_Button,1)
+
+	elseif TechState == 1 then
+		XGUIEng.DisableButton(_Button,1)
+
+	elseif TechState == 2 and (_Technology == Technologies.MU_LeaderSword or _Technology == Technologies.MU_LeaderSpear or _Technology == Technologies.MU_LeaderBow 
+		or _Technology == Technologies.MU_LeaderRifle or _Technology == Technologies.MU_LeaderLightCavalry or _Technology == Technologies.MU_LeaderHeavyCavalry) then
+		XGUIEng.DisableButton(_Button,0)
+
+	--Technology is researched
+	elseif TechState == 4 then
+		XGUIEng.DisableButton(_Button,0)
+
+	--Technology is in reserach or to far in the future
+	elseif TechState == 3 or TechState == 5 then
+		XGUIEng.DisableButton(_Button,1)
+	end
+	if PositionOfNeededEntityInTable > PositionOfSelectedEntityInTable then
+		XGUIEng.DisableButton(_Button,1)
+	end
+	if _Button == "Buy_LeaderRifle2" and Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PB_GunsmithWorkshop2) < 1 then
+		XGUIEng.DisableButton(_Button,1)
+	end
+end
+function GUIUpdate_SettlersUpgradeButtons(_Button, _TechnologyType, _BuildingType)
+
+	local PlayerID = GUI.GetPlayerID()
+	local SelectedBuildingType = Logic.GetEntityType(GUI.GetSelectedEntity())
+	local TechState = Logic.GetTechnologyState(PlayerID, _TechnologyType)
+	local UpgradeCategory = Logic.GetUpgradeCategoryByBuildingType(_BuildingType)
+	local EntityTypes = {Logic.GetBuildingTypesInUpgradeCategory(UpgradeCategory)}
+	local PositionOfSelectedEntityInTable, PositionOfNeededEntityInTable = 0, 0
+
+	for i = 1, EntityTypes[1] do
+		if EntityTypes[i+1] == SelectedBuildingType then
+			PositionOfSelectedEntityInTable = i + 1
+		end
+		if EntityTypes[i+1] == _BuildingType then
+			PositionOfNeededEntityInTable = i + 1
+		end
+	end
+	--Upgrade is interdicted
+	if TechState == 0 then
+		XGUIEng.ShowWidget(_Button,0)
+
+	--Upgrade is enabled and visible
+	elseif TechState == 2 or TechState == 3 then
+		XGUIEng.ShowWidget(_Button,1)
+		XGUIEng.DisableButton(_Button,0)
+
+	--Upgrade is already researched
+	elseif TechState == 4 then
+		XGUIEng.ShowWidget(_Button,0)
+
+	--Upgrade is too far in the future
+	elseif TechState == 1 or TechState == 5 then
+		XGUIEng.ShowWidget(_Button,1)
+		XGUIEng.DisableButton(_Button,1)
+	end
+	if PositionOfNeededEntityInTable > PositionOfSelectedEntityInTable then
+		XGUIEng.ShowWidget(_Button,1)
+		XGUIEng.DisableButton(_Button,1)
+	end
+end
+UpgradeTechByEtype = {	[Entities.PU_LeaderBow1] = Technologies.T_UpgradeBow1,
+						[Entities.PU_LeaderBow2] = Technologies.T_UpgradeBow2,
+						[Entities.PU_LeaderBow3] = Technologies.T_UpgradeBow3,
+						[Entities.PU_LeaderRifle1] = Technologies.T_UpgradeRifle1,
+						[Entities.PU_LeaderSword1] = Technologies.T_UpgradeSword1,
+						[Entities.PU_LeaderSword2] = Technologies.T_UpgradeSword2,
+						[Entities.PU_LeaderSword3] = Technologies.T_UpgradeSword3,
+						[Entities.PU_LeaderPoleArm1] = Technologies.T_UpgradeSpear1,
+						[Entities.PU_LeaderPoleArm2] = Technologies.T_UpgradeSpear2,
+						[Entities.PU_LeaderPoleArm3] = Technologies.T_UpgradeSpear3,
+						[Entities.PU_LeaderCavalry1] = Technologies.T_UpgradeLightCavalry1,
+						[Entities.PU_LeaderHeavyCavalry1] = Technologies.T_UpgradeHeavyCavalry1
+					}
+					
+function GUIUpdate_UpgradeLeader(_LeaderID)
+	local button = XGUIEng.GetCurrentWidgetID()
+	local player = GUI.GetPlayerID()
+	local etype = Logic.GetEntityType(_LeaderID)
+	local tech = UpgradeTechByEtype[etype]
+	if not tech then
+		XGUIEng.DisableButton(button, 1)
+		XGUIEng.ShowWidget(button, 0)
+		return
+	end
+	local techstate = Logic.GetTechnologyState(player, tech)
+	--Upgrade is researched
+	if techstate == 4 then
+		XGUIEng.ShowWidget(button, 1)
+		if Logic.LeaderGetNearbyBarracks(_LeaderID) ~= 0 then
+			XGUIEng.DisableButton(button, 0)
+		else
+			XGUIEng.DisableButton(button, 1)
+		end
+	else
+		XGUIEng.ShowWidget(button, 0)
+		XGUIEng.DisableButton(button, 1)
+	end
+
 end

@@ -6,7 +6,7 @@ for _playerId = 2,12 do
 		AIEnemiesAC[_playerId][i] = AIEnemiesAC[_playerId][i] or {}
 	end
 end
-function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime)
+MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime)
 
 	-- Valid
 	if 	_strength == 0 or _strength > 3 or
@@ -134,7 +134,7 @@ function MapEditor_SetupAI(_playerId, _strength, _range, _techlevel, _position, 
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_playerId})
 	end
 end
-function StartMapEditor_ArmyAttack(_playerId, _delay)
+StartMapEditor_ArmyAttack = function(_playerId, _delay)
 
 	if Counter.Tick2("StartMapEditor_ArmyAttack".._playerId, _delay) then		
 		MapEditor_Armies[_playerId].AttackAllowed = true		
@@ -229,12 +229,12 @@ SetupArmy = function(_army)
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_army.player})
 	end	
 end
-EnlargeArmy = function(_army,_troop)
+EnlargeArmy = function(_army, _troop, _pos)
 
 	if not ArmyTable[_army.player][_army.id + 1].IDs then
 		ArmyTable[_army.player][_army.id + 1].IDs = {}
 	end
-	local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
+	local anchor = _pos or ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 	local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or 0, anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
 	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, id)
 	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
@@ -355,6 +355,113 @@ Synchronize = function(_army0, _army1)
 		end
 	end
 end
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SetupAITroopSpawnGenerator = function(_Name, _army)
+
+	-- Setup trigger
+	assert(_army.generatorID==nil, "There is already a generator registered")
+	_army.generatorID = Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_SECOND,
+					"AITroopSpawnGenerator_Condition",
+					"AITroopSpawnGenerator_Action",
+					1,
+					{_Name, _army.player, _army.id},
+					{_army.player, _army.id})
+end
+AITroopSpawnGenerator_Condition = function(_Name, _player, _id)
+
+	local army = ArmyTable[_player][_id + 1]
+	-- Not enough troops
+	if Counter.Tick2(_Name,10) then
+		
+		-- First spawn done
+		if army.firstSpawnDone == nil or army.firstSpawnDone == false then			
+			return true			
+		else
+		
+			if not army.IDs or (table.getn(army.IDs) < army.strength	and (army.noEnemy == nil or army.noEnemy == false or GetClosestEntity(army, army.noEnemyDistance) == 0)) then
+				return Counter.Tick2(_Name.."_Respawn", army.respawnTime/10)				
+			end
+		end
+	end			
+end
+AITroopSpawnGenerator_Action = function(_player, _id)
+
+	local army = ArmyTable[_player][_id + 1]
+	-- Any current spawn index? No? Create one
+	if army.spawnIndex == nil then
+		army.spawnIndex = 1
+	end
+
+	-- Is any generator building there and dead...destroy this generator
+	if army.spawnGenerator ~= nil and IsDead(army.spawnGenerator) then
+		army.generatorID = nil
+		return true
+	end
+
+	-- Get missing army count
+	local missingTroops = army.strength
+	if army.IDs then
+		 missingTroops = army.strength - (table.getn(army.IDs) or 0)
+	end
+
+	-- Is max spawn amount set
+	if army.firstSpawnDone ~= nil and army.maxSpawnAmount ~= nil then
+		-- Set to max
+		missingTroops = math.min(missingTroops, army.maxSpawnAmount)
+	end
+
+	-- Spawn missing army
+	local i
+	for i=1,missingTroops do
+	
+		-- Any data there
+		if army.spawnTypes[army.spawnIndex] == nil then
+	
+			-- End of queue reached, destroy job or restart
+			if army.endless ~= nil and army.endless then				
+				-- restart
+				army.spawnIndex = 1
+				
+			else
+				
+				-- stop job
+				army.generatorID = nil
+				return true
+			end
+		end
+
+		-- Min number...if should not refresh, number is zero
+		local minNumber = army.spawnTypes[army.spawnIndex][2]
+		if army.refresh ~= nil and not army.refresh then
+			minNumber = 0
+		end
+
+		-- Enlarge army
+		local troopDescription = {leaderType = army.spawnTypes[army.spawnIndex][1], maxNumberOfSoldiers = army.spawnTypes[army.spawnIndex][2], minNumberOfSoldiers = minNumber}
+		EnlargeArmy(army, troopDescription, army.spawnPos)
+		-- Next index
+		army.spawnIndex = army.spawnIndex + 1
+
+	end
+
+	-- First spawn done
+	army.firstSpawnDone = true
+	return false
+
+end
+IsAITroopGeneratorDead = function(_army)
+	-- Is army dead
+	if IsDead(_army) then
+		-- Is generator dead
+		return Trigger.IsTriggerEnabled(_army.generatorID) == 0
+	end
+	return false
+end
+DestroyAITroopGenerator = function(_army)
+	Trigger.UnrequestTrigger(_army.generatorID)
+	_army.generatorID = nil
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ManualControl_AttackTarget = function(_player, _armyId, _id)
 	
 	local tabname, range, target, newtarget
@@ -465,7 +572,7 @@ AITroopGenerator_Action = function(_player)
 	return false
 
 end
-function AITroopGenerator_GetLeader(_player)
+AITroopGenerator_GetLeader = function(_player)
 	
 	local entityID = Event.GetEntityID()		
 	local playerID = Logic.EntityGetPlayer(entityID)
@@ -485,22 +592,24 @@ function AITroopGenerator_GetLeader(_player)
 	end
 	
 end
-function AITroopGenerator_RemoveLeader(_player, _id, _army)
-	
-	local entityID = Event.GetEntityID()		
-	
+AITroopGenerator_RemoveLeader = function(_player, _id, _army)
+
+	local entityID = Event.GetEntityID()
+
 	if entityID == _id then
 		if _army then
-			removetablekeyvalue(ArmyTable[_player][_army].IDs, entityID)		
+			removetablekeyvalue(ArmyTable[_player][_army].IDs, entityID)
+			ArmyTable[_player][_army][_id] = nil
 		else
-			removetablekeyvalue(MapEditor_Armies[_player].IDs, entityID)			
+			removetablekeyvalue(MapEditor_Armies[_player].IDs, entityID)
+			MapEditor_Armies[_player][_id] = nil
 		end
 		return true
 	end
-	
+
 end
 AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_player)
-	
+
 	local num = {}
 	num.Barracks, num.Archery, num.Stables, num.Foundry = AI.Village_GetNumberOfMilitaryBuildings(_player)
 	if MapEditor_Armies[_player].prioritylist_lastUpdate == 0 or Logic.GetTime() > MapEditor_Armies[_player].prioritylist_lastUpdate + 30 then
@@ -511,7 +620,7 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_player)
 			for k,v in pairs(BS.CategoriesInMilitaryBuilding) do
 				local tpos = table_findvalue(v, ucat)
 				if tpos ~= 0 then
-					if num[k] > 0 then						
+					if num[k] > 0 then
 						MapEditor_Armies[_player].prioritylist[i] = {name = k, typ = BS.CategoriesInMilitaryBuilding[k][tpos]}
 					end
 				end
