@@ -700,5 +700,9 @@ Das Rekrutierungsverhalten von Truppen wurde überarbeitet.
 
 Die erfassten Daten der KI werden nun korrekt aktualisiert, wenn deren Truppen aufgewertet werden.
 
+<<<<<<< Updated upstream
+Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
+>>>>>>> Stashed changes
+=======
 Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
 >>>>>>> Stashed changes

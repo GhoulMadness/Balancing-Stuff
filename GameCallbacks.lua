@@ -288,10 +288,13 @@ end
 function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	GameCallback_OnTechnologyResearchedOrig(_PlayerID,_TechnologyType)
 	
 	if _TechnologyType == Technologies.T_HeavyThunder then	
 =======
+=======
+>>>>>>> Stashed changes
 	--calculate score
 	if Score ~= nil then
 		Score.CallBackResearched( _PlayerID, _TechnologyType )	
@@ -317,9 +320,14 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 	elseif _TechnologyType == Technologies.T_TotalDestruction then	
 		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		
 	end
 	
+=======
+
+	end
+>>>>>>> Stashed changes
 =======
 
 	end
@@ -348,6 +356,12 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 					
 		end
 		
+	end
+	
+	--Do not play sound on begin of the map
+	local GameTimeMS = Logic.GetTimeMs()	
+	if GameTimeMS == 0 then
+		return
 	end
 	
 	--Do not play sound on begin of the map
@@ -576,10 +590,16 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		
 		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		for i,_ in pairs(gvCastle.PositionTable) do
 		
 			if math.sqrt((_x - gvCastle.PositionTable[i].X)^2+(_y - gvCastle.PositionTable[i].Y)^2) <= gvCastle.BlockRange then
 			
+=======
+		for _,v in pairs(gvCastle.PositionTable) do
+
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvCastle.BlockRange then
+>>>>>>> Stashed changes
 =======
 		for _,v in pairs(gvCastle.PositionTable) do
 
@@ -599,10 +619,16 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		for i,_ in pairs(gvTower.PositionTable) do		
 		
 			if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 			
+=======
+		for _,v in pairs(gvTower.PositionTable) do
+
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+>>>>>>> Stashed changes
 =======
 		for _,v in pairs(gvTower.PositionTable) do
 
@@ -671,10 +697,16 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 				
 				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Weihnachtsbaum-Karte auch nicht nahe der Bäume)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 				for i,_ in pairs(gvTower.PositionTable) do		
 				
 					if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 					
+=======
+				for _,v in pairs(gvTower.PositionTable) do
+
+					if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+>>>>>>> Stashed changes
 =======
 				for _,v in pairs(gvTower.PositionTable) do
 
@@ -703,7 +735,10 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		
 			local checkpos = true
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 			
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 			local pos = GetPosition("center")
@@ -728,12 +763,18 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 					
 					-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 					for i,_ in pairs(gvTower.PositionTable) do			
 					
 						if math.sqrt((_x - gvTower.PositionTable[i].X)^2+(_y - gvTower.PositionTable[i].Y)^2) <= gvTower.BlockRange then
 						
 =======
 					for _,v in pairs(gvTower.PositionTable) do
+=======
+					for _,v in pairs(gvTower.PositionTable) do
+
+						if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
+>>>>>>> Stashed changes
 
 						if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
 
@@ -758,9 +799,13 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 					
 				end
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 				
 			end	
 			
+=======
+			end
+>>>>>>> Stashed changes
 =======
 			end
 >>>>>>> Stashed changes

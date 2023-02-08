@@ -1,7 +1,11 @@
 	BS = BS or {}
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	BS.Version = 0.733
+=======
+	BS.Version = 0.735
+>>>>>>> Stashed changes
 =======
 	BS.Version = 0.735
 >>>>>>> Stashed changes
