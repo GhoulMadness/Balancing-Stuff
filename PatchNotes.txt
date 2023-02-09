@@ -698,3 +698,5 @@ Das Rekrutierungsverhalten von Truppen wurde überarbeitet.
 Die erfassten Daten der KI werden nun korrekt aktualisiert, wenn deren Truppen aufgewertet werden.
 
 Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
+
+Es werden nun keine Komma-Zahlen mehr angezeigt, wenn Euch Ressourcen fehlen und ihr unter bestimmten Umständen Gebäude abgerissen hattet.
