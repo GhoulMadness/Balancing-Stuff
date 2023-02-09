@@ -950,15 +950,19 @@ function GUIUpdate_BuyMilitaryUnitButtons(_Button, _Technology, _BuildingType)
 	elseif TechState == 1 then
 		XGUIEng.DisableButton(_Button,1)
 
-	elseif TechState == 2 and (_Technology == Technologies.MU_LeaderSword or _Technology == Technologies.MU_LeaderSpear or _Technology == Technologies.MU_LeaderBow 
-		or _Technology == Technologies.MU_LeaderRifle or _Technology == Technologies.MU_LeaderLightCavalry or _Technology == Technologies.MU_LeaderHeavyCavalry) then
-		XGUIEng.DisableButton(_Button,0)
+	elseif TechState == 2 then
+		if _Technology == Technologies.MU_LeaderSword or _Technology == Technologies.MU_LeaderSpear or _Technology == Technologies.MU_LeaderBow 
+			or _Technology == Technologies.MU_LeaderRifle or _Technology == Technologies.MU_LeaderLightCavalry or _Technology == Technologies.MU_LeaderHeavyCavalry then
+			XGUIEng.DisableButton(_Button,0)
+		else
+			XGUIEng.DisableButton(_Button,1)
+		end
 
 	--Technology is researched
 	elseif TechState == 4 then
 		XGUIEng.DisableButton(_Button,0)
 
-	--Technology is in reserach or to far in the future
+	--Technology is in reserach or too far in the future
 	elseif TechState == 3 or TechState == 5 then
 		XGUIEng.DisableButton(_Button,1)
 	end
