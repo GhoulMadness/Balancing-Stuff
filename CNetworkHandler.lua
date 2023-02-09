@@ -458,6 +458,16 @@
 			end
 		)
 		
+		CNetwork.SetNetworkHandler("Ghoul_UpgradeLeaderCommand",
+			function(name, _leaderID, _playerID, ...)
+				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+					CLogger.Log("Ghoul_UpgradeLeaderCommand", name, _leaderID, _playerID, arg)
+					-- execute stuff
+					GUIAction_ActionUpgradeLeader(_leaderID, _playerID, arg)
+				end
+			end
+		)
+
 		CommandCallback_PlaceBuilding = function(_name, _player, _upgradeCategory, _x, _y, _rotation, ...)
 			for i = 1,4 do 
 				if _upgradeCategory == UpgradeCategories["VictoryStatue"..i] then

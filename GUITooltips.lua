@@ -541,3 +541,97 @@ function GUITooltip_Forester_StartWork()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
+function GUITooltip_BuyMilitaryUnit(_EntityType, _NormalTooltip, _DisabledTooltip, _TechnologyType, _ShortCut, _BuildingType)
+
+	local PlayerID = GUI.GetPlayerID()
+	Logic.FillLeaderCostsTable(PlayerID, _EntityType + 2 ^ 16, InterfaceGlobals.CostTable)
+	local SelectedBuildingType = Logic.GetEntityType(GUI.GetSelectedEntity())
+	local UpgradeCategory = Logic.GetUpgradeCategoryByBuildingType(_BuildingType)
+	local EntityTypes = {Logic.GetBuildingTypesInUpgradeCategory(UpgradeCategory)}
+	local PositionOfSelectedEntityInTable, PositionOfNeededEntityInTable = 0, 0
+	local CostString = InterfaceTool_CreateCostString(InterfaceGlobals.CostTable)
+	local TooltipText = _NormalTooltip
+	local NeededPlaces = Logic.GetAttractionLimitValueByEntityType(_EntityType)
+	local ShortCutToolTip = " "
+
+	for i = 1, EntityTypes[1] do
+		if EntityTypes[i+1] == SelectedBuildingType then
+			PositionOfSelectedEntityInTable = i + 1
+		end
+		if EntityTypes[i+1] == _BuildingType then
+			PositionOfNeededEntityInTable = i + 1
+		end
+	end
+
+	CostString = CostString .. XGUIEng.GetStringTableText("InGameMessages/GUI_NamePlaces") .. ": " .. NeededPlaces
+
+	if _TechnologyType ~= nil then
+		local TechState = Logic.GetTechnologyState(PlayerID, _TechnologyType)
+		if TechState == 0 then
+			TooltipText =  "MenuGeneric/UnitNotAvailable"
+			CostString = " "
+		elseif TechState == 1 or TechState == 5 or PositionOfNeededEntityInTable > PositionOfSelectedEntityInTable then
+			TooltipText = _DisabledTooltip
+		end
+	end
+
+	if _ShortCut ~= nil then
+		ShortCutToolTip = XGUIEng.GetStringTableText("MenuGeneric/Key_name") .. ": [" .. XGUIEng.GetStringTableText(_ShortCut) .. "]"
+	end
+
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipText)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+
+end
+function GUITooltip_BuyMerc(_UpgradeCategory, _NormalTooltip, _DisabledTooltip, _TechnologyType, _ShortCut)
+
+	local PlayerID = GUI.GetPlayerID()
+	local SettlerTypeID = Logic.GetSettlerTypeByUpgradeCategory(_UpgradeCategory, PlayerID)
+	Logic.FillLeaderCostsTable(PlayerID, _UpgradeCategory, InterfaceGlobals.CostTable)
+	local CostString = InterfaceTool_CreateCostString(InterfaceGlobals.CostTable)
+	local TooltipText = _NormalTooltip
+	local NeededPlaces = Logic.GetAttractionLimitValueByEntityType(SettlerTypeID)
+	local ShortCutToolTip = " "
+
+	CostString = CostString .. XGUIEng.GetStringTableText("InGameMessages/GUI_NamePlaces") .. ": " .. NeededPlaces
+
+	if _TechnologyType ~= nil then
+		local TechState = Logic.GetTechnologyState(PlayerID, _TechnologyType)
+		if TechState == 0 then
+			TooltipText =  "MenuGeneric/UnitNotAvailable"
+			CostString = " "
+		elseif TechState == 1 then
+			TooltipText = _DisabledTooltip
+		end
+	end
+
+	if _ShortCut ~= nil then
+		ShortCutToolTip = XGUIEng.GetStringTableText("MenuGeneric/Key_name") .. ": [" .. XGUIEng.GetStringTableText(_ShortCut) .. "]"
+	end
+
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipText)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end
+function GUITooltip_UpgradeLeader(_LeaderID, _ShortCut)
+	local PlayerID = GUI.GetPlayerID()
+	local etype = Logic.GetEntityType(_LeaderID)
+	local upetype = etype + 1
+	local numsoldiers = Logic.LeaderGetNumberOfSoldiers(_LeaderID)
+	local soletype = Logic.LeaderGetSoldiersType(_LeaderID)
+	local upsoletype = soletype + 1
+	local t = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+	local CostString = InterfaceTool_CreateCostString(t)
+	local TooltipText = "Wertet diesen Hauptmann und alle seine Soldaten auf!"
+	local ShortCutToolTip = " "
+
+	if _ShortCut ~= nil then
+		ShortCutToolTip = XGUIEng.GetStringTableText("MenuGeneric/Key_name") .. ": [" .. XGUIEng.GetStringTableText(_ShortCut) .. "]"
+	end
+
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TooltipText)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+
+end

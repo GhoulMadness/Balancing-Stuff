@@ -676,6 +676,27 @@ Einige GUI-Elemente wurden ausgelagert. Dies sollte keine Auswirkungen auf das S
 
 Vorbereitungen für das kommende Osterturnier.
 
+Eine erste Version der Osterturnier-Map ist ab sofort verfügbar. 
+Bedenkt jedoch, dass es hier infolge von künftigen Abstimmungen noch zu diversen Änderungen kommen kann.
+
 --- Version 0.734
 
 Limitierungen der Anzahl von Türmen und deren Mindestabstand zueinander gelten nun auch für von Erebos erzeugte Wohnstätten.
+
+Es wurde ein Fehler im Zusammenhang mit Dovbar behoben.
+
+Es wurde eine 2-Spieler-Version der BS-Testmap hinzugefügt.
+
+--- Version 0.735
+
+Für die angepasste KI kann nun ein Spawn-Generator verwendet werden.
+
+Es wurde ein Fehler behoben, durch den der Außenposten (Festung) nicht für die Voraussetzungen der Technologie Steuereintreibung galt.
+
+Das Rekrutierungsverhalten von Truppen wurde überarbeitet.
+
+Die erfassten Daten der KI werden nun korrekt aktualisiert, wenn deren Truppen aufgewertet werden.
+
+Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
+
+Es werden nun keine Komma-Zahlen mehr angezeigt, wenn Euch Ressourcen fehlen und ihr unter bestimmten Umständen Gebäude abgerissen hattet.

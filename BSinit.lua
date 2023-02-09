@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.734
+	BS.Version = 0.735
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -91,7 +91,8 @@
 					["(4) emsbs der taktiker"] = true,
 					["(4) emsbs winterzauber"] = true,
 					["(4) emsbs sparrowdale"] = true,
-					["(4) emsbs osterfieber"] = true
+					["(4) emsbs osterfieber"] = true,
+					["(4) emsbs silberland"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
@@ -345,14 +346,18 @@
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
+	--needed to use etype instead of ucat for some functions(e.g. recruiting)
+	CUtil.EnableEntityTypeAsUgradeCategory()
+	--load special gfx
 	BS.GfxInit()
 	--disables the creation of fow (needed for minimap)
 	CUtil.DisableFoW()
 	--larger zoom factor (default 1.0)
 	Camera.ZoomSetFactorMax(2)
+	--TODO: is this really needed??
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
-	--cooldown handling levy taxes
+	--cooldown handling levy taxes TODO: this is not at the correct place
 	gvLastTimeButtonPressed = -240000 		
 	--additional chat taunts added
 	BonusKeys()	
