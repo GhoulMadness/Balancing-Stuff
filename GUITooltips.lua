@@ -1,14 +1,14 @@
 function GUITooltip_ExtraDuties()
-				
+
 	local PlayerID = GUI.GetPlayerID()
-	if PlayerID == BS.SpectatorPID then	
-		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())		
+	if PlayerID == BS.SpectatorPID then
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
 	end
 	local TaxAmount = Logic.GetPlayerTaxIncome(PlayerID)
 	local TaxBonus = 1
-	
-	for i = 1, gvVictoryStatue3.Amount[PlayerID] do	
-		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))	
+
+	for i = 1, gvVictoryStatue3.Amount[PlayerID] do
+		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
 	end
 	local TaxName = ""
 	local TextString = ""
@@ -22,7 +22,7 @@ function GUITooltip_ExtraDuties()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TextString)
  	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, "@color:255,255,255,255 "..TaxName.." : ".. round(TaxAmount * TaxBonus))
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, " ")
-	
+
 end
 function GUITooltip_Outpost_Serf()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,"@color:180,180,180,255 Kauft einen Leibeigenen @cr @color:255,255,255,255  Ein Lebeigener sammelt Ressourcen, baut und repariert Häuser und kann die Gegend erkunden. Er braucht kein Haus und keinen Bauernhof! ")
@@ -354,29 +354,28 @@ function GUITooltip_Experience()
 end
 function GUITooltip_AOFindHero()
 
-	
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local EntityID = XGUIEng.GetBaseWidgetUserVariable(CurrentWidgetID, 0)
-	
+
 	local CostString = " "
 	local ShortCutToolTip = " "
 	local TooltipString = " "
-	
+
 	if EntityID  ~= 0 then
-		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then	
+		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then
 			TooltipString = "AOMenuTop/Find_hero10"
 		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero11) == 1 then
-			TooltipString = "AOMenuTop/Find_hero11"		
+			TooltipString = "AOMenuTop/Find_hero11"
 		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Evil_Queen then
-			TooltipString = "AOMenuTop/Find_hero12"		
+			TooltipString = "AOMenuTop/Find_hero12"
 		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero13) == 1 then
-			TooltipString = "AOMenuTop/Find_hero13"		
+			TooltipString = "AOMenuTop/Find_hero13"
 		else
 			GUITooltip_FindHero()
 			return
 		end
 	end
-	
+
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
@@ -385,83 +384,59 @@ end
 function GUITooltip_Archers_Tower_AddSlot()
 
 	local CostString = " "
-	
-	local ShortCutToolTip = " "	
-	
+	local ShortCutToolTip = " "
 	local Text = ""
-	
+
 	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
-	
 		Text = "@color:180,180,180 Truppen einlagern @cr @color:255,255,255,255 Klickt hier, um ein nahestehendes Trupp Schützen den Turm hochklettern zu lassen."
-		
 	else
-	
 		Text = "@color:180,180,180 Fill with troops @cr @color:255,255,255,255 Click here to let nearby bowman or rifleman climb up the tower."
-		
 	end
-	
+
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
-	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
-	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
-	
+
 end
 
 function GUITooltip_Archers_Tower_RemoveSlot()
 
 	local CostString = " "
-	
-	local ShortCutToolTip = " "	
-	
+	local ShortCutToolTip = " "
 	local Text = ""
-	
+
 	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
-	
 		Text = "@color:180,180,180 Truppen auslagern @cr @color:255,255,255,255 Klickt hier, um ein stationiertes Trupp den Turm herunterklettern zu lassen."
-		
 	else
-	
 		Text = "@color:180,180,180 Outsource troops @cr @color:255,255,255,255 Click here to let a occupied troop climb down the tower."
-		
 	end
-	
+
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
-	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
-	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
-	
+
 end
 
 function GUITooltip_Archers_Tower_Slot(_slot)
 
 	local CostString = " "
-	
-	local ShortCutToolTip = " "	
-	
+	local ShortCutToolTip = " "
 	local Text = ""
-	
+
 	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
-	
 		Text = "@color:180,180,180 Truppenslot ".._slot.." @cr @color:255,255,255,255 Klickt hier, um dieses Trupp den Turm herunterklettern zu lassen."
-		
 	else
-	
 		Text = "@color:180,180,180 troop slot ".._slot.." @cr @color:255,255,255,255 Click here to let this troop climb down the tower."
-		
 	end
-	
+
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
-	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
-	
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 
 end
 -- Army Creator Tooltips
 function GUITooltip_ArmyCreator(_name,_modifier)
-	
+
 	local pretext
 	if _modifier > 0 then
 		if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
@@ -478,67 +453,66 @@ function GUITooltip_ArmyCreator(_name,_modifier)
 	end
 	local String = XGUIEng.GetStringTableText("names/".._name)
 	XGUIEng.SetText("BS_ArmyCreator_Tooltip", " @center "..pretext.." " .. string.gsub(String, " @bs ", " "))
-	
+
 end
 function GUITooltip_AOFindHero()
 
-	
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local EntityID = XGUIEng.GetBaseWidgetUserVariable(CurrentWidgetID, 0)
-	
+
 	local CostString = " "
 	local ShortCutToolTip = " "
 	local TooltipString = " "
-	
+
 	if EntityID  ~= 0 then
-		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then	
+		if Logic.IsEntityInCategory(EntityID,EntityCategories.Hero10) == 1 then
 			TooltipString = "AOMenuTop/Find_hero10"
 		elseif Logic.IsEntityInCategory(EntityID,EntityCategories.Hero11) == 1 then
-			TooltipString = "AOMenuTop/Find_hero11"		
+			TooltipString = "AOMenuTop/Find_hero11"
 		elseif Logic.GetEntityType( EntityID )	== Entities.CU_Evil_Queen then
-			TooltipString = "AOMenuTop/Find_hero12"		
+			TooltipString = "AOMenuTop/Find_hero12"
 		elseif Logic.GetEntityType( EntityID )	== Entities.PU_Hero13 then
-			TooltipString = "AOMenuTop/Find_hero13"		
+			TooltipString = "AOMenuTop/Find_hero13"
 		elseif Logic.GetEntityType( EntityID )	== Entities.PU_Hero14 then
-			TooltipString = "AOMenuTop/Find_hero14"		
+			TooltipString = "AOMenuTop/Find_hero14"
 		else
 			GUITooltip_FindHero()
 			return
 		end
 	end
-	
+
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetTextKeyName(gvGUI_WidgetID.TooltipBottomText, TooltipString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
 function GUITooltip_Forester_PauseWork()
-	local CostString = " "	
-	local ShortCutToolTip = " "		
-	local Text = ""
-	
-	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then	
-		Text = "@color:180,180,180 Arbeit pausieren @cr @color:255,255,255,255 Klickt hier, um den Förster seine Arbeit niederlegen zu lassen."		
-	else	
-		Text = "@color:180,180,180 pause work @cr @color:255,255,255,255 Click here to make the forester stop working."		
+	local CostString = " "
+	local ShortCutToolTip = " "
+	local Text = " "
+
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
+		Text = "@color:180,180,180 Arbeit pausieren @cr @color:255,255,255,255 Klickt hier, um den Förster seine Arbeit niederlegen zu lassen."
+	else
+		Text = "@color:180,180,180 pause work @cr @color:255,255,255,255 Click here to make the forester stop working."
 	end
-	
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)	
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)	
+
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
 function GUITooltip_Forester_StartWork()
-	local CostString = " "	
-	local ShortCutToolTip = " "		
-	local Text = ""
-	
-	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then	
-		Text = "@color:180,180,180 Arbeit wieder aufnehmen @cr @color:255,255,255,255 Klickt hier, um den Förster seine Arbeit wieder aufnehmen zu lassen."		
-	else	
-		Text = "@color:180,180,180 resume work @cr @color:255,255,255,255 Click here to have the forester resume his work."		
+	local CostString = " "
+	local ShortCutToolTip = " "
+	local Text = " "
+
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
+		Text = "@color:180,180,180 Arbeit wieder aufnehmen @cr @color:255,255,255,255 Klickt hier, um den Förster seine Arbeit wieder aufnehmen zu lassen."
+	else
+		Text = "@color:180,180,180 resume work @cr @color:255,255,255,255 Click here to have the forester resume his work."
 	end
-	
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)	
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)	
+
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
 function GUITooltip_BuyMilitaryUnit(_EntityType, _NormalTooltip, _DisabledTooltip, _TechnologyType, _ShortCut, _BuildingType)
