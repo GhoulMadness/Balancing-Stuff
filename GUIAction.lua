@@ -818,3 +818,55 @@ function GUIAction_ActionUpgradeLeader(_LeaderID, _PlayerID, ...)
 	end
 	Logic.DEBUG_UpgradeSettler(_LeaderID)
 end
+EntityTypesInCatString = {["Mercenary"] = {	Entities.CU_BanditLeaderBow1,
+											Entities.CU_BanditLeaderSword1,
+											Entities.CU_BanditLeaderSword2,
+											Entities.CU_Barbarian_LeaderClub1,
+											Entities.CU_Barbarian_LeaderClub2,
+											Entities.CU_BlackKnight_LeaderMace1,
+											Entities.CU_BlackKnight_LeaderMace2,
+											Entities.CU_BlackKnight_LeaderSword3,
+											Entities.CU_VeteranLieutenant},
+							["Bearman"] = {	Entities.CU_Evil_LeaderBearman1,
+											Entities.CU_Evil_LeaderSkirmisher1,
+											Entities.PU_Hero14_Bearman1,
+											Entities.PU_Hero14_Bearman2,
+											Entities.PU_Hero14_BearmanElite,
+											Entities.PU_Hero14_Skirmisher1,
+											Entities.PU_Hero14_Skirmisher2,
+											Entities.PU_Hero14_SkirmisherElite}
+							}
+function GUIAction_SelectEntityInCategory(_catstring)
+	-- Do not jump in cutscene!
+	if gvInterfaceCinematicFlag == 1 then
+		return
+	end
+	if not EntityTypesInCatString[_catstring] then
+		return
+	end
+	local EntityTable = {}
+	for i = 1, table.getn(EntityTypesInCatString[_catstring]) do
+		local TempTable = {Logic.GetPlayerEntities(GUI.GetPlayerID(), EntityTypesInCatString[_catstring][i], 48)}
+		local number = TempTable[1]
+		for j = 1, number do
+			table.insert(EntityTable,TempTable[j+1])
+		end
+	end
+
+	if table.getn(EntityTable) == 0 then
+		return
+	end
+	local counter = gvKeyBindings_LastSelectedEntityPos
+
+	--Counter at the end of table?
+	counter = counter + 1
+	if counter >= table.getn(EntityTable) then
+		counter = 0
+	end
+
+	gvKeyBindings_LastSelectedEntityPos = counter
+	local EntityID = EntityTable[1 + counter]
+	local IDPosX, IDPosY = Logic.GetEntityPosition(EntityID)
+	Camera.ScrollSetLookAt(IDPosX, IDPosY)
+	GUI.SetSelectedEntity(EntityID )
+end

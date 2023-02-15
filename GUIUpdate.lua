@@ -952,7 +952,8 @@ function GUIUpdate_BuyMilitaryUnitButtons(_Button, _Technology, _BuildingType)
 
 	elseif TechState == 2 then
 		if _Technology == Technologies.MU_LeaderSword or _Technology == Technologies.MU_LeaderSpear or _Technology == Technologies.MU_LeaderBow 
-			or _Technology == Technologies.MU_LeaderRifle or _Technology == Technologies.MU_LeaderLightCavalry or _Technology == Technologies.MU_LeaderHeavyCavalry then
+			or _Technology == Technologies.MU_LeaderRifle or _Technology == Technologies.MU_LeaderLightCavalry or _Technology == Technologies.MU_LeaderHeavyCavalry 
+			or _Technology == Technologies.MU_Scout or _Technology == Technologies.MU_Thief then
 			XGUIEng.DisableButton(_Button,0)
 		else
 			XGUIEng.DisableButton(_Button,1)
@@ -1069,8 +1070,6 @@ function GUIUpdate_UpgradeLeader(_LeaderID)
 		end
 		XGUIEng.DisableButton(button, 1)
 	end
-<<<<<<< Updated upstream
-=======
 end
 
 GUIUpdate_FindView = function()
@@ -1191,6 +1190,5 @@ GUIUpdate_FindView = function()
 	else
 		XGUIEng.ShowWidget("FindBearman", 0)
 	end
->>>>>>> Stashed changes
 
 end

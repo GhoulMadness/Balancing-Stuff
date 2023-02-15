@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.735
+	BS.Version = 0.736
 
 	BS.CurrentMappoolTotalAmount = 0
 
