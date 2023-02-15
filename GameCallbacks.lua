@@ -655,13 +655,11 @@ end
 
 function GameCallback_ResearchProgress(_player, _research_building, _technology, _entity, _research_amount, _current_progress, _max)
 
-	local playerID = _player
-
 	if _technology == Technologies.T_CityGuard then
 		_research_amount = math.floor((_max + 0.5)/120) or _research_amount
 	end
 
-	if Logic.GetTechnologyState(playerID, Technologies.T_TownGuard) == 4 then
+	if Logic.GetTechnologyState(_player, Technologies.T_TownGuard) == 4 then
 		_research_amount = math.ceil(_research_amount *1.2) or _research_amount
 	end
 
@@ -721,35 +719,35 @@ function GameCallback_PaydayPayed(_player,_amount)
 
 		return _amount
 
-	else		
-		return 0		
+	else
+		return 0
 	end
 end
 --------------------------------------------------------------------------------
 -- Function that is called when an entity ID changes (upgrade, ...)
 --------------------------------------------------------------------------------
-function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
+function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 
 	local player = Logic.EntityGetPlayer(_OldID)
 	-- needed when troop on top of the archers tower is upgraded
 	for k,v in pairs(gvArchers_Tower.SlotData) do
-						
+
 		local slot = table_findvalue(gvArchers_Tower.SlotData[k],_OldID)
-		
-		if slot ~= 0 then		
-			gvArchers_Tower.SlotData[k][slot] = _NewID			
-			gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] + 1			
-			local TroopIDs = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[k][slot])}						
-			table.remove(TroopIDs,1)			
+
+		if slot ~= 0 then
+			gvArchers_Tower.SlotData[k][slot] = _NewID
+			gvArchers_Tower.CurrentlyUsedSlots[k] = gvArchers_Tower.CurrentlyUsedSlots[k] + 1
+			local TroopIDs = {Logic.GetSoldiersAttachedToLeader(gvArchers_Tower.SlotData[k][slot])}
+			table.remove(TroopIDs,1)
 			table.insert(TroopIDs,gvArchers_Tower.SlotData[k][slot])
-			
-			for i = 1,table.getn(TroopIDs) do				
-				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)				
-				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)				
-				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player)*gvArchers_Tower.MaxRangeFactor)			
+
+			for i = 1,table.getn(TroopIDs) do
+				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
+				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
+				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player)*gvArchers_Tower.MaxRangeFactor)
 			end
-			
-		end	
+
+		end
 	end
 	-- update AI data when troops upgrade
 	if ArmyTable and ArmyTable[player] then
@@ -783,7 +781,7 @@ function GameCallback_GUI_EntityIDChanged( _OldID, _NewID )
 			end
 		end
 	end
-	GameCallback_GUI_EntityIDChangedOrig(_OldID,_NewID)	
+	GameCallback_GUI_EntityIDChangedOrig(_OldID, _NewID)
 end
 
 GameCallback_UnknownTask = function(_id)
@@ -791,12 +789,12 @@ GameCallback_UnknownTask = function(_id)
 --[[0: weiter sofort
 	1: weiter nächster Tick
 	2: bleiben
-]]	
+]]
 	if GetEntityCurrentTaskIndex(_id) == 3 then
 		if WCutter.FindNearestTree(_id) > 0 then
 			WCutter.StartWork(_id, WCutter.FindNearestTree(_id))
 			return 2
-		else			
+		else
 			SetEntityCurrentTaskIndex(_id, 1)
 			--[[ TODO: return param crucial?
 			return 0]]

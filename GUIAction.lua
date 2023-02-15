@@ -731,30 +731,77 @@ function BuyHeroWindow_Action_BuyHero(_HeroEntityType)
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
 end
 function GUIAction_UpgradeLeader(_LeaderID)
-	local BarracksID = Logic.LeaderGetNearbyBarracks(_LeaderID)
-	if BarracksID == 0 then
-		return
-	end
-	--currently upgrading
-	if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) ~= Logic.GetTotalUpgradeTimeForBuilding(BarracksID) then
-		return
-	end
-	--currently researching
-	if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
-		return
-	end
+	local entities = {GUI.GetSelectedEntities()}
+	local etype, upetype, numsoldiers, soletype, upsoletype, t, BarracksID
 	local PlayerID = GUI.GetPlayerID()
-	local etype = Logic.GetEntityType(_LeaderID)
-	local upetype = etype + 1
-	local numsoldiers = Logic.LeaderGetNumberOfSoldiers(_LeaderID)
-	local soletype = Logic.LeaderGetSoldiersType(_LeaderID)
-	local upsoletype = soletype + 1
-	local t = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
-	if InterfaceTool_HasPlayerEnoughResources_Feedback(t) == 1 then
-		if CNetwork then
-			CNetwork.SendCommand("Ghoul_UpgradeLeaderCommand", _LeaderID, PlayerID, unpack(t))
-		else
-			GUIAction_ActionUpgradeLeader(_LeaderID, PlayerID, unpack(t))
+
+	if not entities[2] then
+		BarracksID = Logic.LeaderGetNearbyBarracks(_LeaderID)
+		if BarracksID == 0 then
+			return
+		end
+		--currently upgrading
+		if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) ~= Logic.GetTotalUpgradeTimeForBuilding(BarracksID) then
+			return
+		end
+		--currently researching
+		if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
+			return
+		end
+		etype = Logic.GetEntityType(_LeaderID)
+		upetype = etype + 1
+		numsoldiers = Logic.LeaderGetNumberOfSoldiers(_LeaderID)
+		soletype = Logic.LeaderGetSoldiersType(_LeaderID)
+		upsoletype = soletype + 1
+		t = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+		if InterfaceTool_HasPlayerEnoughResources_Feedback(t) == 1 then
+			if CNetwork then
+				CNetwork.SendCommand("Ghoul_UpgradeLeaderCommand", _LeaderID, PlayerID, unpack(t))
+			else
+				GUIAction_ActionUpgradeLeader(_LeaderID, PlayerID, unpack(t))
+			end
+		end
+	else
+		local temp_t = {}
+		for i = 1, table.getn(entities) do
+			local id = entities[i]
+			if Logic.IsLeader(id) == 1 then
+				etype = Logic.GetEntityType(id)
+				local tech = UpgradeTechByEtype[etype]
+				if tech then
+					local techstate = Logic.GetTechnologyState(PlayerID, tech)
+					if techstate == 4 then
+						BarracksID = Logic.LeaderGetNearbyBarracks(id)
+						if BarracksID ~= 0
+						and Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) == Logic.GetTotalUpgradeTimeForBuilding(BarracksID)
+						and Logic.GetTechnologyResearchedAtBuilding(BarracksID) == 0 then
+							upetype = etype + 1
+							numsoldiers = Logic.LeaderGetNumberOfSoldiers(id)
+							soletype = Logic.LeaderGetSoldiersType(id)
+							upsoletype = soletype + 1
+							temp_t[i] = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+						end
+					end
+				end
+			end
+		end
+		t = {}
+		for i = 1, 17 do
+			t[i] = 0
+		end
+		for k, v in pairs(temp_t) do
+			for i = 1, table.getn(v) do
+				t[i] = t[i] + v[i]
+			end
+		end
+		if InterfaceTool_HasPlayerEnoughResources_Feedback(t) == 1 then
+			for k, v in pairs(temp_t) do
+				if CNetwork then
+					CNetwork.SendCommand("Ghoul_UpgradeLeaderCommand", entities[k], PlayerID, unpack(v))
+				else
+					GUIAction_ActionUpgradeLeader(entities[k], PlayerID, unpack(v))
+				end
+			end
 		end
 	end
 end

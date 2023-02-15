@@ -1030,25 +1030,167 @@ UpgradeTechByEtype = {	[Entities.PU_LeaderBow1] = Technologies.T_UpgradeBow1,
 function GUIUpdate_UpgradeLeader(_LeaderID)
 	local button = XGUIEng.GetCurrentWidgetID()
 	local player = GUI.GetPlayerID()
-	local etype = Logic.GetEntityType(_LeaderID)
-	local tech = UpgradeTechByEtype[etype]
-	if not tech then
-		XGUIEng.DisableButton(button, 1)
-		XGUIEng.ShowWidget(button, 0)
-		return
-	end
-	local techstate = Logic.GetTechnologyState(player, tech)
-	--Upgrade is researched
-	if techstate == 4 then
-		XGUIEng.ShowWidget(button, 1)
-		if Logic.LeaderGetNearbyBarracks(_LeaderID) ~= 0 then
-			XGUIEng.DisableButton(button, 0)
+	local entities = {GUI.GetSelectedEntities()}
+	if not entities[2] then
+		local etype = Logic.GetEntityType(_LeaderID)
+		local tech = UpgradeTechByEtype[etype]
+		if not tech then
+			XGUIEng.DisableButton(button, 1)
+			XGUIEng.ShowWidget(button, 0)
+			return
+		end
+		local techstate = Logic.GetTechnologyState(player, tech)
+		if techstate == 4 then
+			XGUIEng.ShowWidget(button, 1)
+			if Logic.LeaderGetNearbyBarracks(_LeaderID) ~= 0 then
+				XGUIEng.DisableButton(button, 0)
+			else
+				XGUIEng.DisableButton(button, 1)
+			end
 		else
+			XGUIEng.ShowWidget(button, 0)
 			XGUIEng.DisableButton(button, 1)
 		end
 	else
-		XGUIEng.ShowWidget(button, 0)
+		for i = 1, table.getn(entities) do
+			local id = entities[i]
+			local etype = Logic.GetEntityType(id)
+			local tech = UpgradeTechByEtype[etype]
+			if tech then
+				local techstate = Logic.GetTechnologyState(player, tech)
+				if techstate == 4 then
+					if Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+						XGUIEng.ShowWidget(button, 1)
+						XGUIEng.DisableButton(button, 0)
+						return
+					end
+				end
+			end
+		end
 		XGUIEng.DisableButton(button, 1)
 	end
+<<<<<<< Updated upstream
+=======
+end
+
+GUIUpdate_FindView = function()
+
+	local PlayerID = GUI.GetPlayerID()
+	-- Serfs
+	local SerfAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Serf)
+	if SerfAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindIdleSerf, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindIdleSerf, 0)
+	end
+	-- Swordsmen
+	local PlayerSwordmenAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderSword1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderSword2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderSword3)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderSword4)
+	if PlayerSwordmenAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindSwordLeader, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindSwordLeader, 0)
+	end
+	-- Spearmen
+	local PlayerSpearmenAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderPoleArm1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderPoleArm2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderPoleArm3)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderPoleArm4)
+	if PlayerSpearmenAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindSpearLeader, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindSpearLeader, 0)
+	end
+	-- Bowmen
+	local PlayerBowmenAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderBow1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderBow2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderBow3)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderBow4)
+	if PlayerBowmenAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindBowLeader, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindBowLeader, 0)
+	end
+	-- light Cavalry
+	local PlayerCavalryAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderCavalry1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderCavalry2)
+	if PlayerCavalryAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindLightCavalryLeader, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindLightCavalryLeader, 0)
+	end
+	-- heavy Cavalry
+	local PlayerHeavyCavalryAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderHeavyCavalry1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderHeavyCavalry2)
+	if PlayerHeavyCavalryAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindHeavyCavalryLeader, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindHeavyCavalryLeader, 0)
+	end
+	-- cannons
+	local Cannon1 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
+	local Cannon2 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
+	local Cannon3 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
+	local Cannon4 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
+	local CannonAmount = Cannon1 + Cannon2 + Cannon3 + Cannon4
+	if CannonAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindCannon, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindCannon, 0)
+	end
+	-- riflemen
+	local PlayerRifleAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderRifle1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderRifle2)
+	if PlayerRifleAmount > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindRifleLeader, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindRifleLeader, 0)
+	end
+	-- Scout
+	local Scout = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Scout)
+	if Scout > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindScout, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindScout, 0)
+	end
+	-- Thief
+	local Thief = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Thief)
+	if Thief > 0 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindThief, 1)
+	else
+		XGUIEng.ShowWidget(gvGUI_WidgetID.FindThief, 0)
+	end
+	-- Mercenary
+	local PlayerMercAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_BlackKnight_LeaderMace1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_BlackKnight_LeaderMace2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_BlackKnight_LeaderSword3)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_BanditLeaderSword1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_BanditLeaderSword2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_Barbarian_LeaderClub1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_Barbarian_LeaderClub2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_BanditLeaderBow1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_VeteranLieutenant)
+	if PlayerMercAmount > 0 then
+		XGUIEng.ShowWidget("FindMercenary", 1)
+	else
+		XGUIEng.ShowWidget("FindMercenary", 0)
+	end
+	-- Bearmen
+	local PlayerBearmenAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_Evil_LeaderBearman1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.CU_Evil_LeaderSkirmisher1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Hero14_Bearman1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Hero14_Bearman2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Hero14_BearmanElite)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Hero14_Skirmisher1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Hero14_Skirmisher2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Hero14_SkirmisherElite)
+	if PlayerBearmenAmount > 0 then
+		XGUIEng.ShowWidget("FindBearman", 1)
+	else
+		XGUIEng.ShowWidget("FindBearman", 0)
+	end
+>>>>>>> Stashed changes
 
 end

@@ -616,20 +616,52 @@ function GUITooltip_BuyMerc(_UpgradeCategory, _NormalTooltip, _DisabledTooltip, 
 end
 function GUITooltip_UpgradeLeader(_LeaderID, _ShortCut)
 	local PlayerID = GUI.GetPlayerID()
-	local etype = Logic.GetEntityType(_LeaderID)
-	local upetype = etype + 1
-	local numsoldiers = Logic.LeaderGetNumberOfSoldiers(_LeaderID)
-	local soletype = Logic.LeaderGetSoldiersType(_LeaderID)
-	local upsoletype = soletype + 1
-	local t = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
-	local CostString = InterfaceTool_CreateCostString(t)
-	local TooltipText = "Wertet diesen Hauptmann und alle seine Soldaten auf!"
-	local ShortCutToolTip = " "
-
+	local entities = {GUI.GetSelectedEntities()}
+	local etype, upetype, numsoldiers, soletype, upsoletype, t, CostString, TooltipText
+	if not entities[2] then
+		etype = Logic.GetEntityType(_LeaderID)
+		upetype = etype + 1
+		numsoldiers = Logic.LeaderGetNumberOfSoldiers(_LeaderID)
+		soletype = Logic.LeaderGetSoldiersType(_LeaderID)
+		upsoletype = soletype + 1
+		t = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+		CostString = InterfaceTool_CreateCostString(t)
+		TooltipText = "Wertet diesen Hauptmann und alle seine Soldaten auf!"
+	else
+		local temp_t = {}
+		for i = 1, table.getn(entities) do
+			local id = entities[i]
+			if Logic.IsLeader(id) == 1 then
+				etype = Logic.GetEntityType(id)
+				local tech = UpgradeTechByEtype[etype]
+				if tech then
+					local techstate = Logic.GetTechnologyState(PlayerID, tech)
+					if techstate == 4 and Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+						upetype = etype + 1
+						numsoldiers = Logic.LeaderGetNumberOfSoldiers(id)
+						soletype = Logic.LeaderGetSoldiersType(id)
+						upsoletype = soletype + 1
+						temp_t[i] = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+					end
+				end
+			end
+		end
+		t = {}
+		for i = 1, 17 do
+			t[i] = 0
+		end
+		for k, v in pairs(temp_t) do
+			for i = 1, table.getn(v) do
+				t[i] = t[i] + v[i]
+			end
+		end
+		CostString = InterfaceTool_CreateCostString(t)
+		TooltipText = "Wertet alle selektierten Hauptmänner und alle ihre Soldaten auf! @cr Dies gilt für alle Hauptmänner, die sich nahe ihres Militärgebäudes befinden und deren erforderliche Technologie für das Upgrade erforscht ist."
+	end
+	local ShortCutToolTip = ""
 	if _ShortCut ~= nil then
 		ShortCutToolTip = XGUIEng.GetStringTableText("MenuGeneric/Key_name") .. ": [" .. XGUIEng.GetStringTableText(_ShortCut) .. "]"
 	end
-
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TooltipText)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
