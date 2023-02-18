@@ -600,10 +600,8 @@ AITroopGenerator_RemoveLeader = function(_player, _id, _army)
 
 	if entityID == _id then
 		if _army then
-			removetablekeyvalue(ArmyTable[_player][_army].IDs, entityID)
 			ArmyTable[_player][_army][_id] = nil
 		else
-			removetablekeyvalue(MapEditor_Armies[_player].IDs, entityID)
 			MapEditor_Armies[_player][_id] = nil
 		end
 		return true

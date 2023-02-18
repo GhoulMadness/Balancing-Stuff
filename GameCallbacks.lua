@@ -755,6 +755,7 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 			local tpos = table_findvalue(ArmyTable[player][i].IDs, _OldID)
 			if tpos ~= 0 then
 				ArmyTable[player][i].IDs[tpos] = _NewID
+				ArmyTable[player][i][_NewID] = ArmyTable[player][i][_OldID]
 				ArmyTable[player][i][_OldID] = nil
 				local enemies = BS.GetAllEnemyPlayerIDs(player)
 				for k = 1, table.getn(enemies) do
@@ -771,6 +772,7 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 		local tpos = table_findvalue(MapEditor_Armies[player].IDs, _OldID)
 		if tpos ~= 0 then
 			MapEditor_Armies[player].IDs[tpos] = _NewID
+			MapEditor_Armies[player][_NewID] = MapEditor_Armies[player][_OldID]
 			MapEditor_Armies[player][_OldID] = nil
 			local enemies = BS.GetAllEnemyPlayerIDs(player)
 			for k = 1, table.getn(enemies) do
