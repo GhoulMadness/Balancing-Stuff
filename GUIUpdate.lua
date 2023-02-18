@@ -1031,27 +1031,45 @@ UpgradeTechByEtype = {	[Entities.PU_LeaderBow1] = Technologies.T_UpgradeBow1,
 function GUIUpdate_UpgradeLeader(_LeaderID)
 	local button = XGUIEng.GetCurrentWidgetID()
 	local player = GUI.GetPlayerID()
-	local etype = Logic.GetEntityType(_LeaderID)
-	local tech = UpgradeTechByEtype[etype]
-	if not tech then
-		XGUIEng.DisableButton(button, 1)
-		XGUIEng.ShowWidget(button, 0)
-		return
-	end
-	local techstate = Logic.GetTechnologyState(player, tech)
-	--Upgrade is researched
-	if techstate == 4 then
-		XGUIEng.ShowWidget(button, 1)
-		if Logic.LeaderGetNearbyBarracks(_LeaderID) ~= 0 then
-			XGUIEng.DisableButton(button, 0)
+	local entities = {GUI.GetSelectedEntities()}
+	if not entities[2] then
+		local etype = Logic.GetEntityType(_LeaderID)
+		local tech = UpgradeTechByEtype[etype]
+		if not tech then
+			XGUIEng.DisableButton(button, 1)
+			XGUIEng.ShowWidget(button, 0)
+			return
+		end
+		local techstate = Logic.GetTechnologyState(player, tech)
+		if techstate == 4 then
+			XGUIEng.ShowWidget(button, 1)
+			if Logic.LeaderGetNearbyBarracks(_LeaderID) ~= 0 then
+				XGUIEng.DisableButton(button, 0)
+			else
+				XGUIEng.DisableButton(button, 1)
+			end
 		else
+			XGUIEng.ShowWidget(button, 0)
 			XGUIEng.DisableButton(button, 1)
 		end
 	else
-		XGUIEng.ShowWidget(button, 0)
+		for i = 1, table.getn(entities) do
+			local id = entities[i]
+			local etype = Logic.GetEntityType(id)
+			local tech = UpgradeTechByEtype[etype]
+			if tech then
+				local techstate = Logic.GetTechnologyState(player, tech)
+				if techstate == 4 then
+					if Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+						XGUIEng.ShowWidget(button, 1)
+						XGUIEng.DisableButton(button, 0)
+						return
+					end
+				end
+			end
+		end
 		XGUIEng.DisableButton(button, 1)
 	end
-
 end
 
 GUIUpdate_FindView = function()

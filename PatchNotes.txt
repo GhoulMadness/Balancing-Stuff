@@ -702,3 +702,12 @@ Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt da
 Es werden nun keine Komma-Zahlen mehr angezeigt, wenn Euch Ressourcen fehlen und ihr unter bestimmten Umständen Gebäude abgerissen hattet.
 
 Die Anzeige und Funktionalität der Truppen-Finden-Buttons wurde angepasst.
+
+--- Version 0.736
+
+Truppen können nun auch in der Gruppenselektion geupgradet werden.
+
+Fehlende Tooltips für englischsprachige Spielversionen wurden eingefügt. 
+Dies betrifft auch US-amerikanische, polnische und russische Versionen, da diese auf die englische Version weitergeleitet werden.
+
+Der Schwierigkeitsgrad der Prüfungskarten 1 und 3 wurde leicht verringert.

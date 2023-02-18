@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.735
+	BS.Version = 0.736
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -146,26 +146,20 @@
 					["(12) emsbs wilde horden"] = true,
 					["(12) emsbs voelkerschlacht"] = true
 					}
-					
-				
 				}
 
-	-- counting total Map amount (currently not used, just for information purpose)				
+	-- counting total Map amount (currently not used, just for information purpose)
 	do
 		local i = table.getn(BS.MapList)
-		
+
 		while i > 0 do
-
 			local count = 0
-			for _ in pairs(BS.MapList[i]) do 
-				count = count + 1 
+			for _ in pairs(BS.MapList[i]) do
+				count = count + 1
 			end
-
 			BS.CurrentMappoolTotalAmount = BS.CurrentMappoolTotalAmount + count
-		
-			i = i - 1 
+			i = i - 1
 		end
-		
 	end
 	-- close game if map not validated
 	function BS.ValidateMap()
@@ -175,22 +169,16 @@
 			return true
 		end
 	end
-	
+
 	function BS.ValidateTextureQuality()
-	
 		if GDB.IsKeyValid( "Config\\Display\\TextureResolution" ) then
-		
 			return GDB.GetValue( "Config\\Display\\TextureResolution" ) == 0
-			
 		else
-		
 			return false
-			
 		end
-		
 	end
-	
-	BS.DateRestrictions = 	{ MapName = {	["(4) emsbs hasenjagd"] =  	{
+
+	BS.DateRestrictions = 	{MapName = {	["(4) emsbs hasenjagd"] =  	{
 																		},
 											["(4) emsbs imperium"] = 	{
 																		}													
@@ -207,31 +195,19 @@
 		BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-"..i+1
 		BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-"..i+1
 	end
-	
+
 	function BS.CheckForDateRestrictions(_datestring)
-			
 		if BS.DateRestrictions.MapName[Framework.GetCurrentMapName()] ~= nil then
-			
 			for k,v in pairs(BS.DateRestrictions.MapName[Framework.GetCurrentMapName()]) do
-				
 				if string.find(_datestring, v, 0, string.len(v)) ~= nil then
-				
 					for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-					
 						for x = 1,table.getn(BS.DateRestrictions.TechnologyForbidden) do
-						
 							ForbidTechnology(BS.DateRestrictions.TechnologyForbidden[x],i)
-							
 						end
-						
 					end
-					
 				end
-				
 			end
-			
 		end
-			
 	end
 	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 							["Build_VictoryStatue2"] = "challenge_map2_won",
@@ -245,7 +221,6 @@
 															[3] = "challenge_map3_won"
 														},
 							["Build_VictoryStatue4"] = "challenge_map4_won"
-		
 						}
 
 	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias"},
@@ -254,7 +229,7 @@
 								[4] = {}
 							}
 	function BS.CheckForAchievements(_pID)
-	
+
 		for i = 1,12 do
 			if _pID == i then
 				for k,v in pairs(BS.AchievementNames) do
@@ -281,12 +256,12 @@
 			end
 		end
 	end
-	
-	if CNetwork then			
-		if BS.ValidateMap() ~= true then		
-			Framework.CloseGame()			
-		end		
-	end												   
+
+	if CNetwork then
+		if BS.ValidateMap() ~= true then
+			Framework.CloseGame()
+		end
+	end
 	-- Score stuff
 	if not Score.Player[0] then
 		Score.Player[0] = {
@@ -296,7 +271,7 @@
 			all = 2,
 			resources = 0,
 			technology = 0,
-		};
+		}
 	end	
 
 	Score.WinPoints = 1
@@ -304,7 +279,7 @@
 	Score.UpgradePoints = 25
 	Score.BattleSettlersPoints = 3
 	Score.BattleBuildingPoints = 50
-	Score.SettlersPoints = 5 
+	Score.SettlersPoints = 5
 	Score.ResourcePoints = 0.05
 	Score.ConstructionPoints = 5
 	-----------------------------------------------------------------------------------------------------------------------------
@@ -358,13 +333,13 @@
 	gvMission = {}
 	gvMission.PlayerID = GUI.GetPlayerID()
 	--cooldown handling levy taxes TODO: this is not at the correct place
-	gvLastTimeButtonPressed = -240000 		
+	gvLastTimeButtonPressed = -240000
 	--additional chat taunts added
-	BonusKeys()	
+	BonusKeys()
 	--internal payday activation (for treasury technology - debenture)
-	for i = 1,16 do 
-		CUtil.Payday_SetActive(i, true) 
-	end 
+	for i = 1,16 do
+		CUtil.Payday_SetActive(i, true)
+	end
 	--initializing dz trade punishment
 	DZTrade_Init()
 	--initializing animations for beautifications
@@ -374,7 +349,7 @@
 	--additionaly load this script if there are any presents to steal on the map
 	if gvXmasEventFlag == 1 then
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
-	end	
+	end
 	------------------------------------ initializing triggers -------------------------------------------------------
 	--Trigger for trading
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_GOODS_TRADED, "", "TransactionDetails", 1)
@@ -432,10 +407,10 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
 	--Trigger for AI target redirection
 	AIchunks = {}
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)		
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------		
 	if not gvEMSFlag then
-		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")	
+		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")
 		function Sync.Send(_str)
 			if CNetwork then
 				XNetwork.Chat_SendMessageToAll(_str)
@@ -456,18 +431,16 @@
 			Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 		end
 	else
-		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")	
+		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")
 	end
 	CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	-- check for valid texture quality settings
-	if BS.ValidateTextureQuality() ~= true then		
-		local text	
-		if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then		
-			text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"			
-		else		
-			text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"			
-		end		
-		GUI.AddStaticNote(text)			
+	if BS.ValidateTextureQuality() ~= true then
+		local text = "Bitte stellt Eure Texturqualität im Optionsmenü im Hauptmenü auf hoch und startet das Spiel neu!"
+		if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) ~= "de" then
+			text = "Please visit the options menu in the main menu and change your texture quality settings to high! Afterwards, don't forget to restart your game!"
+		end
+		GUI.AddStaticNote(text)
 	end
 	BS.VersionCheck.Setup()
 	-- asynchronous check for achievements
@@ -475,11 +448,11 @@
 	-- check for temporarily disabled technologies
 	BS.CheckForDateRestrictions(Framework.GetSystemTimeDateString())
 	--Simis Rotation Widget pushed to the left side, so it visually fits better in the upscaled GUI
-	XGUIEng.SetWidgetPosition("RotateBack",389, 4) 
+	XGUIEng.SetWidgetPosition("RotateBack",389, 4)
 	--give players their respective favorite color (if given/set in simis mp QoL)
 	if not CNetwork then
 		if GDB.IsKeyValid("Config\\SettlerServer\\ColorPlayer") then
 			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
 			Display.SetPlayerColorMapping(1, PlayerColor)
 		end
-	end	
+	end
