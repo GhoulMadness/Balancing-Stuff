@@ -240,7 +240,8 @@ EnlargeArmy = function(_army, _troop, _pos)
 	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
 		Logic.LeaderChangeFormationType(id, math.random(1, 7))
 	end
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, id, _army.id + 1})
+	ArmyTable[_army.player][_army.id + 1][id] = ArmyTable[_army.player][_army.id + 1][id] or {}
+	ArmyTable[_army.player][_army.id + 1][id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, id, _army.id + 1})
 
 end
 Defend = function(_army)
@@ -374,17 +375,17 @@ AITroopSpawnGenerator_Condition = function(_Name, _player, _id)
 	local army = ArmyTable[_player][_id + 1]
 	-- Not enough troops
 	if Counter.Tick2(_Name,10) then
-		
+
 		-- First spawn done
-		if army.firstSpawnDone == nil or army.firstSpawnDone == false then			
-			return true			
+		if army.firstSpawnDone == nil or army.firstSpawnDone == false then
+			return true
 		else
-		
-			if not army.IDs or (table.getn(army.IDs) < army.strength	and (army.noEnemy == nil or army.noEnemy == false or GetClosestEntity(army, army.noEnemyDistance) == 0)) then
-				return Counter.Tick2(_Name.."_Respawn", army.respawnTime/10)				
+
+			if not army.IDs or (table.getn(army.IDs) < army.strength and (army.noEnemy == nil or army.noEnemy == false or GetClosestEntity(army, army.noEnemyDistance) == 0)) then
+				return Counter.Tick2(_Name.."_Respawn", army.respawnTime/10)
 			end
 		end
-	end			
+	end
 end
 AITroopSpawnGenerator_Action = function(_player, _id)
 
@@ -415,17 +416,17 @@ AITroopSpawnGenerator_Action = function(_player, _id)
 	-- Spawn missing army
 	local i
 	for i=1,missingTroops do
-	
+
 		-- Any data there
 		if army.spawnTypes[army.spawnIndex] == nil then
-	
+
 			-- End of queue reached, destroy job or restart
-			if army.endless ~= nil and army.endless then				
+			if army.endless ~= nil and army.endless then
 				-- restart
 				army.spawnIndex = 1
-				
+
 			else
-				
+
 				-- stop job
 				army.generatorID = nil
 				return true
@@ -465,7 +466,7 @@ DestroyAITroopGenerator = function(_army)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ManualControl_AttackTarget = function(_player, _armyId, _id)
-	
+
 	local tabname, range, target, newtarget
 	if not _armyId then
 		tabname = MapEditor_Armies[_player]
@@ -481,10 +482,10 @@ ManualControl_AttackTarget = function(_player, _armyId, _id)
 		newtarget = CheckForBetterTarget(_id, nil, nil) or GetNearestTarget(_player, _id)
 	end
 	tabname[_id] = tabname[_id] or {}
-	if newtarget and Logic.GetSector(newtarget) == Logic.GetSector(_id) then		
+	if newtarget and Logic.GetSector(newtarget) == Logic.GetSector(_id) then
 		tabname[_id].currenttarget = newtarget
-		tabname[_id].lasttime = Logic.GetTime() 		
-		Logic.GroupAttack(_id, newtarget)	
+		tabname[_id].lasttime = Logic.GetTime()
+		Logic.GroupAttack(_id, newtarget)
 	end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -506,7 +507,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 
 	-- not enough troops
 	if table.getn(_army.IDs) < _army.strength then
-	
+
 		local numBarr, numArch, numStab, numFoun = AI.Village_GetNumberOfMilitaryBuildings(_army.player)
 		
 		if numBarr + numArch + numStab + numFoun ~= 0 then
@@ -580,16 +581,11 @@ AITroopGenerator_GetLeader = function(_player)
 	local playerID = Logic.EntityGetPlayer(entityID)
 	
 	if playerID == _player and IsMilitaryLeader(entityID) and AI.Entity_GetConnectedArmy(entityID) == -1 then
-		if ArmyTable and ArmyTable[_player] then
-			if table_findvalue(ArmyTable[_player], entityID) == 0 then			
-				table.insert(MapEditor_Armies[_player].IDs, entityID)
-				Logic.LeaderChangeFormationType(entityID, math.random(1, 7))
-				Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, entityID})
-			end
-		else
+		if not ArmyTable or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) then			
 			table.insert(MapEditor_Armies[_player].IDs, entityID)
+			MapEditor_Armies[_player][entityID] = MapEditor_Armies[_player][entityID] or {}
 			Logic.LeaderChangeFormationType(entityID, math.random(1, 7))
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, entityID})
+			MapEditor_Armies[_player][entityID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, entityID})
 		end
 	end
 	
@@ -600,8 +596,10 @@ AITroopGenerator_RemoveLeader = function(_player, _id, _army)
 
 	if entityID == _id then
 		if _army then
+			removetablekeyvalue(ArmyTable[_player][_army].IDs, entityID)
 			ArmyTable[_player][_army][_id] = nil
 		else
+			removetablekeyvalue(MapEditor_Armies[_player].IDs, entityID)
 			MapEditor_Armies[_player][_id] = nil
 		end
 		return true

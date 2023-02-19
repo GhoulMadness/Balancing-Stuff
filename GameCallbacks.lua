@@ -749,19 +749,22 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 
 		end
 	end
-	-- update AI data when troops upgrade
+	--[[ update AI data when troops upgrade
+	note: troop upgrade timing order: GameCallback_GUI_EntityIDChanged -> DestroyedTrigger -> CreatedTrigger]]
 	if ArmyTable and ArmyTable[player] then
-		for i = 1, table.getn(ArmyTable[player]) do
-			local tpos = table_findvalue(ArmyTable[player][i].IDs, _OldID)
+		for k, v in pairs(ArmyTable[player]) do
+			local tpos = table_findvalue(v.IDs, _OldID)
 			if tpos ~= 0 then
-				ArmyTable[player][i].IDs[tpos] = _NewID
-				ArmyTable[player][i][_NewID] = ArmyTable[player][i][_OldID]
-				ArmyTable[player][i][_OldID] = nil
+				Trigger.UnrequestTrigger(v[_OldID].TriggerID)
+				v.IDs[tpos] = _NewID
+				v[_NewID] = v[_OldID]
+				v[_OldID] = nil
+				v[_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID, k})
 				local enemies = BS.GetAllEnemyPlayerIDs(player)
-				for k = 1, table.getn(enemies) do
-					if AIchunks[enemies[k]] then
-						ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
-						ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+				for i = 1, table.getn(enemies) do
+					if AIchunks[enemies[i]] then
+						ChunkWrapper.RemoveEntity(AIchunks[enemies[i]], _OldID)
+						ChunkWrapper.AddEntity(AIchunks[enemies[i]], _NewID)
 					end
 				end
 				break
@@ -771,9 +774,11 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 	if MapEditor_Armies and MapEditor_Armies[player] then
 		local tpos = table_findvalue(MapEditor_Armies[player].IDs, _OldID)
 		if tpos ~= 0 then
+			Trigger.UnrequestTrigger(MapEditor_Armies[player][_OldID].TriggerID)
 			MapEditor_Armies[player].IDs[tpos] = _NewID
 			MapEditor_Armies[player][_NewID] = MapEditor_Armies[player][_OldID]
 			MapEditor_Armies[player][_OldID] = nil
+			MapEditor_Armies[player][_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID})
 			local enemies = BS.GetAllEnemyPlayerIDs(player)
 			for k = 1, table.getn(enemies) do
 				if AIchunks[enemies[k]] then
