@@ -614,37 +614,30 @@ function GetEntityHealth( _entity )
 	
 end
 function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
-
-	local Data = {	Logic.GetPlayerEntitiesInArea(	_player,
-												_entityType,
-												_position.X,
-												_position.Y,
-												_range,
-												_amount)}
-
+	
 	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
 	local Count = 0
-	local i
-	
-	for i=2, Data[1]+1 do
-		local posX, posY = Logic.GetEntityPosition(Data[i])
+	for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+		local posX, posY = Logic.GetEntityPosition(id)
 		if CUtil.GetSector(posX /100, posY /100) == sector then
-			if Logic.IsBuilding(Data[i]) == 1 then
-				if Logic.IsConstructionComplete(Data[i]) == 1 and not IsInappropiateBuilding(Data[i]) and Logic.IsEntityInCategory(Data[i], EntityCategories.Wall) == 0 then
+			if Logic.IsBuilding(id) == 1 then
+				if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
 					Count = Count + 1
 				end
 
-			elseif Logic.IsHero(Data[i]) == 1 then				
-				if Logic.IsEntityAlive(Data[i]) then
+			elseif Logic.IsHero(id) == 1 then				
+				if Logic.IsEntityAlive(id) then
 					Count = Count + 1
 				end
 			else
-				if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(Data[i]))), "xs") then
+				if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
 					Count = Count + 1
 				end
 			end
 		end
-
+		if Count >= _amount then
+			break
+		end
 	end
 
 	return Count >= _amount

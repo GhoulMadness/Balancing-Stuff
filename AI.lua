@@ -115,10 +115,9 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 															CannonEntityType1,
 															CannonEntityType2
 														}
-			
+
 	-- Spawn generator
 	SetupAITroopGenerator("MapEditor_Armies_".._playerId, _playerId)
-						
 	Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_SECOND, nil, "StartMapEditor_ArmyAttack", 1, nil, {_playerId, _peaceTime})			
 	if MapEditor_Armies.controlerId[_playerId] == nil then
 		MapEditor_Armies.controlerId[_playerId] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "ControlMapEditor_Armies", 1, {}, {_playerId})
@@ -143,8 +142,8 @@ StartMapEditor_ArmyAttack = function(_playerId, _delay)
 
 end
 ControlMapEditor_Armies = function(_playerId)
-					
-	if MapEditor_Armies[_playerId] ~= nil then	
+
+	if MapEditor_Armies[_playerId] ~= nil then
 		local pos = MapEditor_Armies[_playerId].position
 		local range
 		if MapEditor_Armies[_playerId].AttackAllowed then
@@ -178,7 +177,7 @@ ControlMapEditor_Armies = function(_playerId)
 				end
 			end
 		end	
-	end			
+	end
 end
 AI_AddEnemiesToChunkData = function(_playerId)
 
@@ -581,7 +580,7 @@ AITroopGenerator_GetLeader = function(_player)
 	local playerID = Logic.EntityGetPlayer(entityID)
 	
 	if playerID == _player and IsMilitaryLeader(entityID) and AI.Entity_GetConnectedArmy(entityID) == -1 then
-		if not ArmyTable or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) then			
+		if not ArmyTable or (ArmyTable and not ArmyTable[_player]) or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) then			
 			table.insert(MapEditor_Armies[_player].IDs, entityID)
 			MapEditor_Armies[_player][entityID] = MapEditor_Armies[_player][entityID] or {}
 			Logic.LeaderChangeFormationType(entityID, math.random(1, 7))
