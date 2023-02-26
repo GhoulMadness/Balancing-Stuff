@@ -711,3 +711,11 @@ Fehlende Tooltips für englischsprachige Spielversionen wurden eingefügt.
 Dies betrifft auch US-amerikanische, polnische und russische Versionen, da diese auf die englische Version weitergeleitet werden.
 
 Der Schwierigkeitsgrad der Prüfungskarten 1 und 3 wurde leicht verringert.
+
+--- Version 0.737
+
+Es wurde ein Fehler mit der Aggressivitäts-Reichweite von KIs behoben.
+
+Es wurde ein Fehler im Zusammenhang mit dem Arbeit pausieren - Button von Förstern behoben.
+
+Es erscheint nun eine Meldung, wenn ihr ein Trupp upgraden wollt und die notwendigen Bedingungen nicht erfüllt sind.

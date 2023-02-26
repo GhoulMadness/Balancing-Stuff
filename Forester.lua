@@ -233,7 +233,7 @@ Forester.WorkChange = function(_id, _flag)
 		return
 	end
 	if _flag == 0 then
-		Trigger.UnrequestTrigger(Forester.TriggerIDs.FinishAnim[workerID])
+		Trigger.UnrequestTrigger(Forester.TriggerIDs.Behavior.FinishAnim[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Inside[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Outside[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Start[workerID])

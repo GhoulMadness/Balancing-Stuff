@@ -742,10 +742,14 @@ function GUIAction_UpgradeLeader(_LeaderID)
 		end
 		--currently upgrading
 		if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) ~= Logic.GetTotalUpgradeTimeForBuilding(BarracksID) then
+			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfUpgrade"))
+			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_04.wav",130)
 			return
 		end
 		--currently researching
 		if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
+			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfResearch"))
+			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_03.wav",110)
 			return
 		end
 		etype = Logic.GetEntityType(_LeaderID)

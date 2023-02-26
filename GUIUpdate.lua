@@ -1043,7 +1043,8 @@ function GUIUpdate_UpgradeLeader(_LeaderID)
 		local techstate = Logic.GetTechnologyState(player, tech)
 		if techstate == 4 then
 			XGUIEng.ShowWidget(button, 1)
-			if Logic.LeaderGetNearbyBarracks(_LeaderID) ~= 0 then
+			local barracks = Logic.LeaderGetNearbyBarracks(_LeaderID)
+			if barracks ~= 0 and Logic.IsConstructionComplete(barracks) == 1 then
 				XGUIEng.DisableButton(button, 0)
 			else
 				XGUIEng.DisableButton(button, 1)
@@ -1060,7 +1061,8 @@ function GUIUpdate_UpgradeLeader(_LeaderID)
 			if tech then
 				local techstate = Logic.GetTechnologyState(player, tech)
 				if techstate == 4 then
-					if Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+					local barracks = Logic.LeaderGetNearbyBarracks(id)
+					if barracks ~= 0 and Logic.IsConstructionComplete(barracks) == 1 then
 						XGUIEng.ShowWidget(button, 1)
 						XGUIEng.DisableButton(button, 0)
 						return
