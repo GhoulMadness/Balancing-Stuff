@@ -796,10 +796,14 @@ IsDead = function(_name)
 	if type(_name) == "table" then
 
 		if ArmyTable and ArmyTable[_name.player] and ArmyTable[_name.player][_name.id + 1] then
-			return table.getn(ArmyTable[_name.player][_name.id + 1].IDs) == 0
+			if ArmyTable[_name.player][_name.id + 1].IDs and type(ArmyTable[_name.player][_name.id + 1].IDs) == "table" then
+				return table.getn(ArmyTable[_name.player][_name.id + 1].IDs) == 0
+			else
+				return true
+			end
 		else
-			return AI.Army_GetNumberOfTroops(_name.player,_name.id) == 0
-		end	
+			return AI.Army_GetNumberOfTroops(_name.player, _name.id) == 0
+		end
 	end
 
 	local entityId = 0
@@ -808,23 +812,23 @@ IsDead = function(_name)
 
 		if Logic.IsEntityDestroyed(_name) then
 			return true
-		end		
+		end
 		entityId = Logic.GetEntityIDByName(_name)
 
-	else		
-		entityId = _name		
+	else
+		entityId = _name
 	end
-	
+
 	if entityId == 0 then
 		return true
 	end
-		
+
 	if AI.Entity_IsDead(entityId) == 1 then
 		return true
 	end
-					
+
 	return false
-	
+
 end
 HasFullStrength = function(_army)
 	
@@ -852,6 +856,50 @@ IsVeryWeak = function(_army)
 	else
 		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / 3)
 	end
+end
+MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
+							[Entities.PU_LeaderSword2] = 4,
+							[Entities.PU_LeaderSword3] = 8,
+							[Entities.PU_LeaderSword4] = 12,
+							[Entities.PU_LeaderPoleArm1] = 4,
+							[Entities.PU_LeaderPoleArm2] = 4,
+							[Entities.PU_LeaderPoleArm3] = 8,
+							[Entities.PU_LeaderPoleArm4] = 12,
+							[Entities.PU_LeaderBow1] = 4,
+							[Entities.PU_LeaderBow2] = 4,
+							[Entities.PU_LeaderBow3] = 8,
+							[Entities.PU_LeaderBow4] = 12,
+							[Entities.PU_LeaderRifle1] = 3,
+							[Entities.PU_LeaderRifle2] = 6,
+							[Entities.PU_LeaderCavalry1] = 3,
+							[Entities.PU_LeaderCavalry2] = 6,
+							[Entities.PU_LeaderHeavyCavalry1] = 3,
+							[Entities.PU_LeaderHeavyCavalry2] = 3,
+							[Entities.PU_Scout] = 0,
+							[Entities.PU_Thief] = 0,
+							[Entities.PV_Cannon1] = 0,
+							[Entities.PV_Cannon2] = 0,
+							[Entities.PV_Cannon3] = 0,
+							[Entities.PV_Cannon4] = 0,
+							[Entities.PV_Cannon5] = 0,
+							[Entities.PV_Cannon6] = 0,
+							[Entities.PV_Catapult] = 0,
+							[Entities.CU_AggressiveWolf] = 0,
+							[Entities.CU_BanditLeaderSword1] = 10,
+							[Entities.CU_BanditLeaderSword2] = 8,
+							[Entities.CU_BanditLeaderBow1] = 10,
+							[Entities.CU_Barbarian_LeaderClub1] = 8,
+							[Entities.CU_Barbarian_LeaderClub2] = 8,
+							[Entities.CU_BlackKnight_LeaderMace1] = 4,
+							[Entities.CU_BlackKnight_LeaderMace2] = 4,
+							[Entities.CU_BlackKnight_LeaderSword3] = 6,
+							[Entities.CU_Evil_LeaderBearman1] = 16,
+							[Entities.CU_Evil_LeaderSkirmisher1] = 16,
+							[Entities.CU_VeteranCaptain] = 0,
+							[Entities.CU_VeteranLieutenant] = 2,
+							[Entities.CU_VeteranMajor] = 2}
+function LeaderTypeGetMaximumNumberOfSoldiers(_type)
+	return MaxSoldiersByLeaderType[_type] or 0
 end
 function Unmuting()
 
@@ -2522,6 +2570,21 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 		end
 	end
 	return xspawn, yspawn
+end
+RechargeWidgetByEntityType = {["LevyTaxes"] = {	[Entities.PB_Headquarters1] = "Levy_Duties_Recharge",
+												[Entities.PB_Headquarters2] = "Levy_Duties_Recharge",
+												[Entities.PB_Headquarters3] = "Levy_Duties_Recharge",
+												[Entities.PB_Outpost1] = "Levy_Duties_Recharge_OP",
+												[Entities.PB_Outpost2] = "Levy_Duties_Recharge_OP",
+												[Entities.PB_Outpost3] = "Levy_Duties_Recharge_OP",
+												[Entities.PB_Castle1] = "Levy_Duties_Recharge_Castle",
+												[Entities.PB_Castle2] = "Levy_Duties_Recharge_Castle",
+												[Entities.PB_Castle3] = "Levy_Duties_Recharge_Castle",
+												[Entities.PB_Castle4] = "Levy_Duties_Recharge_Castle",
+												[Entities.PB_Castle5] = "Levy_Duties_Recharge_Castle"}
+								}
+function GetRechargeWidgetByButtonAndEntityType(_button, _etype)
+	return RechargeWidgetByEntityType[_button][_etype]
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------- RANDOM CHESTS ---------------------------------------------------------------------------

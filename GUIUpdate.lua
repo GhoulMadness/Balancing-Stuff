@@ -216,54 +216,55 @@ function GUIUpdate_LightningRod()
 		end
 	
 		XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID("Lightning_Rod_Recharge"),TimePassed, RechargeTime)	
-	end	
+	end
 end
 
 function GUIUpdate_LevyTaxes()
 
-	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
-	local BuildingID = GUI.GetSelectedEntity()	
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local BuildingID = GUI.GetSelectedEntity()
 	local PlayerID = Logic.EntityGetPlayer(BuildingID)
-	local TimePassed = math.floor((Logic.GetTimeMs()- gvLastTimeButtonPressed)/2400)	
+	local TimePassed = math.floor((Logic.GetTimeMs() - gvLastTimeButtonPressed)/2400)
 	local RechargeTime = 100
+	local button = GetRechargeWidgetByButtonAndEntityType("LevyTaxes", Logic.GetEntityType(BuildingID))
 
-	if 	Logic.GetTechnologyState(PlayerID,Technologies.GT_Taxation) ~= 4 then	
-		XGUIEng.DisableButton(CurrentWidgetID,1)		
-		XGUIEng.HighLightButton(CurrentWidgetID,0)			
-		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)		
+	if 	Logic.GetTechnologyState(PlayerID, Technologies.GT_Taxation) ~= 4 then
+		XGUIEng.DisableButton(CurrentWidgetID, 1)
+		XGUIEng.HighLightButton(CurrentWidgetID, 0)
+		XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(button), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
 	else
 
-		if TimePassed < RechargeTime then	
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"), 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)		
-			XGUIEng.HighLightButton(CurrentWidgetID,0)				
-			XGUIEng.DisableButton(CurrentWidgetID,1)			
+		if TimePassed < RechargeTime then
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(button), 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
+			XGUIEng.HighLightButton(CurrentWidgetID, 0)
+			XGUIEng.DisableButton(CurrentWidgetID, 1)
 		else
-		
-			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("Levy_Duties_Recharge"), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)			
-			XGUIEng.DisableButton(CurrentWidgetID,0)			
-		end			
+
+			XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID(button), 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
+			XGUIEng.DisableButton(CurrentWidgetID, 0)		
+		end
 	end
-	
-	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID("Levy_Duties_Recharge"),TimePassed, RechargeTime)
-	
+
+	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID(button), TimePassed, RechargeTime)
+
 end
 
 function GUIUpdate_OvertimesButtons()
-	
-	local BuildingID = GUI.GetSelectedEntity()	
-	local RemainingOvertimeTimeInPercent = Logic.GetOvertimeRechargeTimeAtBuilding(BuildingID)	
-	local ProgressBarWidget = XGUIEng.GetWidgetID( "OvertimesButton_Recharge" );
 
-	if Logic.IsOvertimeActiveAtBuilding(BuildingID) == 1 then	
-		XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes, 1)			
-		XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes, 0)			
+	local BuildingID = GUI.GetSelectedEntity()
+	local RemainingOvertimeTimeInPercent = Logic.GetOvertimeRechargeTimeAtBuilding(BuildingID)
+	local ProgressBarWidget = XGUIEng.GetWidgetID( "OvertimesButton_Recharge" )
+
+	if Logic.IsOvertimeActiveAtBuilding(BuildingID) == 1 then
+		XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes, 1)
+		XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes, 0)
 		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)			
 	else
-	
-		if Logic.GetTechnologyState(GUI.GetPlayerID(),Technologies.GT_Laws) == 4 then		
-			XGUIEng.DisableButton(XGUIEng.GetCurrentWidgetID(),0)		
-			XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes  ,0)				
-			XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes  ,1)				
+
+		if Logic.GetTechnologyState(GUI.GetPlayerID(), Technologies.GT_Laws) == 4 then
+			XGUIEng.DisableButton(XGUIEng.GetCurrentWidgetID(), 0)
+			XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes, 0)
+			XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes, 1)
 			XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)		
 			
 			if RemainingOvertimeTimeInPercent == 0 then			

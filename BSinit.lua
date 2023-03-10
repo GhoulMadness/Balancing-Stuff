@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.737
+	BS.Version = 0.738
 
 	BS.CurrentMappoolTotalAmount = 0
 
@@ -349,6 +349,13 @@
 	--additionaly load this script if there are any presents to steal on the map
 	if gvXmasEventFlag == 1 then
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
+	end
+	--additional AI buttons on et23 map
+	if gvET23Flag == 1 then
+		WidgetHelper.AddPreCommitCallback(
+		function()
+			CWidget.Transaction_AddRawWidgetsFromFile("maps\\user\\Balancing_Stuff_in_Dev\\EasterT23.xml", "Normal")
+		end)
 	end
 	------------------------------------ initializing triggers -------------------------------------------------------
 	--Trigger for trading

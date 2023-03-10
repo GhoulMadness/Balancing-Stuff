@@ -208,6 +208,19 @@ ReinitChunkData = function(_playerId)
 		AI_AddEnemiesToChunkData(_playerId)
 	end
 end
+GetFirstFreeArmySlot = function(_player)
+	if not (ArmyTable and ArmyTable[_player]) then
+		return 1
+	end
+	local count
+	for k, v in pairs(ArmyTable[_player]) do
+		if not v or IsDead(v) then
+			return k
+		end
+		count = k
+	end
+	return count + 1
+end
 SetupArmy = function(_army)
 	
 	if not ArmyTable then
@@ -234,7 +247,7 @@ EnlargeArmy = function(_army, _troop, _pos)
 		ArmyTable[_army.player][_army.id + 1].IDs = {}
 	end
 	local anchor = _pos or ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
-	local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or 0, anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
+	local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
 	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, id)
 	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
 		Logic.LeaderChangeFormationType(id, math.random(1, 7))

@@ -719,3 +719,9 @@ Es wurde ein Fehler mit der Aggressivitäts-Reichweite von KIs behoben.
 Es wurde ein Fehler im Zusammenhang mit dem Arbeit pausieren - Button von Förstern behoben.
 
 Es erscheint nun eine Meldung, wenn ihr ein Trupp upgraden wollt und die notwendigen Bedingungen nicht erfüllt sind.
+
+--- Version 0.738
+
+Weitere Vorbereitungen für das kommende Osterturnier.
+
+Die Abklingzeit der Sonderabgaben wird nun auch korrekt in Schlössern und Außenposten angezeigt.
