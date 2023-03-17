@@ -137,6 +137,13 @@ function VC_Deathmatch()
 end 
 PrepareBriefing = function(_briefing)
 
+	-- stop humen players leaders from moving
+	local player = GetAllHumenPlayer()
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
+		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) == 1 then
+			Logic.GroupDefend(eID)
+		end
+	end
 	--	prepare camera
 	GUIAction_GoBackFromHawkViewInNormalView()
 	Interface_SetCinematicMode(1)
@@ -791,6 +798,11 @@ Logic.GroupAttack = function(_id, _target)
 	assert((Logic.IsWorker(_target) == 0) or (Logic.IsSettlerAtWork(_target) == 0 and Logic.IsSettlerAtFarm(_target) == 0 and Logic.IsSettlerAtResidence(_target) == 0))
 	return GroupAttackOrig(_id, _target)
 end
+Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
+AI.Army_GetEntityIdOfEnemy = function(_player, _id)
+	assert(_id >= 0 and _id <= 9, "army id needs to be between 0 and 9")
+	Army_GetEntityIdOfEnemyOrig(_player, _id)
+end
 IsDead = function(_name)
 
 	if type(_name) == "table" then
@@ -1117,69 +1129,82 @@ function AddTribute( _tribute )
 	Logic.AddTribute( _tribute.playerId or _tribute.pId, _tribute.Tribute, 0, 0, _tribute.text, unpack( tResCost ) )
 	SetupTributePaid( _tribute )
 	return _tribute.Tribute
-	
-end
-----------------------------------------------------------------------------------------------------------------------------------------	
-function IsPositionExplored(_pID,_x,_y,_range)
 
-	_range = _range or 7000		
-	
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_pID), CEntityIterator.InCircleFilter(_x, _y, _range)) do	
-		if GetDistance({Logic.GetEntityPosition(Logic.GetEntityIDByName(eID))},{X=_x,Y=_y}) <= Logic.GetEntityExplorationRange(eID) then		
-			return 1		
-		else			
-			return 0			
-		end		
-	end
-	
 end
--- returns the start positions (HQ) of the current player as a table 
+----------------------------------------------------------------------------------------------------------------------------------------
+function IsPositionExplored(_pID, _x, _y, _range)
+
+	_range = _range or 7000
+
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_pID), CEntityIterator.InCircleFilter(_x, _y, _range)) do
+		if GetDistance({Logic.GetEntityPosition(Logic.GetEntityIDByName(eID))},{X=_x,Y=_y}) <= Logic.GetEntityExplorationRange(eID) then
+			return 1
+		else
+			return 0
+		end
+	end
+
+end
+-- returns the start positions (HQ) of the current player as a table
 function GetPlayerStartPosition()
 
-	local playerID = GUI.GetPlayerID()	
-	local t = {}	
-	t.LVL = {}
-	
-	-- search for all upgrade levels
-	for i = 1,3 do			
-		t.LVL[i] = {Logic.GetPlayerEntities(playerID, Entities["PB_Headquarters"..i],1)}		
-		table.remove(t.LVL[i],1)	
-		
-		for k = 1,table.getn(t.LVL[i]) do		
-			table.insert(t,t.LVL[i][k])			
-		end		
-		
+	local playerID = GUI.GetPlayerID()
+	if playerID == 17 then
+		playerID = 1
 	end
-	
-	return GetPosition(t[1])	
-	
+	local t = {LVL = {}}
+
+	-- search for all upgrade levels
+	for i = 1,3 do
+		t.LVL[i] = {Logic.GetPlayerEntities(playerID, Entities["PB_Headquarters"..i], 1)}
+		table.remove(t.LVL[i], 1)
+
+		for k = 1,table.getn(t.LVL[i]) do
+			table.insert(t, t.LVL[i][k])
+		end
+
+	end
+
+	return GetPosition(t[1])
+
 end
 
 function GetAllAIs()
 
 	local AITable = {}
 
-	if CNetwork then	
-		for i = 2,16 do	
-			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 0 then			
-				if Score.Player[i].all > 0 then			
-					table.insert(AITable,i)					
-				end				
-			end			
+	if CNetwork then
+		for i = 2, 16 do
+			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 0 then
+				if Score.Player[i].all > 0 then
+					table.insert(AITable, i)
+				end
+			end
 		end
-		
-	else
-	
-		for i = 2,8 do		
-			if Score.Player[i].all > 0 then			
-				table.insert(AITable,i)			
-			end			
-		end
-	
-	end
-	
-	return AITable
 
+	else
+
+		for i = 2, 8 do
+			if Score.Player[i].all > 0 then
+				table.insert(AITable, i)
+			end
+		end
+
+	end
+	return AITable
+end
+function GetAllHumenPlayer()
+	local t = {}
+	local max = 8
+	if CNetwork then
+		max = 16
+	end
+	for i = 1, max do
+		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 1 then
+			table.insert(t, i)
+		end
+	end
+	return t
 end
 -- comfort to let a group of given player IDs share the same diplomacy state
 -- param1: table with player IDs
