@@ -725,3 +725,11 @@ Es erscheint nun eine Meldung, wenn ihr ein Trupp upgraden wollt und die notwend
 Weitere Vorbereitungen für das kommende Osterturnier.
 
 Die Abklingzeit der Sonderabgaben wird nun auch korrekt in Schlössern und Außenposten angezeigt.
+
+--- Version 0.739
+
+Es wurde ein Fehler im Zusammenhang mit der KI behoben, der auftreten konnte, wenn sich Diplomatien geändert hatten.
+
+Die Auswirkungen der Kanonen-Technologien im Laboratorium wurden angepasst. 
+Beide erhöhten den Schaden von Kanonen um je 4, jetzt erhöhen die Techs den Schaden von Kanonen um 6% bzw. 9%.
+(Dies resultiert in nahezu keiner Änderung für Bombarden und einer Erhöhung des Schadensbonus für die anderen Kanonentypen)
