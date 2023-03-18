@@ -140,7 +140,7 @@ PrepareBriefing = function(_briefing)
 	-- stop humen players leaders from moving
 	local player = GetAllHumenPlayer()
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
-		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) == 1 then
+		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) then
 			Logic.GroupDefend(eID)
 		end
 	end
@@ -2038,6 +2038,54 @@ function CreateCostDifferenceTable(_player, _ltype1, _ltype2, _stype1, _stype2, 
 		end
 	end
 	return cost
+end
+function GetNearestBarracks(_playerId, _id)
+	local ucat = GetUpgradeCategoryByEntityID(_id)
+	local btype
+	for k, v in pairs(BS.CategoriesInMilitaryBuilding) do
+		for i = 1, table.getn(v) do
+			if v[i] == ucat then
+				btype = k
+				break
+			end
+		end
+	end
+	local bt = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerId), CEntityIterator.OfAnyTypeFilter(Entities["PB_".. btype .."1"], Entities["PB_".. btype .."2"])) do
+		table.insert(bt, {id = eID, dist = GetDistance(_id, eID)})
+	end
+	table.sort(bt, function(p1, p2)
+		return p1.dist < p2.dist
+	end)
+	if bt[1] and bt[1].id then
+		return bt[1].id
+	else
+		return 0
+	end
+end
+BS.UCatByType = {}
+function GetUpgradeCategoryByEntityType(_type, _flag)
+	if _flag then
+		return Logic.GetUpgradeCategoryByBuildingType(_type)
+	end
+	if not BS.UCatByType[_type] then
+		for k, v in pairs(UpgradeCategories) do
+			local t = {Logic.GetSettlerTypesInUpgradeCategory(v)}
+			for i = 2, t[1]+1 do
+				BS.UCatByType[t[i]] = v
+			end
+		end
+	end
+	return BS.UCatByType[_type]
+end
+function GetUpgradeCategoryByEntityID(_id)
+	local building = (Logic.IsBuilding(_id) == 1)
+	local type = Logic.GetEntityType(_id)
+	return GetUpgradeCategoryByEntityType(type, building)
+end
+function GetUpgradeCategoryByLeaderID(_id)
+	local soldiertype = Logic.LeaderGetSoldiersType(_id)
+	return Logic.LeaderGetUpgradeCategoryFromSoldierType(Logic.EntityGetPlayer(_id), soldiertype) - 1
 end
 CategoriesOfEntities = {}
 function GetAllCategoriesOfEntity(id)

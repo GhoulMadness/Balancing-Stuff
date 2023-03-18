@@ -995,7 +995,7 @@ Hero14_MovementEffects_Player = function(_EntityID)
 				Logic.CreateEffect(gvHero14.MovementEffects[math.random(1,4)], posX, posY)		
 				gvHero14.NighttimeAura.TriggerIDs.BurnEffect[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_BurnEffect_ApplyDamage",1,{},{_EntityID, playerID, posX, posY})
 				
-			elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" or Logic.IsEntityMoving(_EntityID) == 0 then			
+			elseif Logic.GetCurrentTaskList(_EntityID) == "TL_MILITARY_IDLE" or not Logic.IsEntityMoving(_EntityID) then			
 				if Counter.Tick2("Hero14_MovementEffects_Player"..playerID.."_CounterID", 3) then			
 					Logic.CreateEffect(GGL_Effects.FXHero14_Fear, posX, posY)					
 				end

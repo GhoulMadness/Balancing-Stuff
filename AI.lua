@@ -174,6 +174,23 @@ ControlMapEditor_Armies = function(_playerId)
 						local anchor = ArmyHomespots[_playerId].recruited[math.random(1, table.getn(ArmyHomespots[_playerId].recruited))]
 						Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
 					end
+				else
+					if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) then
+						if not Logic.IsEntityMoving(id) then
+							local barracks = GetNearestBarracks(_playerId, id)
+							if GetDistance(id, barracks) > 1000 then
+								Logic.MoveSettler(id, Logic.GetEntityPosition(barracks))
+							end
+						end
+						if Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+							(SendEvent or CSendEvent).BuySoldier(id)
+						end
+					else
+						if GetDistance(GetPosition(id), pos) > 1500 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
+							local anchor = ArmyHomespots[_playerId].recruited[math.random(1, table.getn(ArmyHomespots[_playerId].recruited))]
+							Logic.MoveSettler(id, anchor.X, anchor.Y)
+						end
+					end
 				end
 			end
 		end	
