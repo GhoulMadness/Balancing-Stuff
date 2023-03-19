@@ -154,8 +154,11 @@ ControlMapEditor_Armies = function(_playerId)
 		if AreEntitiesOfDiplomacyStateInArea(_playerId, pos, range, Diplomacy.Hostile) then
 			for i = 1, table.getn(MapEditor_Armies[_playerId].IDs) do
 				local id = MapEditor_Armies[_playerId].IDs[i]
+				if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) and Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+					(SendEvent or CSendEvent).BuySoldier(id)
+				end
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					if GetDistance(GetPosition(id), pos) < 1500 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
+					if GetDistance(GetPosition(id), pos) < 1200 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
 						ManualControl_AttackTarget(_playerId, nil, id)
 					end
 				end
@@ -170,7 +173,7 @@ ControlMapEditor_Armies = function(_playerId)
 			for i = 1, table.getn(MapEditor_Armies[_playerId].IDs) do
 				local id = MapEditor_Armies[_playerId].IDs[i]
 				if MapEditor_Armies[_playerId][id] and MapEditor_Armies[_playerId][id].lasttime then
-					if GetDistance(GetPosition(id), pos) > 1500 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
+					if GetDistance(GetPosition(id), pos) > 1200 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
 						local anchor = ArmyHomespots[_playerId].recruited[math.random(1, table.getn(ArmyHomespots[_playerId].recruited))]
 						Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
 					end
@@ -364,11 +367,15 @@ Retreat = function(_army, _rodeLength)
 	local pos = _army.position
 	for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-		if GetDistance(GetPosition(id), pos) > 1500 and (Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" 
-		or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" or Logic.GetCurrentTaskList(id) == "TL_LEADER_WALK"
-		or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_DRIVE") then
+		if GetDistance(GetPosition(id), pos) > 1500 then
 			local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
-			Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
+			if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" 
+			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" or Logic.GetCurrentTaskList(id) == "TL_LEADER_WALK"
+			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_DRIVE" then
+				Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
+			else
+				Logic.MoveSettler(id, anchor.X, anchor.Y)
+			end
 		end
 	end
 end
@@ -545,7 +552,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 
 	local _army = MapEditor_Armies[_player]
 	-- Already enough troops
-	if 	Counter.Tick2(_Name.."Generator",5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) 
+	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) 
 		or
 		table.getn(_army.IDs) >= _army.strength then
 		return false
@@ -562,9 +569,10 @@ AITroopGenerator_Condition = function(_Name, _player)
 				if Logic.IsEntityInCategory(eID, EntityCategories.MilitaryBuilding) ~= 1 then
 					if AI.Entity_GetConnectedArmy(eID) == -1 and (Logic.GetCurrentTaskList(eID) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(eID) == "TL_VEHICLE_IDLE") then
 						local anchor = ArmyHomespots[_army.player].recruited[math.random(1, table.getn(ArmyHomespots[_army.player].recruited))]
+						local pos = GetPosition(eID)
 						if GetDistance(GetPosition(eID), anchor) > 500 then
 							if string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(eID))), "cu") ~= nil then
-								local pos = GetPosition(eID)
+								
 								if (({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_MercenaryTower, pos.X, pos.Y, 1500, 1)})[1]) ~= 0 then
 									Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
 								end

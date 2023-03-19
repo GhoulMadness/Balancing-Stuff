@@ -140,7 +140,7 @@ PrepareBriefing = function(_briefing)
 	-- stop humen players leaders from moving
 	local player = GetAllHumenPlayer()
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
-		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) then
+		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) and not string.find(Logic.GetCurrentTaskList(eID), "TRAIN") then
 			Logic.GroupDefend(eID)
 		end
 	end
@@ -623,42 +623,87 @@ end
 function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 	
 	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
+	if sector == 0 then
+		sector = EvaluateNearestUnblockedSector(_position.X, _position.Y, 1000, 100)
+	end
 	local Count = 0
-	for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
-		local posX, posY = Logic.GetEntityPosition(id)
-		if CUtil.GetSector(posX /100, posY /100) == sector then
-			if Logic.IsBuilding(id) == 1 then
-				if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
-					Count = Count + 1
-				end
+	if _entityType > 0 then
+		if type(_entityType) == "number" then
+			for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfTypeFilter(_entityType), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+				local posX, posY = Logic.GetEntityPosition(id)
+				if CUtil.GetSector(posX /100, posY /100) == sector then
+					if Logic.IsBuilding(id) == 1 then
+						if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+							Count = Count + 1
+						end
 
-			elseif Logic.IsHero(id) == 1 then				
-				if Logic.IsEntityAlive(id) then
-					Count = Count + 1
+					elseif Logic.IsHero(id) == 1 then				
+						if Logic.IsEntityAlive(id) then
+							Count = Count + 1
+						end
+					end
 				end
-			else
-				if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
-					Count = Count + 1
+				if Count >= _amount then
+					break
+				end
+			end
+		elseif type(_entityType) == "table" then
+			for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(unpack(_entityType)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+				local posX, posY = Logic.GetEntityPosition(id)
+				if CUtil.GetSector(posX /100, posY /100) == sector then
+					if Logic.IsBuilding(id) == 1 then
+						if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+							Count = Count + 1
+						end
+
+					elseif Logic.IsHero(id) == 1 then				
+						if Logic.IsEntityAlive(id) then
+							Count = Count + 1
+						end
+					end
+				end
+				if Count >= _amount then
+					break
 				end
 			end
 		end
-		if Count >= _amount then
-			break
+	else
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			local posX, posY = Logic.GetEntityPosition(id)
+			if CUtil.GetSector(round(posX /100), round(posY /100)) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
+
+				elseif Logic.IsHero(id) == 1 then				
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
+					end
+				else
+					if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
+						Count = Count + 1
+					end
+				end
+			end
+			if Count >= _amount then
+				break
+			end
 		end
 	end
 
 	return Count >= _amount
 
 end
-function AreEntitiesOfDiplomacyStateInArea( _player, _position, _range, _state )
+function AreEntitiesOfDiplomacyStateInArea(_player, _position, _range, _state)
 	
 	local maxplayers = 8
 	if CNetwork then
 		maxplayers = 16
 	end
 	for i = 1, maxplayers do 	
-		if Logic.GetDiplomacyState( _player, i) == _state then		
-			if AreEntitiesInArea( i, 0, _position, _range, 1) then			
+		if Logic.GetDiplomacyState(_player, i) == _state then		
+			if AreEntitiesInArea(i, 0, _position, _range, 1) then			
 				return true				
 			end			
 		end		
@@ -2643,6 +2688,24 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 		end
 	end
 	return xspawn, yspawn
+end
+EvaluateNearestUnblockedSector = function(_posX, _posY, _offset, _step)
+	local xmax, ymax = Logic.WorldGetSize()
+	local dmin, xspawn, yspawn
+
+	for y_ = _posY - _offset, _posY + _offset, _step do
+		for x_ = _posX - _offset, _posX + _offset, _step do
+			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
+				
+				local d = (x_ - _posX)^2 + (y_ - _posY)^2		
+				local sector = CUtil.GetSector(x_ /100, y_ /100)               
+				if sector > 0 then
+					return sector
+				end
+			end
+		end
+	end
+	return 1
 end
 RechargeWidgetByEntityType = {["LevyTaxes"] = {	[Entities.PB_Headquarters1] = "Levy_Duties_Recharge",
 												[Entities.PB_Headquarters2] = "Levy_Duties_Recharge",
