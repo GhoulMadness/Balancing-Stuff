@@ -1370,7 +1370,8 @@ function OnAIEnemyCreated(_playerID)
 
 	for i = 1, table.getn(enemies) do
 		if playerID == enemies[i] then
-			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
+			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
 				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
@@ -1391,7 +1392,8 @@ function OnAIEnemyDestroyed(_playerID)
 
 	for i = 1, table.getn(enemies) do
 		if playerID == enemies[i] then
-			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 then
+			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
 				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
