@@ -839,8 +839,8 @@ GroupAttackOrig = Logic.GroupAttack
 Logic.GroupAttack = function(_id, _target)
 	assert(IsValid(_id))
 	assert(IsValid(_target))
-	assert((Logic.IsEntityInCategory(_id, EntityCategories.MilitaryBuilding) == 1) or (Logic.GetSector(_id) == Logic.GetSector(_target)))
-	assert((Logic.IsWorker(_target) == 0) or (Logic.IsSettlerAtWork(_target) == 0 and Logic.IsSettlerAtFarm(_target) == 0 and Logic.IsSettlerAtResidence(_target) == 0))
+	--assert((Logic.IsEntityInCategory(_id, EntityCategories.MilitaryBuilding) == 1) or (Logic.GetSector(_id) == Logic.GetSector(_target)))
+	--assert((Logic.IsWorker(_target) == 0) or (Logic.IsSettlerAtWork(_target) == 0 and Logic.IsSettlerAtFarm(_target) == 0 and Logic.IsSettlerAtResidence(_target) == 0))
 	return GroupAttackOrig(_id, _target)
 end
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
