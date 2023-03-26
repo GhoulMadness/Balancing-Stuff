@@ -960,31 +960,32 @@ function LeaderTypeGetMaximumNumberOfSoldiers(_type)
 end
 function Unmuting()
 
-	GUI.SetFeedbackSoundOutputState(1)	
+	GUI.SetFeedbackSoundOutputState(1)
 	Music.SetVolumeAdjustment(Music.GetVolumeAdjustment() * 2)
-	
+
 end
 
 function QuickTest()
 
-	local player = GUI.GetPlayerID()	
+	local player = GUI.GetPlayerID()
 	local val = 1000000
-	AddGold(player, val)	
-	AddStone(player, val)	
-	AddIron(player, val)	
-	AddWood(player, val)	
-	AddSulfur(player, val)	
-	AddClay(player, val)	
-	Logic.AddToPlayersGlobalResource(player, ResourceType.SilverRaw, val)	
-	ResearchAllTechnologies(player, true, true, true, true, true)	
-	Game.GameTimeSetFactor(6)	
-	Display.SetRenderFogOfWar(0)	
+	AddGold(player, val)
+	AddStone(player, val)
+	AddIron(player, val)
+	AddWood(player, val)
+	AddSulfur(player, val)
+	AddClay(player, val)
+	Logic.AddToPlayersGlobalResource(player, ResourceType.SilverRaw, val)
+	ResearchAllTechnologies(player, true, true, true, true, true)
+	Display.SetRenderFogOfWar(0)
 	GUI.MiniMap_SetRenderFogOfWar(0)
-	
-	if Tools then	
-		Tools.ExploreArea(-1, -1, val)		
+
+	if Tools then
+		Tools.ExploreArea(-1, -1, val)
 	end
-	
+	if not CNetwork then
+		Game.GameTimeSetFactor(6)
+	end
 end
 
 function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _SpecTechsFlag, _TroopTechsFlag, _SilverTechsFlag)
