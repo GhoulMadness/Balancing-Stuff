@@ -621,17 +621,16 @@ function GetEntityHealth( _entity )
 	
 end
 function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
-	
+
 	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
 	if sector == 0 then
 		sector = EvaluateNearestUnblockedSector(_position.X, _position.Y, 1000, 100)
 	end
 	local Count = 0
-	if _entityType > 0 then
-		if type(_entityType) == "number" then
+	if type(_entityType) == "number" then
+		if _entityType > 0 then
 			for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfTypeFilter(_entityType), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
-				local posX, posY = Logic.GetEntityPosition(id)
-				if CUtil.GetSector(posX /100, posY /100) == sector then
+				if Logic.GetSector(id) == sector then
 					if Logic.IsBuilding(id) == 1 then
 						if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
 							Count = Count + 1
@@ -647,10 +646,9 @@ function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 					break
 				end
 			end
-		elseif type(_entityType) == "table" then
-			for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(unpack(_entityType)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
-				local posX, posY = Logic.GetEntityPosition(id)
-				if CUtil.GetSector(posX /100, posY /100) == sector then
+		else
+			for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+				if Logic.GetSector(id) == sector then
 					if Logic.IsBuilding(id) == 1 then
 						if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
 							Count = Count + 1
@@ -660,17 +658,20 @@ function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 						if Logic.IsEntityAlive(id) then
 							Count = Count + 1
 						end
+					else
+						if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
+							Count = Count + 1
+						end
 					end
 				end
 				if Count >= _amount then
 					break
 				end
 			end
-		end
-	else
-		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
-			local posX, posY = Logic.GetEntityPosition(id)
-			if CUtil.GetSector(round(posX /100), round(posY /100)) == sector then
+		end	
+	elseif type(_entityType) == "table" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(unpack(_entityType)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
 				if Logic.IsBuilding(id) == 1 then
 					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
 						Count = Count + 1
@@ -678,10 +679,6 @@ function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 
 				elseif Logic.IsHero(id) == 1 then				
 					if Logic.IsEntityAlive(id) then
-						Count = Count + 1
-					end
-				else
-					if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
 						Count = Count + 1
 					end
 				end
@@ -701,11 +698,13 @@ function AreEntitiesOfDiplomacyStateInArea(_player, _position, _range, _state)
 	if CNetwork then
 		maxplayers = 16
 	end
+	local flag = false
 	for i = 1, maxplayers do 	
 		if Logic.GetDiplomacyState(_player, i) == _state then		
-			if AreEntitiesInArea(i, 0, _position, _range, 1) then			
-				return true				
-			end			
+			flag = AreEntitiesInArea(i, 0, _position, _range, 1)
+			if flag then
+				return true
+			end
 		end		
 	end
 	
@@ -723,10 +722,10 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea( _player, _entityCategor
 	else	
 		i = 8	
 	end
-
+	local amount, bool
 	for i = 1,i do 	
 		if Logic.GetDiplomacyState( _player, i) == _state then		
-			local amount,bool = AreEntitiesOfTypeAndCategoryInArea( i, 0, _entityCategories, _position, _range, 1)	
+			amount, bool = AreEntitiesOfTypeAndCategoryInArea( i, 0, _entityCategories, _position, _range, 1)	
 			
 			if bool then			
 				return true				
@@ -1241,9 +1240,11 @@ function GetAllAIs()
 end
 function GetAllHumenPlayer()
 	local t = {}
-	local max = 8
+	local max
 	if CNetwork then
 		max = 16
+	else
+		return {1}
 	end
 	for i = 1, max do
 		if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) == 1 then
@@ -2374,6 +2375,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	if not ArmyHomespots[_player] then
 		ArmyHomespots[_player] = {}
 	end
+	local sec = CUtil.GetSector(_pos.X/100, _pos.Y/100)
 	local calcP = function(_XY)
 		local size = Logic.WorldGetSize()
 		return math.max(math.min(_XY + (20 * math.random(-60, 60)), size - 1), 1)
@@ -2385,7 +2387,8 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		end
 		while (table.getn(ArmyHomespots[_player].recruited) < 20 and steps < 1000) do
 			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			if CUtil.GetSector(X/100, Y/100) ~= 0 and table_findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then			
+			local nsec = CUtil.GetSector(X/100, Y/100)
+			if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then			
 				table.insert(ArmyHomespots[_player].recruited, {X = X, Y = Y})
 			end
 			steps = steps + 1
@@ -2396,7 +2399,8 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		end
 		while (table.getn(ArmyHomespots[_player][_army]) < 20 and steps < 1000) do
 			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			if CUtil.GetSector(X/100, Y/100) ~= 0 and table_findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then			
+			local nsec = CUtil.GetSector(X/100, Y/100)
+			if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then			
 				table.insert(ArmyHomespots[_player][_army], {X = X, Y = Y})
 			end
 			steps = steps + 1
@@ -2423,6 +2427,7 @@ function GetNearestTarget(_player, _id)
 	until range >= maxrange
 	do
 		local enemies = BS.GetAllEnemyPlayerIDs(_player)
+		local IDs
 		for i = 1, table.getn(enemies) do
 			IDs = {Logic.GetPlayerEntities(enemies[i], 0, 16)}
 			for k = 1, IDs[1] do

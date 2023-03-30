@@ -78,7 +78,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderSword, _playerId)
 		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderPoleArm, _playerId)
 	end
-	for i=2, ((_techlevel+1)/2) do
+	if _techlevel == 3 then
 		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderCavalry, _playerId)
 		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderHeavyCavalry, _playerId)
 		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderRifle, _playerId)
@@ -147,7 +147,7 @@ ControlMapEditor_Armies = function(_playerId)
 		local pos = MapEditor_Armies[_playerId].position
 		local range
 		if MapEditor_Armies[_playerId].AttackAllowed then
-			range = MapEditor_Armies[_playerId].outerDefenseRange
+			range = math.max(MapEditor_Armies[_playerId].outerDefenseRange or 0, MapEditor_Armies[_playerId].rodeLength or 0)
 		else
 			range = MapEditor_Armies[_playerId].baseDefenseRange
 		end
@@ -233,14 +233,14 @@ ReinitChunkData = function(_playerId)
 end
 GetFirstFreeArmySlot = function(_player)
 	if not (ArmyTable and ArmyTable[_player]) then
-		return 1
+		return 0
 	end
 	local count
 	for k, v in pairs(ArmyTable[_player]) do
 		if not v or IsDead(v) then
-			return k
+			return k - 1
 		end
-		count = k
+		count = k - 1
 	end
 	return count + 1
 end
@@ -271,6 +271,7 @@ EnlargeArmy = function(_army, _troop, _pos)
 	end
 	local anchor = _pos or ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 	local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
+	--local id = CreateGroup(_army.player, _troop.leaderType, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, _troop.experiencePoints or 0)
 	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, id)
 	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
 		Logic.LeaderChangeFormationType(id, math.random(1, 7))
@@ -282,10 +283,12 @@ end
 Defend = function(_army)
 
 	local pos = _army.position
-	local range = _army.rodeLength
-	if AreEntitiesOfDiplomacyStateInArea(_army.player, pos, range, Diplomacy.Hostile) then
+	local range = math.max(_army.rodeLength, ArmyTable[_army.player][_army.id+1].rodeLength)
+
+	if (_army.id < 9 and AI.Army_GetEntityIdOfEnemy(_army.player,_army.id) ~= nil and AI.Army_GetEntityIdOfEnemy(_army.player,_army.id) > 0) 
+	or AreEntitiesOfDiplomacyStateInArea(_army.player, pos, range, Diplomacy.Hostile) then
 		ChunkWrapper.UpdatePositions(AIchunks[_army.player])
-		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_army.player], _army.position.X, _army.position.Y, 3000)
+		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_army.player], pos.X, pos.Y, math.min(2000, range))
 		for i = 1, table.getn(entities) do
 			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == CUtil.GetSector(_army.position.X/100, _army.position.Y/100) and Logic.GetDiplomacyState(_army.player, Logic.EntityGetPlayer(entities[i])) == Diplomacy.Hostile then
 				Retreat(_army)
@@ -314,7 +317,7 @@ Advance = function(_army)
 	
 	local enemyId = AI.Army_GetEntityIdOfEnemy(_army.player,_army.id)
 	
-	if enemyId ~= 0 then
+	if enemyId ~= nil and enemyId > 0 then
 		ChunkWrapper.UpdatePositions(AIchunks[_army.player])
 		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_army.player], _army.position.X, _army.position.Y, 3000)
 		for i = 1, table.getn(entities) do
@@ -347,7 +350,7 @@ FrontalAttack = function(_army, _target)
 
 	local enemyId = _target or AI.Army_GetEntityIdOfEnemy(_army.player,_army.id)
 	
-	if enemyId ~= 0 then
+	if enemyId ~= nil and enemyId > 0 then
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if Logic.GetSector(id) == Logic.GetSector(enemyId) then
@@ -572,7 +575,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 					if AI.Entity_GetConnectedArmy(eID) == -1 and (Logic.GetCurrentTaskList(eID) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(eID) == "TL_VEHICLE_IDLE") then
 						local anchor = ArmyHomespots[_army.player].recruited[math.random(1, table.getn(ArmyHomespots[_army.player].recruited))]
 						local pos = GetPosition(eID)
-						if GetDistance(GetPosition(eID), anchor) > 500 then
+						if GetDistance(pos, anchor) > 500 then
 							if string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(eID))), "cu") ~= nil then
 								
 								if (({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_MercenaryTower, pos.X, pos.Y, 1500, 1)})[1]) ~= 0 then
@@ -637,7 +640,9 @@ AITroopGenerator_GetLeader = function(_player)
 	local playerID = Logic.EntityGetPlayer(entityID)
 	
 	if playerID == _player and IsMilitaryLeader(entityID) and AI.Entity_GetConnectedArmy(entityID) == -1 then
-		if not ArmyTable or (ArmyTable and not ArmyTable[_player]) or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) then			
+		if not ArmyTable or (ArmyTable and not ArmyTable[_player]) 
+		or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) 
+		and Logic.LeaderGetBarrack(entityID) ~= 0 then		
 			table.insert(MapEditor_Armies[_player].IDs, entityID)
 			MapEditor_Armies[_player][entityID] = MapEditor_Armies[_player][entityID] or {}
 			Logic.LeaderChangeFormationType(entityID, math.random(1, 7))
