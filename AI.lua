@@ -214,22 +214,14 @@ AI_AddEnemiesToChunkData = function(_playerId)
 	end
 end
 ReinitChunkData = function(_playerId)
-	ChunkWrapper.UpdatePositions(AIchunks[_playerId])
-	local eIDs = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_playerId], Mapsize/2, Mapsize/2, Mapsize/2)
-	if eIDs and table.getn(eIDs) then
-		for i = 1, table.getn(eIDs) do
-			local etype = Logic.GetEntityType(eIDs[i])
-			if IsMilitaryLeader(eIDs[i]) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 
-			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
-				ChunkWrapper.RemoveEntity(AIchunks[_playerId], eIDs[i])
-				removetablekeyvalue(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eIDs[i])
-				AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total - 1
-			elseif (Logic.IsBuilding(eIDs[i]) == 1 and Logic.IsEntityInCategory(eIDs[i], EntityCategories.Wall) == 0 and not IsInappropiateBuilding(eIDs[i])) or Logic.IsSerf(eIDs[i]) == 1 then
-				ChunkWrapper.RemoveEntity(AIchunks[_playerId], eIDs[i])
-			end
-		end
-		AI_AddEnemiesToChunkData(_playerId)
+	for k, v in pairs(AIchunks[_playerId].Entities) do
+		ChunkWrapper.RemoveEntity(AIchunks[_playerId], k)
 	end
+	for i = 1, table.getn(AIEnemiesAC[_playerId]) do
+		AIEnemiesAC[_playerId][i] = {}
+		AIEnemiesAC[_playerId].total = 0
+	end
+	AI_AddEnemiesToChunkData(_playerId)
 end
 GetFirstFreeArmySlot = function(_player)
 	if not (ArmyTable and ArmyTable[_player]) then
@@ -270,8 +262,8 @@ EnlargeArmy = function(_army, _troop, _pos)
 		ArmyTable[_army.player][_army.id + 1].IDs = {}
 	end
 	local anchor = _pos or ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
-	local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
-	--local id = CreateGroup(_army.player, _troop.leaderType, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, _troop.experiencePoints or 0)
+	--local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
+	local id = CreateGroup(_army.player, _troop.leaderType, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, _troop.experiencePoints or 0)
 	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, id)
 	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
 		Logic.LeaderChangeFormationType(id, math.random(1, 7))
@@ -284,16 +276,11 @@ Defend = function(_army)
 
 	local pos = _army.position
 	local range = math.max(_army.rodeLength, ArmyTable[_army.player][_army.id+1].rodeLength)
-
-	if (_army.id < 9 and AI.Army_GetEntityIdOfEnemy(_army.player,_army.id) ~= nil and AI.Army_GetEntityIdOfEnemy(_army.player,_army.id) > 0) 
-	or AreEntitiesOfDiplomacyStateInArea(_army.player, pos, range, Diplomacy.Hostile) then
-		ChunkWrapper.UpdatePositions(AIchunks[_army.player])
-		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_army.player], pos.X, pos.Y, math.min(2000, range))
-		for i = 1, table.getn(entities) do
-			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == CUtil.GetSector(_army.position.X/100, _army.position.Y/100) and Logic.GetDiplomacyState(_army.player, Logic.EntityGetPlayer(entities[i])) == Diplomacy.Hostile then
-				Retreat(_army)
-				return
-			end
+	local dist = GetNearestEnemyDistance(_army.player, pos, range)
+	if dist then
+		if dist <= math.min(2000, range) then
+			Retreat(_army)
+			return
 		end
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
@@ -315,20 +302,12 @@ Defend = function(_army)
 end
 Advance = function(_army)
 	
-	local enemyId = AI.Army_GetEntityIdOfEnemy(_army.player,_army.id)
+	local enemyId = AI.Army_GetEntityIdOfEnemy(_army.player, _army.id)
 	
 	if enemyId ~= nil and enemyId > 0 then
-		ChunkWrapper.UpdatePositions(AIchunks[_army.player])
-		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_army.player], _army.position.X, _army.position.Y, 3000)
-		for i = 1, table.getn(entities) do
-			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == CUtil.GetSector(_army.position.X/100, _army.position.Y/100) and Logic.GetDiplomacyState(_army.player, Logic.EntityGetPlayer(entities[i])) == Diplomacy.Hostile then
-				Retreat(_army)
-				return
-			end
-		end
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-			if Logic.GetSector(id) == Logic.GetSector(enemyId) then
+			if Logic.GetSector(id) == Logic.GetSector(enemyId) or GetNearestEnemyDistance(_army.player, GetPosition(id), _army.rodeLength) then
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
 					if GetDistance(GetPosition(id), _army.position) < 1500 then
 						ManualControl_AttackTarget(_army.player, _army.id + 1, id)
@@ -348,7 +327,7 @@ Advance = function(_army)
 end
 FrontalAttack = function(_army, _target)
 
-	local enemyId = _target or AI.Army_GetEntityIdOfEnemy(_army.player,_army.id)
+	local enemyId = _target or AI.Army_GetEntityIdOfEnemy(_army.player, _army.id)
 	
 	if enemyId ~= nil and enemyId > 0 then
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do

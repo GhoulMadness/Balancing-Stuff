@@ -735,17 +735,17 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea( _player, _entityCategor
 	end
 	
 	return false
-	
+
 end
 
 function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCategories, _position, _range, _amount)
-		
-	local Data = {}	
-	local Counter = 0	
+
+	local Data = {}
+	local Counter = 0
 	assert(type(_entityCategories) == "table")
-	
-	if type(_entityTypes) == "table" then	
-		for i = 1,table.getn(_entityTypes) do			
+
+	if type(_entityTypes) == "table" then
+		for i = 1,table.getn(_entityTypes) do
 			Data[i] = {	Logic.GetPlayerEntitiesInArea(	_player,
 														_entityType[i],
 														_position.X,
@@ -753,58 +753,67 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 														_range,
 														_amount)}
 
-		
-			for j=2, Data[i][1]+1 do			
+
+			for j=2, Data[i][1]+1 do
 				for k = 1,table.getn(_entityCategories) do
 					if Logic.IsBuilding(Data[i][j]) == 1 then
-						if Logic.IsConstructionComplete(Data[i][j]) == 1 then					
+						if Logic.IsConstructionComplete(Data[i][j]) == 1 then
 							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
-								Counter = Counter + 1								
+								Counter = Counter + 1
 							end
 						end
-					else					
-						if Logic.IsEntityAlive(Data[i][j]) then				
-							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then													
-								Counter = Counter + 1								
-							end							
+					else
+						if Logic.IsEntityAlive(Data[i][j]) then
+							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
+								Counter = Counter + 1
+							end
 						end
-					end					
+					end
 				end
 			end
-			
+
 		end
-	
+
 	else
-		
+
 		Data = {	Logic.GetPlayerEntitiesInArea(	_player,
 													_entityType,
 													_position.X,
 													_position.Y,
 													_range,
 													_amount)}
-	
-		for j=2, Data[1]+1 do		
+
+		for j=2, Data[1]+1 do
 			for k = 1,table.getn(_entityCategories) do
 				if Logic.IsBuilding(Data[j]) == 1 then
-					if Logic.IsConstructionComplete(Data[j]) == 1 then					
+					if Logic.IsConstructionComplete(Data[j]) == 1 then
 						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
-							Counter = Counter + 1							
+							Counter = Counter + 1
 						end
 					end
-				else				
-					if Logic.IsEntityAlive(Data[j]) then			
-						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then										
-							Counter = Counter + 1							
-						end						
+				else
+					if Logic.IsEntityAlive(Data[j]) then
+						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
+							Counter = Counter + 1
+						end
 					end
-				end				
+				end
 			end
 		end
-		
+
 	end
 
 	return Counter,(Counter >= _amount)
 
+end
+
+function GetNearestEnemyDistance(_player, _position, _range)
+	ChunkWrapper.UpdatePositions(AIchunks[_player])
+	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
+	if entities and entities[1] and Logic.IsEntityAlive(entities[1]) then
+		return GetDistance(entities[1], _position)
+	end
+	return false
 end
 
 ResumeEntityOrig = Logic.ResumeEntity
@@ -844,8 +853,11 @@ Logic.GroupAttack = function(_id, _target)
 end
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
 AI.Army_GetEntityIdOfEnemy = function(_player, _id)
-	assert(_id >= 0 and _id <= 9, "army id needs to be between 0 and 9")
-	Army_GetEntityIdOfEnemyOrig(_player, _id)
+	if _id >= 0 and _id <= 8 then
+		return Army_GetEntityIdOfEnemyOrig(_player, _id)
+	else
+		return Army_GetEntityIdOfEnemyOrig(_player, 0)
+	end
 end
 IsDead = function(_name)
 
@@ -1325,20 +1337,20 @@ end
 
 GetDistance = function(_a, _b)
 
-	if type(_a) ~= "table" then	
-		_a = {Logic.GetEntityPosition(GetID(_a))}		
+	if type(_a) ~= "table" then
+		_a = GetPosition(_a)
 	end
-	
-	if type(_b) ~= "table" then	
-		_b = {Logic.GetEntityPosition(GetID(_b))} 		
+
+	if type(_b) ~= "table" then
+		_b = GetPosition(_b)
 	end
-	
-	if _a.X ~= nil then	
-		return math.sqrt((_a.X - _b.X)^2+(_a.Y - _b.Y)^2)		
-	else	
-		return math.sqrt((_a[1] - _b[1])^2+(_a[2] - _b[2])^2)		
+
+	if _a.X ~= nil then
+		return math.sqrt((_a.X - _b.X)^2+(_a.Y - _b.Y)^2)
+	else
+		return math.sqrt((_a[1] - _b[1])^2+(_a[2] - _b[2])^2)
 	end
-	
+
 end
 
 function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
@@ -2375,7 +2387,15 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	if not ArmyHomespots[_player] then
 		ArmyHomespots[_player] = {}
 	end
-	local sec = CUtil.GetSector(_pos.X/100, _pos.Y/100)
+	local sec, id = 0, Logic.GetEntityAtPosition(_pos.X, _pos.Y)
+	if id > 0 then
+		sec = Logic.GetSector(id)
+	else
+		sec = CUtil.GetSector(_pos.X/100, _pos.Y/100)
+	end
+	if sec == 0 then
+		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 1000, 100)
+	end
 	local calcP = function(_XY)
 		local size = Logic.WorldGetSize()
 		return math.max(math.min(_XY + (20 * math.random(-60, 60)), size - 1), 1)
@@ -2419,11 +2439,11 @@ function GetNearestTarget(_player, _id)
 	repeat		
 		local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], posX, posY, range)
 		for i = 1, table.getn(entities) do
-			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == sector and Logic.GetDiplomacyState(_player, Logic.EntityGetPlayer(entities[i])) == Diplomacy.Hostile then
+			if entities[i] and Logic.IsEntityAlive(entities[i]) and Logic.GetSector(entities[i]) == sector then
 				return entities[i]
 			end
 		end
-		range = range + 3000
+		range = range + 5000
 	until range >= maxrange
 	do
 		local enemies = BS.GetAllEnemyPlayerIDs(_player)
