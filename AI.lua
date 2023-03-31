@@ -10,7 +10,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 
 	-- Valid
 	if 	_strength == 0 or _strength > 3 or
-		_techlevel < 0 or _techlevel > 3 or 
+		_techlevel < 0 or _techlevel > 3 or
 		_playerId < 1 or _playerId > 16 or
 		_aggressiveLevel < 0 or _aggressiveLevel > 3 or
 		type(_position) ~= "string" then
@@ -24,10 +24,10 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	if Logic.GetPlayerEntitiesInArea(_playerId, 0, position.X, position.Y, 0, 1, 8) == 0 then
 		return
 	end
-	
+
 	--	set up default information
 	local description = {
-	
+
 		serfLimit				=	(_strength^2)+2,
 		--------------------------------------------------
 		extracting				=	false,
@@ -58,14 +58,14 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 			randomTime			=	15*(5-_strength)
 		},
 	}
-		
-	SetupPlayerAi(_playerId, description)	
+
+	SetupPlayerAi(_playerId, description)
 	EvaluateArmyHomespots(_playerId, position, nil)
-	
+
 	local CannonEntityType1
 	local CannonEntityType2
 	-- Tech level
-	if _techlevel <= 2 then		
+	if _techlevel <= 2 then
 		CannonEntityType1 = Entities.PV_Cannon1
 		CannonEntityType2 = Entities.PV_Cannon2
 	elseif _techlevel == 3 then
@@ -91,10 +91,10 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	if MapEditor_Armies.controlerId == nil then
 		MapEditor_Armies.controlerId = {}
 	end
-		
-	MapEditor_Armies[_playerId] = {}	
+
+	MapEditor_Armies[_playerId] = {}
 	MapEditor_Armies[_playerId].prioritylist = {}
-	MapEditor_Armies[_playerId].prioritylist_lastUpdate = 0		
+	MapEditor_Armies[_playerId].prioritylist_lastUpdate = 0
 	MapEditor_Armies[_playerId].player 				=	_playerId
 	MapEditor_Armies[_playerId].id					=	0
 	MapEditor_Armies[_playerId].strength			=	_strength * 15
@@ -105,7 +105,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	MapEditor_Armies[_playerId].outerDefenseRange	=	_range
 	MapEditor_Armies[_playerId].techLVL 			= 	_techlevel
 	MapEditor_Armies[_playerId].AttackAllowed		=	false
-	MapEditor_Armies[_playerId].IDs					=	{}	
+	MapEditor_Armies[_playerId].IDs					=	{}
 	MapEditor_Armies[_playerId].AllowedTypes		=	{ 	UpgradeCategories.LeaderBow,
 															UpgradeCategories.LeaderSword,
 															UpgradeCategories.LeaderPoleArm,
@@ -118,10 +118,10 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 
 	-- Spawn generator
 	SetupAITroopGenerator("MapEditor_Armies_".._playerId, _playerId)
-	Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_SECOND, nil, "StartMapEditor_ArmyAttack", 1, nil, {_playerId, _peaceTime})			
+	Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_SECOND, nil, "StartMapEditor_ArmyAttack", 1, nil, {_playerId, _peaceTime})
 	if MapEditor_Armies.controlerId[_playerId] == nil then
 		MapEditor_Armies.controlerId[_playerId] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "ControlMapEditor_Armies", 1, {}, {_playerId})
-	end		
+	end
 
 	SetHostile(1,_playerId)
 
@@ -135,9 +135,9 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 end
 StartMapEditor_ArmyAttack = function(_playerId, _delay)
 
-	if Counter.Tick2("StartMapEditor_ArmyAttack".._playerId, _delay) then		
-		MapEditor_Armies[_playerId].AttackAllowed = true		
-		return true		
+	if Counter.Tick2("StartMapEditor_ArmyAttack".._playerId, _delay) then
+		MapEditor_Armies[_playerId].AttackAllowed = true
+		return true
 	end
 
 end
@@ -163,11 +163,11 @@ ControlMapEditor_Armies = function(_playerId)
 					end
 				end
 				if MapEditor_Armies[_playerId][id] then
-					if (MapEditor_Armies[_playerId][id].lasttime and (MapEditor_Armies[_playerId][id].lasttime + 5 < Logic.GetTime() )) 
+					if (MapEditor_Armies[_playerId][id].lasttime and (MapEditor_Armies[_playerId][id].lasttime + 5 < Logic.GetTime() ))
 					or (MapEditor_Armies[_playerId][id].currenttarget and not Logic.IsEntityAlive(MapEditor_Armies[_playerId][id].currenttarget)) then
 						ManualControl_AttackTarget(_playerId, nil, id)
 					end
-				end							
+				end
 			end
 		else
 			for i = 1, table.getn(MapEditor_Armies[_playerId].IDs) do
@@ -196,14 +196,14 @@ ControlMapEditor_Armies = function(_playerId)
 					end
 				end
 			end
-		end	
+		end
 	end
 end
 AI_AddEnemiesToChunkData = function(_playerId)
 
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(_playerId))), CEntityIterator.IsSettlerOrBuildingFilter()) do
 		local etype = Logic.GetEntityType(eID)
-		if IsMilitaryLeader(eID) or Logic.IsHero(eID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3 
+		if IsMilitaryLeader(eID) or Logic.IsHero(eID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
 		or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
 			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
 			table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
@@ -290,21 +290,21 @@ Defend = function(_army)
 				end
 			end
 			if ArmyTable[_army.player][_army.id + 1][id] then
-				if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 5 < Logic.GetTime() )) 
+				if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 5 < Logic.GetTime() ))
 				or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
 					ManualControl_AttackTarget(_army.player, _army.id + 1, id)
 				end
-			end							
+			end
 		end
 	else
 		Retreat(_army)
 	end
 end
 Advance = function(_army)
-	
+
 	local enemyId = AI.Army_GetEntityIdOfEnemy(_army.player, _army.id)
-	
-	if enemyId ~= nil and enemyId > 0 then
+
+	if enemyId > 0 then
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if Logic.GetSector(id) == Logic.GetSector(enemyId) or GetNearestEnemyDistance(_army.player, GetPosition(id), _army.rodeLength) then
@@ -328,8 +328,8 @@ end
 FrontalAttack = function(_army, _target)
 
 	local enemyId = _target or AI.Army_GetEntityIdOfEnemy(_army.player, _army.id)
-	
-	if enemyId ~= nil and enemyId > 0 then
+
+	if enemyId > 0 then
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if Logic.GetSector(id) == Logic.GetSector(enemyId) then
@@ -353,7 +353,7 @@ Retreat = function(_army, _rodeLength)
 		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 		if GetDistance(GetPosition(id), pos) > 1500 then
 			local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
-			if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" 
+			if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE"
 			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" or Logic.GetCurrentTaskList(id) == "TL_LEADER_WALK"
 			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_DRIVE" then
 				Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
@@ -371,14 +371,6 @@ Redeploy = function(_army, _position, _rodeLength)
 	_army.position = _position
 	ArmyHomespots[_army.player][_army.id + 1] = nil
 	EvaluateArmyHomespots(_army.player, _position, _army.id + 1)
-	local pos = _army.position
-	for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
-		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-		if GetDistance(GetPosition(id), pos) > 1500 then
-			local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
-			Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
-		end
-	end
 end
 Synchronize = function(_army0, _army1)
 
@@ -386,14 +378,6 @@ Synchronize = function(_army0, _army1)
 	_army1.position = _army0.position
 	ArmyHomespots[_army1.player][_army1.id + 1] = nil
 	EvaluateArmyHomespots(_army1.player, _army0.position, _army1.id + 1)
-	local pos = _army1.position
-	for i = 1, table.getn(ArmyTable[_army1.player][_army1.id + 1].IDs) do
-		local id = ArmyTable[_army1.player][_army1.id + 1].IDs[i]
-		if GetDistance(GetPosition(id), pos) > 1500 then
-			local anchor = ArmyHomespots[_army1.player][_army1.id + 1][math.random(1, table.getn(ArmyHomespots[_army1.player][_army1.id + 1]))]
-			Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
-		end
-	end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SetupAITroopSpawnGenerator = function(_Name, _army)
@@ -536,7 +520,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 
 	local _army = MapEditor_Armies[_player]
 	-- Already enough troops
-	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) 
+	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack)
 		or
 		table.getn(_army.IDs) >= _army.strength then
 		return false
@@ -546,7 +530,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 	if table.getn(_army.IDs) < _army.strength then
 
 		local numBarr, numArch, numStab, numFoun = AI.Village_GetNumberOfMilitaryBuildings(_army.player)
-		
+
 		if numBarr + numArch + numStab + numFoun ~= 0 then
 			-- Connect unemployed leader
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_army.player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Cannon)) do
@@ -556,7 +540,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 						local pos = GetPosition(eID)
 						if GetDistance(pos, anchor) > 500 then
 							if string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(eID))), "cu") ~= nil then
-								
+
 								if (({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_MercenaryTower, pos.X, pos.Y, 1500, 1)})[1]) ~= 0 then
 									Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
 								end
@@ -565,8 +549,8 @@ AITroopGenerator_Condition = function(_Name, _player)
 								end
 							else
 								local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
-					
-								if MilitaryBuildingID ~= 0	then		
+
+								if MilitaryBuildingID ~= 0	then
 									if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
 										if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(eID) == Logic.LeaderGetMaxNumberOfSoldiers(eID)) then
 											Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
@@ -614,21 +598,21 @@ AITroopGenerator_Action = function(_player)
 
 end
 AITroopGenerator_GetLeader = function(_player)
-	
-	local entityID = Event.GetEntityID()		
+
+	local entityID = Event.GetEntityID()
 	local playerID = Logic.EntityGetPlayer(entityID)
-	
+
 	if playerID == _player and IsMilitaryLeader(entityID) and AI.Entity_GetConnectedArmy(entityID) == -1 then
-		if not ArmyTable or (ArmyTable and not ArmyTable[_player]) 
-		or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) 
-		and Logic.LeaderGetBarrack(entityID) ~= 0 then		
+		if not ArmyTable or (ArmyTable and not ArmyTable[_player])
+		or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0)
+		and Logic.LeaderGetBarrack(entityID) ~= 0 then
 			table.insert(MapEditor_Armies[_player].IDs, entityID)
 			MapEditor_Armies[_player][entityID] = MapEditor_Armies[_player][entityID] or {}
 			Logic.LeaderChangeFormationType(entityID, math.random(1, 7))
 			MapEditor_Armies[_player][entityID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, entityID})
 		end
 	end
-	
+
 end
 AITroopGenerator_RemoveLeader = function(_player, _id, _army)
 
