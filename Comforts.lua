@@ -859,6 +859,18 @@ AI.Army_GetEntityIdOfEnemy = function(_player, _id)
 		return Army_GetEntityIdOfEnemyOrig(_player, 0)
 	end
 end
+GetArmyByLeaderID = function(_id)
+	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Leader) == 1, "invalid entity ID")
+	local player = Logic.EntityGetPlayer(_id)
+	assert(ArmyTable and ArmyTable[player], "player ID ".. player .." has no armies")
+	for _, v in pairs(ArmyTable[player]) do
+		if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
+			if table_findvalue(v.IDs, _id) ~= 0 then
+				return v
+			end
+		end
+	end
+end
 IsDead = function(_name)
 
 	if type(_name) == "table" then
@@ -2967,10 +2979,10 @@ ChestRandomPositions.OffsetByType = {	[Entities.XD_Fir1] = {X = 80, Y = 80},
 																	[90] = {X = 100, Y = 680},
 																	[180] = {X = 600, Y = 90},
 																	[270] = {X = 700, Y = -230}},
-										[Entities.PB_PowerPlant1] = {	[0] = {X = 260, Y = 320},
-																		[90] = {X = 200, Y = 100},
-																		[180] = {X = 300, Y = 110},
-																		[270] = {X = 300, Y = 220}},
+										[Entities.PB_PowerPlant1] = {[0] = {X = 260, Y = 320},
+																	[90] = {X = 200, Y = 100},
+																	[180] = {X = 300, Y = 110},
+																	[270] = {X = 300, Y = 220}},
 										[Entities.PB_Residence1] = {[0] = {X = 300, Y = 210},
 																	[90] = {X = 300, Y = 140},
 																	[180] = {X = 200, Y = 180},
@@ -2993,49 +3005,151 @@ ChestRandomPositions.OffsetByType = {	[Entities.XD_Fir1] = {X = 80, Y = 80},
 																	[270] = {X = 760, Y = -100}},
 										[Entities.PB_SilverMine2] = {X = 520, Y = 680},
 										[Entities.PB_SilverMine3] = {X = 600, Y = 610},
-										[Entities.PB_StoneMason1] = {	[0] = {X = 480, Y = 470},
-																		[90] = {X = 450, Y = 400},
-																		[180] = {X = -70, Y = 480},
-																		[270] = {X = 480, Y = -50}},
-										[Entities.PB_StoneMason2] = {X = 510, Y = 230},
-										[Entities.PB_SulfurMine2] = {X = 245, Y = 790},
-										[Entities.PB_SulfurMine3] = {X = 245, Y = 790},
-										[Entities.PB_Tavern1] = {X = 520, Y = 520},
-										[Entities.PB_Tavern2] = {X = 520, Y = 520},
-										[Entities.PB_University1] = {X = 780, Y = 190},
-										[Entities.PB_University2] = {X = 780, Y = 190},
+										[Entities.PB_StoneMason1] = {[0] = {X = 480, Y = 470},
+																	[90] = {X = 450, Y = 400},
+																	[180] = {X = -70, Y = 480},
+																	[270] = {X = 480, Y = -50}},
+										[Entities.PB_StoneMason2] = {[0] = {X = 510, Y = 230},
+																	[90] = {X = 400, Y = 420},
+																	[180] = {X = -70, Y = 480},
+																	[270] = {X = 480, Y = -50}},
+										[Entities.PB_SulfurMine2] = {[0] = {X = 245, Y = 790},
+																	[90] = {X = -500, Y = 650},
+																	[180] = {X = 400, Y = -450},
+																	[270] = {X = 650, Y = -300}},
+										[Entities.PB_SulfurMine3] = {[0] = {X = 245, Y = 790},
+																	[90] = {X = -500, Y = 650},
+																	[180] = {X = 400, Y = -450},
+																	[270] = {X = 650, Y = -300}},
+										[Entities.PB_Tavern1] = {[0] = {X = 520, Y = 520},
+																[90] = {X = -160, Y = 400},
+																[180] = {X = 480, Y = -220},
+																[270] = {X = 560, Y = 400}},
+										[Entities.PB_Tavern2] = {[0] = {X = 520, Y = 520},
+																[90] = {X = -160, Y = 400},
+																[180] = {X = 480, Y = -220},
+																[270] = {X = 560, Y = 400}},
+										[Entities.PB_University1] = {[0] = {X = 780, Y = 190},
+																	[90] = {X = 330, Y = 700},
+																	[180] = {X = 630, Y = -400},
+																	[270] = {X = 780, Y = 600}},
+										[Entities.PB_University2] = {[0] = {X = 780, Y = 190},
+																	[90] = {X = 330, Y = 700},
+																	[180] = {X = 630, Y = -400},
+																	[270] = {X = 780, Y = 600}},
 										[Entities.PB_WeatherTower1] = {X = 280, Y = 230},
-										[Entities.PB_VillageCenter1] = {X = 260, Y = 700},
-										[Entities.PB_VillageCenter2] = {X = 260, Y = 700},
-										[Entities.PB_VillageCenter3] = {X = 260, Y = 700},
-										[Entities.CB_Abbey01] = {X = 510, Y = 410},
-										[Entities.CB_Abbey02] = {X = 190, Y = 130},
-										[Entities.CB_Abbey03] = {X = 160, Y = 150},
+										[Entities.PB_VillageCenter1] = {[0] = {X = 260, Y = 700},
+																		[90] = {X = 200, Y = 660},
+																		[180] = {X = 700, Y = 180},
+																		[270] = {X = 600, Y = 300}},
+										[Entities.PB_VillageCenter2] = {[0] = {X = 260, Y = 700},
+																		[90] = {X = 200, Y = 660},
+																		[180] = {X = 700, Y = 180},
+																		[270] = {X = 600, Y = 300}},
+										[Entities.PB_VillageCenter3] = {[0] = {X = 260, Y = 700},
+																		[90] = {X = 200, Y = 660},
+																		[180] = {X = 700, Y = 180},
+																		[270] = {X = 600, Y = 300}},
+										[Entities.CB_Abbey01] = {[0] = {X = 510, Y = 410},
+																[90] = {X = 300, Y = 400},
+																[180] = {X = 570, Y = 200},
+																[270] = {X = 350, Y = 600}},
+										[Entities.CB_Abbey02] = {[0] = {X = 190, Y = 130},
+																[90] = {X = 130, Y = 100},
+																[180] = {X = 130, Y = 200},
+																[270] = {X = 130, Y = 200}},
+										[Entities.CB_Abbey03] = {[0] = {X = 160, Y = 150},
+																[90] = {X = 210, Y = 160},
+																[180] = {X = 170, Y = 110},
+																[270] = {X = 140, Y = 160}},
 										[Entities.CB_Abbey04] = {X = 160, Y = 50},
-										[Entities.CB_BarmeciaCastle] = {X = 780, Y = 440},
-										[Entities.CB_Bastille1] = {X = 380, Y = 370},
-										[Entities.CB_Camp15] = {X = 280, Y = 190},
-										[Entities.CB_Camp22] = {X = 140, Y = 90},
-										[Entities.CB_Castle1] = {X = 670, Y = 410},
-										[Entities.CB_Castle2] = {X = 650, Y = 540},
-										[Entities.CB_CleycourtCastle] = {X = 280, Y = 790},
-										[Entities.CB_CrawfordCastle] = {X = 530, Y = 590},
-										[Entities.CB_DarkCastle] = {X = 930, Y = 830},
-										[Entities.CB_DestroyAbleRuinFarm1] = {X = 240, Y = 610},
-										[Entities.CB_DestroyAbleRuinHouse1] = {X = 270, Y = 130},
-										[Entities.CB_DestroyAbleRuinMonastery1] = {X = 700, Y = 180},
-										[Entities.CB_DestroyAbleRuinResidence1] = {X = 260, Y = 230},
-										[Entities.CB_FolklungCastle] = {X = 850, Y = 940},
-										[Entities.CB_KaloixCastle] = {X = 910, Y = 630},
-										[Entities.CB_MinerCamp2] = {X = 240, Y = 220},
-										[Entities.CB_MinerCamp3] = {X = 240, Y = 220},
-										[Entities.CB_Mint1] = {X = 360, Y = 480},
-										[Entities.CB_OldKingsCastle] = {X = 1170, Y = 580},
-										[Entities.CB_OldKingsCastleRuin] = {X = 1170, Y = 580},
-										[Entities.CB_RobberyTower1] = {X = 410, Y = 260},
+										[Entities.CB_BarmeciaCastle] = {[0] = {X = 780, Y = 440},
+																		[90] = {X = 770, Y = 300},
+																		[180] = {X = -200, Y = 800},
+																		[270] = {X = 870, Y = -400}},
+										[Entities.CB_Bastille1] = {	[0] = {X = 380, Y = 370},
+																	[90] = {X = 370, Y = 160},
+																	[180] = {X = 400, Y = 330},
+																	[270] = {X = 310, Y = 300}},
+										[Entities.CB_Camp15] = {[0] = {X = 280, Y = 190},
+																[90] = {X = 190, Y = 240},
+																[180] = {X = 190, Y = 150},
+																[270] = {X = 190, Y = 140}},
+										[Entities.CB_Camp22] = {[0] = {X = 140, Y = 90},
+																[90] = {X = 190, Y = 130},
+																[180] = {X = 180, Y = 0},
+																[270] = {X = 280, Y = 160}},
+										[Entities.CB_Castle1] = {[0] = {X = 670, Y = 410},
+																[90] = {X = 600, Y = 290},
+																[180] = {X = 500, Y = -30},
+																[270] = {X = 160, Y = 500}},
+										[Entities.CB_Castle2] = {[0] = {X = 650, Y = 540},
+																[90] = {X = 600, Y = 310},
+																[180] = {X = 500, Y = -30},
+																[270] = {X = 600, Y = 300}},
+										[Entities.CB_CleycourtCastle] = {[0] = {X = 280, Y = 790},
+																		[90] = {X = -20, Y = 900},
+																		[180] = {X = 900, Y = -90},
+																		[270] = {X = 700, Y = 290}},
+										[Entities.CB_CrawfordCastle] = {[0] = {X = 530, Y = 590},
+																		[90] = {X = 280, Y = 680},
+																		[180] = {X = 80, Y = 620},
+																		[270] = {X = 560, Y = 210}},
+										[Entities.CB_DarkCastle] = {[0] = {X = 930, Y = 830},
+																	[90] = {X = 930, Y = 480},
+																	[180] = {X = 100, Y = 910},
+																	[270] = {X = 800, Y = 100}},
+										[Entities.CB_DestroyAbleRuinFarm1] = {	[0] = {X = 240, Y = 700},
+																				[90] = {X = -150, Y = 300},
+																				[180] = {X = 300, Y = -280},
+																				[270] = {X = 600, Y = 230}},
+										[Entities.CB_DestroyAbleRuinHouse1] = {	[0] = {X = 300, Y = 130},
+																				[90] = {X = 200, Y = 220},
+																				[180] = {X = 230, Y = 160},
+																				[270] = {X = 220, Y = 150}},
+										[Entities.CB_DestroyAbleRuinMonastery1] = {	[0] = {X = 700, Y = 180},
+																					[90] = {X = 370, Y = 600},
+																					[180] = {X = -280, Y = 410},
+																					[270] = {X = 360, Y = 600}},
+										[Entities.CB_DestroyAbleRuinResidence1] = {	[0] = {X = 100, Y = 330},
+																					[90] = {X = 220, Y = 160},
+																					[180] = {X = 200, Y = 160},
+																					[270] = {X = 220, Y = 140}},
+										[Entities.CB_FolklungCastle] = {[0] = {X = 900, Y = 940},
+																		[90] = {X = -500, Y = 800},
+																		[180] = {X = 900, Y = -600},
+																		[270] = {X = 1000, Y = 900}},
+										[Entities.CB_KaloixCastle] = {	[0] = {X = 910, Y = 630},
+																		[90] = {X = 540, Y = 800},
+																		[180] = {X = 320, Y = 1000},
+																		[270] = {X = 1000, Y = -290}},
+										[Entities.CB_MinerCamp2] = {[0] = {X = 200, Y = 280},
+																	[90] = {X = 150, Y = 200},
+																	[180] = {X = 140, Y = 300},
+																	[270] = {X = 180, Y = 200}},
+										[Entities.CB_MinerCamp3] = {[0] = {X = 160, Y = 300},
+																	[90] = {X = 140, Y = 200},
+																	[180] = {X = 140, Y = 300},
+																	[270] = {X = 210, Y = 160}},
+										[Entities.CB_Mint1] = {	[0] = {X = 400, Y = 480},
+																[90] = {X = -130, Y = 300},
+																[180] = {X = 10, Y = 600},
+																[270] = {X = 520, Y = 100}},
+										[Entities.CB_OldKingsCastle] = {[0] = {X = 1200, Y = 580},
+																		[90] = {X = 600, Y = 1120},
+																		[180] = {X = -220, Y = 900},
+																		[270] = {X = 900, Y = -380}},
+										[Entities.CB_OldKingsCastleRuin] = {[0] = {X = 1200, Y = 580},
+																			[90] = {X = 600, Y = 1120},
+																			[180] = {X = -220, Y = 900},
+																			[270] = {X = 900, Y = -380}},
+										[Entities.CB_RobberyTower1] = {	[0] = {X = 410, Y = 260},
+																		[90] = {X = 300, Y = 300},
+																		[180] = {X = 200, Y = 300},
+																		[270] = {X = 350, Y = 320}},
 										[Entities.CB_Tower1] = {X = 350, Y = 220}
 										}
-for k,v in pairs(Entities) do
+for _, v in pairs(Entities) do
 	if ChestRandomPositions.OffsetByType[v] then
 		table.insert(ChestRandomPositions.AllowedTypes, v)
 	end
@@ -3056,7 +3170,7 @@ ChestRandomPositions.Resources = {Gold = {BaseAmount = 600, RandomBonus = 200, T
 ChestRandomPositions.TypeToName = {Gold = "Taler", Silver = "Silber"}
 ChestRandomPositions.TypeToPretext = {Gold = "hat eine Schatztruhe geplündert.", Silver = "hat einen besonders wertvollen Schatz gefunden."}
 -- played sound and its volume when chest was opened
-ChestRandomPositions.OpenedSound = {Type = Sounds.Misc_Chat2, Volume = 100}
+ChestRandomPositions.OpenedSound = {Type = Sounds.Misc_Chat2, Volume = 125}
 -- created chest entity type
 ChestRandomPositions.ChestType = Entities.XD_ChestGold
 -- default script name given to created chests
@@ -3094,7 +3208,7 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
 
             if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
                 local distcheck = true
-                for k,v in pairs(postable) do
+                for _, v in pairs(postable) do
                     if GetDistance(v, {X = _X, Y = _Y}) < ChestRandomPositions.MinDistance then
                         distcheck = false
 						break
@@ -3151,10 +3265,13 @@ ChestRandomPositions_ChestControl = function(...)
 								ExtendedStatistics.Players[j][res] = ExtendedStatistics.Players[j][res] + randomEventAmount
 							end
 							--
-							Sound.PlayGUISound(ChestRandomPositions.OpenedSound.Type, ChestRandomPositions.OpenedSound.Volume)
 							ChestRandomPositions.ActiveState[i] = false
 							ChestRandomPositions.OpenedCount = ChestRandomPositions.OpenedCount + 1
 							ReplaceEntity(arg[i], Entities.XD_ChestOpen)
+							if GUI.GetPlayerID() == j then
+								Sound.PlayGUISound(ChestRandomPositions.OpenedSound.Type, ChestRandomPositions.OpenedSound.Volume)
+							end
+							break
 						end
 					end
 				end

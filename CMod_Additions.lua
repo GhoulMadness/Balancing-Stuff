@@ -1,32 +1,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------- Tables and misc Stuff --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------
-if XNetwork.Manager_DoesExist() ~= 0 then
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
-		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
-		Logic.SetTechnologyState(i,Technologies.MU_Catapult,0)
-		if gvXmasEventFlag or gvTutorialFlag then
-			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0)
-		end
-
-	end
-	if GUI.GetPlayerID() == 17 then
-		Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
-	end
-	Logic.SetTechnologyState(17,Technologies.GT_Tactics,3)
-	-----------------------------------------------------------------------------------------------
-	-- Added Castles to win condition -------------------------------------------------------------
-	-----------------------------------------------------------------------------------------------
-	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5}
-
-else
-	Logic.SetTechnologyState(1,Technologies.UP1_Lighthouse,3)
-	Logic.SetTechnologyState(1,Technologies.MU_Cannon5,0)
-	Logic.SetTechnologyState(1,Technologies.MU_Cannon6,0)
-	if gvXmasEventFlag then
-		Logic.SetTechnologyState(1,Technologies.B_VillageHall,0)
-	end
+if XNetwork.Manager_DoesExist() == 0 then
 	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
 		return 1
 	end
@@ -55,7 +30,28 @@ else
 		end
 		gvMission.singleplayerMode = true
 	end
+else
+
+	if GUI.GetPlayerID() == 17 then
+		Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
+	end
+	Logic.SetTechnologyState(17,Technologies.GT_Tactics,3)
 end
+for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+	Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
+	Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
+	Logic.SetTechnologyState(i,Technologies.MU_Catapult,0)
+	if gvXmasEventFlag or gvTutorialFlag then
+		Logic.SetTechnologyState(i,Technologies.B_VillageHall,0)
+	end
+
+end
+-----------------------------------------------------------------------------------------------
+-- Added Castles to win condition -------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1, Entities.PB_Headquarters2, Entities.PB_Headquarters3,
+											Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5,
+											Entities.PB_Outpost1, Entities.PB_Outpost2, Entities.PB_Outpost3}
 
 if CUtil then
 
@@ -104,7 +100,7 @@ if CUtil then
 
 	-- base values; needed for challenge maps
 	basevalue_refined_resources = {
-        [Entities.PB_Bank1] = 3,
+        [Entities.PB_Bank1] = 2,
         [Entities.PB_Bank2] = 3,
         [Entities.PB_Bank3] = 4,
 		[Entities.CB_Mint1] = 3,
