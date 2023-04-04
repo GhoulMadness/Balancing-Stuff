@@ -42,7 +42,7 @@
 					["(2) emsbs grabenkampf"] = true,
 					["(2) emsbs der taktiker"] = true,
 					["(2) emsbs die alten imperien"] = true,
-					["(2) emsbs hasenjagd"] = true					
+					["(2) emsbs hasenjagd"] = true
 					},
 				[3] =	{
 					["(3) bs koop kalas zorn"] = true,
@@ -67,7 +67,7 @@
 					["(4) bs koop marys intrige"] = true,
 					["(4) bs koop die tore der stadt"] = true,
 					["(4) bs koop oasenschlacht"] = true,
-					["(4) bs koop schlacht um velborg"] = true,
+					["(4) bs koop belagerung von velborg"] = true,
 					["(4) emsbs battle isle"] = true,
 					["(4) emsbs eklipse"] = true,
 					["(4) emsbs grosser wald des daemmerlichts"] = true,
@@ -184,7 +184,7 @@
 	BS.DateRestrictions = 	{MapName = {	["(4) emsbs hasenjagd"] =  	{
 																		},
 											["(4) emsbs imperium"] = 	{
-																		}													
+																		}
 										},
 							TechnologyForbidden = {	[1] = Technologies.B_VictoryStatue1,
 													[2] = Technologies.B_VictoryStatue2
@@ -275,7 +275,7 @@
 			resources = 0,
 			technology = 0,
 		}
-	end	
+	end
 
 	Score.WinPoints = 1
 	Score.ResearchPoints = 50
@@ -418,7 +418,7 @@
 	--Trigger for AI target redirection
 	AIchunks = {}
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
-	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------		
+	----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------
 	if not gvEMSFlag then
 		Script.Load("maps\\user\\EMS\\tools\\Sync.lua")
 		function Sync.Send(_str)
