@@ -739,3 +739,5 @@ Beide erhöhten den Schaden von Kanonen um je 4, jetzt erhöhen die Techs den Sc
 Es wurden mehrere Fehler im Zusammenhang mit der KI behoben.
 
 Es wurde ein Fehler behoben, durch den die Kosten beim Soldatenkauf falsch angezeigt werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit dem Erscheinen der Förster behoben.

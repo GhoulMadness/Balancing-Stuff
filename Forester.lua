@@ -366,8 +366,12 @@ OnForester_Created = function(_id)
 			local doorpos = Forester.DoorOffsetByEntityType[Logic.GetEntityType(distancetable[1].id)]		
 			local r = math.rad(rotation)
 			local s = math.sin(r)
-			local c = math.cos(r)		
-			local workerID = Logic.CreateEntity(Entities.PU_Forester, posX + (doorpos.X * c - doorpos.Y * s), posY + (doorpos.X * s + doorpos.Y * c), 0, playerID)
+			local c = math.cos(r)	
+			local _X, _Y = posX + (doorpos.X * c - doorpos.Y * s), posY + (doorpos.X * s + doorpos.Y * c)
+			if CUtil.GetSector(_X/100, _Y/100) == 0 then
+				_X, _Y = EvaluateNearestUnblockedPosition(_X, _Y, 1000, 100)
+			end
+			local workerID = Logic.CreateEntity(Entities.PU_Forester, _X, _Y, 0, playerID)
 			Forester.BuildingBelongingWorker[_id] = workerID
 			Logic.SetEntityScriptingValue(workerID,72,1)
 			Logic.SetEntitySelectableFlag(workerID, 0)		
