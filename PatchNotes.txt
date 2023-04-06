@@ -733,3 +733,9 @@ Es wurde ein Fehler im Zusammenhang mit der KI behoben, der auftreten konnte, we
 Die Auswirkungen der Kanonen-Technologien im Laboratorium wurden angepasst. 
 Beide erhöhten den Schaden von Kanonen um je 4, jetzt erhöhen die Techs den Schaden von Kanonen um 6% bzw. 9%.
 (Dies resultiert in nahezu keiner Änderung für Bombarden und einer Erhöhung des Schadensbonus für die anderen Kanonentypen)
+
+--- Version 0.740
+
+Es wurden mehrere Fehler im Zusammenhang mit der KI behoben.
+
+Es wurde ein Fehler behoben, durch den die Kosten beim Soldatenkauf falsch angezeigt werden konnten.
