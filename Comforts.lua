@@ -810,8 +810,12 @@ end
 function GetNearestEnemyDistance(_player, _position, _range)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
-	if entities and entities[1] and Logic.IsEntityAlive(entities[1]) then
-		return GetDistance(entities[1], _position)
+	if entities and entities[1] then
+		for i = 1, table.getn(entities) do
+			if Logic.IsEntityAlive(entities[i]) then
+				return GetDistance(entities[i], _position)
+			end
+		end
 	end
 	return false
 end

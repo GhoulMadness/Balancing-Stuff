@@ -226,9 +226,24 @@
 							["Build_VictoryStatue4"] = "challenge_map4_won"
 						}
 
-	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias", "DerEisenfresser", "ThePhoenix_2000", "Novator12", "Vqrys"},
-								[2] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias", "Novator12", "ZorkManu", "RitterLeo", "DerEisenfresser", "ThePhoenix_2000", "Vqrys"},
-								[3] = {"Roma_Invicta", "CAS_G Roma", "CAS-G_Mathias", "Mathias", "G4F_Mathias", "Novator12", "Vqrys"},
+	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
+										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
+										"DerEisenfresser",
+										"ThePhoenix_2000",
+										"Novator12", "Novator12Slave",
+										"Vqrys"},
+								[2] = {"Roma_Invicta", "CAS_G Roma",
+										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
+										"Novator12", "Novator12Slave",
+										"ZorkManu",
+										"RitterLeo",
+										"DerEisenfresser",
+										"ThePhoenix_2000",
+										"Vqrys"},
+								[3] = {"Roma_Invicta", "CAS_G Roma",
+										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
+										"Novator12", "Novator12Slave",
+										"Vqrys"},
 								[4] = {}
 							}
 	function BS.CheckForAchievements(_pID)

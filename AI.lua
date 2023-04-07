@@ -367,15 +367,19 @@ Redeploy = function(_army, _position, _rodeLength)
 
 	if _rodeLength then
 		_army.rodeLength = _rodeLength
+		ArmyTable[_army.player][_army.id + 1].rodeLength = _rodeLength
 	end
 	_army.position = _position
+	ArmyTable[_army.player][_army.id + 1].position = _position
 	ArmyHomespots[_army.player][_army.id + 1] = nil
 	EvaluateArmyHomespots(_army.player, _position, _army.id + 1)
 end
 Synchronize = function(_army0, _army1)
 
 	_army1.rodeLength = _army0.rodeLength
+	ArmyTable[_army1.player][_army1.id + 1].rodeLength = ArmyTable[_army0.player][_army0.id + 1].rodeLength
 	_army1.position = _army0.position
+	ArmyTable[_army1.player][_army1.id + 1].position = ArmyTable[_army0.player][_army0.id + 1].position
 	ArmyHomespots[_army1.player][_army1.id + 1] = nil
 	EvaluateArmyHomespots(_army1.player, _army0.position, _army1.id + 1)
 end

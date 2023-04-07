@@ -521,7 +521,7 @@ Forester_TreeGrowthControl = function(_id, _suffixName)
 	else
 		if Counter.Tick2("Forester_TreeGrowthControl_".. _id, Forester.TreeGrowthTimeNeeded) then
 			local size = GetEntitySize(_id)
-			__id = ReplaceEntity(_id, Entities.XD_Rock1)
+			local __id = ReplaceEntity(_id, Entities.XD_Rock2)
 			SetEntitySize(__id, math.min(size + Forester.TreeGrowthAmount, 1))
 			Logic.SetModelAndAnimSet(__id, Models[_suffixName])
 			Forester.TriggerIDs.Tree.Growth[__id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_TreeGrowthControl",1,{},{__id, _suffixName})
