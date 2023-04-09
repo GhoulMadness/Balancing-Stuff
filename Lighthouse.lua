@@ -19,9 +19,8 @@ gvLighthouse = { delay = 60 + math.random(30) , troopamount = 2 + math.random(4)
 	Entities.PU_LeaderBow4,
 	Entities.PU_LeaderRifle2,
 	Entities.PU_LeaderCavalry2,
-	Entities.PU_LeaderHeavyCavalry2
-									} 
-, soldieramount = 1 + math.random(6), soldiercavamount = 1 + math.random(5) , starttime = {}, cooldown = 300, villageplacesneeded = 10 + math.random(5),
+	Entities.PU_LeaderHeavyCavalry2},
+	soldieramount = 1 + math.random(6), soldiercavamount = 1 + math.random(5) , starttime = {}, cooldown = 300, villageplacesneeded = 10 + math.random(5),
 	UpdateTroopQuality = function(_time)
 		gvLighthouse.troopamount = math.max(gvLighthouse.troopamount, math.min(round(3 ^ (1 + _time / 10000)), 10))
 		gvLighthouse.soldieramount = math.max(gvLighthouse.soldieramount, math.min(round(2 ^ (1 + _time / 2000)), 12))
@@ -35,7 +34,7 @@ gvLighthouse = { delay = 60 + math.random(30) , troopamount = 2 + math.random(4)
 if not CNetwork then
 	gvLighthouse.starttime[1] = 0
 else
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do 
+	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		gvLighthouse.starttime[i] = 0
 	end
 end
@@ -68,7 +67,7 @@ gvLighthouse.PrepareSpawn = function(_playerID,_eID)
 	for k,v in pairs(gvLighthouse.HireCosts) do
 		Logic.AddToPlayersGlobalResource(_playerID, k, -v)
 	end
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,(_pos.X + posadjust.X),(_pos.Y + posadjust.Y)} )	
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "Lighthouse_SpawnTroops",1,{},{_playerID,(_pos.X + posadjust.X),(_pos.Y + posadjust.Y)} )
 end
 Lighthouse_SpawnTroops = function(_pID,_posX,_posY)
 	if Logic.GetTime() >= gvLighthouse.starttime[_pID] + gvLighthouse.delay then
@@ -86,7 +85,7 @@ Lighthouse_SpawnTroops = function(_pID,_posX,_posY)
 			end
 			return true
 		end
-		for i = 1,gvLighthouse.troopamount do 
+		for i = 1,gvLighthouse.troopamount do
 			CreateGroup(_pID,gvLighthouse.troops[math.random(table.getn(gvLighthouse.troops))],gvLighthouse.soldieramount,_posX ,_posY,0)
 		end
 		if _pID == GUI.GetPlayerID() then

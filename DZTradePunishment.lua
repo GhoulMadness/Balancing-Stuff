@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------------------------------------------------------------
 gvDZTradeCheck = {PlayerDelay = {}, PlayerTime = {}, amount = 0.007 + Logic.GetRandom(0.008), factor = 1.1 + (Logic.GetRandom(5)/10), treshold = 15 + Logic.GetRandom(15), PunishmentProtected = {CriticalRange = 3200}, AttractionOverhaulFactor = 1.2, MotivationValues = {Maximum = 0.29, AverageMaximum = 0.26, Minimum = 0.24}}
 function DZTrade_Init()
-	
+
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		gvDZTradeCheck.PlayerTime[i] = -1
 		gvDZTradeCheck.DelayDefaultValue = 60 + Logic.GetRandom(20)
@@ -11,7 +11,7 @@ function DZTrade_Init()
 
 	end
 	StartSimpleJob("DZTrade_PunishmentJob")
-	
+
 end
 function DZTrade_PunishmentJob()
 	for player = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
@@ -21,7 +21,7 @@ function DZTrade_PunishmentJob()
 					gvDZTradeCheck.PlayerTime[player] = Logic.GetTime()	+ gvDZTradeCheck.PlayerDelay[player]
 				end
 			end
-			gvDZTradeCheck.PlayerDelay[player] = gvDZTradeCheck.PlayerDelay[player] - 1	
+			gvDZTradeCheck.PlayerDelay[player] = gvDZTradeCheck.PlayerDelay[player] - 1
 			if gvDZTradeCheck.PlayerDelay[player] == 0 then
 				local r,g,b = GUI.GetPlayerColor(player)
 				GUI.AddNote(" @color:"..r..","..g..","..b.." "..UserTool_GetPlayerName(player).." @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b.." verfügt über zu wenig Platz für seine Siedler." )
@@ -39,13 +39,13 @@ function DZTrade_PunishmentJob()
 		end
 	end
 end
-function gvDZTradeCheck.Punishment(_playerID)		
+function gvDZTradeCheck.Punishment(_playerID)
 	local timepassed = math.floor((Logic.GetTime() - gvDZTradeCheck.PlayerTime[_playerID])/4)
 	local count = 0
 	local maxvalue = (Logic.GetPlayerAttractionUsage(_playerID) - Logic.GetPlayerAttractionLimit(_playerID)) * gvDZTradeCheck.AttractionOverhaulFactor
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
 		if count < maxvalue then
-			local motivation = Logic.GetSettlersMotivation(eID) 
+			local motivation = Logic.GetSettlersMotivation(eID)
 			if motivation >= gvDZTradeCheck.MotivationValues.Maximum or Logic.GetAverageMotivation(_playerID) >= gvDZTradeCheck.MotivationValues.AverageMaximum then
 				CEntity.SetMotivation(eID, motivation - math.max(math.min(math.floor((gvDZTradeCheck.amount*(gvDZTradeCheck.factor^timepassed))*100)/100, 0.06), 0.2))
 			elseif motivation < gvDZTradeCheck.MotivationValues.Minimum then
@@ -57,12 +57,12 @@ function gvDZTradeCheck.Punishment(_playerID)
 		end
 	end
 end
-function gvDZTradeCheck.PunishmentProtected.Check(_playerID)		
+function gvDZTradeCheck.PunishmentProtected.Check(_playerID)
 	local DZTable = {	Logic.GetPlayerEntities(_playerID, Entities.PB_VillageCenter3, 10)	}
 	local HPTable = {}
 	table.remove(DZTable,1)
-	for i = 1,table.getn(DZTable) do 
-		HPTable[i] = GetEntityHealth(DZTable[i]) 
+	for i = 1,table.getn(DZTable) do
+		HPTable[i] = GetEntityHealth(DZTable[i])
 		local minHP = math.min(HPTable[i],100)
 		local posX,posY = Logic.GetEntityPosition(DZTable[i])
 		local pos = {X = posX,Y = posY}

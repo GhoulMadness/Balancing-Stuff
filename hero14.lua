@@ -1,4 +1,4 @@
-gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120, 
+gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			SpawnTroops = function(_heroID)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
@@ -14,7 +14,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				if IsNighttime() then
 					calcvalue = calcvalue * 2.5
 				end
-				if calcvalue < 10 then					
+				if calcvalue < 10 then
 					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
 				elseif calcvalue >= 10 and calcvalue < 25 then
 					AI.Entity_CreateFormation(playerID, Entities.PU_Hero14_Bearman1, 0, 4, pos.X, pos.Y, 0, 0, 0, 0)
@@ -38,7 +38,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			SpawnEvilTower = function(_heroID)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
-				end			
+				end
 				if Logic.IsHero(_heroID) ~= 1 then
 					return
 				end
@@ -69,7 +69,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 			ApplyDamage = function(_heroID, posX, posY)
 				if not Logic.IsEntityAlive(_heroID) then
 					return
-				end		
+				end
 				if Logic.IsHero(_heroID) ~= 1 then
 					return
 				end
@@ -87,8 +87,8 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 							if Soldiers[1] > 0 then
 								for i = 2, Soldiers[1] + 1 do
 									local soldierdmg = math.max(damage - ((i - 2) * damage/10), damage/5)
-									if soldierdmg >= Logic.GetEntityHealth(Soldiers[i]) then						
-										BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")							
+									if soldierdmg >= Logic.GetEntityHealth(Soldiers[i]) then
+										BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")
 									end
 									if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
 										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
@@ -102,8 +102,8 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 									end
 								end
 							else
-								if damage >= Logic.GetEntityHealth(eID) then						
-									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
+								if damage >= Logic.GetEntityHealth(eID) then
+									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
 								end
 								if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
 									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
@@ -116,12 +116,12 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 									Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
 								end
 							end
-						elseif Logic.IsBuilding(eID) == 1 then 
+						elseif Logic.IsBuilding(eID) == 1 then
 							if gvLightning.IsLightningProofBuilding(eID) ~= true then
 								if Logic.IsConstructionComplete(eID) == 1 then
 									if Logic.GetEntityType(eID) ~= Entities.CB_Evil_Tower1 and Logic.GetEntityType(eID) ~= Entities.PU_Hero14_EvilTower then
-										if damage >= Logic.GetEntityHealth(eID) then						
-											BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")							
+										if damage >= Logic.GetEntityHealth(eID) then
+											BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")
 										end
 										if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
 											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] + (math.min(damage, Logic.GetEntityHealth(eID)))
@@ -132,13 +132,13 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 										if gvHero14.LifestealAura.TriggerIDs[pID] then
 											Logic.HealEntity(_heroID, damage * gvHero14.LifestealAura.LifestealAmount)
 											Logic.CreateEffect(GGL_Effects.FXSalimHeal, pos.X, pos.Y)
-										end										
+										end
 									end
 								end
 							end
 						elseif Logic.IsSerf(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
-							if damage >= Logic.GetEntityHealth(eID) then						
-								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")							
+							if damage >= Logic.GetEntityHealth(eID) then
+								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
 							end
 							if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
 								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
@@ -159,7 +159,7 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 								[3] = GGL_Effects.FXHero14_FireSmall,
 								[4] = GGL_Effects.FXHero14_FireLo
 							  },
-			AbilityNameRechargeButtons = {CallOfDarkness = "Hero14_RechargeCallOfDarkness", LifestealAura = "Hero14_RechargeLifestealAura", RisingEvil = "Hero14_RechargeRisingEvil"},				
+			AbilityNameRechargeButtons = {CallOfDarkness = "Hero14_RechargeCallOfDarkness", LifestealAura = "Hero14_RechargeLifestealAura", RisingEvil = "Hero14_RechargeRisingEvil"},
 			GetRechargeButtonByAbilityName = function(_name)
 				return gvHero14.AbilityNameRechargeButtons[_name]
 			end,

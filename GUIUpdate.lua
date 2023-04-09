@@ -1,4 +1,3 @@
-BS.SpectatorPID = 17
 BS.DefaultColorValues = {RechargeButton = {r = 214, g = 44, b = 24, a = 189},
 						White = {r = 255, g = 255, b = 255, a = 255},
 						Red = {r = 255, g = 0, b = 0, a = 255},
@@ -76,6 +75,7 @@ function GUIUpdate_Experience()
 	for k,v in pairs(BS.ExperienceLevels) do
 		if XP >= v then
 			LVL = k
+		else
 			break
 		end
 	end
@@ -1078,6 +1078,9 @@ end
 GUIUpdate_FindView = function()
 
 	local PlayerID = GUI.GetPlayerID()
+	if PlayerID == BS.SpectatorPID and GUI.GetSelectedEntity() then
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
+	end
 	-- Serfs
 	local SerfAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_Serf)
 	if SerfAmount > 0 then
@@ -1220,7 +1223,7 @@ function GUIUpdate_DisplayButtonOnlyInMode(_ModeFlag)
 	end
 
 	if CNetwork then
-		if CurrentWidgetID ~= XGUIEng.GetWidgetID("MainMenuWindow_RestartGame") 
+		if CurrentWidgetID ~= XGUIEng.GetWidgetID("MainMenuWindow_RestartGame")
 		or CurrentWidgetID ~= XGUIEng.GetWidgetID("GameEndScreen_WindowRestartGame") then
 			XGUIEng.DisableButton(CurrentWidgetID, 1)
 		else

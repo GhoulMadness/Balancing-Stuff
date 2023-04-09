@@ -2,6 +2,8 @@
 
 	BS.Version = 0.740
 
+	BS.SpectatorPID = 17
+
 	BS.CurrentMappoolTotalAmount = 0
 
 	BS.MapList = {

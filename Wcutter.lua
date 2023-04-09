@@ -24,7 +24,7 @@ WCutter.TriggerIDs = {	StartWork = {},
 WCutter.FindNearestTree = function(_id)
 	local distancetable = {}
 	local x,y = Logic.GetEntityPosition(_id)
-	for k,v in pairs(Forester.TreeGrowingBlockedPos) do	
+	for k,v in pairs(Forester.TreeGrowingBlockedPos) do
 		table.insert(distancetable, {id = Logic.GetEntityAtPosition(v.X, v.Y), dist = GetDistance({X = x, Y = y}, v)})
 	end
 	table.sort(distancetable, function(p1, p2) return p1.dist < p2.dist end)
@@ -44,7 +44,7 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid)
 	if IsNear(_id, _treeid, WCutter.ApproachRange) then
 		WCutter.TriggerIDs.StartWork[_id] = nil
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.StartWork[_id])
-		WCutter.CutTree(_id, _treeid)		
+		WCutter.CutTree(_id, _treeid)
 		return true
 	else
 		if Logic.GetCurrentTaskList(_id) == "TL_WORKER_IDLE" then
@@ -58,7 +58,7 @@ WCutter.CutTree = function(_id, _treeid)
 	_treeid = newID
 	if res_amount > 0 then
 		WCutter.TriggerIDs.CutTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_CutTreeDelay", 1, {}, {_id, _treeid, etype, res_amount})
-	else	
+	else
 		SetEntityCurrentTaskIndex(_id, 3)
 	end
 end
@@ -69,7 +69,7 @@ WCutter.BlockTree = function(_treeid, _flag)
 					]]
 	local etype = Logic.GetEntityType(_treeid)
 	local model = Models[Logic.GetEntityTypeName(etype)]
-	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])		
+	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])
 
 	Logic.SetModelAndAnimSet(newID, model)
 	return newID, etype
@@ -80,8 +80,8 @@ WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
 		if IsValid(_treeid) then
 			newID = ReplaceEntity(_treeid, _tree_type)
 			WCutter.BlockTree(newID, 1)
-			--TODO: Tree needs to be blocked so no serfs can chop it during subanim 
-		end 
+			--TODO: Tree needs to be blocked so no serfs can chop it during subanim
+		end
 		if newID then
 			--TODO: SubAnim ChopTree ausführen
 			WCutter.TriggerIDs.CutTree[_id] = nil
@@ -102,5 +102,5 @@ WCutter_RemoveTree = function(_id, _treeid, _res_amount)
 	end
 end
 WCutter.EndWorkCycle = function(_id)
-	SetEntityCurrentTaskIndex(_id, 1)		
+	SetEntityCurrentTaskIndex(_id, 1)
 end

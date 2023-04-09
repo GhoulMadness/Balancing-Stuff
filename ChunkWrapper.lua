@@ -13,20 +13,20 @@ function ChunkFilter.AddEntityCategory(_filter, _eCat)
 end;
 
 function ChunkFilter.CheckEntity(_filter, _id)
-	
+
 	for i = 1,table.getn(_filter.EntityCategories) do
 		local ecat = _filter.EntityCategories[i];
 		if Logic.IsEntityInCategory(_id, ecat) == 1 then
 			return true;
 		end;
 	end;
-	
+
 	for i = 1, table.getn(_filter.FunctionFilter) do
 		if _filter.FunctionFilter[i](_id, unpack(_filter.FunctionFilterArgs[i])) then
 			return true;
 		end;
 	end;
-	
+
 	return false;
 end;
 
@@ -42,13 +42,13 @@ function ChunkWrapper.new(_filter)
 		Entities = {};
 		Dirty = false;
 		LastUpdate = 0;
-		
+
 		Filter = _filter or ChunkFilter.new();
 		-- chunk = <UserData>
 	};
-	
+
 	table.insert(ChunkWrapper.chunks, t);
-	
+
 	return t;
 end;
 
@@ -63,7 +63,7 @@ end;
 
 function ChunkWrapper.AddEntity(chunk, _id)
 	chunk.Entities[_id] = true;
-	chunk.Dirty = true;	
+	chunk.Dirty = true;
 	ChunkWrapper.Internal_GetOrInit(chunk):AddEntity(_id);
 end;
 
@@ -126,14 +126,14 @@ end;
 
 function ChunkWrapper_OnEntityCreated()
 	local id = Event.GetEntityID();
-	
+
 	for i = table.getn(ChunkWrapper.chunks), 1, -1 do
 		local chunk = ChunkWrapper.chunks[i];
 		if ChunkFilter.CheckEntity(chunk.Filter, id) then
 			ChunkWrapper.AddEntity(chunk, id);
 		end;
 	end;
-	
+
 end;
 
 if not CHUNKWRAPPER_TRIGGER then

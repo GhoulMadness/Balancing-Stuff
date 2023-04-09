@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function ControlSiversmithGrievance()
 	-- Need to reset globals?
-	if not gvSpeech then 
+	if not gvSpeech then
 		return
 	end
 	if gvSpeech.ResetGlobalsFlag == 1 then
@@ -14,19 +14,19 @@ function ControlSiversmithGrievance()
 	if Sounds.VoicesMentor_LEAVE_Silversmith ~= nil then
 		return
 	end
-	
+
     -----------------------------------------------------------------------------------------------
     -- Get current game time
     local GameTimeMS = Logic.GetTimeMs()
-    
-    	
+
+
     -----------------------------------------------------------------------------------------------
     -- Get player ID
     local PlayerID = GUI.GetPlayerID()
 	-----------------------------------------------------------------------------------------------
     -- System stuff
-    
-	-- Decrement wait counter; return when time to wait bigger than 0	
+
+	-- Decrement wait counter; return when time to wait bigger than 0
     if gvSpeech.SecondsToWait ~= 0 then
 		gvSpeech.SecondsToWait = gvSpeech.SecondsToWait - 1
 		if gvSpeech.SecondsToWait > 0 then
@@ -34,7 +34,7 @@ function ControlSiversmithGrievance()
         end
         gvSpeech.SecondsToWait = 0
 	end
-	
+
 
 	--Don't play speeches during cinematics
 	if gvInterfaceCinematicFlag == 1 then
@@ -45,12 +45,12 @@ function ControlSiversmithGrievance()
     do
 		-------------------------------------------------------------------------------------------
 		-- No work
-		
+
 		-- Settler is leaving, because of no work
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateLeaving, Feedback.SettlerReasonNoWork )
  			if LastGrievanceMS > gvSpeech.GrievanceLeavingNoWorkBanGameTimeMS then
-				gvSpeech.GrievanceLeavingNoWorkBanGameTimeMS = GameTimeMS 
+				gvSpeech.GrievanceLeavingNoWorkBanGameTimeMS = GameTimeMS
 				gvSpeech.GrievanceAngryNoWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 				gvSpeech.GrievanceSadNoWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
@@ -93,12 +93,12 @@ function ControlSiversmithGrievance()
 		end
 		-------------------------------------------------------------------------------------------
 		-- Taxes
-		
+
 		-- Settler is leaving, because of taxes
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateLeaving, Feedback.SettlerReasonTaxes )
  			if LastGrievanceMS > gvSpeech.GrievanceLeavingTaxesBanGameTimeMS then
-				gvSpeech.GrievanceLeavingTaxesBanGameTimeMS = GameTimeMS 
+				gvSpeech.GrievanceLeavingTaxesBanGameTimeMS = GameTimeMS
 				gvSpeech.GrievanceAngryTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 				gvSpeech.GrievanceSadTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
@@ -110,14 +110,14 @@ function ControlSiversmithGrievance()
 				return
 			end
 		end
-	
+
 		-- Settler is angry, because of taxes
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateAngry, Feedback.SettlerReasonTaxes )
  			if LastGrievanceMS > gvSpeech.GrievanceAngryTaxesBanGameTimeMS then
 				gvSpeech.GrievanceAngryTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 				gvSpeech.GrievanceSadTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
-				
+
 				if EntityType == Entities.PU_Silversmith then
 					Stream.Start("Sounds\\VoicesMentor\\mad_silversmith.wav", 262)
 					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
@@ -126,13 +126,13 @@ function ControlSiversmithGrievance()
 				return
 			end
 		end
-		
+
 		-- Settler is sad, because of taxes
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateSad, Feedback.SettlerReasonTaxes )
  			if LastGrievanceMS > gvSpeech.GrievanceSadTaxesBanGameTimeMS then
 				gvSpeech.GrievanceSadTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
-				
+
 				if EntityType == Entities.PU_Silversmith then
 					Stream.Start("Sounds\\VoicesMentor\\sad_silversmith.wav", 262)
 					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
@@ -143,12 +143,12 @@ function ControlSiversmithGrievance()
 		end
 		-------------------------------------------------------------------------------------------
 		-- Too much work
-		
+
 		-- Settler is leaving, because of too much work
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateLeaving, Feedback.SettlerReasonTooMuchWork )
  			if LastGrievanceMS > gvSpeech.GrievanceLeavingTooMuchWorkBanGameTimeMS then
-				gvSpeech.GrievanceLeavingTooMuchWorkBanGameTimeMS = GameTimeMS 
+				gvSpeech.GrievanceLeavingTooMuchWorkBanGameTimeMS = GameTimeMS
 				gvSpeech.GrievanceAngryTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 				gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
@@ -160,14 +160,14 @@ function ControlSiversmithGrievance()
 				return
 			end
 		end
-	
+
 		-- Settler is angry, because of too much work
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateAngry, Feedback.SettlerReasonTooMuchWork )
  			if LastGrievanceMS > gvSpeech.GrievanceAngryTooMuchWorkBanGameTimeMS then
 				gvSpeech.GrievanceAngryTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 				gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
-				
+
 				if EntityType == Entities.PU_Silversmith then
 					Stream.Start("Sounds\\VoicesMentor\\mad_silversmith.wav", 262)
 					----StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooMuchWork,false)
@@ -176,13 +176,13 @@ function ControlSiversmithGrievance()
 				return
 			end
 		end
-		
+
 		-- Settler is sad, because of too much work
 		do
 			local LastGrievanceMS, EntityType = Logic.FeedbackGetLastGrievanceGameTimeMS( PlayerID, Feedback.SettlerStateSad, Feedback.SettlerReasonTooMuchWork )
  			if LastGrievanceMS > gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS then
 				gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
-				
+
 				if EntityType == Entities.PU_Silversmith then
 					Stream.Start("Sounds\\VoicesMentor\\sad_silversmith.wav", 262)
 					----StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooMuchWork,false)

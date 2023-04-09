@@ -5,12 +5,12 @@ if not gvLastTimeLightningRodUsed then
 	gvLastTimeLightningRodUsed = -240000
 end
 Mapsize = Logic.WorldGetSize()
-gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStrikes = 0, 
+gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStrikes = 0,
 	--Menge an Blitzen pro Sekunde abhängig von der Fläche der Map
 	Amount = math.floor((((Mapsize/100)^2)/70000)+0.5),
-	RecentlyDamaged = 
+	RecentlyDamaged =
 	{
-		false, 
+		false,
 		false,
 		false,
 		false,
@@ -23,13 +23,13 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		false,
 		false
 	},
-	
-	RodProtected = 
+
+	RodProtected =
 	{
-		false, 
-		false, 
-		false, 
-		false, 
+		false,
+		false,
+		false,
+		false,
 		false,
 		false,
 		false,
@@ -38,7 +38,7 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		false,
 		false,
 		false
-	}	
+	}
 , 	DamageProofBuildings = {
 		[Entities.CB_OldKingsCastleRuin] = true,
 		[Entities.CB_Mercenary] = true,
@@ -120,9 +120,9 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.XD_OSO_Wall_Corner_Small2] = true,
 		[Entities.XD_OSO_Wall_Corner_Small3] = true,
 		[Entities.XD_OSO_Wall_Tower2] = true,
-		[Entities.ZB_ConstructionSite1] = true, 
+		[Entities.ZB_ConstructionSite1] = true,
 		[Entities.ZB_ConstructionSite2] = true,
-		[Entities.ZB_ConstructionSite3] = true, 
+		[Entities.ZB_ConstructionSite3] = true,
 		[Entities.ZB_ConstructionSite4] = true,
 		[Entities.ZB_ConstructionSite5] = true,
 		[Entities.ZB_ConstructionSiteArchery1] = true,
@@ -137,7 +137,7 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 		[Entities.ZB_ConstructionSiteIronMine1] = true,
 		[Entities.ZB_ConstructionSiteStoneMine1] = true,
 		[Entities.ZB_ConstructionSiteSulfurMine1] = true,
-		[Entities.ZB_ConstructionSiteStonemason1] = true, 
+		[Entities.ZB_ConstructionSiteStonemason1] = true,
 		[Entities.ZB_ConstructionSiteTower1] = true,
 		[Entities.ZB_ConstructionSiteUniversity1] = true,
 		[Entities.ZB_ConstructionSiteVillageCenter1] = true,
@@ -146,13 +146,13 @@ gvLightning = { Range = 245, BaseDamage = 25, DamageAmplifier = 1, AdditionalStr
 	}
 }
 function gvLightning.IsLightningProofBuilding(_entityID)
-	return gvLightning.DamageProofBuildings[Logic.GetEntityType(_entityID)] 
+	return gvLightning.DamageProofBuildings[Logic.GetEntityType(_entityID)]
 end
-function Lightning_Job() 
+function Lightning_Job()
 	--Blitzeinschläge nur bei Regen
 	if Logic.GetWeatherState() == 2 then
 		local range = gvLightning.Range + Logic.GetRandom(gvLightning.Range)
-		local damage = gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage) 
+		local damage = gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage)
 		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + math.min(GetCurrentWeatherGfxSet()*5,55)*gvLightning.DamageAmplifier)
 		local amount = gvLightning.Amount
 		local x,y
@@ -160,35 +160,35 @@ function Lightning_Job()
 		if GetCurrentWeatherGfxSet() == 11 or GetCurrentWeatherGfxSet() == 28 then
 			amount = amount + (gvLightning.Amount *2) + gvLightning.AdditionalStrikes
 		end
-			
-		for i = 1,amount do	
+
+		for i = 1,amount do
 			x = Logic.GetRandom(Mapsize)
 			y = Logic.GetRandom(Mapsize)
 			if GetDistance({X = x, Y = y},{X = Mapsize/2, Y = Mapsize/2}) <= Mapsize/2 then
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,x,y)
 				gvLightning.Damage(x,y,range,damage,buildingdamage)
 			end
-		end		
-		
+		end
+
 		local pID = GUI.GetPlayerID()
 		if gvLightning.RecentlyDamaged[pID] == true then
-			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 92 ) 
-			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 94 ) 
+			Sound.PlayGUISound( Sounds.OnKlick_Select_varg, 92 )
+			Sound.PlayGUISound( Sounds.OnKlick_PB_Tower3, 94 )
 			Sound.PlayGUISound( Sounds.OnKlick_PB_PowerPlant1, 82 )
 			Sound.PlayGUISound(Sounds.AmbientSounds_rainmedium,120)
 			Stream.Start("Sounds\\Misc\\SO_buildingdestroymedium.wav",72)
 			gvLightning.RecentlyDamaged[pID] = false
 		end
-    end	
+    end
 end
 
 function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
     for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
-	
+
 		-- wenn Serf, dann...
 		if Logic.IsSerf(eID) == 1 then
-			Logic.HurtEntity(eID, _damage)			
+			Logic.HurtEntity(eID, _damage)
 		-- wenn Held oder Kanone, dann...
 		elseif Logic.IsHero(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 			if Logic.IsEntityAlive(eID) then
@@ -202,7 +202,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				Logic.HurtEntity(eID, damage)
 			end
 		-- wenn Leader, dann...
-		elseif Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then		
+		elseif Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then
 			local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
 			if Soldiers[1] > 0 then
 				for i = 2, math.floor(Soldiers[1]/2) do
@@ -210,7 +210,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 						ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning + 1
 						ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning + Logic.GetEntityHealth(Soldiers[i])
 					end
-					ChangeHealthOfEntity(Soldiers[i],0)					
+					ChangeHealthOfEntity(Soldiers[i],0)
 				end
 			else
 				local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.6)
@@ -223,7 +223,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				Logic.HurtEntity(eID, damage)
 			end
 		-- wenn Gebäude, dann...
-		elseif Logic.IsBuilding(eID) == 1 then 
+		elseif Logic.IsBuilding(eID) == 1 then
 			if gvLightning.IsLightningProofBuilding(eID) ~= true then
 				if Logic.IsConstructionComplete(eID) == 1 then
 					local PID = Logic.EntityGetPlayer(eID)
@@ -244,7 +244,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 					end
 				end
 			end
-   	
+
 		-- wenn alles andere (Soldier), dann...
 		else
 			if Logic.IsEntityAlive(eID) then
@@ -261,7 +261,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then
 			gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
 			GUI.ScriptSignal(_posX, _posY, 0)
-		end		
+		end
 		local count
 		if ExtendedStatistics then
 			if not count and IsValid(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then

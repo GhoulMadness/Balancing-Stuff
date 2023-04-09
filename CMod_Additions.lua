@@ -32,17 +32,17 @@ if XNetwork.Manager_DoesExist() == 0 then
 	end
 else
 
-	if GUI.GetPlayerID() == 17 then
-		Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
+	if GUI.GetPlayerID() == BS.SpectatorPID then
+		Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2)
 	end
-	Logic.SetTechnologyState(17,Technologies.GT_Tactics,3)
+	Logic.SetTechnologyState(BS.SpectatorPID, Technologies.GT_Tactics, 3)
 end
-for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-	Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
-	Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
-	Logic.SetTechnologyState(i,Technologies.MU_Catapult,0)
+for i = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+	Logic.SetTechnologyState(i, Technologies.MU_Cannon5, 0)
+	Logic.SetTechnologyState(i, Technologies.MU_Cannon6, 0)
+	Logic.SetTechnologyState(i, Technologies.MU_Catapult, 0)
 	if gvXmasEventFlag or gvTutorialFlag then
-		Logic.SetTechnologyState(i,Technologies.B_VillageHall,0)
+		Logic.SetTechnologyState(i, Technologies.B_VillageHall, 0)
 	end
 
 end

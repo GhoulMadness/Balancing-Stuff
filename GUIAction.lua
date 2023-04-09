@@ -39,7 +39,7 @@ function GUIAction_ChangeView(_mode)
 		Camera.RotSetAngle( -45 )
 		Camera.RotSetFlipBack( 1 )
 		Camera.ScrollUpdateZMode( 0 )
-		Camera.ZoomSetAngle(85)	
+		Camera.ZoomSetAngle(85)
 		XGUIEng.ShowWidget("MinimapButtons_DownView",0)
 		XGUIEng.ShowWidget("MinimapButtons_NormalView",0)
 		XGUIEng.ShowWidget("MinimapButtons_RPGView",1)
@@ -109,7 +109,7 @@ function GUIAction_NormalResourceView()
 end
 function GUIAction_ExpelAll()
 	local SelectedEntityIDs = {GUI.GetSelectedEntities()}
-	for i = 1,table.getn(SelectedEntityIDs) do 
+	for i = 1,table.getn(SelectedEntityIDs) do
 		if Logic.IsHero(SelectedEntityIDs[i]) == 1 then
 			Sound.PlayFeedbackSound( Sounds.Leader_LEADER_NO_rnd_01, 0 )
 			GUI.AddNote("Massenentlassung funktioniert nicht, wenn Helden selektiert sind!")
@@ -119,12 +119,12 @@ function GUIAction_ExpelAll()
 			end
 		elseif Logic.IsSerf(SelectedEntityIDs[i]) then
 			GUI.ExpelSettler(SelectedEntityIDs[i])
-		end	
+		end
 	end
 end
 function GUIAction_LightningRod()
 	gvLastTimeLightningRodUsed = Logic.GetTimeMs()
-    GUIUpdate_LightningRod()   
+    GUIUpdate_LightningRod()
 	Sound.PlayGUISound(Sounds.OnKlick_Select_salim, 627)
 	local PlayerID = GUI.GetPlayerID()
 	if CNetwork then
@@ -221,11 +221,11 @@ function GUIAction_ForceSettlersToWork()
 		GUI.ToggleOvertimeAtBuilding(BuildingID)
 
 		if Logic.IsOvertimeActiveAtBuilding(BuildingID) ~= 1 then
-			if CNetwork then			
+			if CNetwork then
 				CNetwork.SendCommand("Ghoul_ForceSettlersToWorkPenalty", GUI.GetPlayerID())
 			else
 				GUIAction_ForceSettlersToWorkPenalty(GUI.GetPlayerID())
-			end	
+			end
 		end
 
 	end
@@ -246,7 +246,7 @@ end
 function GUIAction_LighthouseHireTroops()
 	local eID = GUI.GetSelectedEntity()
 	local pID = Logic.EntityGetPlayer(eID)
-	
+
 	if Logic.GetPlayerAttractionUsage(pID) >= Logic.GetPlayerAttractionLimit(pID) then
 		GUI.SendPopulationLimitReachedFeedbackEvent(pID)
 		return
@@ -270,28 +270,28 @@ end
 function GUIAction_MercenaryTower(_ucat)
 
 	local MercID = GUI.GetSelectedEntity()
-	
-	if Logic.GetRemainingUpgradeTimeForBuilding(MercID ) ~= Logic.GetTotalUpgradeTimeForBuilding (MercID) then		
+
+	if Logic.GetRemainingUpgradeTimeForBuilding(MercID ) ~= Logic.GetTotalUpgradeTimeForBuilding (MercID) then
 		return
 	end
-	
-	local PlayerID = GUI.GetPlayerID()	
-	
+
+	local PlayerID = GUI.GetPlayerID()
+
 	-- Maximum number of settlers attracted?
 	if Logic.GetPlayerAttractionUsage( PlayerID ) >= Logic.GetPlayerAttractionLimit( PlayerID ) then
 		GUI.SendPopulationLimitReachedFeedbackEvent( PlayerID )
 		return
 	end
-		
+
 	--currently researching
 	if Logic.GetTechnologyResearchedAtBuilding(MercID) ~= 0 then
 		return
-	end	
+	end
 	Logic.FillSoldierCostsTable( PlayerID, _ucat, InterfaceGlobals.CostTable )
-	
+
 	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then
 		if _ucat ~= UpgradeCategories.LeaderElite then
-			-- Yes			
+			-- Yes
 			GUI.BuyLeader(MercID, _ucat)
 			gvMercenaryTower.LastTimeUsed = Logic.GetTime()
 			GUI.DeselectEntity(MercID)
@@ -555,7 +555,7 @@ function GUIAction_Archers_Tower_AddSlot()
 
 					if CNetwork then
 						CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop", player, entity, eID)
-					else						
+					else
 						gvArchers_Tower.PrepareData.AddTroop(player, entity, eID)
 					end
 

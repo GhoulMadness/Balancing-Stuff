@@ -105,7 +105,7 @@ function GameCallback_GUI_SelectionChanged()
 	local EntityId = GUI.GetSelectedEntity()
 	local SelectedEntities = { GUI.GetSelectedEntities() }
 
-	--	
+	--
 	if EntityId == nil then
 		return
 	end
@@ -140,7 +140,7 @@ function GameCallback_GUI_SelectionChanged()
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingGroup")
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)
 			--Set contrsuction menu as default and highlight the tab
-			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)	
+			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SerfConstructionMenu,1)
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
 			XGUIEng.HighLightButton(gvGUI_WidgetID.ToSerfBeatificationMenu,1)
@@ -281,22 +281,22 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 
 	--calculate score
 	if Score ~= nil then
-		Score.CallBackResearched( _PlayerID, _TechnologyType )	
+		Score.CallBackResearched( _PlayerID, _TechnologyType )
 	end
-	
+
 	local PlayerID = GUI.GetPlayerID()
 	if PlayerID ~= _PlayerID then
 		return
 	end
-	
+
 	local BuildingID = GUI.GetSelectedEntity()
 	if BuildingID ~= 0 then
 		local TechnologyAtBuilding = Logic.GetTechnologyResearchedAtBuilding(BuildingID)
-		if  TechnologyAtBuilding == 0 then	
+		if  TechnologyAtBuilding == 0 then
 			XGUIEng.ShowWidget(gvGUI_WidgetID.ResearchInProgress,0)
 		end
 	end
-	
+
 	if _TechnologyType == Technologies.T_HeavyThunder then
 		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
 
@@ -328,13 +328,13 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		end
 
 	end
-	
+
 	--Do not play sound on begin of the map
-	local GameTimeMS = Logic.GetTimeMs()	
+	local GameTimeMS = Logic.GetTimeMs()
 	if GameTimeMS == 0 then
 		return
 	end
-	
+
 	--Update all buttons in the visible container
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
 end
@@ -533,9 +533,9 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 
 	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag and not gvXmasEventFlag then
-	
+
 		local checkpos = true
-		
+
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
 		for _,v in pairs(gvTower.PositionTable) do
 
@@ -551,7 +551,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		local checkpos = true
 
-		for _,v in pairs(gvVStatue4.PositionTable) do		
+		for _,v in pairs(gvVStatue4.PositionTable) do
 
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvVStatue4.BlockRange then
 				checkpos = false

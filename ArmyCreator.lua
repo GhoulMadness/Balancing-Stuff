@@ -80,7 +80,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.PU_BattleSerf] = true,
 									[Entities.PU_Scout] = true
 									},
-				PlayerTroops = { },	
+				PlayerTroops = { },
 				SpawnPos = { },
 				Finished = { }
 }
@@ -153,13 +153,13 @@ ArmyCreator.CheckForPointsLimitExceeded = function(_trooptable)
 		if count > (ArmyCreator.BasePoints * (gvDiffLVL)) then
 			return k
 		end
-	end	
+	end
 end
 ArmyCreator.CheckForAchievement = function(_playerID)
-	local allowed 
+	local allowed
 	for k,v in pairs(BS.AchievementWhitelist[i]) do
 		if v == XNetwork.GameInformation_GetLogicPlayerUserName(_playerID) then
-			allowed = true							
+			allowed = true
 		end
 	end
 	return allowed
@@ -167,104 +167,104 @@ end
 ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 
 	ArmyCreator.Finished[_playerID] = true
-	
+
 	ArmyCreator.PlayerTroops[_playerID] = _trooptable
-	
+
 	if ArmyCreator.OnSetupFinished then
-	
-		if CNetwork then 
-		
+
+		if CNetwork then
+
 			local count = 0
-		
+
 			for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-			
+
 				if ArmyCreator.Finished[i] then
-				
+
 					count = count + 1
-					
+
 				end
-				
+
 			end
-			
+
 			if count == GetNumberOfPlayingHumanPlayer() then
-			
+
 				local playersleft = GetNumberOfPlayingHumanPlayer()
-			
+
 				for i = 1, 12 do
-				
+
 					if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) ~= 0 then
-			
+
 						ArmyCreator.CreateTroops(i, ArmyCreator.PlayerTroops[i])
-						
+
 						playersleft = playersleft - 1
-						
+
 					end
-					
+
 					if playersleft == 0 then
-						
+
 						break
-						
+
 					end
-					
+
 				end
-			
+
 				ArmyCreator.OnSetupFinished()
-			
+
 			end
-			
+
 		else
-			
+
 			ArmyCreator.CreateTroops(_playerID, _trooptable)
-		
+
 			ArmyCreator.OnSetupFinished()
-			
+
 		end
-	
+
 	end
-	
+
 end
 ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 
 	for k,v in pairs(_trooptable) do
-						
-		if ArmyCreator.TroopException[k] and v == 1 then						
-				
+
+		if ArmyCreator.TroopException[k] and v == 1 then
+
 			Logic.CreateEntity(k, ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, math.random(360), _playerID)
-			
+
 		elseif ArmyCreator.TroopOnlyLeader[k] then
-		
+
 			if v > 1 then
-			
+
 				for i = 1,v do
-				
+
 					Logic.CreateEntity(k, ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, math.random(360), _playerID)
-					
+
 				end
-				
+
 			elseif v == 1 then
-			
+
 				Logic.CreateEntity(k, ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, math.random(360), _playerID)
-			
+
 			end
-			
+
 		else
-		
+
 			if v > 1 then
-			
+
 				for i = 1,v do
-				
+
 					CreateMilitaryGroup(_playerID, k, 16, ArmyCreator.SpawnPos[_playerID])
-					
+
 				end
-				
+
 			elseif v == 1 then
-			
+
 				CreateMilitaryGroup(_playerID, k, 16, ArmyCreator.SpawnPos[_playerID])
-			
+
 			end
-			
+
 		end
-	
+
 	end
-	
-end	
+
+end

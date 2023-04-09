@@ -1226,7 +1226,7 @@ end
 function GetPlayerStartPosition()
 
 	local playerID = GUI.GetPlayerID()
-	if playerID == 17 then
+	if playerID == BS.SpectatorPID then
 		playerID = 1
 	end
 	local t = {LVL = {}}
