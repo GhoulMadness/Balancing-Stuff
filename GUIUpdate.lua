@@ -1242,3 +1242,14 @@ function GUIUpdate_DisplayButtonOnlyInMode(_ModeFlag)
 	end
 
 end
+
+function GUIUpdate_TaxesButtons()
+
+	local PlayerID = GUI.GetPlayerID()
+	local TaxLevel = Logic.GetTaxLevel(PlayerID)
+
+	XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "taxesgroup")
+	XGUIEng.HighLightButton(gvGUI_WidgetID.TaxesButtons[TaxLevel] ,1)
+	XGUIEng.HighLightButton(gvGUI_WidgetID.TaxesButtonsOP[TaxLevel] ,1)
+
+end

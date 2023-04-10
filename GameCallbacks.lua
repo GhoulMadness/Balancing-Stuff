@@ -169,9 +169,6 @@ function GameCallback_GUI_SelectionChanged()
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)
 				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
 				ButtonStem = "Upgrade_Outpost"
-				if Logic.GetTechnologyState(Logic.EntityGetPlayer(EntityId), Technologies.GT_Literacy) == 4 and XGUIEng.IsWidgetShown(XGUIEng.GetWidgetID("HQTaxes_OP")) == 0 then
-					XGUIEng.ShowWidget(XGUIEng.GetWidgetID("HQTaxes_OP"),1)
-				end
 			--Is EntityType the Goldmine?
 			elseif UpgradeCategory == UpgradeCategories.GoldMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)

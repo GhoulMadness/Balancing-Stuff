@@ -52,7 +52,14 @@ end
 MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1, Entities.PB_Headquarters2, Entities.PB_Headquarters3,
 											Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5,
 											Entities.PB_Outpost1, Entities.PB_Outpost2, Entities.PB_Outpost3}
-
+-- needed for outpost taxes update
+gvGUI_WidgetID.TaxesButtonsOP = {}
+gvGUI_WidgetID.TaxesButtonsOP[0] = 	"SetVeryLowTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[1] = 	"SetLowTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[2] = 	"SetNormalTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[3] = 	"SetHighTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[4] = 	"SetVeryHighTaxes_OP"
+--
 if CUtil then
 
 	refined_resource_gold = {
