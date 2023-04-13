@@ -741,3 +741,7 @@ Es wurden mehrere Fehler im Zusammenhang mit der KI behoben.
 Es wurde ein Fehler behoben, durch den die Kosten beim Soldatenkauf falsch angezeigt werden konnten.
 
 Es wurde ein Fehler im Zusammenhang mit dem Erscheinen der Förster behoben.
+
+--- Version 0.741
+
+Es wurde ein Fehler behoben, durch den das Aufwerten von Truppen im MP manchmal keine Ressourcen kostete.

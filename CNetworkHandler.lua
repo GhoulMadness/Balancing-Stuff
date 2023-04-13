@@ -463,7 +463,7 @@ if CNetwork then
 			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 				CLogger.Log("Ghoul_UpgradeLeaderCommand", name, _leaderID, _playerID, arg)
 				-- execute stuff
-				GUIAction_ActionUpgradeLeader(_leaderID, _playerID, arg)
+				GUIAction_ActionUpgradeLeader(_leaderID, _playerID, unpack(arg))
 			end
 		end
 	)
