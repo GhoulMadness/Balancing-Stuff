@@ -227,6 +227,15 @@ CutsceneDone = function()
 	end
 
 end
+DiffLVLToString = function(_lvl)
+	if _lvl == 1 then
+		return "Schwer"
+	elseif _lvl == 2 then
+		return "Normal"
+	else
+		return "Leicht"
+	end
+end
 function GetNumberOfPlayingHumanPlayer()
 
 	if not CNetwork then
@@ -1045,6 +1054,7 @@ end
 function HideGUI()
 
 	Game.GUIActivate(0)
+	Display.SetRenderDecalsSelections(0)
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "ShowGUI()", 2 )
 
 end
@@ -1052,6 +1062,7 @@ end
 function ShowGUI()
 
 	Game.GUIActivate(1)
+	Display.SetRenderDecalsSelections(1)
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 
 end

@@ -264,13 +264,17 @@ EnlargeArmy = function(_army, _troop, _pos)
 	local anchor = _pos or ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 	--local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
 	local id = CreateGroup(_army.player, _troop.leaderType, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, _troop.experiencePoints or 0)
-	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, id)
-	if Logic.IsEntityInCategory(id, EntityCategories.EvilLeader) ~= 1 then
-		Logic.LeaderChangeFormationType(id, math.random(1, 7))
+	ConnectLeaderWithArmy(id, _army)
+end
+ConnectLeaderWithArmy = function(_id, _army)
+	assert(IsValid(_id), "invalid leader id")
+	assert(type(_army) == "table", "army must be a valid army table")
+	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, _id)
+	if Logic.IsEntityInCategory(_id, EntityCategories.EvilLeader) ~= 1 then
+		Logic.LeaderChangeFormationType(_id, math.random(1, 7))
 	end
-	ArmyTable[_army.player][_army.id + 1][id] = ArmyTable[_army.player][_army.id + 1][id] or {}
-	ArmyTable[_army.player][_army.id + 1][id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, id, _army.id + 1})
-
+	ArmyTable[_army.player][_army.id + 1][_id] = ArmyTable[_army.player][_army.id + 1][_id] or {}
+	ArmyTable[_army.player][_army.id + 1][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, _id, _army.id + 1})
 end
 Defend = function(_army)
 
@@ -278,7 +282,7 @@ Defend = function(_army)
 	local range = math.max(_army.rodeLength, ArmyTable[_army.player][_army.id+1].rodeLength)
 	local dist = GetNearestEnemyDistance(_army.player, pos, range)
 	if dist then
-		if dist <= math.min(2000, range) then
+		if dist <= math.min(2000, range) and not gvEMSFlag then
 			Retreat(_army)
 			return
 		end
