@@ -261,7 +261,7 @@ function GameCallback_GameSpeedChanged( _Speed )
     if Speed == 0 then
 		gvGameSpeed = 0
 		if not CNetwork then
-			local PauseScreenType = Logic.GetRandom(4) + 1
+			local PauseScreenType = math.random(5)
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		end
 
@@ -274,11 +274,19 @@ function GameCallback_GameSpeedChanged( _Speed )
     end
 end
 
-function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
+function GameCallback_OnTechnologyResearched(_PlayerID, _TechnologyType)
 
 	--calculate score
 	if Score ~= nil then
 		Score.CallBackResearched( _PlayerID, _TechnologyType )
+	end
+
+	if _TechnologyType == Technologies.T_HeavyThunder then
+		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
+
+	elseif _TechnologyType == Technologies.T_TotalDestruction then
+		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
+
 	end
 
 	local PlayerID = GUI.GetPlayerID()
@@ -294,13 +302,6 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		end
 	end
 
-	if _TechnologyType == Technologies.T_HeavyThunder then
-		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
-
-	elseif _TechnologyType == Technologies.T_TotalDestruction then
-		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
-
-	end
 	if not gvMercTechsCheated then
 
 		if _TechnologyType == Technologies.T_BarbarianCulture then
