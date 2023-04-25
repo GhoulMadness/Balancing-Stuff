@@ -70,17 +70,17 @@ function GUIUpdate_Experience()
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
 	local EntityID = GUI.GetSelectedEntity()
 	local XP = math.min(CEntity.GetLeaderExperience(EntityID), 1000)
-	local LVL
+	local LVL = 0
 
-	for k,v in pairs(BS.ExperienceLevels) do
-		if XP >= v then
-			LVL = k
+	for i = 0, table.getn(BS.ExperienceLevels) do
+		if XP >= BS.ExperienceLevels[i] then
+			LVL = i
 		else
 			break
 		end
 	end
-
-	XGUIEng.SetText( CurrentWidgetID, " @ra ".. XP .." (LVL ".. LVL ..")")
+	
+	XGUIEng.SetText( CurrentWidgetID, " @ra "..XP .." (LVL ".. LVL ..")")
 
 end
 
@@ -157,7 +157,8 @@ BS.Faith = {MaxValue = 5000, colorsteps = {	[0] = {r = 255, g = 0, b = 0},
 											[20] = {r = 255, g = 165, b = 0},
 											[40] = {r = 255, g = 255, b = 0},
 											[60] = {r = 153, g = 225, b = 47},
-											[80] = {r = 50, g = 205, b = 50}
+											[80] = {r = 50, g = 205, b = 50},
+											[100] = {r = 0, g = 255, b = 0}
 											},
 							defaultcol = {r = 255, g = 255, b = 255}
 			}
@@ -182,14 +183,17 @@ function GUIUpdate_SpecialResourceAmount(_ResourceType)
 	end
 
 	procent = math.min(math.floor((Amount/maxvalue)*100), 100)
-
-	for k,v in pairs(BS.Faith.colorsteps) do
-		if procent >= k then
-			XGUIEng.SetText( CurrentWidgetID, "@color:"..v.r..","..v.g..","..v.b.." "..(procent or 0).." @color:"..BS.Faith.defaultcol.r..","..BS.Faith.defaultcol.g..","..BS.Faith.defaultcol.b.." % ")
-			break
+	if procent == 100 then
+		col = BS.Faith.colorsteps[procent]
+	else
+		for k,v in pairs(BS.Faith.colorsteps) do
+			if procent >= k and procent < k + 20 then
+				col = v
+				break
+			end
 		end
 	end
-
+	XGUIEng.SetText( CurrentWidgetID, "@color:"..col.r..","..col.g..","..col.b.." "..(procent or 0).." @color:"..BS.Faith.defaultcol.r..","..BS.Faith.defaultcol.g..","..BS.Faith.defaultcol.b.." % ")
 end
 
 function GUIUpdate_LightningRod()

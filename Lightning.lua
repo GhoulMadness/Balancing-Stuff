@@ -151,9 +151,9 @@ end
 function Lightning_Job()
 	--Blitzeinschläge nur bei Regen
 	if Logic.GetWeatherState() == 2 then
-		local range = gvLightning.Range + Logic.GetRandom(gvLightning.Range)
-		local damage = gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage)
-		local buildingdamage = (((gvLightning.BaseDamage + Logic.GetRandom(gvLightning.BaseDamage))*3) + math.min(GetCurrentWeatherGfxSet()*5,55)*gvLightning.DamageAmplifier)
+		local range = gvLightning.Range + math.random(gvLightning.Range)
+		local damage = gvLightning.BaseDamage + math.random(gvLightning.BaseDamage)
+		local buildingdamage = (((gvLightning.BaseDamage + math.random(gvLightning.BaseDamage))*3) + math.min(GetCurrentWeatherGfxSet()*5,55)*gvLightning.DamageAmplifier)
 		local amount = gvLightning.Amount
 		local x,y
 		--noch mehr Blitze bei Unwetter und nächtlichem Unwetter (Gfx-Set 11 und 28)
@@ -162,8 +162,8 @@ function Lightning_Job()
 		end
 
 		for i = 1,amount do
-			x = Logic.GetRandom(Mapsize)
-			y = Logic.GetRandom(Mapsize)
+			x = math.random(Mapsize)
+			y = math.random(Mapsize)
 			if GetDistance({X = x, Y = y},{X = Mapsize/2, Y = Mapsize/2}) <= Mapsize/2 then
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode,x,y)
 				gvLightning.Damage(x,y,range,damage,buildingdamage)
@@ -258,13 +258,13 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 			end
 		end
 		-- Signal für den Spieler + Begrenzung Ton nur 1/sek
-		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then
+		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true and Logic.IsEntityAlive(eID) then
 			gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
 			GUI.ScriptSignal(_posX, _posY, 0)
 		end
 		local count
 		if ExtendedStatistics then
-			if not count and IsValid(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true then
+			if not count and IsValid(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true and Logic.IsEntityAlive(eID) then
 				ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].AmountOfLightningStrikes + 1
 				count = true
 			end

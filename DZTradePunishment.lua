@@ -1,12 +1,12 @@
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------- DZ Trade Punishment --------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------
-gvDZTradeCheck = {PlayerDelay = {}, PlayerTime = {}, amount = 0.007 + Logic.GetRandom(0.008), factor = 1.1 + (Logic.GetRandom(5)/10), treshold = 15 + Logic.GetRandom(15), PunishmentProtected = {CriticalRange = 3200}, AttractionOverhaulFactor = 1.2, MotivationValues = {Maximum = 0.29, AverageMaximum = 0.26, Minimum = 0.24}}
+gvDZTradeCheck = {PlayerDelay = {}, PlayerTime = {}, amount = 0.007 + (math.random(8)/100), factor = 1.1 + (math.random(5)/10), treshold = 15 + math.random(15), PunishmentProtected = {CriticalRange = 3200}, AttractionOverhaulFactor = 1.2, MotivationValues = {Maximum = 0.29, AverageMaximum = 0.26, Minimum = 0.24}}
 function DZTrade_Init()
 
 	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		gvDZTradeCheck.PlayerTime[i] = -1
-		gvDZTradeCheck.DelayDefaultValue = 60 + Logic.GetRandom(20)
+		gvDZTradeCheck.DelayDefaultValue = 60 + math.random(20)
 		gvDZTradeCheck.PlayerDelay[i] = gvDZTradeCheck.DelayDefaultValue
 
 	end

@@ -506,7 +506,16 @@ Forester_ArrivedAtDestinationCheck = function(_id, _buildingID, _posX, _posY, _t
 		return true
 	else
 		if Counter.Tick2("Forester_ArrivedAtDestinationCheck_".. _id, Forester.WorkCycleDelay[_id]) then
-			Logic.MoveSettler(_id, _posX, _posY)
+			if Logic.GetSector(_id) == CUtil.GetSector(_posX/100, _posY/100) then
+				Logic.MoveSettler(_id, _posX, _posY)
+			else
+				local posX, posY, terrType = Forester.FindNextTreePos(_id)
+				if posX ~= 0 then
+					Logic.MoveSettler(_id, posX, posY)
+					Forester.TriggerIDs.WorkControl.ArrivedAtDestination[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_ArrivedAtDestinationCheck",1,{},{_id, _buildingID, posX, posY, terrType})
+					return true
+				end
+			end
 		end
 	end
 end
@@ -515,9 +524,12 @@ Forester_TreeGrowthControl = function(_id, _suffixName)
 		return true
 	end
 	if GetEntitySize(_id) >= 1 then
-		local newID = ReplaceEntity(_id, Entities[_suffixName])
-		Forester.TriggerIDs.Tree.Cutted[newID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","Forester_Tree_OnTreeCutted",1,{},{newID})
-		return true
+		local posX, posY = Logic.GetEntityPosition(_id)
+		if Logic.GetEntitiesInArea(0, posX, posY, 100, 1, 6) == 0 then
+			local newID = ReplaceEntity(_id, Entities[_suffixName])
+			Forester.TriggerIDs.Tree.Cutted[newID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","Forester_Tree_OnTreeCutted",1,{},{newID})
+			return true
+		end
 	else
 		if Counter.Tick2("Forester_TreeGrowthControl_".. _id, Forester.TreeGrowthTimeNeeded) then
 			local size = GetEntitySize(_id)

@@ -745,3 +745,33 @@ Es wurde ein Fehler im Zusammenhang mit dem Erscheinen der Förster behoben.
 --- Version 0.741
 
 Es wurde ein Fehler behoben, durch den das Aufwerten von Truppen im MP manchmal keine Ressourcen kostete.
+
+Es wurde ein Fehler im Zusammenhang mit den Wachstum der von Förstern platzierten Bäume behoben.
+
+Es wurden Fehler im Zusammenhang mit zwei Technologien in der Wettermaschine behoben, die zu Desyncs führen konnten.
+
+--- Version 0.742
+
+QoL für den Förster: Hat ein Setzling seine maximale Größe erreicht und es befand sich ein Förster in unmittelbarer Nähe, so konnte sich dieser nicht mehr bewegen, weil er durch den entstandenen Baum blockiert wurde. Der Setzling wird nun erst zum fällbaren Baum, wenn sich keine Siedler in direkter Nähe befindet.
+Wurde der Bereich, in dem der Förster aufforsten wollte, blockiert (z.B. durch das Platzieren eines Gebäudes), hat der Förster gewartet, bis der Bereich wieder erreichbar ist. Er wird sich nun stattdessen einen neuen Ort zum Aufforsten suchen.
+
+Es wurde ein Fehler behoben, durch den die Erfahrungsstufen von Truppen in der erweiterten Stats-Anzeige nicht korrekt angezeigt wurden.
+
+Spieler konnten bisher eine unbegrenzte Menge an Glauben und Wetterenergie ansammeln. Sie können nun nur noch das angedachte Maximum ansammeln. 
+Hinweis: Für Glauben hat dies für den Spieler keine spürbaren Auswirkungen, da nach einer Segnung der Wert auf 0 gesetzt wird.
+Bei der Wetterenergie wird allen anderen Spielern beim Wetterwechsel Energie abgezogen. Dies war davor oft nicht spürbar, da die Spieler das eigentliche Limit weit überschritten hatten und nach dem Abzug immer noch über dem Limit waren.
+
+Die Ressourcen-Finden Fähigkeit der Kundschafter ist zurück. 
+Die Meldung, ob der Kundschafter hierbei erfolgreich war, ging an alle Spieler. Dies wurde behoben und nur noch der Spieler, der die Fähigkeit auslöst, erhält die Nachricht.
+Bedenkt aber bitte, dass mit der Fähigkeit keine Silber-/Goldminen und/oder mediterrane Steinbrüche gefunden werden können.
+
+Sägewerker arbeiten nun effektiver.
+Hinweis: Je nach Rahmenbedingungen (Motivation, Versorgung, etc.) arbeiten sie nun bis zu 50% effektiver.
+
+Es wurde ein Fehler behoben, durch den die Positionen von Armeen nicht aktualisiert wurden, wenn die Armee-ID erneut verwendet wurde.
+
+Ihr erhaltet nun kein Signal und keinen Ton mehr, wenn ein ohnmächtiger Held vom Blitz getroffen wird.
+
+Die KI fokussiert Helden nun ein wenig mehr (sie wurden bisher fast gänzlich von ihr ignoriert).
+
+Es wurde ein Fehler im Zusammenhang mit der Wetterwechselsperre beim Wechsel auf Unwetter behoben.

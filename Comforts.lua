@@ -269,8 +269,32 @@ function SetPlayerName(_playerId, _name)
 	gvPlayerName[_playerId] = _name
 
 end
-
-function table_findvalue(_tid,_value)
+--[[ find numeric indexed table holes
+returns table with holes indexes or, if no holes were found, false]]
+function table_findholes(_t)
+	assert(type(_t) == "table", "input type must be a table")
+	local last, holes = nil, {}
+	for k, _ in pairs(_t) do
+		if k ~= 1 and not next(holes) then
+			for i = 1, k - 1 do
+				table.insert(holes, i)
+			end
+		else
+			if last and last + 1 ~= k then
+				for i = last, k - 1 do
+					table.insert(holes, i)
+				end
+			end
+		end
+		last = k
+	end
+	
+	if next(holes) then
+		return holes
+	end
+	return false
+end
+function table_findvalue(_tid, _value)
 
 	local tpos
 
@@ -322,7 +346,7 @@ function table_findvalue(_tid,_value)
 
 end
 
-function removetablekeyvalue(_tid,_key)
+function removetablekeyvalue(_tid, _key)
 
 	local tpos
 
@@ -819,7 +843,7 @@ end
 function GetNearestEnemyDistance(_player, _position, _range)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
-	if entities and entities[1] then
+	if next(entities) then
 		for i = 1, table.getn(entities) do
 			if Logic.IsEntityAlive(entities[i]) then
 				return GetDistance(entities[i], _position)
@@ -2377,7 +2401,7 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 		return p1.dist < p2.dist
 	end)
 
-	if distancepow2table[1] then
+	if next(distancepow2table) then
 		return distancepow2table[1].id
 	end
 end
@@ -2464,7 +2488,7 @@ function GetNearestTarget(_player, _id)
 	end
 	local posX, posY = Logic.GetEntityPosition(_id)
 	local range = 5000
-	local maxrange = ({Logic.WorldGetSize()})[1]
+	local maxrange = Logic.WorldGetSize()
 	local sector = Logic.GetSector(_id)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	repeat
@@ -2503,9 +2527,13 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
 	local posX, posY = Logic.GetEntityPosition(_eID)
 	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
+	local bonusRange = 500
 	local damageclass = GetEntityTypeDamageClass(etype)
 	local damagerange = GetEntityTypeDamageRange(etype)
 	local calcT = {}
+	if IsMelee then
+		bonusRange = 800
+	end
 
 	if _target then
 		if gvAntiBuildingCannonsRange[etype] then
@@ -2526,16 +2554,17 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local clumpscore
 	local attach
 	ChunkWrapper.UpdatePositions(AIchunks[player])
-	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[player], posX, posY, _range or maxrange + 500)
+	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[player], posX, posY, _range or maxrange + bonusRange)
 
-	if not entities[1] then
+	if not next(entities) then
 		return
 	end
 	for i = 1, table.getn(entities) do
 		if Logic.IsEntityAlive(entities[i]) then
 			local ety = Logic.GetEntityType(entities[i])
 			local threatbonus
-			if Logic.GetFoundationTop(entities[i]) ~= 0 or (Logic.IsBuilding(entities[i]) == 0 and GetEntityTypeDamageRange(ety) > 0) then
+			if Logic.GetFoundationTop(entities[i]) ~= 0 or (Logic.IsBuilding(entities[i]) == 0 and GetEntityTypeDamageRange(ety) > 0)
+			or (Logic.IsHero(entities[i]) == 1 and not IsMelee) then
 				threatbonus = 1
 			end
 			attach = CEntity.GetAttachedEntities(entities[i])[37]
@@ -2552,7 +2581,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	end
 	local attachN = attach and table.getn(attach) or 0
 	if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
-		if postable[1] then
+		if next(postable) then
 			clumppos, score = GetPositionClump(postable, damagerange, 100)
 			for i = 1, table.getn(calcT) do
 				if IsTower then
@@ -2585,7 +2614,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 			return (p1.factor * 10 - distval(p1.dist, maxrange) - attachN) > (p2.factor * 10 - distval(p2.dist, maxrange) - attachN)
 		end
 	end)
-	if calcT[1] then
+	if next(calcT) then
 		for i = 1, table.getn(calcT) do
 			if sector == Logic.GetSector(calcT[i].id) then
 				return calcT[i].id

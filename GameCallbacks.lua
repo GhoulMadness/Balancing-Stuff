@@ -806,3 +806,26 @@ GameCallback_UnknownTask = function(_id)
 		end
 	end
 end
+function GameCallback_OnPointToResource(_foundPos, _unused)
+
+	if gvScoutUsedPointToResources then
+		if _foundPos == 0 then
+			GUI.AddNote( XGUIEng.GetStringTableText("InGameMessages/shortmessage_noresourceclose") )
+		else
+			GUI.AddNote( XGUIEng.GetStringTableText("InGameMessages/shortmessage_pointtoresource") )
+		end
+		gvScoutUsedPointToResources = nil
+	end
+end
+-- weather energy infinite resources fix
+GameCallback_ResourceChanged = function(_player, _type, _amount)
+	if _type == ResourceType.WeatherEnergy then
+		if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetEnergyRequiredForWeatherChange() then
+			Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetEnergyRequiredForWeatherChange())
+		end
+	elseif _type == ResourceType.Faith then
+		if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetMaximumFaith() then
+			Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetMaximumFaith())
+		end
+	end
+end

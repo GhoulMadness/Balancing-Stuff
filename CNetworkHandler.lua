@@ -129,11 +129,6 @@ if CNetwork then
 	CNetwork.SetNetworkHandler("Ghoul_ChangeWeatherToThunderstorm",
 		function(name, _playerID,_eID)
 
-			if Logic.GetEntityType(_eID) ~= Entities.PB_WeatherTower1 then
-
-				return
-
-			end
 			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 
 				CLogger.Log("Ghoul_ChangeWeatherToThunderstorm", name)
@@ -143,31 +138,7 @@ if CNetwork then
 					return
 
 				end
-
-				Logic.AddWeatherElement(2,120,0,11,5,15)
-
-				Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetEnergyRequiredForWeatherChange()))
-
-				--in case the player still has energy left, bring him down to zero!
-				if Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy ) > Logic.GetEnergyRequiredForWeatherChange() then
-
-					Logic.AddToPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy, -(Logic.GetPlayersGlobalResource(_playerID, ResourceType.WeatherEnergy )))
-
-				end
-
-				if EMS then
-
-					EMS.RF.WLT.LockWeatherChange()
-
-				end
-
-				if _playerID == GUI.GetPlayerID() and GUI.GetSelectedEntity() == _eID then
-
-					GUI.DeselectEntity(_eID)
-
-					GUI.SelectEntity(_eID)
-
-				end
+				GUIAction_ChangeToThunderstorm(_playerID, _eID)
 
 			end
 

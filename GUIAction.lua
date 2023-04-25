@@ -130,7 +130,7 @@ function GUIAction_LightningRod()
 	if CNetwork then
         CNetwork.SendCommand("Ghoul_LightningRod_Protected", PlayerID)
     else
-	LightningRod_Protected(PlayerID)
+		LightningRod_Protected(PlayerID)
 	end
 end
 function LightningRod_Protected(_PID)
@@ -325,16 +325,16 @@ function GUIAction_ChangeToSpecialWeather(_weathertype,_EntityID)
 	if CurrentWeatherEnergy >= NeededWeatherEnergy then
 		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/GUI_WeathermashineActivated"))
 		if CNetwork then
-			CNetwork.SendCommand("Ghoul_ChangeWeatherToThunderstorm", PlayerID,_EntityID)
+			CNetwork.SendCommand("Ghoul_ChangeWeatherToThunderstorm", PlayerID, _EntityID)
 		else
-			GUIAction_ChangeToThunderstorm(PlayerID,_EntityID)
+			GUIAction_ChangeToThunderstorm(PlayerID, _EntityID)
 		end
 
 	else
 		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/GUI_WeathermashineNotReady"))
 	end
 end
-function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
+function GUIAction_ChangeToThunderstorm(_playerID, _EntityID)
 
 	if Logic.GetEntityType(_EntityID) ~= Entities.PB_WeatherTower1 then
 		return
@@ -349,6 +349,9 @@ function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
 	end
 
 	if EMS then
+		if EMS.RF.WLT.Job == nil then
+			EMS.RF.WLT.Job = StartSimpleJob("EMS_RF_WLT_Counter");
+		end
 		EMS.RF.WLT.LockWeatherChange()
 	end
 
@@ -641,7 +644,8 @@ function GUIAction_ArmyCreatorFinishSetup()
 end
 
 function GUIAction_ScoutFindResources()
-	--GUI.ScoutPointToResources(GUI.GetSelectedEntity())
+	gvScoutUsedPointToResources = true
+	GUI.ScoutPointToResources(GUI.GetSelectedEntity())
 end
 
 --------------------------------------------------------------------------------

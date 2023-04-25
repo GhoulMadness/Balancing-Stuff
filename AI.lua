@@ -230,6 +230,8 @@ GetFirstFreeArmySlot = function(_player)
 	local count
 	for k, v in pairs(ArmyTable[_player]) do
 		if not v or IsDead(v) then
+			ArmyTable[_player][k] = nil
+			ArmyHomespots[_player][k] = nil
 			return k - 1
 		end
 		count = k - 1
@@ -294,7 +296,7 @@ Defend = function(_army)
 				end
 			end
 			if ArmyTable[_army.player][_army.id + 1][id] then
-				if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 5 < Logic.GetTime() ))
+				if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
 				or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
 					ManualControl_AttackTarget(_army.player, _army.id + 1, id)
 				end

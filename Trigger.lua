@@ -504,7 +504,7 @@ function TransactionDetails()
 	end
 
 	if Logic.GetTechnologyState(PID,Technologies.T_Scale) == 4 then
-		local Bonus = math.ceil((TSum/10) + Logic.GetRandom((TSum/6)))
+		local Bonus = math.ceil((TSum/10) + math.random((TSum/6)))
 		Logic.AddToPlayersGlobalResource(PID, TTyp, Bonus )
 
 		if GUI.GetPlayerID() == PID then
@@ -717,7 +717,7 @@ gvWinterTheme = {GfxSets = {3, 9, 13}, WeatherState = 3, Chance = 1/28, Volume =
 function WinterTheme()
 
 	if gvWinterTheme.IsCurrentWeatherSuited() then
-		local SoundChance = Logic.GetRandom(1/gvWinterTheme.Chance)
+		local SoundChance = math.random(1/gvWinterTheme.Chance)
 		if SoundChance == 1 then
 			Sound.PlayGUISound(Sounds.AmbientSounds_winter_rnd_1, gvWinterTheme.Volume)
 		end
