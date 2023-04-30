@@ -109,6 +109,7 @@ function GUIAction_NormalResourceView()
 end
 function GUIAction_ExpelAll()
 	local SelectedEntityIDs = {GUI.GetSelectedEntities()}
+	GUIAction_LeaderDetailsOff()
 	for i = 1,table.getn(SelectedEntityIDs) do
 		if Logic.IsHero(SelectedEntityIDs[i]) == 1 then
 			Sound.PlayFeedbackSound( Sounds.Leader_LEADER_NO_rnd_01, 0 )

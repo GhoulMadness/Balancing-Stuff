@@ -241,7 +241,9 @@
 										"RitterLeo",
 										"DerEisenfresser",
 										"ThePhoenix_2000",
-										"Vqrys"},
+										"Vqrys",
+										"Izzo",
+										"a8wh4t"},
 								[3] = {"Roma_Invicta", "CAS_G Roma",
 										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 										"Novator12", "Novator12Slave",
@@ -349,9 +351,6 @@
 	CUtil.DisableFoW()
 	--larger zoom factor (default 1.0)
 	Camera.ZoomSetFactorMax(2)
-	--TODO: is this really needed??
-	gvMission = {}
-	gvMission.PlayerID = GUI.GetPlayerID()
 	--cooldown handling levy taxes TODO: this is not at the correct place
 	gvLastTimeButtonPressed = -240000
 	--additional chat taunts added
