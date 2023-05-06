@@ -46,10 +46,12 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				local pos = GetPosition(_heroID)
 				local towerID = ({Logic.GetPlayerEntitiesInArea(playerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[2]
 				local towerpos = GetPosition(towerID)
+				local health = GetEntityHealth(towerID)
 				Logic.CreateEffect(GGL_Effects.FXHero14_Poison, towerpos.X, towerpos.Y)
 				Logic.CreateEffect(GGL_Effects.FXHero14_Fear, towerpos.X, towerpos.Y)
 				Logic.CreateEffect(GGL_Effects.FXCrushBuilding, towerpos.X, towerpos.Y)
-				ReplaceEntity(towerID, Entities.PU_Hero14_EvilTower)
+				local id = ReplaceEntity(towerID, Entities.PU_Hero14_EvilTower)
+				SetHealth(id, health)
 				if IsNighttime() then
 					gvHero14.RisingEvil.LastTimeUsed = gvHero14.RisingEvil.LastTimeUsed - 120
 					if gvHero14.RisingEvil.NextCooldown then

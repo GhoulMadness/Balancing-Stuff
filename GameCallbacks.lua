@@ -15,6 +15,10 @@ function Mission_OnSaveGameLoaded()
 	Mission_OnSaveGameLoadedOrig()
 	MultiplayerTools.OnSaveGameLoaded = function()
 	end
+	if SendEvent and not next(SendEvent) then
+		SendEvent = nil
+	end
+	CUtil.EnableEntityTypeAsUgradeCategory()
 	BS.GfxInit()
 	CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	if not CNetwork then

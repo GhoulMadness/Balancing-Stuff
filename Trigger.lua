@@ -1329,32 +1329,6 @@ for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
 end
 
-function AntiBuildingCannon_RedirectTarget()
-
-	local attacker = Event.GetEntityID1()
-	local target = Event.GetEntityID2()
-	local attype = Logic.GetEntityType(attacker)
-
-	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(Logic.EntityGetPlayer(attacker)) == 0 then
-		for k,v in pairs(gvAntiBuildingCannonsRange) do
-			if attype == k and Logic.IsBuilding(target) == 0 then
-				local building = BS.CheckForNearestHostileBuildingInAttackRange(attacker, v)
-				if building then
-					Logic.GroupAttack(attacker, building)
-				end
-			else
-				if Logic.IsEntityInCategory(target, EntityCategories.Soldier) == 0 then
-					local newtarget = CheckForBetterTarget(attacker, target)
-					if newtarget ~= nil then
-						Logic.GroupAttack(attacker, newtarget)
-					end
-				end
-			end
-		end
-	end
-
-end
-
 function OnAIEnemyCreated(_playerID)
 
 	local entityID = Event.GetEntityID()

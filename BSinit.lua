@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.742
+	BS.Version = 0.743
 
 	BS.SpectatorPID = 17
 
@@ -233,7 +233,9 @@
 										"DerEisenfresser",
 										"ThePhoenix_2000",
 										"Novator12", "Novator12Slave",
-										"Vqrys"},
+										"Vqrys",
+										"ZorkManu",
+										"Parzival42"},
 								[2] = {"Roma_Invicta", "CAS_G Roma",
 										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 										"Novator12", "Novator12Slave",

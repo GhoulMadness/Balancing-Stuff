@@ -28,7 +28,6 @@ if XNetwork.Manager_DoesExist() == 0 then
 		else
 			GUIAction_ToggleMenu_Orig(_menu, _status)
 		end
-		gvMission.singleplayerMode = true
 	end
 else
 

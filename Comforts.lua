@@ -288,7 +288,7 @@ function table_findholes(_t)
 		end
 		last = k
 	end
-	
+
 	if next(holes) then
 		return holes
 	end
@@ -2401,9 +2401,8 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 		return p1.dist < p2.dist
 	end)
 
-	if next(distancepow2table) then
-		return distancepow2table[1].id
-	end
+	return (distancepow2table[1] and distancepow2table[1].id)
+
 end
 BS.GetTableStrByHeroType = function(_type)
 
@@ -2534,20 +2533,18 @@ function CheckForBetterTarget(_eID, _target, _range)
 	if IsMelee then
 		bonusRange = 800
 	end
-
-	if _target then
-		if gvAntiBuildingCannonsRange[etype] then
-			if Logic.IsBuilding(_target) == 0 then
-				return BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
-			end
+	if gvAntiBuildingCannonsRange[etype] then
+		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
+		if _target and Logic.IsBuilding(_target) == 0 and target then
+			return target
+		elseif not _target and target then
+			return target
+		else
+			return
 		end
-		if Logic.IsEntityAlive(_target) and sector == Logic.GetSector(_target) then
-			calcT[1] = {id = _target, factor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(_target))], dist = GetDistance(_eID, _target)}
-		end
-	else
-		if gvAntiBuildingCannonsRange[etype] then
-			return BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
-		end
+	end
+	if _target and Logic.IsEntityAlive(_target) and sector == Logic.GetSector(_target) then
+		calcT[1] = {id = _target, factor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(_target))], dist = GetDistance(_eID, _target)}
 	end
 
 	local postable = {}

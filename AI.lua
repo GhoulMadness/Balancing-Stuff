@@ -126,11 +126,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	SetHostile(1,_playerId)
 
 	if not AIchunks[_playerId] then
-		AIchunks[_playerId] = ChunkWrapper.new()
-		AI_AddEnemiesToChunkData(_playerId)
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_playerId})
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_playerId})
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_playerId})
+		AI_InitChunks(_playerId)
 	end
 end
 StartMapEditor_ArmyAttack = function(_playerId, _delay)
@@ -163,7 +159,7 @@ ControlMapEditor_Armies = function(_playerId)
 					end
 				end
 				if MapEditor_Armies[_playerId][id] then
-					if (MapEditor_Armies[_playerId][id].lasttime and (MapEditor_Armies[_playerId][id].lasttime + 5 < Logic.GetTime() ))
+					if (MapEditor_Armies[_playerId][id].lasttime and (MapEditor_Armies[_playerId][id].lasttime + 3 < Logic.GetTime() ))
 					or (MapEditor_Armies[_playerId][id].currenttarget and not Logic.IsEntityAlive(MapEditor_Armies[_playerId][id].currenttarget)) then
 						ManualControl_AttackTarget(_playerId, nil, id)
 					end
@@ -198,6 +194,13 @@ ControlMapEditor_Armies = function(_playerId)
 			end
 		end
 	end
+end
+AI_InitChunks = function(_playerId)
+	AIchunks[_playerId] = ChunkWrapper.new()
+	AI_AddEnemiesToChunkData(_playerId)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_playerId})
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_playerId})
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_playerId})
 end
 AI_AddEnemiesToChunkData = function(_playerId)
 
@@ -251,11 +254,7 @@ SetupArmy = function(_army)
 	AI.Army_SetScatterTolerance(_army.player, _army.id, 0)
 	AI.Army_SetSize(_army.player, _army.id, 0)
 	if not AIchunks[_army.player] then
-		AIchunks[_army.player] = ChunkWrapper.new()
-		AI_AddEnemiesToChunkData(_army.player)
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAIEnemyCreated", 1, {}, {_army.player})
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAIEnemyDestroyed", 1, {}, {_army.player})
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_DIPLOMACY_CHANGED, "", "OnAIDiplomacyChanged", 1, {}, {_army.player})
+		AI_InitChunks(_army.player)
 	end
 end
 EnlargeArmy = function(_army, _troop, _pos)
@@ -276,7 +275,7 @@ ConnectLeaderWithArmy = function(_id, _army)
 		Logic.LeaderChangeFormationType(_id, math.random(1, 7))
 	end
 	ArmyTable[_army.player][_army.id + 1][_id] = ArmyTable[_army.player][_army.id + 1][_id] or {}
-	ArmyTable[_army.player][_army.id + 1][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, _id, _army.id + 1})
+	ArmyTable[_army.player][_army.id + 1][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, _id, _army.id})
 end
 Defend = function(_army)
 
@@ -320,7 +319,7 @@ Advance = function(_army)
 					end
 				end
 				if ArmyTable[_army.player][_army.id + 1][id] then
-					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 5 < Logic.GetTime() ))
+					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
 					or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
 						ManualControl_AttackTarget(_army.player, _army.id + 1 , id)
 					end
@@ -614,15 +613,20 @@ AITroopGenerator_GetLeader = function(_player)
 
 	if playerID == _player and IsMilitaryLeader(entityID) and AI.Entity_GetConnectedArmy(entityID) == -1 then
 		if not ArmyTable or (ArmyTable and not ArmyTable[_player])
-		or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0)
-		and Logic.LeaderGetBarrack(entityID) ~= 0 then
-			table.insert(MapEditor_Armies[_player].IDs, entityID)
-			MapEditor_Armies[_player][entityID] = MapEditor_Armies[_player][entityID] or {}
-			Logic.LeaderChangeFormationType(entityID, math.random(1, 7))
-			MapEditor_Armies[_player][entityID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, entityID})
+		or (ArmyTable and ArmyTable[_player] and table_findvalue(ArmyTable[_player], entityID) == 0) then
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "AITroopGenerator_CheckLeaderAttachedToBarracks", 1, {}, {_player, entityID})
 		end
 	end
 
+end
+AITroopGenerator_CheckLeaderAttachedToBarracks = function(_player, _id)
+	if Logic.LeaderGetBarrack(_id) ~= 0 then
+		table.insert(MapEditor_Armies[_player].IDs, _id)
+		MapEditor_Armies[_player][_id] = MapEditor_Armies[_player][_id] or {}
+		Logic.LeaderChangeFormationType(_id, math.random(1, 7))
+		MapEditor_Armies[_player][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, _id})
+	end
+	return true
 end
 AITroopGenerator_RemoveLeader = function(_player, _id, _army)
 
@@ -630,8 +634,8 @@ AITroopGenerator_RemoveLeader = function(_player, _id, _army)
 
 	if entityID == _id then
 		if _army then
-			removetablekeyvalue(ArmyTable[_player][_army].IDs, entityID)
-			ArmyTable[_player][_army][_id] = nil
+			removetablekeyvalue(ArmyTable[_player][_army + 1].IDs, entityID)
+			ArmyTable[_player][_army + 1][_id] = nil
 		else
 			removetablekeyvalue(MapEditor_Armies[_player].IDs, entityID)
 			MapEditor_Armies[_player][_id] = nil
