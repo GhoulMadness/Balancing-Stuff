@@ -353,6 +353,9 @@
 	CUtil.DisableFoW()
 	--larger zoom factor (default 1.0)
 	Camera.ZoomSetFactorMax(2)
+	--needed for Victory
+	gvMission = gvMission or {}
+	gvMission.PlayerID = GUI.GetPlayerID()
 	--cooldown handling levy taxes TODO: this is not at the correct place
 	gvLastTimeButtonPressed = -240000
 	--additional chat taunts added
