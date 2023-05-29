@@ -846,7 +846,7 @@ function GetNearestEnemyDistance(_player, _position, _range)
 	if next(entities) then
 		for i = 1, table.getn(entities) do
 			if Logic.IsEntityAlive(entities[i]) then
-				return GetDistance(entities[i], _position)
+				return GetDistance(entities[i], _position), entities[i]
 			end
 		end
 	end
@@ -2561,7 +2561,8 @@ function CheckForBetterTarget(_eID, _target, _range)
 			local ety = Logic.GetEntityType(entities[i])
 			local threatbonus
 			if Logic.GetFoundationTop(entities[i]) ~= 0 or (Logic.IsBuilding(entities[i]) == 0 and GetEntityTypeDamageRange(ety) > 0)
-			or (Logic.IsHero(entities[i]) == 1 and not IsMelee) then
+			or (Logic.IsHero(entities[i]) == 1 and not IsMelee)
+			or Logic.IsEntityInCategory(entities[i], EntityCategories.Cannon) == 1 then
 				threatbonus = 1
 			end
 			attach = CEntity.GetAttachedEntities(entities[i])[37]
@@ -2710,8 +2711,8 @@ BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Ent
 										[8] = UpgradeCategories.LeaderPoleArm,
 										[9] = UpgradeCategories.LeaderCavalry
 										}
-BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm},
-									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle},
+BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm, UpgradeCategories.LeaderElite, UpgradeCategories.BlackKnightLeaderSword3, UpgradeCategories.BlackKnightLeaderMace1, UpgradeCategories.LeaderBandit, UpgradeCategories.LeaderBarbarian},
+									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle, UpgradeCategories.LeaderBanditBow},
 									["Stables"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry},
 									["Foundry"] = {Entities.PV_Cannon1, Entities.PV_Cannon2, Entities.PV_Cannon3, Entities.PV_Cannon4}
 									}
@@ -2742,6 +2743,15 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 		end
 		return count < 3
 	end
+end
+function IsCannonType(_type)
+	assert(type(_type) == "number" and _type > 0, "invalid entity type")
+	if _type == Entities.PV_Cannon1 or _type == Entities.PV_Cannon2 or _type == Entities.PV_Cannon3 
+	or _type == Entities.PV_Cannon4 or _type == Entities.PV_Cannon5 or _type == Entities.PV_Cannon5
+	or _type == Entities.PV_Catapult then
+		return true
+	end
+	return false
 end
 RotateOffset = function(_x, _y, _rot)
 

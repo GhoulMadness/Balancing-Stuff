@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.743
+	BS.Version = 0.744
 
 	BS.SpectatorPID = 17
 
@@ -235,7 +235,9 @@
 										"Novator12", "Novator12Slave",
 										"Vqrys",
 										"ZorkManu",
-										"Parzival42"},
+										"Parzival42",
+										"Izzo",
+										"a8wh4t"},
 								[2] = {"Roma_Invicta", "CAS_G Roma",
 										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 										"Novator12", "Novator12Slave",
@@ -251,7 +253,9 @@
 								[3] = {"Roma_Invicta", "CAS_G Roma",
 										"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 										"Novator12", "Novator12Slave",
-										"Vqrys"},
+										"Vqrys",
+										"Izzo",
+										"a8wh4t"},
 								[4] = {}
 							}
 	function BS.CheckForAchievements(_pID)

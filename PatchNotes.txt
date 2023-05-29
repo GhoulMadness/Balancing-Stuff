@@ -795,6 +795,10 @@ Es wurden Fehler beim Laden von Spielständen im SP behoben.
 
 Es wurde ein Fehler im Zusammenhang mit Spawn-Armeen und Rekrutierungsarmeen desselben Spielers behoben.
 
+--- Version 0.744
 
+Das Defensivverhalten von Rekrutierungsarmeen wurde überarbeitet.
+
+Rekrutierungsarmeen können nun ihre Truppen an mehreren Militärgebäuden desselben Typs gleichzeitig ausbilden.
 
 
