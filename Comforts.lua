@@ -2727,7 +2727,6 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 	if not _id or not Logic.IsEntityAlive(_id) then
 		return
 	end
-	local slots
 	local IsFoundry = (Logic.GetEntityType(_id) == Entities.PB_Foundry1 or Logic.GetEntityType(_id) == Entities.PB_Foundry2)
 	if IsFoundry then
 		return Logic.GetCannonProgress(_id) == 100
@@ -2742,6 +2741,30 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 			end
 		end
 		return count < 3
+	end
+end
+GetLeadersTrainingAtMilitaryBuilding = function(_id)
+	if not _id or not Logic.IsEntityAlive(_id) then
+		return
+	end
+	local IsFoundry = (Logic.GetEntityType(_id) == Entities.PB_Foundry1 or Logic.GetEntityType(_id) == Entities.PB_Foundry2)
+	if IsFoundry then
+		if Logic.GetCannonProgress(_id) == 100 then
+			return 0
+		else
+			return 1
+		end
+	else
+		local count = 0
+		local attach = CEntity.GetAttachedEntities(_id)[42]
+		if attach and attach[1] then
+			for i = 1, table.getn(attach) do
+				if Logic.IsEntityInCategory(attach[i], EntityCategories.Soldier) == 0 then
+					count = count + 1
+				end
+			end
+		end
+		return count
 	end
 end
 function IsCannonType(_type)

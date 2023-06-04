@@ -40,6 +40,12 @@ function Mission_OnSaveGameLoaded()
 		Logic.PlayerSetIsHumanFlag(PIDs[i], 1)
 		Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 	end
+	gvGUI_WidgetID.TaxesButtonsOP = {}
+	gvGUI_WidgetID.TaxesButtonsOP[0] = 	"SetVeryLowTaxes_OP"
+	gvGUI_WidgetID.TaxesButtonsOP[1] = 	"SetLowTaxes_OP"
+	gvGUI_WidgetID.TaxesButtonsOP[2] = 	"SetNormalTaxes_OP"
+	gvGUI_WidgetID.TaxesButtonsOP[3] = 	"SetHighTaxes_OP"
+	gvGUI_WidgetID.TaxesButtonsOP[4] = 	"SetVeryHighTaxes_OP"
 end
 -- 3 Diebe max. auf der Weihnachtsmap
 if gvXmasEventFlag == 1 then
