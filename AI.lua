@@ -257,7 +257,7 @@ SetupArmy = function(_army)
 	if not ArmyTable[_army.player] then
 		ArmyTable[_army.player] = {}
 	end
-	ArmyTable[_army.player][_army.id + 1] = ArmyTable[_army.player][_army.id + 1] or _army
+	ArmyTable[_army.player][_army.id + 1] = _army
 	EvaluateArmyHomespots(_army.player, _army.position, _army.id + 1)
 	AI.Army_SetScatterTolerance(_army.player, _army.id, 0)
 	AI.Army_SetSize(_army.player, _army.id, 0)

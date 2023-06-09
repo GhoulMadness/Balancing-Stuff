@@ -780,18 +780,34 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 		end
 	end
 	if MapEditor_Armies and MapEditor_Armies[player] then
-		local tpos = table_findvalue(MapEditor_Armies[player].IDs, _OldID)
+		local tpos = table_findvalue(MapEditor_Armies[player].offensiveArmies.IDs, _OldID)
 		if tpos ~= 0 then
-			Trigger.UnrequestTrigger(MapEditor_Armies[player][_OldID].TriggerID)
-			MapEditor_Armies[player].IDs[tpos] = _NewID
-			MapEditor_Armies[player][_NewID] = MapEditor_Armies[player][_OldID]
-			MapEditor_Armies[player][_OldID] = nil
-			MapEditor_Armies[player][_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID})
+			Trigger.UnrequestTrigger(MapEditor_Armies[player].offensiveArmies[_OldID].TriggerID)
+			MapEditor_Armies[player].offensiveArmies.IDs[tpos] = _NewID
+			MapEditor_Armies[player].offensiveArmies[_NewID] = MapEditor_Armies[player].offensiveArmies[_OldID]
+			MapEditor_Armies[player].offensiveArmies[_OldID] = nil
+			MapEditor_Armies[player].offensiveArmies[_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID, "offensiveArmies"})
 			local enemies = BS.GetAllEnemyPlayerIDs(player)
 			for k = 1, table.getn(enemies) do
 				if AIchunks[enemies[k]] then
 					ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
 					ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+				end
+			end
+		else
+			tpos = table_findvalue(MapEditor_Armies[player].defensiveArmies.IDs, _OldID)
+			if tpos ~= 0 then
+				Trigger.UnrequestTrigger(MapEditor_Armies[player].defensiveArmies[_OldID].TriggerID)
+				MapEditor_Armies[player].defensiveArmies.IDs[tpos] = _NewID
+				MapEditor_Armies[player].defensiveArmies[_NewID] = MapEditor_Armies[player].defensiveArmies[_OldID]
+				MapEditor_Armies[player].defensiveArmies[_OldID] = nil
+				MapEditor_Armies[player].defensiveArmies[_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID, "defensiveArmies"})
+				local enemies = BS.GetAllEnemyPlayerIDs(player)
+				for k = 1, table.getn(enemies) do
+					if AIchunks[enemies[k]] then
+						ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
+						ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+					end
 				end
 			end
 		end
