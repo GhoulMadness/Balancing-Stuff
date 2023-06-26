@@ -53,7 +53,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				local id = ReplaceEntity(towerID, Entities.PU_Hero14_EvilTower)
 				SetHealth(id, health)
 				if IsNighttime() then
-					gvHero14.RisingEvil.LastTimeUsed = gvHero14.RisingEvil.LastTimeUsed - 120
+					if playerID == GUI.GetPlayerID() then
+						gvHero14.RisingEvil.LastTimeUsed = gvHero14.RisingEvil.LastTimeUsed - 120
+					end
 					if gvHero14.RisingEvil.NextCooldown then
 						if gvHero14.RisingEvil.NextCooldown[playerID] then
 							gvHero14.RisingEvil.NextCooldown[playerID] = gvHero14.RisingEvil.NextCooldown[playerID] - 120
