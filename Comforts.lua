@@ -137,6 +137,28 @@ function VC_Deathmatch()
 end 
 PrepareBriefing = function(_briefing)
 
+<<<<<<< Updated upstream
+=======
+	-- stop humen players leaders from moving
+	local player = GetAllHumenPlayer()
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
+		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) and not string.find(Logic.GetCurrentTaskList(eID), "TRAIN") and not string.find(Logic.GetCurrentTaskList(eID), "LEAVE") then
+			Logic.GroupDefend(eID)
+		end
+	end
+	local num, id = Logic.GetEntities(Entities.PB_Dome, 1)
+	if num > 0 and Logic.IsConstructionComplete(id) == 1 then
+	-- dome is finished, timer runs: add some extra time when triggering a briefing
+		for i = 1,999 do
+			if Counter["counter"..i] then
+				if Counter["counter"..i].Show then
+					Counter["counter"..i].Limit = Counter["counter"..i].Limit + 180
+					break
+				end
+			end
+		end
+	end
+>>>>>>> Stashed changes
 	--	prepare camera
 	GUIAction_GoBackFromHawkViewInNormalView()
 	Interface_SetCinematicMode(1)
@@ -2160,9 +2182,15 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 	
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(playerID))), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(posX, posY, _range)) do
 		if Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(eID) then
+<<<<<<< Updated upstream
 			local _X, _Y = Logic.GetEntityPosition(eID)	
 			local distancepow2 = (_X - posX)^2 + (_Y - posY)^2	
 			if Logic.GetFoundationTop(eID) ~= 0 then
+=======
+			local _X, _Y = Logic.GetEntityPosition(eID)
+			local distancepow2 = (_X - posX)^2 + (_Y - posY)^2
+			if Logic.GetFoundationTop(eID) ~= 0 or Logic.IsEntityInCategory(eID, EntityCategories.Bridge) == 1 then
+>>>>>>> Stashed changes
 				distancepow2 = distancepow2 / 2
 			end
 			table.insert(distancepow2table, {id = eID, dist = distancepow2})
@@ -2290,6 +2318,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local damageclass = GetEntityTypeDamageClass(etype)
 	local damagerange = GetEntityTypeDamageRange(etype)
 	local calcT = {}
+<<<<<<< Updated upstream
 	
 	if _target then
 		if gvAntiBuildingCannonsRange[etype] then
@@ -2303,6 +2332,17 @@ function CheckForBetterTarget(_eID, _target, _range)
 	else
 		if gvAntiBuildingCannonsRange[etype] then
 			return BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
+=======
+	if IsMelee then
+		bonusRange = 800
+	end
+	if gvAntiBuildingCannonsRange[etype] then
+		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
+		if _target and Logic.IsBuilding(_target) == 0 and target then
+			return target
+		elseif not _target and target then
+			return target
+>>>>>>> Stashed changes
 		end
 	end
 	

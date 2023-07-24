@@ -134,12 +134,66 @@
 					return
 					
 				end
+<<<<<<< Updated upstream
 				if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then 
 				
 					CLogger.Log("Ghoul_ChangeWeatherToThunderstorm", name)  
 					
 					if Logic.GetPlayersGlobalResource(_playerID,ResourceType.WeatherEnergy) < Logic.GetEnergyRequiredForWeatherChange() then
 					
+=======
+				GUIAction_ChangeToThunderstorm(_playerID, _eID)
+
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_Hero6Sacrilege",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero6 then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+
+				CLogger.Log("Ghoul_Hero6Sacrilege", name, _playerID,_heroID)
+				-- Cooldown handling
+				gvHero6.Sacrilege.NextCooldown = gvHero13.Sacrilege.NextCooldown or {}
+				local starttime = Logic.GetTime()
+
+				if gvHero6.Sacrilege.NextCooldown[_playerID] then
+					if gvHero6.Sacrilege.NextCooldown[_playerID] > starttime then
+						return
+					end
+				end
+				-- update cooldown.
+				gvHero6.Sacrilege.NextCooldown[_playerID] = Logic.GetTime() + (gvHero6.Cooldown.Sacrilege)
+				-- execute stuff
+				if not gvHero6.TriggerIDs.Sacrilege[_playerID] then
+					gvHero6.TriggerIDs.Sacrilege[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Hero6_Sacrilege_Trigger", 1, nil, {_heroID,_playerID,starttime})
+				end
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+
+				CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID)
+				-- Cooldown handling
+				gvHero13.StoneArmor.NextCooldown = gvHero13.StoneArmor.NextCooldown or {}
+				local starttime = Logic.GetTimeMs()
+
+				if gvHero13.StoneArmor.NextCooldown[_playerID] then
+					if gvHero13.StoneArmor.NextCooldown[_playerID] > starttime then
+>>>>>>> Stashed changes
 						return
 						
 					end
@@ -180,6 +234,7 @@
 				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
 					return
 				end
+<<<<<<< Updated upstream
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Hero13StoneArmor", name, _playerID,_heroID)  					
@@ -200,6 +255,77 @@
 					end
 					if not gvHero13.TriggerIDs.StoneArmor.DamageApply[_playerID] then
 						gvHero13.TriggerIDs.StoneArmor.DamageApply[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_StoneArmor_ApplyDamage", 1, nil, {_heroID,starttime})
+=======
+
+				-- update cooldown.
+				gvHero14.CallOfDarkness.NextCooldown[playerID] = Logic.GetTime() + gvHero14.CallOfDarkness.Cooldown
+
+				-- execute stuff
+				gvHero14.CallOfDarkness.SpawnTroops(_heroID)
+
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_Hero14LifestealAura",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+
+				CLogger.Log("Ghoul_Hero14LifestealAura", name, _playerID,_heroID)
+
+				-- Cooldown handling
+				gvHero14.LifestealAura.NextCooldown = gvHero14.LifestealAura.NextCooldown or {}
+
+				local starttime = Logic.GetTime()
+
+				if gvHero14.LifestealAura.NextCooldown[_playerID] then
+
+					if gvHero14.LifestealAura.NextCooldown[_playerID] > starttime then
+
+						return
+
+					end
+
+				end
+
+				-- update cooldown.
+				gvHero14.LifestealAura.NextCooldown[_playerID] = Logic.GetTime() + gvHero14.LifestealAura.Cooldown
+
+				-- execute stuff
+				gvHero14.LifestealAura.TriggerIDs[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {_heroID,starttime})
+
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_Hero14RisingEvil",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+
+				CLogger.Log("Ghoul_Hero14RisingEvil", name, _playerID, _heroID)
+
+				-- Cooldown handling
+				gvHero14.RisingEvil.NextCooldown = gvHero14.RisingEvil.NextCooldown or {}
+
+				local starttime = Logic.GetTime()
+
+				if gvHero14.RisingEvil.NextCooldown[_playerID] then
+
+					if gvHero14.RisingEvil.NextCooldown[_playerID] > starttime then
+
+						return
+
+>>>>>>> Stashed changes
 					end
 				end  
 				
@@ -212,6 +338,7 @@
 				if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
 					return
 				end
+<<<<<<< Updated upstream
 				if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then 
 				
 					CLogger.Log("Ghoul_Hero13DivineJudgment", name, _playerID,_heroID)  					
@@ -303,6 +430,57 @@
 					if trooptable[Entities.PU_Hero14] > 0 then
 						if not ArmyCreator.CheckForAchievement(_playerID) then
 							trooptable[Entities.PU_Hero14] = 0
+=======
+
+				-- update cooldown.
+				gvHero14.RisingEvil.NextCooldown[_playerID] = Logic.GetTime() + gvHero14.RisingEvil.Cooldown
+
+				-- execute stuff
+				gvHero14.RisingEvil.SpawnEvilTower(_heroID)
+
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_Forester_WorkChange",
+		function(name, _playerID, _id, _flag)
+
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+				CLogger.Log("Ghoul_Forester_WorkChange", name, _playerID, _id, _flag)
+				-- execute stuff
+				Forester.WorkChange(_id, _flag)
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_CoalUsageChange",
+		function(name, _flag, _playerID, _type)
+
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+				CLogger.Log("Ghoul_CoalUsageChange", name, _playerID, _id, _flag)
+				-- execute stuff
+				gvCoal.AdjustTypeList(_flag, _playerID, _type)
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("BuyHero",
+		function(name, _playerID, _buildingID, _type)
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+				if _type == Entities.PU_Hero14 then
+					local count = 0
+					for i = 1,3 do
+						for k,v in pairs(BS.AchievementWhitelist[i]) do
+							if v == XNetwork.GameInformation_GetLogicPlayerUserName(_playerID) then
+								count = count + 1
+							end
+>>>>>>> Stashed changes
 						end
 					end
 					ArmyCreator.ReadyForTroopCreation(_playerID, trooptable)

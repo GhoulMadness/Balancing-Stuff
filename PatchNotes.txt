@@ -701,4 +701,147 @@ Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt da
 
 Es werden nun keine Komma-Zahlen mehr angezeigt, wenn Euch Ressourcen fehlen und ihr unter bestimmten Umständen Gebäude abgerissen hattet.
 
+<<<<<<< Updated upstream
 Die Anzeige und Funktionalität der Truppen-Finden-Buttons wurde angepasst.
+=======
+Die Anzeige und Funktionalität der Truppen-Finden-Buttons wurde angepasst.
+
+--- Version 0.736
+
+Truppen können nun auch in der Gruppenselektion geupgradet werden.
+
+Fehlende Tooltips für englischsprachige Spielversionen wurden eingefügt. 
+Dies betrifft auch US-amerikanische, polnische und russische Versionen, da diese auf die englische Version weitergeleitet werden.
+
+Der Schwierigkeitsgrad der Prüfungskarten 1 und 3 wurde leicht verringert.
+
+--- Version 0.737
+
+Es wurde ein Fehler mit der Aggressivitäts-Reichweite von KIs behoben.
+
+Es wurde ein Fehler im Zusammenhang mit dem Arbeit pausieren - Button von Förstern behoben.
+
+Es erscheint nun eine Meldung, wenn ihr ein Trupp upgraden wollt und die notwendigen Bedingungen nicht erfüllt sind.
+
+--- Version 0.738
+
+Weitere Vorbereitungen für das kommende Osterturnier.
+
+Die Abklingzeit der Sonderabgaben wird nun auch korrekt in Schlössern und Außenposten angezeigt.
+
+--- Version 0.739
+
+Es wurde ein Fehler im Zusammenhang mit der KI behoben, der auftreten konnte, wenn sich Diplomatien geändert hatten.
+
+Die Auswirkungen der Kanonen-Technologien im Laboratorium wurden angepasst. 
+Beide erhöhten den Schaden von Kanonen um je 4, jetzt erhöhen die Techs den Schaden von Kanonen um 6% bzw. 9%.
+(Dies resultiert in nahezu keiner Änderung für Bombarden und einer Erhöhung des Schadensbonus für die anderen Kanonentypen)
+
+--- Version 0.740
+
+Es wurden mehrere Fehler im Zusammenhang mit der KI behoben.
+
+Es wurde ein Fehler behoben, durch den die Kosten beim Soldatenkauf falsch angezeigt werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit dem Erscheinen der Förster behoben.
+
+--- Version 0.741
+
+Es wurde ein Fehler behoben, durch den das Aufwerten von Truppen im MP manchmal keine Ressourcen kostete.
+
+Es wurde ein Fehler im Zusammenhang mit den Wachstum der von Förstern platzierten Bäume behoben.
+
+Es wurden Fehler im Zusammenhang mit zwei Technologien in der Wettermaschine behoben, die zu Desyncs führen konnten.
+
+--- Version 0.742
+
+QoL für den Förster: Hat ein Setzling seine maximale Größe erreicht und es befand sich ein Förster in unmittelbarer Nähe, so konnte sich dieser nicht mehr bewegen, weil er durch den entstandenen Baum blockiert wurde. Der Setzling wird nun erst zum fällbaren Baum, wenn sich keine Siedler in direkter Nähe befindet.
+Wurde der Bereich, in dem der Förster aufforsten wollte, blockiert (z.B. durch das Platzieren eines Gebäudes), hat der Förster gewartet, bis der Bereich wieder erreichbar ist. Er wird sich nun stattdessen einen neuen Ort zum Aufforsten suchen.
+
+Es wurde ein Fehler behoben, durch den die Erfahrungsstufen von Truppen in der erweiterten Stats-Anzeige nicht korrekt angezeigt wurden.
+
+Spieler konnten bisher eine unbegrenzte Menge an Glauben und Wetterenergie ansammeln. Sie können nun nur noch das angedachte Maximum ansammeln. 
+Hinweis: Für Glauben hat dies für den Spieler keine spürbaren Auswirkungen, da nach einer Segnung der Wert auf 0 gesetzt wird.
+Bei der Wetterenergie wird allen anderen Spielern beim Wetterwechsel Energie abgezogen. Dies war davor oft nicht spürbar, da die Spieler das eigentliche Limit weit überschritten hatten und nach dem Abzug immer noch über dem Limit waren.
+
+Die Ressourcen-Finden Fähigkeit der Kundschafter ist zurück. 
+Die Meldung, ob der Kundschafter hierbei erfolgreich war, ging an alle Spieler. Dies wurde behoben und nur noch der Spieler, der die Fähigkeit auslöst, erhält die Nachricht.
+Bedenkt aber bitte, dass mit der Fähigkeit keine Silber-/Goldminen und/oder mediterrane Steinbrüche gefunden werden können.
+
+Sägewerker arbeiten nun effektiver.
+Hinweis: Je nach Rahmenbedingungen (Motivation, Versorgung, etc.) arbeiten sie nun bis zu 50% effektiver.
+
+Es wurde ein Fehler behoben, durch den die Positionen von Armeen nicht aktualisiert wurden, wenn die Armee-ID erneut verwendet wurde.
+
+Ihr erhaltet nun kein Signal und keinen Ton mehr, wenn ein ohnmächtiger Held vom Blitz getroffen wird.
+
+Die KI fokussiert Helden nun ein wenig mehr (sie wurden bisher fast gänzlich von ihr ignoriert).
+
+Es wurde ein Fehler im Zusammenhang mit der Wetterwechselsperre beim Wechsel auf Unwetter behoben.
+
+--- Version 0.743
+
+Anpassung Erebos: Wird ein Ballistaturm in eine Wohnstätte verdorben, erscheint diese nun nicht mit 100% Lebenspunkten, sondern erhält denselben %-Wert HP, den der Ballistaturm hatte.
+Lauftempo Erebos: 360 -> 350
+Verdorbene Wohnstätte Rüstung: 2 -> 0
+Verdorbene Wohnstätte Reichweite: 2800 -> 2700
+Verdorbene Wohnstätte Schaden: 75 -> 80
+
+Durch die verbesserten Sägewerke wurden einige Balancing-Änderungen notwendig. Daher wurden folgende Anpassungen vorgenommen:
+Schadensfaktor Speer/Schwert 1,3 -> 1,25
+Schadensfaktor SKav/Schwert 1,5 -> 1,6
+Schadensfaktor NV/Speer 1,5 -> 1,6
+Schadensfaktor NV/Kav 1,1 -> 1,0
+Schadensfaktor Scharfi/Speer 1,0 -> 1,05
+
+Es wurden Fehler beim Laden von Spielständen im SP behoben.
+
+Es wurde ein Fehler im Zusammenhang mit Spawn-Armeen und Rekrutierungsarmeen desselben Spielers behoben.
+
+--- Version 0.744
+
+Das Defensivverhalten von Rekrutierungsarmeen wurde überarbeitet.
+
+Rekrutierungsarmeen können nun ihre Truppen an mehreren Militärgebäuden desselben Typs gleichzeitig ausbilden.
+
+--- Version 0.745
+
+Die Siegerstatue des Osterturniers 2023 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Roma und Mathias!
+
+Neue Gebäude und ein neuer Ressourcentyp sind nun verfügbar.
+
+Es wurde ein Fehler behoben, durch den Truppen in Rekrutierungsgebäuden beim Auslösen von Briefings und Cutscenes stehen bleiben konnten.
+
+Es wurde ein Fehler behoben, durch den keine Truppen auf den Schützenturm klettern konnten, wenn dieser gegen den Uhrzeigersinn gedreht wurde.
+
+Anti-Gebäude-Kanonen der KI fokussieren nun Schützentürme ein wenig mehr.
+
+Bärenmenschen haben selbst im späteren Spielverlauf noch sehr viel Schaden ausgehalten, obwohl sie eine offensiv ausgerichtete Einheit sein sollen. Daher wurde folgende Änderung vorgenommen:
+Rüstungswert Bärenmenschen 3 -> 2
+
+Ingenieure produzieren nun nur noch 5 Wetterenergie pro Zyklus anstatt 10.
+
+Brücken bieten nun mehr Platz zur Überquerung.
+
+Die Siegessäule kann nun nicht mehr abgerissen werden.
+
+Einige Modelle und Texturen wurden überarbeitet.
+
+Heldenbalancing:
+Kala Giftpfeile Abklingzeit [s] 38 -> 30
+Kala Giftpfeile Schaden 80 -> 90
+Kala Giftnebel Abklingzeit [s] 27 -> 22
+Kala Giftnebel Schaden 50 -> 60
+
+Die durch Ari gerufenen Banditen sind nun vollständige Trupps mit je 6 Soldaten.
+Anzahl gerufene Banditen 6 -> 4
+
+Helias Segnung hat nun einen passiven Effekt: Solange der Spieler vollen Glauben hat und die Fähigkeit nicht aktiv ist, erleidet Helias halben Schaden.
+Solange die Fähigkeit aktiv ist, erleiden alle nahen verbündeten Einheiten weniger Schaden abhängig vom Glauben, jeder reduzierte Schaden kostet aber auch Glauben.
+Helias hat nun eine weitere Fähigkeit: Sakrileg: Während der Wirkdauer geht sämtlicher Glauben, den Gegner generieren, stattdessen an Helias' Spieler.
+
+Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fähigkeit (bis auf ein Minimum, welches nicht unterschritten werden kann).
+
+
+
+>>>>>>> Stashed changes

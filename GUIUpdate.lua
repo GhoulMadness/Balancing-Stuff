@@ -79,9 +79,15 @@ function GUIUpdate_Experience()
 			break
 		end
 	end
+<<<<<<< Updated upstream
 			
 	XGUIEng.SetText( CurrentWidgetID, " @ra ".. XP .." (LVL ".. LVL ..")")	
 	
+=======
+
+	XGUIEng.SetText( CurrentWidgetID, " @ra "..XP .." (LVL ".. LVL ..")")
+
+>>>>>>> Stashed changes
 end
 
 BS.Time = {DefaultValues = {secondsperday = 1440, daytimebegin = 8, tutorialoffset = 34}, calculation = {dayinsec = 60*60*24, hourinminutes = 60*60}, IngameTimeSec = 0}
@@ -514,6 +520,26 @@ function GUIUpdate_MintTaxBonus()
 	
 end
 
+function GUIUpdate_Hero6Ability(_Ability)
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local ProgressBarWidget = gvHero6.GetRechargeButtonByAbilityName(_Ability)
+	local HeroID = GUI.GetSelectedEntity()
+	local TimePassed = math.floor(Logic.GetTime()- gvHero6.LastTimeUsed[_Ability])
+	local cooldown = gvHero6.Cooldown[_Ability]
+	
+	if TimePassed < cooldown then
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
+		XGUIEng.HighLightButton(CurrentWidgetID,0)
+		XGUIEng.DisableButton(CurrentWidgetID,1)
+	else
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
+		XGUIEng.DisableButton(CurrentWidgetID,0)
+	end
+
+	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
+
+end
 function GUIUpdate_Hero13Ability(_Ability)
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()	
@@ -1191,4 +1217,75 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget("FindBearman", 0)
 	end
 
+<<<<<<< Updated upstream
+=======
+end
+function GUIUpdate_DisplayButtonOnlyInMode(_ModeFlag)
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+
+	--_ModeFlag 0 = SP
+	--_ModeFlag 1 = MP
+	--_ModeFlag 2 = Campaign (used for tipps button)
+
+	if _ModeFlag == 2 then
+		local NameType = {Framework.GetCurrentMapTypeAndCampaignName()}
+		local Type = NameType[1]
+
+		if Type == -1 then
+			if Logic.PlayerGetGameState(GUI.GetPlayerID()) == 3
+			or Logic.PlayerGetGameState(GUI.GetPlayerID()) == 2 then
+
+				XGUIEng.DisableButton(CurrentWidgetID, 0)
+			else
+				XGUIEng.DisableButton(CurrentWidgetID, 1)
+			end
+		end
+		return
+	end
+
+	if CNetwork then
+		if CurrentWidgetID ~= XGUIEng.GetWidgetID("MainMenuWindow_RestartGame")
+		or CurrentWidgetID ~= XGUIEng.GetWidgetID("GameEndScreen_WindowRestartGame") then
+			XGUIEng.DisableButton(CurrentWidgetID, 1)
+		else
+			if Logic.PlayerGetGameState(GUI.GetPlayerID()) ~= 3 then
+				XGUIEng.DisableButton(CurrentWidgetID, 0)
+			else
+				XGUIEng.DisableButton(CurrentWidgetID, 1)
+			end
+		end
+	else
+		if Logic.PlayerGetGameState(GUI.GetPlayerID()) ~= 3 then
+			XGUIEng.DisableButton(CurrentWidgetID ,0)
+		else
+			XGUIEng.DisableButton(CurrentWidgetID, 1)
+		end
+	end
+
+end
+
+function GUIUpdate_TaxesButtons()
+
+	local PlayerID = GUI.GetPlayerID()
+	local TaxLevel = Logic.GetTaxLevel(PlayerID)
+
+	XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "taxesgroup")
+	XGUIEng.HighLightButton(gvGUI_WidgetID.TaxesButtons[TaxLevel] ,1)
+	XGUIEng.HighLightButton(gvGUI_WidgetID.TaxesButtonsOP[TaxLevel] ,1)
+
+end
+
+function GUIUpdate_CoalUsage()
+	
+	local PlayerID = GUI.GetPlayerID()
+	local type = Logic.GetEntityType(GUI.GetSelectedEntity())
+	if gvCoal.Usage[PlayerID][type] == true then
+		XGUIEng.ShowWidget("Activate_CoalUsage", 0)
+		XGUIEng.ShowWidget("Deactivate_CoalUsage", 1)
+	else
+		XGUIEng.ShowWidget("Activate_CoalUsage", 1)
+		XGUIEng.ShowWidget("Deactivate_CoalUsage", 0)
+	end
+>>>>>>> Stashed changes
 end
