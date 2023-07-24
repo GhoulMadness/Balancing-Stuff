@@ -1,4 +1,3 @@
-
 function BS.GfxInit()
 	----------------------------  Nacht -GFXs  ----------------------------------------------------
 	--Sommer-Nacht
@@ -302,7 +301,7 @@ function TagNachtZyklus(_duration, _rainflag, _snowflag, _bonuscount, _randomfla
 		AddRandomWeatherSet(round(durationinsec/48),2,allowed_weathertypes,_bonuscount)							--0.5min
 		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
 		AddRandomWeatherSet(round(durationinsec/48),3,allowed_weathertypes,_bonuscount)							--0.5min
-	
+
 	end
 	gvDayCycleStartTime = Logic.GetTime()
 end
@@ -312,9 +311,9 @@ GfxElements = 	{ daytypes =   {[1] = {weathertypes = {[1] = {[1] = 9,
 															  [2] = 19},
 													   [2] = {[1] = 13,
 															  [2] = 20,
-															  [3] = 28},																	
+															  [3] = 28},
 													   [3] = {[1] = 14,
-															  [2] = 21}}},					
+															  [2] = 21}}},
 								[2] = {weathertypes = {[1] = {[1] = 10,
 															  [2] = 22},
 													   [2] = {[1] = 15,
@@ -382,7 +381,7 @@ function AddRandomWeatherSet(_duration, _daytype, _allowed_weathertypes, _modifi
 			weathertype = 1
 		elseif num > (70 - (_modifier*5)) and num <= (90 - (_modifier*2)) then
 			--Regen
-			weathergfx = GfxElements.daytypes[_daytype].weathertypes[2][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[2]))]	
+			weathergfx = GfxElements.daytypes[_daytype].weathertypes[2][math.random(table.getn(GfxElements.daytypes[_daytype].weathertypes[2]))]
 			weathertype = 2
 		else
 			--Winter

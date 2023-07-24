@@ -1,32 +1,7 @@
 ------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------- Tables and misc Stuff --------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------
-if XNetwork.Manager_DoesExist() ~= 0 then
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-		Logic.SetTechnologyState(i,Technologies.MU_Cannon5,0)
-		Logic.SetTechnologyState(i,Technologies.MU_Cannon6,0)
-		Logic.SetTechnologyState(i,Technologies.MU_Catapult,0)
-		if gvXmasEventFlag or gvTutorialFlag then
-			Logic.SetTechnologyState(i,Technologies.B_VillageHall,0)
-		end
-
-	end
-	if GUI.GetPlayerID() == 17 then
-		Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
-	end
-	Logic.SetTechnologyState(17,Technologies.GT_Tactics,3)
-	-----------------------------------------------------------------------------------------------
-	-- Added Castles to win condition -------------------------------------------------------------
-	-----------------------------------------------------------------------------------------------
-	MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1,Entities.PB_Headquarters2,Entities.PB_Headquarters3,Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5}
-
-else
-	Logic.SetTechnologyState(1,Technologies.UP1_Lighthouse,3)
-	Logic.SetTechnologyState(1,Technologies.MU_Cannon5,0)
-	Logic.SetTechnologyState(1,Technologies.MU_Cannon6,0)
-	if gvXmasEventFlag then
-		Logic.SetTechnologyState(1,Technologies.B_VillageHall,0)
-	end
+if XNetwork.Manager_DoesExist() == 0 then
 	XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
 		return 1
 	end
@@ -53,10 +28,37 @@ else
 		else
 			GUIAction_ToggleMenu_Orig(_menu, _status)
 		end
-		gvMission.singleplayerMode = true
 	end
-end
+else
 
+	if GUI.GetPlayerID() == BS.SpectatorPID then
+		Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2)
+	end
+	Logic.SetTechnologyState(BS.SpectatorPID, Technologies.GT_Tactics, 3)
+end
+for i = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+	Logic.SetTechnologyState(i, Technologies.MU_Cannon5, 0)
+	Logic.SetTechnologyState(i, Technologies.MU_Cannon6, 0)
+	Logic.SetTechnologyState(i, Technologies.MU_Catapult, 0)
+	if gvXmasEventFlag or gvTutorialFlag then
+		Logic.SetTechnologyState(i, Technologies.B_VillageHall, 0)
+	end
+
+end
+-----------------------------------------------------------------------------------------------
+-- Added Castles to win condition -------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1, Entities.PB_Headquarters2, Entities.PB_Headquarters3,
+											Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5,
+											Entities.PB_Outpost1, Entities.PB_Outpost2, Entities.PB_Outpost3}
+-- needed for outpost taxes update
+gvGUI_WidgetID.TaxesButtonsOP = {}
+gvGUI_WidgetID.TaxesButtonsOP[0] = 	"SetVeryLowTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[1] = 	"SetLowTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[2] = 	"SetNormalTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[3] = 	"SetHighTaxes_OP"
+gvGUI_WidgetID.TaxesButtonsOP[4] = 	"SetVeryHighTaxes_OP"
+--
 if CUtil then
 
 	refined_resource_gold = {
@@ -104,7 +106,7 @@ if CUtil then
 
 	-- base values; needed for challenge maps
 	basevalue_refined_resources = {
-        [Entities.PB_Bank1] = 3,
+        [Entities.PB_Bank1] = 2,
         [Entities.PB_Bank2] = 3,
         [Entities.PB_Bank3] = 4,
 		[Entities.CB_Mint1] = 3,

@@ -39,7 +39,7 @@ function GUIAction_ChangeView(_mode)
 		Camera.RotSetAngle( -45 )
 		Camera.RotSetFlipBack( 1 )
 		Camera.ScrollUpdateZMode( 0 )
-		Camera.ZoomSetAngle(85)	
+		Camera.ZoomSetAngle(85)
 		XGUIEng.ShowWidget("MinimapButtons_DownView",0)
 		XGUIEng.ShowWidget("MinimapButtons_NormalView",0)
 		XGUIEng.ShowWidget("MinimapButtons_RPGView",1)
@@ -109,7 +109,8 @@ function GUIAction_NormalResourceView()
 end
 function GUIAction_ExpelAll()
 	local SelectedEntityIDs = {GUI.GetSelectedEntities()}
-	for i = 1,table.getn(SelectedEntityIDs) do 
+	GUIAction_LeaderDetailsOff()
+	for i = 1,table.getn(SelectedEntityIDs) do
 		if Logic.IsHero(SelectedEntityIDs[i]) == 1 then
 			Sound.PlayFeedbackSound( Sounds.Leader_LEADER_NO_rnd_01, 0 )
 			GUI.AddNote("Massenentlassung funktioniert nicht, wenn Helden selektiert sind!")
@@ -119,18 +120,18 @@ function GUIAction_ExpelAll()
 			end
 		elseif Logic.IsSerf(SelectedEntityIDs[i]) then
 			GUI.ExpelSettler(SelectedEntityIDs[i])
-		end	
+		end
 	end
 end
 function GUIAction_LightningRod()
 	gvLastTimeLightningRodUsed = Logic.GetTimeMs()
-    GUIUpdate_LightningRod()   
+    GUIUpdate_LightningRod()
 	Sound.PlayGUISound(Sounds.OnKlick_Select_salim, 627)
 	local PlayerID = GUI.GetPlayerID()
 	if CNetwork then
         CNetwork.SendCommand("Ghoul_LightningRod_Protected", PlayerID)
     else
-	LightningRod_Protected(PlayerID)
+		LightningRod_Protected(PlayerID)
 	end
 end
 function LightningRod_Protected(_PID)
@@ -221,11 +222,11 @@ function GUIAction_ForceSettlersToWork()
 		GUI.ToggleOvertimeAtBuilding(BuildingID)
 
 		if Logic.IsOvertimeActiveAtBuilding(BuildingID) ~= 1 then
-			if CNetwork then			
+			if CNetwork then
 				CNetwork.SendCommand("Ghoul_ForceSettlersToWorkPenalty", GUI.GetPlayerID())
 			else
 				GUIAction_ForceSettlersToWorkPenalty(GUI.GetPlayerID())
-			end	
+			end
 		end
 
 	end
@@ -246,7 +247,7 @@ end
 function GUIAction_LighthouseHireTroops()
 	local eID = GUI.GetSelectedEntity()
 	local pID = Logic.EntityGetPlayer(eID)
-	
+
 	if Logic.GetPlayerAttractionUsage(pID) >= Logic.GetPlayerAttractionLimit(pID) then
 		GUI.SendPopulationLimitReachedFeedbackEvent(pID)
 		return
@@ -270,28 +271,28 @@ end
 function GUIAction_MercenaryTower(_ucat)
 
 	local MercID = GUI.GetSelectedEntity()
-	
-	if Logic.GetRemainingUpgradeTimeForBuilding(MercID ) ~= Logic.GetTotalUpgradeTimeForBuilding (MercID) then		
+
+	if Logic.GetRemainingUpgradeTimeForBuilding(MercID ) ~= Logic.GetTotalUpgradeTimeForBuilding (MercID) then
 		return
 	end
-	
-	local PlayerID = GUI.GetPlayerID()	
-	
+
+	local PlayerID = GUI.GetPlayerID()
+
 	-- Maximum number of settlers attracted?
 	if Logic.GetPlayerAttractionUsage( PlayerID ) >= Logic.GetPlayerAttractionLimit( PlayerID ) then
 		GUI.SendPopulationLimitReachedFeedbackEvent( PlayerID )
 		return
 	end
-		
+
 	--currently researching
 	if Logic.GetTechnologyResearchedAtBuilding(MercID) ~= 0 then
 		return
-	end	
+	end
 	Logic.FillSoldierCostsTable( PlayerID, _ucat, InterfaceGlobals.CostTable )
-	
+
 	if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then
 		if _ucat ~= UpgradeCategories.LeaderElite then
-			-- Yes			
+			-- Yes
 			GUI.BuyLeader(MercID, _ucat)
 			gvMercenaryTower.LastTimeUsed = Logic.GetTime()
 			GUI.DeselectEntity(MercID)
@@ -325,16 +326,16 @@ function GUIAction_ChangeToSpecialWeather(_weathertype,_EntityID)
 	if CurrentWeatherEnergy >= NeededWeatherEnergy then
 		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/GUI_WeathermashineActivated"))
 		if CNetwork then
-			CNetwork.SendCommand("Ghoul_ChangeWeatherToThunderstorm", PlayerID,_EntityID)
+			CNetwork.SendCommand("Ghoul_ChangeWeatherToThunderstorm", PlayerID, _EntityID)
 		else
-			GUIAction_ChangeToThunderstorm(PlayerID,_EntityID)
+			GUIAction_ChangeToThunderstorm(PlayerID, _EntityID)
 		end
 
 	else
 		GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/GUI_WeathermashineNotReady"))
 	end
 end
-function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
+function GUIAction_ChangeToThunderstorm(_playerID, _EntityID)
 
 	if Logic.GetEntityType(_EntityID) ~= Entities.PB_WeatherTower1 then
 		return
@@ -349,6 +350,9 @@ function GUIAction_ChangeToThunderstorm(_playerID,_EntityID)
 	end
 
 	if EMS then
+		if EMS.RF.WLT.Job == nil then
+			EMS.RF.WLT.Job = StartSimpleJob("EMS_RF_WLT_Counter");
+		end
 		EMS.RF.WLT.LockWeatherChange()
 	end
 
@@ -569,7 +573,7 @@ function GUIAction_Archers_Tower_AddSlot()
 
 					if CNetwork then
 						CNetwork.SendCommand("Ghoul_Archers_Tower_AddTroop", player, entity, eID)
-					else						
+					else
 						gvArchers_Tower.PrepareData.AddTroop(player, entity, eID)
 					end
 
@@ -655,7 +659,8 @@ function GUIAction_ArmyCreatorFinishSetup()
 end
 
 function GUIAction_ScoutFindResources()
-	--GUI.ScoutPointToResources(GUI.GetSelectedEntity())
+	gvScoutUsedPointToResources = true
+	GUI.ScoutPointToResources(GUI.GetSelectedEntity())
 end
 
 --------------------------------------------------------------------------------
@@ -756,10 +761,14 @@ function GUIAction_UpgradeLeader(_LeaderID)
 		end
 		--currently upgrading
 		if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) ~= Logic.GetTotalUpgradeTimeForBuilding(BarracksID) then
+			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfUpgrade"))
+			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_04.wav",130)
 			return
 		end
 		--currently researching
 		if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
+			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfResearch"))
+			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_03.wav",110)
 			return
 		end
 		etype = Logic.GetEntityType(_LeaderID)

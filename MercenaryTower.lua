@@ -29,4 +29,4 @@ gvMercenaryTower = { LastTimeUsed = 0, Cooldown = {
 	["BuyLeaderEvilBear"] = "EvilBear_Recharge",
 	["BuyLeaderEvilSkir"] = "EvilSkir_Recharge"
 	}
-} 
+}

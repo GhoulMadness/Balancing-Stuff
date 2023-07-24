@@ -67,7 +67,7 @@ Forester.LandscapeTreeSets = {["European"] = {	"XD_Tree1",
 												"XD_Palm1",
 												"XD_Palm2",
 												"XD_Palm3",
-												"XD_Palm4",												
+												"XD_Palm4",
 												"XD_Umbrella1",
 												"XD_Umbrella2",
 												"XD_Umbrella3"
@@ -99,7 +99,7 @@ Forester.LandscapeTreeSets = {["European"] = {	"XD_Tree1",
 												"XD_TreeMoor9"
 											}
 							}
--- table that concenates terrain types with landscape types 											
+-- table that concenates terrain types with landscape types
 Forester.LandscapeTypeBySoilTexture = {
 									[1] = "European",
 									[2] = "European",
@@ -173,20 +173,20 @@ Forester.WorkCycleDelayBase = 10
 Forester.WorkCycleDelay = {}
 Forester.HomeSpotOffset = {	X = 0,
 							Y = -500}
-Forester.InitialTreeSizeFactor = 0.2	
+Forester.InitialTreeSizeFactor = 0.2
 Forester.TreeGrowthAmount = 0.02
-Forester.TreeGrowthTimeNeeded = 2		
-Forester.TreeGrowingBlockedPos = {}	
+Forester.TreeGrowthTimeNeeded = 2
+Forester.TreeGrowingBlockedPos = {}
 Forester.BuildingBelongingWorker = {}
 Forester.WorkActiveState = {}
 Forester.DoorOffsetByEntityType = {	[Entities.PB_VillageCenter1] = 	{X = -500,
 																	Y = -600},
 									[Entities.PB_VillageCenter2] = 	{X = -500,
-																	Y = -600},	
+																	Y = -600},
 									[Entities.PB_VillageCenter3] = 	{X = -500,
-																	Y = -600},	
+																	Y = -600},
 									[Entities.CB_Grange] = 			{X = -400,
-																	Y = 200},	
+																	Y = 200},
 									[Entities.PB_Castle1] = 		{X = -1000,
 																	Y = -300},
 									[Entities.PB_Castle2] = 		{X = -1000,
@@ -203,14 +203,14 @@ Forester.TriggerIDs = {	PrepareForPause = {},
 										Inside = {},
 										Outside = {},
 										ArrivedAtDestination = {},
-										PrepareForPause = {}},						
+										PrepareForPause = {}},
 						Tree = {	Growth = {},
 									Cutted = {}},
 						Behavior = {FinishAnim = {},
-									ForesterDied = {}}						
+									ForesterDied = {}}
 						}
-Forester.GetDistanceToNextPlantedTree = function(_posX, _posY)	
-	local distance 
+Forester.GetDistanceToNextPlantedTree = function(_posX, _posY)
+	local distance
 	for k,v in pairs(Forester.TreeGrowingBlockedPos) do
 		local tempdistance = GetDistance({X = _posX, Y = _posY}, v)
 		if not distance then
@@ -229,11 +229,11 @@ end
 Forester.WorkChange = function(_id, _flag)
 	local posX, posY = Logic.GetEntityPosition(_id)
 	local workerID = Forester.GetWorkerIDByBuildingID(_id)
-	if not workerID then	
+	if not workerID then
 		return
 	end
 	if _flag == 0 then
-		Trigger.UnrequestTrigger(Forester.TriggerIDs.FinishAnim[workerID])
+		Trigger.UnrequestTrigger(Forester.TriggerIDs.Behavior.FinishAnim[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Inside[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Outside[workerID])
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.WorkControl.Start[workerID])
@@ -242,7 +242,7 @@ Forester.WorkChange = function(_id, _flag)
 	elseif _flag == 1 then
 		Forester.WorkActiveState[_id] = _flag
 		Forester.UpdateWorkCycleDelay(workerID)
-		Forester.TriggerIDs.WorkControl.Inside[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Inside",1,{},{workerID, _id})	
+		Forester.TriggerIDs.WorkControl.Inside[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Inside",1,{},{workerID, _id})
 	end
 end
 Forester.UpdateWorkCycleDelay = function(_id)
@@ -262,8 +262,8 @@ Forester_FinishAnimCheck = function(_id, _buildingID, _posX, _posY, _terrType)
 	if not IsExisting(_id) then
 		return true
 	end
-	
-	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then		
+
+	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then
 		Forester.PlaceTree(_id, _buildingID, _posX, _posY, _terrType)
 		return true
 	end
@@ -275,7 +275,7 @@ Forester.PlaceTree = function(_id, _buildingID, _posX, _posY, _terrType)
 	SetEntitySize(id, Forester.InitialTreeSizeFactor)
 	Forester.TriggerIDs.Tree.Growth[id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_TreeGrowthControl",1,{},{id, suffixName})
 	table.insert(Forester.TreeGrowingBlockedPos, {X = _posX, Y = _posY})
-	Forester.FinishWorkCycle(_id, _buildingID)	
+	Forester.FinishWorkCycle(_id, _buildingID)
 end
 Forester.FinishWorkCycle = function(_id, _buildingID)
 	if not IsExisting(_buildingID) then
@@ -284,7 +284,7 @@ Forester.FinishWorkCycle = function(_id, _buildingID)
 	if IsExisting(_id) then
 		if Forester.WorkActiveState[_buildingID] ~= 0 then
 		local posX, posY = Logic.GetEntityPosition(_buildingID)
-		Logic.MoveSettler(_id, posX + Forester.HomeSpotOffset.X, posY + Forester.HomeSpotOffset.Y)		
+		Logic.MoveSettler(_id, posX + Forester.HomeSpotOffset.X, posY + Forester.HomeSpotOffset.Y)
 		Forester.TriggerIDs.WorkControl.Start[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Start",1,{},{_id, _buildingID})
 		end
 	end
@@ -294,41 +294,41 @@ Forester.FindNextTreePos = function(_id)
 	local x, y = Logic.GetEntityPosition(_id)
 	local offset = Forester.MaxRange
 	local xmax, ymax = Logic.WorldGetSize()
-	local dmin, xspawn, yspawn, tempterrType, terrType	
-	local count, eID = Logic.GetEntitiesInArea(Entities.XD_TreeStump1, x, y, Forester.MaxRange, 1)	
-	
+	local dmin, xspawn, yspawn, tempterrType, terrType
+	local count, eID = Logic.GetEntitiesInArea(Entities.XD_TreeStump1, x, y, Forester.MaxRange, 1)
+
 	if count > 0 then
 		local posX, posY = Logic.GetEntityPosition(eID)
 		local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(posX, posY)
 		if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil and (height > CUtil.GetWaterHeight(x/100, y/100)) then
-		
-			Logic.DestroyEntity(eID)		
+
+			Logic.DestroyEntity(eID)
 			return posX, posY, tempterrType
 		end
 	end
 
 	for y_ = y - offset, y + offset, Forester.SearchForFreeSpotRange do
-	
+
 		for x_ = x - offset, x + offset, Forester.SearchForFreeSpotRange do
-		
-			if 0 < x_ and 0 < y_ and x_ < xmax and y_ < ymax and (y_ ~= y and x_ ~= x) then				
-				
+
+			if 0 < x_ and 0 < y_ and x_ < xmax and y_ < ymax and (y_ ~= y and x_ ~= x) then
+
 				local d = (x_ - x)^2 + (y_ - y)^2
 				local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)
-				
+
 				if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
-					
-					if Forester.TreeGrowingBlockedPos[1] == nil or table_findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then		
+
+					if Forester.TreeGrowingBlockedPos[1] == nil or table_findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then
 						if Forester.GetDistanceToNextPlantedTree(x_, y_) >= Forester.AllowedInferenceRange then
 							if not dmin or dmin > d then
-							
+
 								dmin = d
 								terrType = tempterrType
 								xspawn = x_
-								yspawn = y_																	
-							end		
-						end				
-					end						
+								yspawn = y_
+							end
+						end
+					end
 				end
 			end
 		end
@@ -340,38 +340,42 @@ Forester.FindNextTreePos = function(_id)
 	end
 end
 
-OnForester_Created = function(_id)  
+OnForester_Created = function(_id)
 
 	if IsExisting(_id) then
 		if Logic.GetPlayerAttractionLimit(Logic.EntityGetPlayer(_id)) > 0 then
-	
+
 			local buildingposX, buildingposY = Logic.GetEntityPosition(_id)
-			local playerID = Logic.EntityGetPlayer(_id)		
+			local playerID = Logic.EntityGetPlayer(_id)
 			local distancetable = {}
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2, Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5)) do
 
-				local posX, posY = Logic.GetEntityPosition(eID)			
-				local distance = GetDistance({X = buildingposX, Y = buildingposY}, {X = posX, Y = posY})			
+				local posX, posY = Logic.GetEntityPosition(eID)
+				local distance = GetDistance({X = buildingposX, Y = buildingposY}, {X = posX, Y = posY})
 				table.insert(distancetable, {id = eID, dist = distance})
-				
+
 			end
-			
+
 			table.sort(distancetable, function(p1, p2)
 				return p1.dist < p2.dist
 			end)
-			
-			local posX, posY = Logic.GetEntityPosition(distancetable[1].id)		
-			local rotation = Logic.GetEntityOrientation(distancetable[1].id)		
-			local doorpos = Forester.DoorOffsetByEntityType[Logic.GetEntityType(distancetable[1].id)]		
+
+			local posX, posY = Logic.GetEntityPosition(distancetable[1].id)
+			local rotation = Logic.GetEntityOrientation(distancetable[1].id)
+			local doorpos = Forester.DoorOffsetByEntityType[Logic.GetEntityType(distancetable[1].id)]
 			local r = math.rad(rotation)
 			local s = math.sin(r)
-			local c = math.cos(r)		
-			local workerID = Logic.CreateEntity(Entities.PU_Forester, posX + (doorpos.X * c - doorpos.Y * s), posY + (doorpos.X * s + doorpos.Y * c), 0, playerID)
+			local c = math.cos(r)
+			local _X, _Y = posX + (doorpos.X * c - doorpos.Y * s), posY + (doorpos.X * s + doorpos.Y * c)
+			if CUtil.GetSector(_X/100, _Y/100) == 0 then
+				_X, _Y = EvaluateNearestUnblockedPosition(_X, _Y, 1000, 100)
+			end
+			local workerID = Logic.CreateEntity(Entities.PU_Forester, _X, _Y, 0, playerID)
 			Forester.BuildingBelongingWorker[_id] = workerID
 			Logic.SetEntityScriptingValue(workerID,72,1)
-			Logic.SetEntitySelectableFlag(workerID, 0)		
-			
+			Logic.SetEntitySelectableFlag(workerID, 0)
+
 			Logic.MoveSettler(workerID, buildingposX + Forester.HomeSpotOffset.X, buildingposY + Forester.HomeSpotOffset.Y)
 
 			Forester.TriggerIDs.WorkControl.Start[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Start",1,{},{workerID, _id})
@@ -381,24 +385,24 @@ OnForester_Created = function(_id)
 end
 function OnForester_Died(_id, _buildingID)
 
-	local entityID = Event.GetEntityID()	
+	local entityID = Event.GetEntityID()
     if entityID == _id then
 		Forester.BuildingBelongingWorker[_buildingID] = nil
-		if IsExisting(_buildingID) then	
-			OnForester_Created(_buildingID)	
+		if IsExisting(_buildingID) then
+			OnForester_Created(_buildingID)
 		else
 			Forester.WorkActiveState[_buildingID] = nil
-		end		
+		end
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.Behavior.ForesterDied[_id])
-	end	
+	end
 end
 function Forester_Tree_OnTreeCutted(_id)
 
-	local entityID = Event.GetEntityID()	
+	local entityID = Event.GetEntityID()
     if entityID == _id then
 		removetablekeyvalue(Forester.TreeGrowingBlockedPos,GetPosition(_id))
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.Tree.Cutted[_id])
-	end	
+	end
 end
 Forester_PrepareForPauseJob = function(_id, _buildingID)
 	if not IsExisting(_buildingID) then
@@ -410,7 +414,7 @@ Forester_PrepareForPauseJob = function(_id, _buildingID)
 	local buildingpos = GetPosition(_buildingID)
 	local targetpos = {	X = buildingpos.X + Forester.HomeSpotOffset.X,
 						Y = buildingpos.Y + Forester.HomeSpotOffset.Y}
-	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then	
+	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then
 		if GetDistance(GetPosition(_id), {X = targetpos.X, Y = targetpos.Y}) <= 200 then
 			Logic.MoveEntity(_id, buildingpos.X, buildingpos.Y)
 			Forester.UpdateWorkCycleDelay(_id)
@@ -434,7 +438,7 @@ Forester_WorkControl_Start = function(_id, _buildingID)
 	local buildingpos = GetPosition(_buildingID)
 	local targetpos = {	X = buildingpos.X + Forester.HomeSpotOffset.X,
 						Y = buildingpos.Y + Forester.HomeSpotOffset.Y}
-	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then	
+	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then
 		if GetDistance(GetPosition(_id), {X = targetpos.X, Y = targetpos.Y}) <= 200 then
 			Logic.MoveEntity(_id, buildingpos.X, buildingpos.Y)
 			Forester.UpdateWorkCycleDelay(_id)
@@ -442,7 +446,7 @@ Forester_WorkControl_Start = function(_id, _buildingID)
 	end
 	if GetDistance(GetPosition(_id), buildingpos) <= 100 then
 		Logic.SetEntityScriptingValue(_id, -30, 513)
-		Forester.TriggerIDs.WorkControl.Inside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Inside",1,{},{_id, _buildingID})	
+		Forester.TriggerIDs.WorkControl.Inside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Inside",1,{},{_id, _buildingID})
 		return true
 	end
 end
@@ -462,11 +466,11 @@ Forester_WorkControl_Inside = function(_id, _buildingID)
 				Logic.MoveEntity(_id, math.floor(targetpos.X), math.floor(targetpos.Y))
 				Logic.SetEntityScriptingValue(_id, -30, 65793)
 				Logic.SetEntityScriptingValue(_id,72,1)
-				Logic.SetEntitySelectableFlag(_id, 0)	
-				Forester.TriggerIDs.WorkControl.Outside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Outside",1,{},{_id, _buildingID})		
+				Logic.SetEntitySelectableFlag(_id, 0)
+				Forester.TriggerIDs.WorkControl.Outside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Outside",1,{},{_id, _buildingID})
 				return true
 			end
-		end			
+		end
 	else
 		return true
 	end
@@ -486,7 +490,7 @@ Forester_WorkControl_Outside = function(_id, _buildingID)
 			local posX, posY, terrType = Forester.FindNextTreePos(_id)
 			if posX ~= 0 then
 				Logic.MoveSettler(_id, posX, posY)
-				Forester.TriggerIDs.WorkControl.ArrivedAtDestination[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_ArrivedAtDestinationCheck",1,{},{_id, _buildingID, posX, posY, terrType})				
+				Forester.TriggerIDs.WorkControl.ArrivedAtDestination[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_ArrivedAtDestinationCheck",1,{},{_id, _buildingID, posX, posY, terrType})
 				return true
 			end
 		end
@@ -502,7 +506,16 @@ Forester_ArrivedAtDestinationCheck = function(_id, _buildingID, _posX, _posY, _t
 		return true
 	else
 		if Counter.Tick2("Forester_ArrivedAtDestinationCheck_".. _id, Forester.WorkCycleDelay[_id]) then
-			Logic.MoveSettler(_id, _posX, _posY)
+			if Logic.GetSector(_id) == CUtil.GetSector(_posX/100, _posY/100) then
+				Logic.MoveSettler(_id, _posX, _posY)
+			else
+				local posX, posY, terrType = Forester.FindNextTreePos(_id)
+				if posX ~= 0 then
+					Logic.MoveSettler(_id, posX, posY)
+					Forester.TriggerIDs.WorkControl.ArrivedAtDestination[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_ArrivedAtDestinationCheck",1,{},{_id, _buildingID, posX, posY, terrType})
+					return true
+				end
+			end
 		end
 	end
 end
@@ -511,16 +524,21 @@ Forester_TreeGrowthControl = function(_id, _suffixName)
 		return true
 	end
 	if GetEntitySize(_id) >= 1 then
-		local newID = ReplaceEntity(_id, Entities[_suffixName])		
-		Forester.TriggerIDs.Tree.Cutted[newID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","Forester_Tree_OnTreeCutted",1,{},{newID})
-		return true
+		local posX, posY = Logic.GetEntityPosition(_id)
+		if Logic.GetEntitiesInArea(0, posX, posY, 100, 1, 6) == 0 then
+			local newID = ReplaceEntity(_id, Entities[_suffixName])
+			Forester.TriggerIDs.Tree.Cutted[newID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","Forester_Tree_OnTreeCutted",1,{},{newID})
+			return true
+		end
 	else
 		if Counter.Tick2("Forester_TreeGrowthControl_".. _id, Forester.TreeGrowthTimeNeeded) then
 			local size = GetEntitySize(_id)
-			__id = ReplaceEntity(_id, Entities.XD_Rock1)
-			SetEntitySize(__id, math.min(size + Forester.TreeGrowthAmount, 1))
-			Logic.SetModelAndAnimSet(__id, Models[_suffixName])
-			Forester.TriggerIDs.Tree.Growth[__id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_TreeGrowthControl",1,{},{__id, _suffixName})
+			local __id = ReplaceEntity(_id, Entities.XD_Rock2)
+			if __id and __id > 0 then
+				SetEntitySize(__id, math.min(size + Forester.TreeGrowthAmount, 1))
+				Logic.SetModelAndAnimSet(__id, Models[_suffixName])
+				Forester.TriggerIDs.Tree.Growth[__id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_TreeGrowthControl",1,{},{__id, _suffixName})
+			end
 			return true
 		end
 	end

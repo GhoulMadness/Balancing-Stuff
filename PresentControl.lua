@@ -9,8 +9,8 @@ gvPresent = gvPresent or {}
 --Geschenke-Funktionen initialisieren
 --Trigger IDs
 gvPresent.triggerIDTable = {
-							Theft = {}, 
-							Delivery = {}, 
+							Theft = {},
+							Delivery = {},
 							Kill = {},
 							Created = {},
 							Victory = {}
@@ -31,7 +31,7 @@ function gvPresent.Init()
 	if gvEMSFlag then
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreen"),1)
 		gvPresent.triggerIDTable.Victory[1] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,nil,"gvPresent_VictoryJob", 1)
-		if GUI.GetPlayerID() == 17 then
+		if GUI.GetPlayerID() == BS.SpectatorPID then
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenSpectator"),1)
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressScreenTeamName"),1)
 			XGUIEng.SetText(XGUIEng.GetWidgetID("PresentProgressScreenTeamName")," @center "..GetXmasTeamName(1))
@@ -42,12 +42,12 @@ function gvPresent.Init()
 	gvPresent.ThiefIDTable = {}
 	for i = 1,gvMaxPlayers,1 do
 		gvPresent.ThiefIDTable[i] = {}
-	end		
+	end
 end
 --Geschenke-Fortschritt-Anzeige updaten
 function GUIUpdate_PresentProgress_Screen(_TID)
 
-	if type(_TID) ~= "number" or gvXmas2021 then 
+	if type(_TID) ~= "number" or gvXmas2021 then
 		return
 	end
 	gvPresent.Progress[_TID] = math.abs(gvPresent.Progress[_TID])
@@ -91,8 +91,8 @@ function GUIUpdate_PresentProgress_Screen(_TID)
 		end
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgress"..gvPresent.Progress[_TID]),1)
 	end
-	if GUI.GetPlayerID() == 17 then
-		
+	if GUI.GetPlayerID() == BS.SpectatorPID then
+
 		for i = 1,7,1 do
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgress"..i-1),0)
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressSpectator"..i-1),0)
@@ -101,14 +101,14 @@ function GUIUpdate_PresentProgress_Screen(_TID)
 		XGUIEng.ShowWidget(XGUIEng.GetWidgetID("PresentProgressSpectator"..gvPresent.Progress[2]),1)
 	end
 end
-	
+
 --Alle Dieb-IDs in Table einfügen (Table aktuell ungenutzt)
 function gvPresent_ThiefCreated()
     local entityID = Event.GetEntityID()
     local entityType = Logic.GetEntityType(entityID)
     local playerID = Logic.EntityGetPlayer(entityID)
     if entityType == Entities.PU_Thief then
-    
+
 	table.insert(gvPresent.ThiefIDTable[playerID],entityID)
 	end
 end
@@ -118,19 +118,19 @@ if gvMaxPlayers == 4 then
 		gvPresent.XmasTreePos =		{
 									[1]={X=21200,Y=10500},
 									[2]={X=33200,Y=10300}
-								}		
+								}
 	else
 		gvPresent.XmasTreePos = 	{
 									[1]={X=39900,Y=36400},
 									[2]={X=39900,Y=24500}
-								}		
+								}
 	end
 elseif gvMaxPlayers == 6 or gvMaxPlayers == 8 then
 	gvPresent.XmasTreePos =		{
 								[1]={X=32300,Y=21600},
 								[2]={X=44500,Y=21600}
 							}
-end								
+end
 -- Alle Geschenke-Typen. Beim erfolgreichen Klau wird zufällig eines davon erstellt
 gvPresent.PresentTypes = {Entities.XD_Present1,Entities.XD_Present2,Entities.XD_Present3}
 -- kritische Reichweite, in der ein Geschenk geklaut werden kann
@@ -146,12 +146,12 @@ elseif gvMaxPlayers >= 6 then
 	gvPresent.XmasTreeBuildBlockRange = 2400
 end
 -- Check, ob ein Geschenk geklaut wurde
-function gvPresent_ThiefPresentStolenCheck(_TID)	
+function gvPresent_ThiefPresentStolenCheck(_TID)
 	local pID1
 	local pID2
 	local pID3
 	local pID4
-	local eTID 
+	local eTID
 	if gvMaxPlayers == 4 then
 		if _TID == 1 then
 			pID1 = 1
@@ -194,7 +194,7 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 		else
 			return
 		end
-	end					
+	end
 	local number1,eID1 = Logic.GetPlayerEntitiesInArea(pID1,Entities.PU_Thief, gvPresent.XmasTreePos[eTID].X, gvPresent.XmasTreePos[eTID].Y, gvPresent.XmasTreeCriticalRange, 10)
 	local number2,eID2 = Logic.GetPlayerEntitiesInArea(pID2,Entities.PU_Thief, gvPresent.XmasTreePos[eTID].X, gvPresent.XmasTreePos[eTID].Y, gvPresent.XmasTreeCriticalRange, 10)
 	local eID
@@ -206,9 +206,9 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 	end
 	if eID ~= nil then
 		local pID = Logic.EntityGetPlayer(eID)
-		local resTyp,amount 
+		local resTyp,amount
 		resTyp,amount = Logic.GetStolenResourceInfo(eID)
-		
+
 		local pos = gvPresent.XmasTreePos[eTID]
 
 		if amount ~= nil then
@@ -216,7 +216,7 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				DestroyEntity(Logic.GetEntityIDByName("T"..eTID.."_Present"..gvPresent.Progress[eTID]) )
 				gvPresent.Progress[eTID] = math.abs(gvPresent.Progress[eTID] - 1)
 				--amount = nil
-				GUIUpdate_PresentProgress_Screen(eTID)			
+				GUIUpdate_PresentProgress_Screen(eTID)
 				gvPresent.triggerIDTable.Delivery[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "gvPresent_ThiefDeliveredPresentCheck", 1,nil,{eID,pID,pos.X,pos.Y,_TID})
 				gvPresent.triggerIDTable.Kill[_TID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "gvPresent_ThiefKilledCheck", 1,nil,{eID,_TID})
 				if gvMaxPlayers <= 6 then
@@ -227,8 +227,8 @@ function gvPresent_ThiefPresentStolenCheck(_TID)
 				Logic.SetModelAndAnimSet(Logic.GetEntityIDByName("XmasTree"..eTID),Models.XD_Xmastree1)
 				if gvXmas2021 then
 					Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..eTID),Models.XD_RuinFragment1)
-					local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..eTID).X,GetPosition("XmasTree"..eTID).Y,0,0)	
-					Logic.SetEntityName(eID,"XmasTree"..eTID.."Fake")	
+					local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..eTID).X,GetPosition("XmasTree"..eTID).Y,0,0)
+					Logic.SetEntityName(eID,"XmasTree"..eTID.."Fake")
 					Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..eTID.."Fake"),Models.XD_Xmastree1)
 					CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(Logic.GetEntityIDByName("XmasTree"..eTID.."Fake")))[25]:SetFloat(3)
 				end
@@ -256,9 +256,9 @@ function gvPresent.CheckForSelection(_eID)
 		return
 	end
 end
--- Check, ob der Dieb mit geklautem Geschenk angekommen ist 
+-- Check, ob der Dieb mit geklautem Geschenk angekommen ist
 function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
-	
+
 	local enemyTID
 	local ename = Logic.GetEntityName(_eID)
 	local timeline = 0
@@ -267,7 +267,7 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 		if 	_TID == 1 then
 			enemyTID = 2
 			XmasEnemyID = 5
-			
+
 		elseif _TID == 2 then
 			enemyTID = 1
 			XmasEnemyID = 6
@@ -278,7 +278,7 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 		if 	_TID == 1 then
 			enemyTID = 2
 			XmasEnemyID = 10
-			
+
 		elseif _TID == 2 then
 			enemyTID = 1
 			XmasEnemyID = 9
@@ -288,12 +288,12 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 	end
 	-- Zeigt die Position des Diebes dem Gegnerteam alle 5 Sekunden an
 	if timeline >= 5 then
-		if Logic.GetDiplomacyState(GUI.GetPlayerID(),_pID) ==  Diplomacy.Hostile or GUI.GetPlayerID() == 17 then
+		if Logic.GetDiplomacyState(GUI.GetPlayerID(),_pID) ==  Diplomacy.Hostile or GUI.GetPlayerID() == BS.SpectatorPID then
 			thiefcurrentpos.X,thiefcurrentpos.Y = Logic.GetEntityPosition(_eID)
 			GUI.ScriptSignal(thiefcurrentpos.X, thiefcurrentpos.Y, 1)
 			timeline = 0
 		end
-	else	
+	else
 		timeline = timeline + 1
 	end
 	--[[ Arbeitsverweigerung wird nicht toleriert:
@@ -317,8 +317,8 @@ function gvPresent_ThiefDeliveredPresentCheck(_eID,_pID,_posX,_posY,_TID)
 			if gvXmas2021 then
 				Logic.SetModelAndAnimSet(PresentID,Models.XD_MiscPile1)
 				Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID),Models.XD_RuinFragment1)
-				local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..enemyTID).X,GetPosition("XmasTree"..enemyTID).Y,0,0)	
-				Logic.SetEntityName(eID,"XmasTree"..enemyTID.."Fake")	
+				local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..enemyTID).X,GetPosition("XmasTree"..enemyTID).Y,0,0)
+				Logic.SetEntityName(eID,"XmasTree"..enemyTID.."Fake")
 				Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID.."Fake"),Models.XD_Xmastree1)
 				CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(Logic.GetEntityIDByName("XmasTree"..enemyTID.."Fake")))[25]:SetFloat(3)
 			end
@@ -341,7 +341,7 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 	if gvMaxPlayers == 4 then
 		if 	_TID == 1 then
 			enemyTID = 2
-			XmasEnemyID = 5		
+			XmasEnemyID = 5
 		elseif _TID == 2 then
 			enemyTID = 1
 			XmasEnemyID = 6
@@ -351,7 +351,7 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 	elseif gvMaxPlayers >= 6 then
 		if 	_TID == 1 then
 			enemyTID = 2
-			XmasEnemyID = 10		
+			XmasEnemyID = 10
 		elseif _TID == 2 then
 			enemyTID = 1
 			XmasEnemyID = 9
@@ -372,8 +372,8 @@ function gvPresent_ThiefKilledCheck(_eID,_TID)
 		if gvXmas2021 then
 			Logic.SetModelAndAnimSet(ePresentID,Models.XD_MiscPile1)
 			Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID),Models.XD_RuinFragment1)
-			local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..enemyTID).X,GetPosition("XmasTree"..enemyTID).Y,0,0)	
-			Logic.SetEntityName(eID,"XmasTree"..enemyTID.."Fake")	
+			local eID = Logic.CreateEntity(Entities.XD_Rock1,GetPosition("XmasTree"..enemyTID).X,GetPosition("XmasTree"..enemyTID).Y,0,0)
+			Logic.SetEntityName(eID,"XmasTree"..enemyTID.."Fake")
 			Logic.SetModelAndAnimSet(GetEntityId("XmasTree"..enemyTID.."Fake"),Models.XD_Xmastree1)
 			CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(Logic.GetEntityIDByName("XmasTree"..enemyTID.."Fake")))[25]:SetFloat(3)
 		end
@@ -392,8 +392,8 @@ function gvPresent_VictoryJob()
 		gvPresent.CutsceneVictorious(1)
 		return true
 	end
-	
-	if gvPresent.Progress[2] == 6 then	
+
+	if gvPresent.Progress[2] == 6 then
 		gvPresent.CutsceneVictorious(2)
 		return true
 	end
@@ -454,7 +454,7 @@ function gvPresent.CutsceneVictorious(_TID)
 	end
 	local pos1 = {Logic.GetEntityPosition(Logic.GetEntityIDByName(pos))}
 	local text = ""
-	if CNetwork then 
+	if CNetwork then
 		text = pname1.." @color:255,255,255 und @color:"..pcolorr2..","..pcolorb2..","..pcolorg2.." "..pname2.." @color:255,255,255 haben"
 	else
 		text = UserTool_GetPlayerName(GUI.GetPlayerID()).." @color:255,255,255 hat"
@@ -471,28 +471,28 @@ function gvPresent.CutsceneVictorious(_TID)
 					duration = 20,
 					delay = 6,
 					action 	=	function()
-								
+
 					end,
 					title = " @color:180,0,240 Mentor",
 					text = " @color:230,0,0 Herzlichen Gl\195\188ckwunsch! @color:"..pcolorr1..","..pcolorg1..","..pcolorb1.." "..text.." diese Partie für sich entschieden!",
-					},				
-			
+					},
+
 			},
-	Callback = function()	
+	Callback = function()
 		Display.SetRenderFogOfWar(0)
 		GUI.MiniMap_SetRenderFogOfWar(0)
 		GameEnding()
-		if Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Friendly or PID1 == GUI.GetPlayerID() or GUI.GetPlayerID() == 17 then
+		if Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Friendly or PID1 == GUI.GetPlayerID() or GUI.GetPlayerID() == BS.SpectatorPID then
 			Stream.Start("Voice\\cm01_08_barmecia_txt\\notevictory.mp3",190)
 		elseif Logic.GetDiplomacyState(PID1,GUI.GetPlayerID()) == Diplomacy.Hostile then
 			Stream.Start("Sounds\\VoicesMentor\\vc_yourteamhaslost_rnd_02.wav",190)
 		end
-	
+
 	end
-    
+
 	}
 	Startcutscene(cutsceneTable)
-	
+
 end
 function GameEnding()
 	if gvPresent.Progress[1] == 6 then
@@ -501,16 +501,16 @@ function GameEnding()
 			Logic.PlayerSetGameStateToWon(2)
 			Logic.PlayerSetGameStateToLost(3)
 			Logic.PlayerSetGameStateToLost(4)
-			
-		elseif gvMaxPlayers == 6 then 		
+
+		elseif gvMaxPlayers == 6 then
 			Logic.PlayerSetGameStateToWon(1)
 			Logic.PlayerSetGameStateToWon(2)
 			Logic.PlayerSetGameStateToWon(3)
 			Logic.PlayerSetGameStateToLost(4)
 			Logic.PlayerSetGameStateToLost(5)
 			Logic.PlayerSetGameStateToLost(6)
-			
-		elseif gvMaxPlayers == 8 then 		
+
+		elseif gvMaxPlayers == 8 then
 			Logic.PlayerSetGameStateToWon(1)
 			Logic.PlayerSetGameStateToWon(2)
 			Logic.PlayerSetGameStateToWon(3)
@@ -520,14 +520,14 @@ function GameEnding()
 			Logic.PlayerSetGameStateToLost(7)
 			Logic.PlayerSetGameStateToLost(8)
 		end
-		
+
 	elseif gvPresent.Progress[2] == 6 then
 		if gvMaxPlayers == 4 then
 			Logic.PlayerSetGameStateToWon(3)
 			Logic.PlayerSetGameStateToWon(4)
 			Logic.PlayerSetGameStateToLost(1)
 			Logic.PlayerSetGameStateToLost(2)
-		
+
 		elseif gvMaxPlayers == 6 then
 			Logic.PlayerSetGameStateToWon(4)
 			Logic.PlayerSetGameStateToWon(5)
@@ -535,7 +535,7 @@ function GameEnding()
 			Logic.PlayerSetGameStateToLost(1)
 			Logic.PlayerSetGameStateToLost(2)
 			Logic.PlayerSetGameStateToLost(3)
-			
+
 		elseif gvMaxPlayers == 8 then
 			Logic.PlayerSetGameStateToWon(5)
 			Logic.PlayerSetGameStateToWon(6)
@@ -554,7 +554,7 @@ end
 function gvPresent.SDPayday()
 
 	local pID1,pID2,pID3,pID4
-	if gvPresent.Progress[1] > gvPresent.Progress[2] then 
+	if gvPresent.Progress[1] > gvPresent.Progress[2] then
 		if gvMaxPlayers == 4 then
 			pID1 = 1
 			pID2 = 2
@@ -568,7 +568,7 @@ function gvPresent.SDPayday()
 			pID3 = 3
 			pID3 = 4
 		end
-	elseif gvPresent.Progress[1] < gvPresent.Progress[2] then 
+	elseif gvPresent.Progress[1] < gvPresent.Progress[2] then
 		if gvMaxPlayers == 4 then
 			pID1 = 3
 			pID2 = 4
@@ -586,14 +586,14 @@ function gvPresent.SDPayday()
 		pID1 = 1
 		pID2 = 2
 	end
-	
+
 	--20% höherer Zahltag-Faktor pro Geschenke-Differenz (siehe GameCallback_PaydayPayed)
 	local PresentDifferenceFactor = 1+ (math.sqrt((gvPresent.Progress[1]-gvPresent.Progress[2])^2)/5)
-	
+
 	gvPresent.SDPaydayFactor[pID1] = PresentDifferenceFactor
 	gvPresent.SDPaydayFactor[pID2] = PresentDifferenceFactor
 	if pID3 ~= nil then
-		gvPresent.SDPaydayFactor[pID3] = PresentDifferenceFactor	
+		gvPresent.SDPaydayFactor[pID3] = PresentDifferenceFactor
 	end
 	if pID4 ~= nil then
 		gvPresent.SDPaydayFactor[pID4] = PresentDifferenceFactor
@@ -622,7 +622,7 @@ end
 ------------------------------------ CutsceneComforts ------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 function Startcutscene(_Cutscene)
-	
+
   local length = 0
   local i
   for i = 1, table.getn(_Cutscene.Flights) do
@@ -634,7 +634,7 @@ function Startcutscene(_Cutscene)
     EndTime   = Logic.GetTime() + length,
     Callback  = _Cutscene.Callback,
     Music     = Music.GetVolumeAdjustment()
-    } 
+    }
 	cutsceneIsActive = true
 	--XGUIEng.SetMaterialColor(XGUIEng.GetWidgetID("CinematicBar02"), 0, 0, 0, 0, 100)
 	XGUIEng.ShowWidget(XGUIEng.GetWidgetID("CinematicBar00"), 0)
@@ -652,7 +652,7 @@ function Startcutscene(_Cutscene)
 	Camera.ZoomSetDistance(_Cutscene.StartPosition.zoom)
 	Camera.RotSetAngle(_Cutscene.StartPosition.rotation)
 	Camera.ZoomSetAngle(_Cutscene.StartPosition.angle)
-	Camera.ScrollSetLookAt(_Cutscene.StartPosition.position[1],_Cutscene.StartPosition.position[2])  
+	Camera.ScrollSetLookAt(_Cutscene.StartPosition.position[1],_Cutscene.StartPosition.position[2])
 	Counter.SetLimit("Cutscene", -1)
 	StartSimpleJob("ControlCutscene")
 end
@@ -671,19 +671,19 @@ function ControlCutscene()
 				Camera.RotFlight(page.rotation, page.duration)
 				Camera.ZoomSetAngleFlight(page.angle, page.duration)
 				Camera.FlyToLookAt(page.position[1], page.position[2], page.duration)
-			 
+
             if page.title ~= nil then
                PrintBriefingHeadline("@color:255,250,200 " .. page.title)
             end
-			
+
             if page.text ~= nil then
                PrintBriefingText(page.text)
             end
-			
+
             if page.action ~= nil then
                page.action()
             end
-			
+
 			if (page.title ~= "") or (page.text ~= "") then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("CinematicBar00"), 0)
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("CinematicBar01"), 0)
@@ -695,7 +695,7 @@ function ControlCutscene()
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("CinematicBar01"), 0)
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("CinematicBar02"), 0)
 			end
-			
+
             Counter.SetLimit("Cutscene", page.duration + (page.delay or 0))
             gvCutscene.Page = gvCutscene.Page + 1
         end

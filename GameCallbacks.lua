@@ -15,6 +15,10 @@ function Mission_OnSaveGameLoaded()
 	Mission_OnSaveGameLoadedOrig()
 	MultiplayerTools.OnSaveGameLoaded = function()
 	end
+	if SendEvent and not next(SendEvent) then
+		SendEvent = nil
+	end
+	CUtil.EnableEntityTypeAsUgradeCategory()
 	BS.GfxInit()
 	CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 	if not CNetwork then
@@ -36,8 +40,6 @@ function Mission_OnSaveGameLoaded()
 		Logic.PlayerSetIsHumanFlag(PIDs[i], 1)
 		Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 	end
-<<<<<<< Updated upstream
-=======
 	for i = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		Display.SetPlayerColorMapping(i, XNetwork.GameInformation_GetLogicPlayerColor(i))
 	end
@@ -47,7 +49,6 @@ function Mission_OnSaveGameLoaded()
 	gvGUI_WidgetID.TaxesButtonsOP[2] = 	"SetNormalTaxes_OP"
 	gvGUI_WidgetID.TaxesButtonsOP[3] = 	"SetHighTaxes_OP"
 	gvGUI_WidgetID.TaxesButtonsOP[4] = 	"SetVeryHighTaxes_OP"
->>>>>>> Stashed changes
 end
 -- 3 Diebe max. auf der Weihnachtsmap
 if gvXmasEventFlag == 1 then
@@ -119,7 +120,7 @@ function GameCallback_GUI_SelectionChanged()
 	local EntityId = GUI.GetSelectedEntity()
 	local SelectedEntities = { GUI.GetSelectedEntities() }
 
-	--	
+	--
 	if EntityId == nil then
 		return
 	end
@@ -154,7 +155,7 @@ function GameCallback_GUI_SelectionChanged()
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingGroup")
 			XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Selection_generic"),1)
 			--Set contrsuction menu as default and highlight the tab
-			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)	
+			XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SerfMenus,0)
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SerfConstructionMenu,1)
 			XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
 			XGUIEng.HighLightButton(gvGUI_WidgetID.ToSerfBeatificationMenu,1)
@@ -190,9 +191,6 @@ function GameCallback_GUI_SelectionChanged()
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Outpost"),1)
 				XGUIEng.ShowWidget(gvGUI_WidgetID.DestroyBuilding,0)
 				ButtonStem = "Upgrade_Outpost"
-				if Logic.GetTechnologyState(Logic.EntityGetPlayer(EntityId), Technologies.GT_Literacy) == 4 and XGUIEng.IsWidgetShown(XGUIEng.GetWidgetID("HQTaxes_OP")) == 0 then
-					XGUIEng.ShowWidget(XGUIEng.GetWidgetID("HQTaxes_OP"),1)
-				end
 			--Is EntityType the Goldmine?
 			elseif UpgradeCategory == UpgradeCategories.GoldMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)
@@ -289,7 +287,7 @@ function GameCallback_GameSpeedChanged( _Speed )
     if Speed == 0 then
 		gvGameSpeed = 0
 		if not CNetwork then
-			local PauseScreenType = Logic.GetRandom(4) + 1
+			local PauseScreenType = math.random(5)
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		end
 
@@ -302,26 +300,13 @@ function GameCallback_GameSpeedChanged( _Speed )
     end
 end
 
-function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
+function GameCallback_OnTechnologyResearched(_PlayerID, _TechnologyType)
 
 	--calculate score
 	if Score ~= nil then
-		Score.CallBackResearched( _PlayerID, _TechnologyType )	
+		Score.CallBackResearched( _PlayerID, _TechnologyType )
 	end
-	
-	local PlayerID = GUI.GetPlayerID()
-	if PlayerID ~= _PlayerID then
-		return
-	end
-	
-	local BuildingID = GUI.GetSelectedEntity()
-	if BuildingID ~= 0 then
-		local TechnologyAtBuilding = Logic.GetTechnologyResearchedAtBuilding(BuildingID)
-		if  TechnologyAtBuilding == 0 then	
-			XGUIEng.ShowWidget(gvGUI_WidgetID.ResearchInProgress,0)
-		end
-	end
-	
+
 	if _TechnologyType == Technologies.T_HeavyThunder then
 		gvLightning.AdditionalStrikes = gvLightning.AdditionalStrikes + 3
 
@@ -329,6 +314,20 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		gvLightning.DamageAmplifier = gvLightning.DamageAmplifier + 0.3
 
 	end
+
+	local PlayerID = GUI.GetPlayerID()
+	if PlayerID ~= _PlayerID then
+		return
+	end
+
+	local BuildingID = GUI.GetSelectedEntity()
+	if BuildingID ~= 0 then
+		local TechnologyAtBuilding = Logic.GetTechnologyResearchedAtBuilding(BuildingID)
+		if  TechnologyAtBuilding == 0 then
+			XGUIEng.ShowWidget(gvGUI_WidgetID.ResearchInProgress,0)
+		end
+	end
+
 	if not gvMercTechsCheated then
 
 		if _TechnologyType == Technologies.T_BarbarianCulture then
@@ -353,13 +352,13 @@ function GameCallback_OnTechnologyResearched( _PlayerID, _TechnologyType )
 		end
 
 	end
-	
+
 	--Do not play sound on begin of the map
-	local GameTimeMS = Logic.GetTimeMs()	
+	local GameTimeMS = Logic.GetTimeMs()
 	if GameTimeMS == 0 then
 		return
 	end
-	
+
 	--Update all buttons in the visible container
 	XGUIEng.DoManualButtonUpdate(gvGUI_WidgetID.InGame)
 end
@@ -566,9 +565,9 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 
 	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag and not gvXmasEventFlag then
-	
+
 		local checkpos = true
-		
+
 		-- Türme dürfen nicht nahe anderer Türme gebaut werden
 		for _,v in pairs(gvTower.PositionTable) do
 
@@ -584,7 +583,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		local checkpos = true
 
-		for _,v in pairs(gvVStatue4.PositionTable) do		
+		for _,v in pairs(gvVStatue4.PositionTable) do
 
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvVStatue4.BlockRange then
 				checkpos = false
@@ -782,18 +781,22 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 
 		end
 	end
-	-- update AI data when troops upgrade
+	--[[ update AI data when troops upgrade
+	note: troop upgrade timing order: GameCallback_GUI_EntityIDChanged -> DestroyedTrigger -> CreatedTrigger]]
 	if ArmyTable and ArmyTable[player] then
-		for i = 1, table.getn(ArmyTable[player]) do
-			local tpos = table_findvalue(ArmyTable[player][i].IDs, _OldID)
+		for k, v in pairs(ArmyTable[player]) do
+			local tpos = table_findvalue(v.IDs, _OldID)
 			if tpos ~= 0 then
-				ArmyTable[player][i].IDs[tpos] = _NewID
-				ArmyTable[player][i][_OldID] = nil
+				Trigger.UnrequestTrigger(v[_OldID].TriggerID)
+				v.IDs[tpos] = _NewID
+				v[_NewID] = v[_OldID]
+				v[_OldID] = nil
+				v[_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID, k})
 				local enemies = BS.GetAllEnemyPlayerIDs(player)
-				for k = 1, table.getn(enemies) do
-					if AIchunks[enemies[k]] then
-						ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
-						ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+				for i = 1, table.getn(enemies) do
+					if AIchunks[enemies[i]] then
+						ChunkWrapper.RemoveEntity(AIchunks[enemies[i]], _OldID)
+						ChunkWrapper.AddEntity(AIchunks[enemies[i]], _NewID)
 					end
 				end
 				break
@@ -801,15 +804,34 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 		end
 	end
 	if MapEditor_Armies and MapEditor_Armies[player] then
-		local tpos = table_findvalue(MapEditor_Armies[player].IDs, _OldID)
+		local tpos = table_findvalue(MapEditor_Armies[player].offensiveArmies.IDs, _OldID)
 		if tpos ~= 0 then
-			MapEditor_Armies[player].IDs[tpos] = _NewID
-			MapEditor_Armies[player][_OldID] = nil
+			Trigger.UnrequestTrigger(MapEditor_Armies[player].offensiveArmies[_OldID].TriggerID)
+			MapEditor_Armies[player].offensiveArmies.IDs[tpos] = _NewID
+			MapEditor_Armies[player].offensiveArmies[_NewID] = MapEditor_Armies[player].offensiveArmies[_OldID]
+			MapEditor_Armies[player].offensiveArmies[_OldID] = nil
+			MapEditor_Armies[player].offensiveArmies[_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID, "offensiveArmies"})
 			local enemies = BS.GetAllEnemyPlayerIDs(player)
 			for k = 1, table.getn(enemies) do
 				if AIchunks[enemies[k]] then
 					ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
 					ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+				end
+			end
+		else
+			tpos = table_findvalue(MapEditor_Armies[player].defensiveArmies.IDs, _OldID)
+			if tpos ~= 0 then
+				Trigger.UnrequestTrigger(MapEditor_Armies[player].defensiveArmies[_OldID].TriggerID)
+				MapEditor_Armies[player].defensiveArmies.IDs[tpos] = _NewID
+				MapEditor_Armies[player].defensiveArmies[_NewID] = MapEditor_Armies[player].defensiveArmies[_OldID]
+				MapEditor_Armies[player].defensiveArmies[_OldID] = nil
+				MapEditor_Armies[player].defensiveArmies[_NewID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {player, _NewID, "defensiveArmies"})
+				local enemies = BS.GetAllEnemyPlayerIDs(player)
+				for k = 1, table.getn(enemies) do
+					if AIchunks[enemies[k]] then
+						ChunkWrapper.RemoveEntity(AIchunks[enemies[k]], _OldID)
+						ChunkWrapper.AddEntity(AIchunks[enemies[k]], _NewID)
+					end
 				end
 			end
 		end
@@ -842,8 +864,6 @@ GameCallback_UnknownTask = function(_id)
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Coalmaker_RemoveFireEffect",1,{},{work, eff1, eff2, eff3})
 		return 1
 	end
-<<<<<<< Updated upstream
-=======
 end
 
 function GameCallback_OnPointToResource(_foundPos, _unused)
@@ -878,5 +898,4 @@ GameCallback_ResourceChanged = function(_player, _type, _amount)
 			end
 		end
 	end
->>>>>>> Stashed changes
 end

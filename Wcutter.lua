@@ -187,13 +187,8 @@ end
 WCutter.FindNearestTree = function(_id)
 	local distancetable = {}
 	local x,y = Logic.GetEntityPosition(_id)
-<<<<<<< Updated upstream
-	for k,v in pairs(Forester.TreeGrowingBlockedPos) do	
-		table.insert(distancetable, {id = Logic.GetEntityAtPosition(v.X, v.Y), dist = GetDistance({X = x, Y = y}, v)})
-=======
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(WCutter.TreeTypes)), CEntityIterator.InCircleFilter(x, y, WCutter.MaxRange)) do
 		table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
->>>>>>> Stashed changes
 	end
 	table.sort(distancetable, function(p1, p2) return p1.dist < p2.dist end)
 	if distancetable and next(distancetable) then
@@ -285,16 +280,10 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 		Logic.HurtEntity(_id, 100)
 	end
 	if IsNear(_id, _treeid, WCutter.ApproachRange) then
-<<<<<<< Updated upstream
-		WCutter.TriggerIDs.StartWork[_id] = nil
-		Trigger.UnrequestTrigger(WCutter.TriggerIDs.StartWork[_id])
-		WCutter.CutTree(_id, _treeid)		
-=======
 		Logic.EntityLookAt(_id, _treeid)
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.Cut[_id])
 		WCutter.CutTree(_id, _treeid, _buildingID)
->>>>>>> Stashed changes
 		return true
 	else
 		if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then
@@ -316,16 +305,8 @@ WCutter.CutTree = function(_id, _treeid, _buildingID)
 	end
 	local newID, etype = WCutter.BlockTree(_treeid, 2)
 	_treeid = newID
-<<<<<<< Updated upstream
-	if res_amount > 0 then
-		WCutter.TriggerIDs.CutTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_CutTreeDelay", 1, {}, {_id, _treeid, etype, res_amount})
-	else	
-		SetEntityCurrentTaskIndex(_id, 3)
-	end
-=======
 	WCutter.TriggerIDs.CutTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_CutTreeDelay", 1, {}, {_id, _treeid, etype, res_amount})
 	Logic.SetTaskList(_id, TaskLists.TL_CUT_TREE)
->>>>>>> Stashed changes
 end
 WCutter.BlockTree = function(_treeid, _flag)
 	--[[ _flag param: 0: unblock
@@ -334,7 +315,7 @@ WCutter.BlockTree = function(_treeid, _flag)
 					]]
 	local etype = Logic.GetEntityType(_treeid)
 	local model = Models[Logic.GetEntityTypeName(etype)]
-	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])		
+	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])
 
 	Logic.SetModelAndAnimSet(newID, model)
 	return newID, etype
@@ -343,16 +324,9 @@ WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
 	if Counter.Tick2("WCutter_CutTreeDelay_".._id.."_".._treeid, math.min(WCutter.BaseTimeNeeded + WCutter.TimeNeededPerRess * _res_amount, WCutter.MaxTimeNeeded)) then
 		local tempID, newID
 		if IsValid(_treeid) then
-<<<<<<< Updated upstream
-			newID = ReplaceEntity(_treeid, _tree_type)
-			WCutter.BlockTree(newID, 1)
-			--TODO: Tree needs to be blocked so no serfs can chop it during subanim 
-		end 
-=======
 			tempID = ReplaceEntity(_treeid, _tree_type)
 			newID = WCutter.BlockTree(tempID, 1)
 		end
->>>>>>> Stashed changes
 		if newID then
 			Logic.SetModelAndAnimSet(newID, Models.XD_Trunk1)
 			if Logic.GetWeatherState() ~= 3 then
@@ -382,9 +356,6 @@ WCutter_RemoveTree = function(_id, _treeid, _res_amount)
 	end
 end
 WCutter.EndWorkCycle = function(_id)
-<<<<<<< Updated upstream
-	SetEntityCurrentTaskIndex(_id, 1)		
-=======
 	local _buildingID = WCutter.GetBuildingIDByWorkerID(_id)
 	if not _buildingID or not IsExisting(_buildingID) then
 		Logic.HurtEntity(_id, 100)
@@ -397,5 +368,4 @@ WCutter.EndWorkCycle = function(_id)
 			WCutter.TriggerIDs.WorkControl.Start[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Start",1,{},{_id, _buildingID})
 		end
 	end
->>>>>>> Stashed changes
 end

@@ -701,9 +701,6 @@ Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt da
 
 Es werden nun keine Komma-Zahlen mehr angezeigt, wenn Euch Ressourcen fehlen und ihr unter bestimmten Umständen Gebäude abgerissen hattet.
 
-<<<<<<< Updated upstream
-Die Anzeige und Funktionalität der Truppen-Finden-Buttons wurde angepasst.
-=======
 Die Anzeige und Funktionalität der Truppen-Finden-Buttons wurde angepasst.
 
 --- Version 0.736
@@ -844,4 +841,3 @@ Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fäh
 
 
 
->>>>>>> Stashed changes
