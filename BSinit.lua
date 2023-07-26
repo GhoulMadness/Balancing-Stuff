@@ -418,6 +418,8 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "KerberosAttackAdditions", 1)
 	--Trigger for helias effects
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnHeliasCreated", 1)
+	--Trigger for ari troops
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAriTroopCreated", 1)
 	--Trigger for erebos movement effects
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnErebos_Created", 1)
 	--Trigger for catapult stones effects

@@ -253,6 +253,24 @@ function Hero6_Sacrilege_Trigger(_id, _player, _starttime)
 	Logic.CreateEffect(GGL_Effects.FXExtractStone, posX, posY)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Ari ----------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+gvHero5 = {AbilityProperties = {Summon = {NumTroops = 6, Duration = 60}}}
+function OnAriTroopCreated()
+
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+
+	if entityType == Entities.PU_Hero5_Outlaw then
+		local player = Logic.EntityGetPlayer(entityID)
+		local posX, posY = Logic.GetEntityPosition(entityID)
+		for i = 1, gvHero5.AbilityProperties.Summon.NumTroops do
+			Logic.CreateEntity(Entities.PU_Hero5_OutlawSoldier, posX, posY, 0, player)
+			Logic.LeaderGetOneSoldier(entityID)
+		end
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Catapult Stones ----------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CatapultStoneOnHitEffects = {	[1] = GGL_Effects.FXFireTemp,
