@@ -155,7 +155,7 @@ if CNetwork then
 
 				CLogger.Log("Ghoul_Hero6Sacrilege", name, _playerID,_heroID)
 				-- Cooldown handling
-				gvHero6.Sacrilege.NextCooldown = gvHero13.Sacrilege.NextCooldown or {}
+				gvHero6.Sacrilege.NextCooldown = gvHero6.Sacrilege.NextCooldown or {}
 				local starttime = Logic.GetTime()
 
 				if gvHero6.Sacrilege.NextCooldown[_playerID] then
