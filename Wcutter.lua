@@ -14,7 +14,7 @@ WCutter.ChopSubAnimDuration = 50
 WCutter.WorkCycleDelayBase = 5
 WCutter.WorkCycleDelay = {}
 -- range in which the woodcutter needs to be to start chopping tree (s-cm)
-WCutter.ApproachRange = 200
+WCutter.ApproachRangeBonus = 200
 -- default amount of wood per tree
 WCutter.DefaultResourceAmount = 75
 WCutter.HomeSpotOffset = {	X = -200,
@@ -41,9 +41,7 @@ WCutter.TreeTypes = {Entities.XD_AppleTree1,
 					Entities.XD_DarkTree8,
 					Entities.XD_DeadTree01,
 					Entities.XD_DeadTree02,
-					Entities.XD_DeadTree03,
 					Entities.XD_DeadTree04,
-					Entities.XD_DeadTree05,
 					Entities.XD_DeadTree06,
 					Entities.XD_DeadTreeEvelance1,
 					Entities.XD_DeadTreeEvelance2,
@@ -279,7 +277,8 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 	if not IsExisting(_buildingID) then
 		Logic.HurtEntity(_id, 100)
 	end
-	if IsNear(_id, _treeid, WCutter.ApproachRange) then
+	local range = GetEntityTypeNumBlockedPoints(Logic.GetEntityType(_treeid)) * 100
+	if IsNear(_id, _treeid, range + WCutter.ApproachRangeBonus) then
 		Logic.EntityLookAt(_id, _treeid)
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.Cut[_id])

@@ -839,5 +839,7 @@ Helias hat nun eine weitere Fähigkeit: Sakrileg: Während der Wirkdauer geht s�
 
 Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fähigkeit (bis auf ein Minimum, welches nicht unterschritten werden kann).
 
+Dovbars Götterdämmerung und Erebos Höllenfeuer-Aura verursachen nun keinen Schaden mehr an Einheiten und Gebäude neutral gesinnter Spieler.
+
 
 

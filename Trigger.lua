@@ -948,86 +948,89 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
 
-				-- wenn Leader, dann...
-				if IsMilitaryLeader(eID) and Logic.IsEntityAlive(eID) then
-					local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
-					if Soldiers[1] > 0 then
-						for i = 2, table.getn(Soldiers) do
-							local soldierdmg = math.max(damage - ((i - 2) * damage * tab.DamageFalloff), damage * tab.MinDamage)
-							local health = Logic.GetEntityHealth(Soldiers[i])
-							if soldierdmg >= health then
-								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")
-							else
-								break
-							end
-							if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
-								BS.ManualUpdate_DamageDealt(_heroID, soldierdmg, Logic.GetEntityHealth(Soldiers[i]), "DamageToUnits")
-							end
-							Logic.HurtEntity(Soldiers[i], soldierdmg)
-							if i == table.getn(Soldiers) then
-								if soldierdmg >= Logic.GetEntityHealth(eID) then
-									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
+				local player2 = Logic.EntityGetPlayer(eID)
+				if player == player2 or Logic.GetDiplomacyState(player, player2) ~= Diplomacy.Neutral then
+					-- wenn Leader, dann...
+					if IsMilitaryLeader(eID) and Logic.IsEntityAlive(eID) then
+						local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
+						if Soldiers[1] > 0 then
+							for i = 2, table.getn(Soldiers) do
+								local soldierdmg = math.max(damage - ((i - 2) * damage * tab.DamageFalloff), damage * tab.MinDamage)
+								local health = Logic.GetEntityHealth(Soldiers[i])
+								if soldierdmg >= health then
+									BS.ManualUpdate_KillScore(player, Logic.EntityGetPlayer(Soldiers[i]), "Settler")
+								else
+									break
 								end
-								if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-									BS.ManualUpdate_DamageDealt(_heroID, soldierdmg, Logic.GetEntityHealth(eID), "DamageToUnits")
+								if ExtendedStatistics and (Logic.GetDiplomacyState(player, Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
+									BS.ManualUpdate_DamageDealt(_heroID, soldierdmg, Logic.GetEntityHealth(Soldiers[i]), "DamageToUnits")
 								end
-								Logic.HurtEntity(eID, round(soldierdmg))
-								break
+								Logic.HurtEntity(Soldiers[i], soldierdmg)
+								if i == table.getn(Soldiers) then
+									if soldierdmg >= Logic.GetEntityHealth(eID) then
+										BS.ManualUpdate_KillScore(player, player2, "Settler")
+									end
+									if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
+										BS.ManualUpdate_DamageDealt(_heroID, soldierdmg, Logic.GetEntityHealth(eID), "DamageToUnits")
+									end
+									Logic.HurtEntity(eID, round(soldierdmg))
+									break
+								end
 							end
+
+						else
+
+							if damage >= Logic.GetEntityHealth(eID) then
+								BS.ManualUpdate_KillScore(player, player2, "Settler")
+							end
+							if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
+								BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
+							end
+							Logic.HurtEntity(eID, damage)
 						end
 
-					else
+					-- wenn Held, dann...
+					elseif Logic.IsHero(eID) == 1 then
+
+						damage = damage * tab.DamageFactors.Hero
+						if damage >= Logic.GetEntityHealth(eID) then
+							BS.ManualUpdate_KillScore(player, player2, "Settler")
+						end
+						if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
+							BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
+						end
+						Logic.HurtEntity(eID, damage)
+
+					-- wenn Gebäude, dann...
+					elseif Logic.IsBuilding(eID) == 1 then
+
+						damage = damage * tab.DamageFactors.Building
+						if damage >= Logic.GetEntityHealth(eID) then
+							BS.ManualUpdate_KillScore(player, player2, "Building")
+						end
+						if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
+							BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToBuildings")
+						end
+						Logic.HurtEntity(eID, damage)
+
+					-- wenn Leibi, dann...
+					elseif Logic.IsSerf(eID) == 1 then
 
 						if damage >= Logic.GetEntityHealth(eID) then
-							BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
+							BS.ManualUpdate_KillScore(player, player2, "Settler")
 						end
-						if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
+						if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
 							BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
 						end
 						Logic.HurtEntity(eID, damage)
 					end
-
-				-- wenn Held, dann...
-				elseif Logic.IsHero(eID) == 1 then
-
-					damage = damage * tab.DamageFactors.Hero
-					if damage >= Logic.GetEntityHealth(eID) then
-						BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
-					end
-					if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-						BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
-					end
-					Logic.HurtEntity(eID, damage)
-
-				-- wenn Gebäude, dann...
-				elseif Logic.IsBuilding(eID) == 1 then
-
-					damage = damage * tab.DamageFactors.Building
-					if damage >= Logic.GetEntityHealth(eID) then
-						BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")
-					end
-					if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-						BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToBuildings")
-					end
-					Logic.HurtEntity(eID, damage)
-
-				-- wenn Leibi, dann...
-				elseif Logic.IsSerf(eID) == 1 then
-
-					if damage >= Logic.GetEntityHealth(eID) then
-						BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
-					end
-					if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-						BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
-					end
-					Logic.HurtEntity(eID, damage)
 				end
 			end
 		end
 
-		gvHero13.TriggerIDs.DivineJudgment.Judgment[Logic.EntityGetPlayer(_heroID)] = nil
-		Trigger.UnrequestTrigger(gvHero13.TriggerIDs.DivineJudgment.DMGBonus[Logic.EntityGetPlayer(_heroID)])
-		gvHero13.TriggerIDs.DivineJudgment.DMGBonus[Logic.EntityGetPlayer(_heroID)] = nil
+		gvHero13.TriggerIDs.DivineJudgment.Judgment[player] = nil
+		Trigger.UnrequestTrigger(gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player])
+		gvHero13.TriggerIDs.DivineJudgment.DMGBonus[player] = nil
 		return true
 	end
 end

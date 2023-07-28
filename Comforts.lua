@@ -1854,6 +1854,19 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	end
 end
+-- gets entity type num blocked points value (block field in s-m x and y)
+function GetEntityTypeNumBlockedPoints(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.EntityTypeNumBlockedPoints then
+		BS.MemValues.EntityTypeNumBlockedPoints = {}
+	end
+	if BS.MemValues.EntityTypeNumBlockedPoints[_entityType] then
+		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
+	else
+		BS.MemValues.EntityTypeNumBlockedPoints[_entityType] = GetEntityTypePointer(_entityType)[22]:GetInt()
+		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
+	end
+end
 ------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- entity id related --------------------------------------------------------------------------
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)

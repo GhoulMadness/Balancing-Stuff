@@ -84,7 +84,8 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				end
 				local pID = Logic.EntityGetPlayer(_heroID)
 				for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(pos.X, pos.Y, gvHero14.NighttimeAura.Range)) do
-					if Logic.IsEntityInCategory(eID, EntityCategories.EvilLeader) ~= 1 then
+					local player2 = Logic.EntityGetPlayer(eID)
+					if Logic.IsEntityInCategory(eID, EntityCategories.EvilLeader) ~= 1 and (pID == player2 or Logic.GetDiplomacyState(pID, player2) ~= Diplomacy.Neutral) then
 						local damage = gvHero14.NighttimeAura.Damage + math.random(gvHero14.NighttimeAura.Damage)
 						if Logic.IsLeader(eID) == 1 and Logic.IsEntityAlive(eID) then
 							local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
@@ -92,12 +93,12 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 								for i = 2, Soldiers[1] + 1 do
 									local soldierdmg = math.max(damage - ((i - 2) * damage/10), damage/5)
 									if soldierdmg >= Logic.GetEntityHealth(Soldiers[i]) then
-										BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i]), "Settler")
+										BS.ManualUpdate_KillScore(pID, Logic.EntityGetPlayer(Soldiers[i]), "Settler")
 									end
-									if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
-										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
-										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
-										ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+									if ExtendedStatistics and (Logic.GetDiplomacyState(pID, Logic.EntityGetPlayer(Soldiers[i])) == Diplomacy.Hostile) then
+										ExtendedStatistics.Players[pID]["DamageToUnits"] = ExtendedStatistics.Players[pID]["DamageToUnits"] + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
+										ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(soldierdmg, Logic.GetEntityHealth(Soldiers[i])))
+										ExtendedStatistics.Players[pID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[pID].MostDeadlyEntityDamage, ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID])
 									end
 									Logic.HurtEntity(Soldiers[i], soldierdmg)
 									if gvHero14.LifestealAura.TriggerIDs[pID] then
@@ -107,12 +108,12 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 								end
 							else
 								if damage >= Logic.GetEntityHealth(eID) then
-									BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
+									BS.ManualUpdate_KillScore(pID, player2, "Settler")
 								end
-								if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
-									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
-									ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+								if ExtendedStatistics and (Logic.GetDiplomacyState(pID, player2) == Diplomacy.Hostile) then
+									ExtendedStatistics.Players[pID]["DamageToUnits"] = ExtendedStatistics.Players[pID]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+									ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+									ExtendedStatistics.Players[pID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[pID].MostDeadlyEntityDamage, ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID])
 								end
 								Logic.HurtEntity(eID, damage)
 								if gvHero14.LifestealAura.TriggerIDs[pID] then
@@ -125,12 +126,12 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 								if Logic.IsConstructionComplete(eID) == 1 then
 									if Logic.GetEntityType(eID) ~= Entities.CB_Evil_Tower1 and Logic.GetEntityType(eID) ~= Entities.PU_Hero14_EvilTower then
 										if damage >= Logic.GetEntityHealth(eID) then
-											BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Building")
+											BS.ManualUpdate_KillScore(pID, player2, "Building")
 										end
-										if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToBuildings"] + (math.min(damage, Logic.GetEntityHealth(eID)))
-											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
-											ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+										if ExtendedStatistics and (Logic.GetDiplomacyState(pID, player2) == Diplomacy.Hostile) then
+											ExtendedStatistics.Players[pID]["DamageToBuildings"] = ExtendedStatistics.Players[pID]["DamageToBuildings"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+											ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+											ExtendedStatistics.Players[pID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[pID].MostDeadlyEntityDamage, ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID])
 										end
 										Logic.HurtEntity(eID, damage)
 										if gvHero14.LifestealAura.TriggerIDs[pID] then
@@ -142,12 +143,12 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 							end
 						elseif Logic.IsSerf(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 							if damage >= Logic.GetEntityHealth(eID) then
-								BS.ManualUpdate_KillScore(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID), "Settler")
+								BS.ManualUpdate_KillScore(pID, player2, "Settler")
 							end
-							if ExtendedStatistics and (Logic.GetDiplomacyState(Logic.EntityGetPlayer(_heroID), Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile) then
-								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] = ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
-								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
-								ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage, ExtendedStatistics.Players[Logic.EntityGetPlayer(_heroID)].MostDeadlyEntityDamage_T[_heroID])
+							if ExtendedStatistics and (Logic.GetDiplomacyState(pID, player2) == Diplomacy.Hostile) then
+								ExtendedStatistics.Players[pID]["DamageToUnits"] = ExtendedStatistics.Players[pID]["DamageToUnits"] + (math.min(damage, Logic.GetEntityHealth(eID)))
+								ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(damage, Logic.GetEntityHealth(eID)))
+								ExtendedStatistics.Players[pID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[pID].MostDeadlyEntityDamage, ExtendedStatistics.Players[pID].MostDeadlyEntityDamage_T[_heroID])
 							end
 							Logic.HurtEntity(eID, damage)
 							if gvHero14.LifestealAura.TriggerIDs[pID] then
