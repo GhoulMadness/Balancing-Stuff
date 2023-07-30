@@ -1956,10 +1956,16 @@ function GetEntitySize(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
 end
 -- set entity size (relative to 1)
-function SetEntitySize(_entityID,_size)
+function SetEntitySize(_entityID, _size)
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_size) == "number", "size needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
+end
+-- set entity model (gets resetted when task changes)
+function SetEntityModel(_entityID, _id)
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_id) == "number", "model id needs to be a number")
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:SetInt(_id)
 end
 --[[GetMilitaryBuildingMaxTrainSlots
 CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]

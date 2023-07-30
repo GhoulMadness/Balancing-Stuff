@@ -106,7 +106,8 @@ WCutter.TriggerIDs = {	WorkControl = {	Start = {},
 										Inside = {},
 										Outside = {},
 										Cut = {},
-										ArrivedAtDestination = {}},
+										ArrivedAtDestination = {},
+										CarrierModel = {}},
 						CutTree = {},
 						RemoveTree = {},
 						Behavior = {FinishAnim = {},
@@ -213,6 +214,8 @@ WCutter_WorkControl_Start = function(_id, _buildingID)
 		end
 	end
 	if GetDistance(GetPosition(_id), buildingpos) <= 100 then
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.CarrierModel[_id])
+		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
 		Logic.SetEntityScriptingValue(_id, -30, 513)
 		WCutter.TriggerIDs.WorkControl.Start[_id] = nil
 		WCutter.TriggerIDs.WorkControl.Inside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Inside",1,{},{_id, _buildingID})
@@ -232,6 +235,7 @@ WCutter_WorkControl_Inside = function(_id, _buildingID)
 							Y = buildingpos.Y + WCutter.HomeSpotOffset.Y}
 		if Logic.GetEntityScriptingValue(_id, -30) == 513 then
 			if Counter.Tick2("WCutter_WorkControl_Inside_Delay_".. _id, WCutter.WorkCycleDelay[_id]) then
+				SetEntityModel(_id, Models.U_Woodcutter)
 				Logic.MoveEntity(_id, math.floor(targetpos.X), math.floor(targetpos.Y))
 				Logic.SetEntityScriptingValue(_id, -30, 65793)
 				Logic.SetEntityScriptingValue(_id,72,1)
@@ -361,10 +365,13 @@ WCutter.EndWorkCycle = function(_id)
 	end
 	if IsExisting(_id) then
 		if WCutter.WorkActiveState[_buildingID] ~= 0 then
-			Logic.SetModelAndAnimSet(_id, Models.U_Woodcutter_Backpack, AnimSets.SET_WOODCUTTER)
 			local posX, posY = Logic.GetEntityPosition(_buildingID)
 			Logic.MoveSettler(_id, posX + WCutter.HomeSpotOffset.X, posY + WCutter.HomeSpotOffset.Y)
 			WCutter.TriggerIDs.WorkControl.Start[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Start",1,{},{_id, _buildingID})
+			WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_SetCarrierModel",1,{},{_id})
 		end
 	end
+end
+WCutter_SetCarrierModel = function(_id)
+	SetEntityModel(_id, Models.U_Woodcutter_Backpack)
 end
