@@ -204,12 +204,26 @@ if CNetwork then
 			MP_DiplomacyWindow.resource_to_next[ResourceType.Silver] = ResourceType.GoldRaw
 
 		end
+
+		-- sending coal only allowed on pvp maps
+		if EMS then
+			MP_DiplomacyWindow.resource_to_name[ResourceType.Knowledge] =  " @color:21,24,22: " .. XGUIEng.GetStringTableText("ingamemessages/GUI_NameCoal") .. " @color:255,255,255,255: "
+			MP_DiplomacyWindow.resource_to_next[ResourceType.Silver] = ResourceType.Knowledge
+			MP_DiplomacyWindow.resource_to_next[ResourceType.Knowledge] = ResourceType.Gold
+			MP_DiplomacyWindow.resource_to_check[ResourceType.Knowledge] = {ResourceType.Knowledge}
+			MP_DiplomacyWindow.allowed_resources[ResourceType.Knowledge] = true
+			if MP_DiplomacyWindow.raw_resources_allowed then
+				MP_DiplomacyWindow.resource_to_next[ResourceType.Silver] = ResourceType.Knowledge
+				MP_DiplomacyWindow.resource_to_next[ResourceType.Knowledge] = ResourceType.GoldRaw
+			end
+		end
 	end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------- EXTENDED STATISTICS --------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	ExtendedStatistics.ResourceToKey[ResourceType.Silver] = "Silver"
 	ExtendedStatistics.ResourceToKey[ResourceType.SilverRaw] = "Silver"
+	ExtendedStatistics.ResourceToKey[ResourceType.Knowledge] = "Coal"
 	for player = 1, 16 do
 		ExtendedStatistics.Players[player].DamageTakenByLightning = 0
 		ExtendedStatistics.Players[player].AmountOfLightningStrikes = 0
@@ -217,6 +231,9 @@ if CNetwork then
 		ExtendedStatistics.Players[player].Silver = 0
 		ExtendedStatistics.Players[player].SilverLast = 0
 		ExtendedStatistics.Players[player].ExchangedResources.Silver = 0
+		ExtendedStatistics.Players[player].Coal = 0
+		ExtendedStatistics.Players[player].CoalLast = 0
+		ExtendedStatistics.Players[player].ExchangedResources.Coal = 0
 	end
 	CUtilStatistics.AddStatistic("DamageTakenByLightning", "Damage Taken By Lightning Strikes", "Damage/Attacks", "ExtendedStatistics_Callback_DamageTakenByLightning")
 	CUtilStatistics.SetStatisticWidgetValues("normal",  "DamageTakenByLightning", "graphics\\textures\\gui\\b_generic_building.png", GetTextureCoordinatesAt(4, 8, 0, 1))
@@ -250,6 +267,19 @@ if CNetwork then
 		local current = ExtendedStatistics.Players[player].Silver
 		local last = ExtendedStatistics.Players[player].SilverLast
 		ExtendedStatistics.Players[player].SilverLast = current
+		return current - last
+	end
+	CUtilStatistics.AddStatisticWithPM("CoalEarned", "Coal Earned", "Coal Earned Per Minute", "EarnedResources", "ExtendedStatistics_Callback_CoalEarned", "ExtendedStatistics_Callback_CoalEarnedPerMinute")
+	CUtilStatistics.SetStatisticWidgetValues("normal",  "CoalEarned", "data\\graphics\\textures\\b_statistics.png", GetTextureCoordinatesAt(4, 32, 0, 24))
+	CUtilStatistics.SetStatisticWidgetValues("hovered", "CoalEarned", "data\\graphics\\textures\\b_statistics.png", GetTextureCoordinatesAt(4, 32, 1, 24))
+	CUtilStatistics.SetStatisticWidgetValues("pressed", "CoalEarned", "data\\graphics\\textures\\b_statistics.png", GetTextureCoordinatesAt(4, 32, 2, 24))
+	function ExtendedStatistics_Callback_CoalEarned(player)
+		return ExtendedStatistics.Players[player].Coal
+	end
+	function ExtendedStatistics_Callback_CoalEarnedPerMinute(player)
+		local current = ExtendedStatistics.Players[player].Coal
+		local last = ExtendedStatistics.Players[player].CoalLast
+		ExtendedStatistics.Players[player].CoalLast = current
 		return current - last
 	end
 end

@@ -879,22 +879,28 @@ function GameCallback_OnPointToResource(_foundPos, _unused)
 end
 -- weather energy infinite resources fix
 GameCallback_ResourceChanged = function(_player, _type, _amount)
-	if _type == ResourceType.WeatherEnergy then
-		if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetEnergyRequiredForWeatherChange() then
-			Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetEnergyRequiredForWeatherChange())
-		end
-	elseif _type == ResourceType.Faith then
-		if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetMaximumFaith() then
-			Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetMaximumFaith())
-		end
-		-- helias sacrilege resource redirect
-		local enemies = BS.GetAllEnemyPlayerIDs(_player)
-		for i = 1,table.getn(enemies) do
-			if gvHero6.Sacrilege.Active[enemies[i]] then
-				if _amount > 0 and not gvHero6.Sacrilege.Active[_player] then
-					Logic.AddToPlayersGlobalResource(enemies[i], _type, _amount)
-					Logic.SubFromPlayersGlobalResource(_player, _type, _amount)
+	if _player > 0 and _player < 17 and _amount > 0 then
+		if _type == ResourceType.WeatherEnergy then
+			if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetEnergyRequiredForWeatherChange() then
+				Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetEnergyRequiredForWeatherChange())
+			end
+		elseif _type == ResourceType.Faith then
+			if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetMaximumFaith() then
+				Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetMaximumFaith())
+			end
+			-- helias sacrilege resource redirect
+			local enemies = BS.GetAllEnemyPlayerIDs(_player)
+			for i = 1,table.getn(enemies) do
+				if gvHero6.Sacrilege.Active[enemies[i]] then
+					if _amount > 0 and not gvHero6.Sacrilege.Active[_player] then
+						Logic.AddToPlayersGlobalResource(enemies[i], _type, _amount)
+						Logic.SubFromPlayersGlobalResource(_player, _type, _amount)
+					end
 				end
+			end
+		elseif _type == ResourceType.Knowledge then
+			if ExtendedStatistics then
+				ExtendedStatistics.Players[_player].Coal = ExtendedStatistics.Players[_player].Coal + _amount
 			end
 		end
 	end
