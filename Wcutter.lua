@@ -283,6 +283,7 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 	end
 	local range = GetEntityTypeNumBlockedPoints(Logic.GetEntityType(_treeid)) * 100
 	if IsNear(_id, _treeid, range + WCutter.ApproachRangeBonus) then
+		Logic.SetTaskList(_id, TaskLists.TL_NPC_IDLE)
 		Logic.EntityLookAt(_id, _treeid)
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.Cut[_id])
