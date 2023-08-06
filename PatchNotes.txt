@@ -824,6 +824,8 @@ Die Siegessäule kann nun nicht mehr abgerissen werden.
 
 Einige Modelle und Texturen wurden überarbeitet.
 
+Die Münzstätte erhöht nun den Zahltag um 2% anstatt 1,5%. Das Maximum wurde von 15% auf 20% angehoben.
+
 Heldenbalancing:
 Kala Giftpfeile Abklingzeit [s] 38 -> 30
 Kala Giftpfeile Schaden 80 -> 90

@@ -343,7 +343,7 @@ function GUIUpdate_MercenaryTower(_button)
 	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),TimePassed, RechargeTime)
 
 end
-BS.MintValues = {WorkersNeeded = 3, BonusPerMint = 0.015, MaxBonus = 0.15}
+BS.MintValues = {WorkersNeeded = 3, BonusPerMint = 0.02, MaxBonus = 0.2}
 BS.MintValues.MaxTotalFactor = 1 + BS.MintValues.MaxBonus
 BS.MintValues.MaxNumberOfMints = math.ceil(BS.MintValues.MaxBonus / BS.MintValues.BonusPerMint)
 BS.MintValues.BonusInPercent = BS.MintValues.BonusPerMint * 100
