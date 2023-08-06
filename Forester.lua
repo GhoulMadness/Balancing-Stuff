@@ -60,10 +60,10 @@ Forester.LandscapeTreeSets = {["European"] = {	"XD_Tree1",
 											},
 							["Steppe"] 	=	{	"XD_OliveTree1",
 												"XD_OliveTree2",
-												"XD_DeadTree1",
-												"XD_DeadTree2",
-												"XD_DeadTree4",
-												"XD_DeadTree6",
+												"XD_DeadTree01",
+												"XD_DeadTree02",
+												"XD_DeadTree04",
+												"XD_DeadTree06",
 												"XD_Palm1",
 												"XD_Palm2",
 												"XD_Palm3",
@@ -76,10 +76,10 @@ Forester.LandscapeTreeSets = {["European"] = {	"XD_Tree1",
 												"XD_Fir1_small",
 												"XD_Fir2",
 												"XD_Fir2_small",
-												"XD_DeadTree1",
-												"XD_DeadTree2",
-												"XD_DeadTree4",
-												"XD_DeadTree6",
+												"XD_DeadTree01",
+												"XD_DeadTree02",
+												"XD_DeadTree04",
+												"XD_DeadTree06",
 												"XD_DeadTreeEvelance1",
 												"XD_DeadTreeEvelance2",
 												"XD_DeadTreeEvelance3",
@@ -99,6 +99,8 @@ Forester.LandscapeTreeSets = {["European"] = {	"XD_Tree1",
 												"XD_TreeMoor9"
 											}
 							}
+-- table with blocking values
+Forester.NumBlockedPointsBySuffix = {}
 -- table that concenates terrain types with landscape types
 Forester.LandscapeTypeBySoilTexture = {
 									[1] = "European",
@@ -524,8 +526,13 @@ Forester_TreeGrowthControl = function(_id, _suffixName)
 		return true
 	end
 	if GetEntitySize(_id) >= 1 then
+		local range = Forester.NumBlockedPointsBySuffix[_suffixName]
+		if not range then
+			range = GetEntityTypeNumBlockedPoints(Entities[_suffixName])
+			Forester.NumBlockedPointsBySuffix[_suffixName] = range
+		end
 		local posX, posY = Logic.GetEntityPosition(_id)
-		if Logic.GetEntitiesInArea(0, posX, posY, 100, 1, 6) == 0 then
+		if Logic.GetEntitiesInArea(0, posX, posY, range*100, 1, 6) == 0 then
 			local newID = ReplaceEntity(_id, Entities[_suffixName])
 			Forester.TriggerIDs.Tree.Cutted[newID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","Forester_Tree_OnTreeCutted",1,{},{newID})
 			return true

@@ -79,7 +79,7 @@ function GUIUpdate_Experience()
 			break
 		end
 	end
-	
+
 	XGUIEng.SetText( CurrentWidgetID, " @ra "..XP .." (LVL ".. LVL ..")")
 
 end
@@ -343,7 +343,7 @@ function GUIUpdate_MercenaryTower(_button)
 	XGUIEng.SetProgressBarValues(XGUIEng.GetWidgetID(gvMercenaryTower.RechargeButton[_button]),TimePassed, RechargeTime)
 
 end
-BS.MintValues = {WorkersNeeded = 3, BonusPerMint = 0.015, MaxBonus = 0.15}
+BS.MintValues = {WorkersNeeded = 3, BonusPerMint = 0.02, MaxBonus = 0.2}
 BS.MintValues.MaxTotalFactor = 1 + BS.MintValues.MaxBonus
 BS.MintValues.MaxNumberOfMints = math.ceil(BS.MintValues.MaxBonus / BS.MintValues.BonusPerMint)
 BS.MintValues.BonusInPercent = BS.MintValues.BonusPerMint * 100
@@ -519,6 +519,26 @@ function GUIUpdate_MintTaxBonus()
 
 end
 
+function GUIUpdate_Hero6Ability(_Ability)
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local ProgressBarWidget = gvHero6.GetRechargeButtonByAbilityName(_Ability)
+	local HeroID = GUI.GetSelectedEntity()
+	local TimePassed = math.floor(Logic.GetTime()- gvHero6.LastTimeUsed[_Ability])
+	local cooldown = gvHero6.Cooldown[_Ability]
+	
+	if TimePassed < cooldown then
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
+		XGUIEng.HighLightButton(CurrentWidgetID,0)
+		XGUIEng.DisableButton(CurrentWidgetID,1)
+	else
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
+		XGUIEng.DisableButton(CurrentWidgetID,0)
+	end
+
+	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
+
+end
 function GUIUpdate_Hero13Ability(_Ability)
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
@@ -1256,4 +1276,17 @@ function GUIUpdate_TaxesButtons()
 	XGUIEng.HighLightButton(gvGUI_WidgetID.TaxesButtons[TaxLevel] ,1)
 	XGUIEng.HighLightButton(gvGUI_WidgetID.TaxesButtonsOP[TaxLevel] ,1)
 
+end
+
+function GUIUpdate_CoalUsage()
+	
+	local PlayerID = GUI.GetPlayerID()
+	local type = Logic.GetEntityType(GUI.GetSelectedEntity())
+	if gvCoal.Usage[PlayerID][type] == true then
+		XGUIEng.ShowWidget("Activate_CoalUsage", 0)
+		XGUIEng.ShowWidget("Deactivate_CoalUsage", 1)
+	else
+		XGUIEng.ShowWidget("Activate_CoalUsage", 1)
+		XGUIEng.ShowWidget("Deactivate_CoalUsage", 0)
+	end
 end

@@ -140,8 +140,20 @@ PrepareBriefing = function(_briefing)
 	-- stop humen players leaders from moving
 	local player = GetAllHumenPlayer()
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
-		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) and not string.find(Logic.GetCurrentTaskList(eID), "TRAIN") then
+		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) and not string.find(Logic.GetCurrentTaskList(eID), "TRAIN") and not string.find(Logic.GetCurrentTaskList(eID), "LEAVE") then
 			Logic.GroupDefend(eID)
+		end
+	end
+	local num, id = Logic.GetEntities(Entities.PB_Dome, 1)
+	if num > 0 and Logic.IsConstructionComplete(id) == 1 then
+	-- dome is finished, timer runs: add some extra time when triggering a briefing
+		for i = 1,999 do
+			if Counter["counter"..i] then
+				if Counter["counter"..i].Show then
+					Counter["counter"..i].Limit = Counter["counter"..i].Limit + 180
+					break
+				end
+			end
 		end
 	end
 	--	prepare camera
@@ -1842,6 +1854,19 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	end
 end
+-- gets entity type num blocked points value (block field in s-m x and y)
+function GetEntityTypeNumBlockedPoints(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.EntityTypeNumBlockedPoints then
+		BS.MemValues.EntityTypeNumBlockedPoints = {}
+	end
+	if BS.MemValues.EntityTypeNumBlockedPoints[_entityType] then
+		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
+	else
+		BS.MemValues.EntityTypeNumBlockedPoints[_entityType] = GetEntityTypePointer(_entityType)[22]:GetInt()
+		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
+	end
+end
 ------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- entity id related --------------------------------------------------------------------------
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
@@ -1931,10 +1956,16 @@ function GetEntitySize(_entityID)
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
 end
 -- set entity size (relative to 1)
-function SetEntitySize(_entityID,_size)
+function SetEntitySize(_entityID, _size)
 	assert( IsValid(_entityID) , "invalid entityID" )
 	assert( type(_size) == "number", "size needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
+end
+-- set entity model (gets resetted when task changes)
+function SetEntityModel(_entityID, _id)
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( type(_id) == "number", "model id needs to be a number")
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:SetInt(_id)
 end
 --[[GetMilitaryBuildingMaxTrainSlots
 CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]
@@ -2390,7 +2421,7 @@ BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 		if Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(eID) then
 			local _X, _Y = Logic.GetEntityPosition(eID)
 			local distancepow2 = (_X - posX)^2 + (_Y - posY)^2
-			if Logic.GetFoundationTop(eID) ~= 0 then
+			if Logic.GetFoundationTop(eID) ~= 0 or Logic.IsEntityInCategory(eID, EntityCategories.Bridge) == 1 then
 				distancepow2 = distancepow2 / 2
 			end
 			table.insert(distancepow2table, {id = eID, dist = distancepow2})
@@ -2539,8 +2570,6 @@ function CheckForBetterTarget(_eID, _target, _range)
 			return target
 		elseif not _target and target then
 			return target
-		else
-			return
 		end
 	end
 	if _target and Logic.IsEntityAlive(_target) and sector == Logic.GetSector(_target) then

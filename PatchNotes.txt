@@ -801,4 +801,47 @@ Das Defensivverhalten von Rekrutierungsarmeen wurde überarbeitet.
 
 Rekrutierungsarmeen können nun ihre Truppen an mehreren Militärgebäuden desselben Typs gleichzeitig ausbilden.
 
+--- Version 0.745
+
+Die Siegerstatue des Osterturniers 2023 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Roma und Mathias!
+
+Neue Gebäude und ein neuer Ressourcentyp sind nun verfügbar.
+
+Es wurde ein Fehler behoben, durch den Truppen in Rekrutierungsgebäuden beim Auslösen von Briefings und Cutscenes stehen bleiben konnten.
+
+Es wurde ein Fehler behoben, durch den keine Truppen auf den Schützenturm klettern konnten, wenn dieser gegen den Uhrzeigersinn gedreht wurde.
+
+Anti-Gebäude-Kanonen der KI fokussieren nun Schützentürme ein wenig mehr.
+
+Bärenmenschen haben selbst im späteren Spielverlauf noch sehr viel Schaden ausgehalten, obwohl sie eine offensiv ausgerichtete Einheit sein sollen. Daher wurde folgende Änderung vorgenommen:
+Rüstungswert Bärenmenschen 3 -> 2
+
+Ingenieure produzieren nun nur noch 5 Wetterenergie pro Zyklus anstatt 10.
+
+Brücken bieten nun mehr Platz zur Überquerung.
+
+Die Siegessäule kann nun nicht mehr abgerissen werden.
+
+Einige Modelle und Texturen wurden überarbeitet.
+
+Die Münzstätte erhöht nun den Zahltag um 2% anstatt 1,5%. Das Maximum wurde von 15% auf 20% angehoben.
+
+Heldenbalancing:
+Kala Giftpfeile Abklingzeit [s] 38 -> 30
+Kala Giftpfeile Schaden 80 -> 90
+Kala Giftnebel Abklingzeit [s] 27 -> 22
+Kala Giftnebel Schaden 50 -> 60
+
+Die durch Ari gerufenen Banditen sind nun vollständige Trupps mit je 6 Soldaten.
+Anzahl gerufene Banditen 6 -> 4
+
+Helias Segnung hat nun einen passiven Effekt: Solange der Spieler vollen Glauben hat und die Fähigkeit nicht aktiv ist, erleidet Helias halben Schaden.
+Solange die Fähigkeit aktiv ist, erleiden alle nahen verbündeten Einheiten weniger Schaden abhängig vom Glauben, jeder reduzierte Schaden kostet aber auch Glauben.
+Helias hat nun eine weitere Fähigkeit: Sakrileg: Während der Wirkdauer geht sämtlicher Glauben, den Gegner generieren, stattdessen an Helias' Spieler.
+
+Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fähigkeit (bis auf ein Minimum, welches nicht unterschritten werden kann).
+
+Dovbars Götterdämmerung und Erebos Höllenfeuer-Aura verursachen nun keinen Schaden mehr an Einheiten und Gebäude neutral gesinnter Spieler.
+
+
 

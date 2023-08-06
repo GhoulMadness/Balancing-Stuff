@@ -361,6 +361,20 @@ function GUIAction_ChangeToThunderstorm(_playerID, _EntityID)
 
 end
 -----------------------------------------------------------------------------------------------------------------------------
+function GUIAction_Hero6Sacrilege()
+	local heroID = GUI.GetSelectedEntity()
+	local player = Logic.EntityGetPlayer(heroID)
+	local starttime = Logic.GetTime()
+	gvHero6.LastTimeUsed.Sacrilege = starttime
+	if CNetwork then
+		CNetwork.SendCommand("Ghoul_Hero6Sacrilege",player,heroID)
+	else
+		if not gvHero6.TriggerIDs.Sacrilege[player] then
+			gvHero6.TriggerIDs.Sacrilege[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Hero6_Sacrilege_Trigger", 1, nil, {heroID,player,starttime})
+		end
+	end
+end
+-----------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Hero13StoneArmor()
 
 	local heroID = GUI.GetSelectedEntity()
@@ -878,4 +892,13 @@ function GUIAction_SelectEntityInCategory(_catstring)
 	local IDPosX, IDPosY = Logic.GetEntityPosition(EntityID)
 	Camera.ScrollSetLookAt(IDPosX, IDPosY)
 	GUI.SetSelectedEntity(EntityID )
+end
+function GUIAction_ActivateCoalUsage(_flag)
+	local player = GUI.GetPlayerID()
+	local type = Logic.GetEntityType(GUI.GetSelectedEntity())
+	if CNetwork then
+		CNetwork.SendCommand("Ghoul_CoalUsageChange", _flag, player, type)
+	else
+		gvCoal.AdjustTypeList(_flag, player, type)
+	end
 end

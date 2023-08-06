@@ -40,6 +40,9 @@ function Mission_OnSaveGameLoaded()
 		Logic.PlayerSetIsHumanFlag(PIDs[i], 1)
 		Logic.PlayerSetPlayerColor(PIDs[i], GUI.GetPlayerColor(PIDs[i]))
 	end
+	for i = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
+		Display.SetPlayerColorMapping(i, XNetwork.GameInformation_GetLogicPlayerColor(i))
+	end
 	gvGUI_WidgetID.TaxesButtonsOP = {}
 	gvGUI_WidgetID.TaxesButtonsOP[0] = 	"SetVeryLowTaxes_OP"
 	gvGUI_WidgetID.TaxesButtonsOP[1] = 	"SetLowTaxes_OP"
@@ -73,6 +76,8 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 		StartCountdown(10*60,DomeVictory,true,"Dome_Victory")
 	elseif eType == Entities.PB_ForestersHut1 then
 		OnForester_Created(_BuildingID)
+	elseif eType == Entities.PB_WoodcuttersHut1 then
+		OnWCutter_Created(_BuildingID)
 	elseif Scaremonger.MotiEffect[eType] then
 		Scaremonger.MotiDebuff(_PlayerID,eType)
 	elseif eType == Entities.PB_Beautification13 then
@@ -167,7 +172,14 @@ function GameCallback_GUI_SelectionChanged()
 
 		--Check selected building Type
 		if Logic.IsConstructionComplete( EntityId ) == 1 then
-
+			
+			--Check for Coal button
+			if gvCoal.AllowedTypes[EntityType] then
+				XGUIEng.ShowWidget("ToggleCoalUsage",1)
+			else
+				XGUIEng.ShowWidget("ToggleCoalUsage",0)
+			end
+		
 			local ButtonStem = ""
 
 			--Is EntityType the Silvermine?
@@ -183,6 +195,10 @@ function GameCallback_GUI_SelectionChanged()
 			elseif UpgradeCategory == UpgradeCategories.GoldMine then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Goldmine"),1)
 				ButtonStem =  "Upgrade_Goldmine"
+			--Is EntityType the Coalmine?
+			elseif UpgradeCategory == UpgradeCategories.Coalmine then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Coalmine"),1)
+				ButtonStem =  "Upgrade_Coalmine"
 
 			elseif UpgradeCategory == UpgradeCategories.Beautification07 then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("MechanicalClock"),1)
@@ -350,30 +366,22 @@ end
 function GameCallback_RefinedResource(_entityID, _type, _amount)
 
     local playerID = Logic.EntityGetPlayer(_entityID)
+	local etype = Logic.GetEntityType(Logic.GetSettlersWorkBuilding(_entityID))
 
     if _type == ResourceType.Gold then
 
         if Logic.GetTechnologyState(playerID, Technologies.T_BookKeeping) == 4 then
-            local work = Logic.GetSettlersWorkBuilding(_entityID)
-            _amount = (refined_resource_gold[Logic.GetEntityType(work)] or _amount)
-
-		else
-
-			if gvChallengeFlag then
-				local work = Logic.GetSettlersWorkBuilding(_entityID)
-				_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
-			end
-
+            _amount = _amount + 1
         end
 
-	else
-
-		if gvChallengeFlag then
-			local work = Logic.GetSettlersWorkBuilding(_entityID)
-			_amount = (basevalue_refined_resources[Logic.GetEntityType(work)] or _amount)
-		end
-
     end
+
+	if gvCoal.Usage[playerID][etype] then
+		if Logic.GetPlayersGlobalResource(playerID, ResourceType.Knowledge) >= gvCoal.ResourceNeeded[etype] then
+			Logic.SubFromPlayersGlobalResource(playerID, ResourceType.Knowledge, gvCoal.ResourceNeeded[etype])
+			_amount = _amount + gvCoal.ResourceBonus[etype]
+		end
+	end
 
     if GameCallback_RefinedResourceOrig then
         return GameCallback_RefinedResourceOrig(_entityID, _type, _amount)
@@ -501,6 +509,10 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		return allowed and (Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(), _eType) < 1) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 
+	elseif _eType == Entities.PB_CoalMine1 then
+
+		return gvCoal.Mine.PlacementCheck(_x, _y, _rotation) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+
 	elseif _eType == Entities.PB_Archers_Tower and not gvXmas2021ExpFlag and not gvXmasEventFlag then
 
 		local checkorientation = true
@@ -514,6 +526,18 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		return allowed and checkorientation and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 
 	elseif _eType == Entities.PB_ForestersHut1 then
+
+		local checkorientation = true
+
+		if _rotation == 0 or _rotation == 360 then
+			checkorientation = true
+		else
+			checkorientation = false
+		end
+
+		return allowed and checkorientation and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1) and (Logic.GetPlayerAttractionLimit(GUI.GetPlayerID()) > 0)
+		
+	elseif _eType == Entities.PB_WoodcuttersHut1 then
 
 		local checkorientation = true
 
@@ -821,17 +845,27 @@ GameCallback_UnknownTask = function(_id)
 	1: weiter nächster Tick
 	2: bleiben
 ]]
-	if GetEntityCurrentTaskIndex(_id) == 3 then
+	--[[if Logic.GetEntityType(_id) == Entities.PU_WoodCutter and GetEntityCurrentTaskIndex(_id) == 6 then
 		if WCutter.FindNearestTree(_id) > 0 then
 			WCutter.StartWork(_id, WCutter.FindNearestTree(_id))
-			return 2
+			return 1
 		else
-			SetEntityCurrentTaskIndex(_id, 1)
-			--[[ TODO: return param crucial?
-			return 0]]
+			SetEntityCurrentTaskIndex(_id, 0)
+			return 1
 		end
+	end]]
+	
+	if Logic.GetEntityType(_id) == Entities.PU_CoalMaker then
+		local posX, posY = Logic.GetEntityPosition(_id)
+		local work = Logic.GetSettlersWorkBuilding(_id)
+		local eff1 = Logic.CreateEffect(GGL_Effects.FXFire, posX, posY - 150)
+		local eff2 = Logic.CreateEffect(GGL_Effects.FXFireLo, posX, posY - 150)
+		local eff3 = Logic.CreateEffect(GGL_Effects.FXFireMedium, posX, posY - 150)
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Coalmaker_RemoveFireEffect",1,{},{work, eff1, eff2, eff3})
+		return 1
 	end
 end
+
 function GameCallback_OnPointToResource(_foundPos, _unused)
 
 	if gvScoutUsedPointToResources then
@@ -845,13 +879,29 @@ function GameCallback_OnPointToResource(_foundPos, _unused)
 end
 -- weather energy infinite resources fix
 GameCallback_ResourceChanged = function(_player, _type, _amount)
-	if _type == ResourceType.WeatherEnergy then
-		if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetEnergyRequiredForWeatherChange() then
-			Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetEnergyRequiredForWeatherChange())
-		end
-	elseif _type == ResourceType.Faith then
-		if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetMaximumFaith() then
-			Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetMaximumFaith())
+	if _player > 0 and _player < 17 and _amount > 0 then
+		if _type == ResourceType.WeatherEnergy then
+			if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetEnergyRequiredForWeatherChange() then
+				Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetEnergyRequiredForWeatherChange())
+			end
+		elseif _type == ResourceType.Faith then
+			if Logic.GetPlayersGlobalResource(_player, _type) > Logic.GetMaximumFaith() then
+				Logic.SubFromPlayersGlobalResource(_player, _type, Logic.GetPlayersGlobalResource(_player, _type) - Logic.GetMaximumFaith())
+			end
+			-- helias sacrilege resource redirect
+			local enemies = BS.GetAllEnemyPlayerIDs(_player)
+			for i = 1,table.getn(enemies) do
+				if gvHero6.Sacrilege.Active[enemies[i]] then
+					if _amount > 0 and not gvHero6.Sacrilege.Active[_player] then
+						Logic.AddToPlayersGlobalResource(enemies[i], _type, _amount)
+						Logic.SubFromPlayersGlobalResource(_player, _type, _amount)
+					end
+				end
+			end
+		elseif _type == ResourceType.Knowledge then
+			if ExtendedStatistics then
+				ExtendedStatistics.Players[_player].Coal = ExtendedStatistics.Players[_player].Coal + _amount
+			end
 		end
 	end
 end

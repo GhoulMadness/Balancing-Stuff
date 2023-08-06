@@ -85,6 +85,9 @@ gvArchers_Tower.Offset_ByOrientation = {[0] = {	X = 0,
 function gvArchers_Tower.GetOffset_ByOrientation(_entity)
 
 	local orientation = Logic.GetEntityOrientation(_entity)
+	while orientation < 0 do
+		orientation = orientation + 360
+	end
 	return gvArchers_Tower.Offset_ByOrientation[orientation]
 
 end

@@ -146,6 +146,35 @@ if CNetwork then
 
 	)
 
+	CNetwork.SetNetworkHandler("Ghoul_Hero6Sacrilege",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero6 then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+
+				CLogger.Log("Ghoul_Hero6Sacrilege", name, _playerID,_heroID)
+				-- Cooldown handling
+				gvHero6.Sacrilege.NextCooldown = gvHero6.Sacrilege.NextCooldown or {}
+				local starttime = Logic.GetTime()
+
+				if gvHero6.Sacrilege.NextCooldown[_playerID] then
+					if gvHero6.Sacrilege.NextCooldown[_playerID] > starttime then
+						return
+					end
+				end
+				-- update cooldown.
+				gvHero6.Sacrilege.NextCooldown[_playerID] = Logic.GetTime() + (gvHero6.Cooldown.Sacrilege)
+				-- execute stuff
+				if not gvHero6.TriggerIDs.Sacrilege[_playerID] then
+					gvHero6.TriggerIDs.Sacrilege[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Hero6_Sacrilege_Trigger", 1, nil, {_heroID,_playerID,starttime})
+				end
+			end
+
+		end
+
+	)
+
 	CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor",
 		function(name,_playerID,_heroID)
 			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
@@ -327,7 +356,7 @@ if CNetwork then
 			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
 				return
 			end
-			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 
 				CLogger.Log("Ghoul_Hero14LifestealAura", name, _playerID,_heroID)
 
@@ -363,9 +392,9 @@ if CNetwork then
 			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero14 then
 				return
 			end
-			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 
-				CLogger.Log("Ghoul_Hero14RisingEvil", name, _playerID,_heroID)
+				CLogger.Log("Ghoul_Hero14RisingEvil", name, _playerID, _heroID)
 
 				-- Cooldown handling
 				gvHero14.RisingEvil.NextCooldown = gvHero14.RisingEvil.NextCooldown or {}
@@ -397,10 +426,23 @@ if CNetwork then
 	CNetwork.SetNetworkHandler("Ghoul_Forester_WorkChange",
 		function(name, _playerID, _id, _flag)
 
-			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
 				CLogger.Log("Ghoul_Forester_WorkChange", name, _playerID, _id, _flag)
 				-- execute stuff
 				Forester.WorkChange(_id, _flag)
+			end
+
+		end
+
+	)
+
+	CNetwork.SetNetworkHandler("Ghoul_CoalUsageChange",
+		function(name, _flag, _playerID, _type)
+
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+				CLogger.Log("Ghoul_CoalUsageChange", name, _playerID, _id, _flag)
+				-- execute stuff
+				gvCoal.AdjustTypeList(_flag, _playerID, _type)
 			end
 
 		end

@@ -168,6 +168,19 @@ function GUITooltip_ResourceWeatherEnergy()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, Text)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 end
+function GUITooltip_ResourceCoal()
+	local CostString = " "
+	local ShortCutToolTip = " "
+	local TooltipText = " "
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
+		TooltipText = "@color:180,180,180 Kohle @cr @color:255,255,255,255 Diese Menge Kohle steht Euch im Moment zur Verfügung."
+	else
+		TooltipText = "@color:180,180,180 Coal @cr @color:255,255,255,255 This amount of coal is currently available to you."
+	end
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, TooltipText)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
+end
 function GUITooltip_DetailedResourceView()
 	local CostString = " "
 	local ShortCutToolTip = " "
