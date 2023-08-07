@@ -843,5 +843,18 @@ Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fäh
 
 Dovbars Götterdämmerung und Erebos Höllenfeuer-Aura verursachen nun keinen Schaden mehr an Einheiten und Gebäude neutral gesinnter Spieler.
 
+--- Version 0.746
+
+Es wurde ein Fehler behoben, durch den Köhler nicht von der Segnung 'Heiligsprechnung' betroffen waren.
+
+Es wurde ein Fehler im Zusammenhang mit der Anzeige der Kohleverwendung für Zuschauer behoben.
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn die Holzfällerhütte abgerissen wurde während sich der Holzfäller innerhalb dieser befunden hat.
+
+In der Holzfällerhütte, der Kohlemine und der Köhlerei könnt ihr nun einsehen, wie viele Rohstoffe erhalten wurden. 
+In der Köhlerei wird zusätzlich die Menge verbrannter Baumstämme angezeigt.
+
+Die Menge geförderte Kohle aus der Kohlemine ist nun abhängig von der Ausbaustufe und kann durch die Spitzhacke weiter erhöht werden.
+
 
 

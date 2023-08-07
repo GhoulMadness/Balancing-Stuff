@@ -526,7 +526,7 @@ function GUIUpdate_Hero6Ability(_Ability)
 	local HeroID = GUI.GetSelectedEntity()
 	local TimePassed = math.floor(Logic.GetTime()- gvHero6.LastTimeUsed[_Ability])
 	local cooldown = gvHero6.Cooldown[_Ability]
-	
+
 	if TimePassed < cooldown then
 		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
 		XGUIEng.HighLightButton(CurrentWidgetID,0)
@@ -1279,9 +1279,12 @@ function GUIUpdate_TaxesButtons()
 end
 
 function GUIUpdate_CoalUsage()
-	
+
 	local PlayerID = GUI.GetPlayerID()
 	local type = Logic.GetEntityType(GUI.GetSelectedEntity())
+	if PlayerID == BS.SpectatorPID then
+		PlayerID = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
+	end
 	if gvCoal.Usage[PlayerID][type] == true then
 		XGUIEng.ShowWidget("Activate_CoalUsage", 0)
 		XGUIEng.ShowWidget("Deactivate_CoalUsage", 1)
@@ -1289,4 +1292,34 @@ function GUIUpdate_CoalUsage()
 		XGUIEng.ShowWidget("Activate_CoalUsage", 1)
 		XGUIEng.ShowWidget("Deactivate_CoalUsage", 0)
 	end
+end
+
+function GUIUpdate_CoalMineAmount()
+
+	local id = GUI.GetSelectedEntity()
+	local amount = gvCoal.Mine.AmountMined[id] or 0
+	local pretext = gvCoal.Mine.TooltipText[string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName())]
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), pretext .. amount)
+end
+function GUIUpdate_CoalMakerCoalAmount()
+
+	local id = GUI.GetSelectedEntity()
+	local amount = gvCoal.Coalmaker.CoalEarned[id] or 0
+	local pretext = gvCoal.Coalmaker.TooltipText.Coal[string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName())]
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), pretext .. amount)
+end
+
+function GUIUpdate_CoalMakerWoodAmount()
+
+	local id = GUI.GetSelectedEntity()
+	local amount = gvCoal.Coalmaker.WoodBurned[id] or 0
+	local pretext = gvCoal.Coalmaker.TooltipText.Wood[string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName())]
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), pretext .. amount)
+end
+function GUIUpdate_WoodcutterAmount()
+
+	local id = WCutter.GetWorkerIDByBuildingID(GUI.GetSelectedEntity())
+	local amount = WCutter.WoodEarned[id] or 0
+	local pretext = WCutter.TooltipText[string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName())]
+	XGUIEng.SetText(XGUIEng.GetCurrentWidgetID(), pretext .. amount)
 end

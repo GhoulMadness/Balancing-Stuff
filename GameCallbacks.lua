@@ -10,6 +10,7 @@ HeroWidgetUpdate_ShowHeroWidgetOrig = HeroWidgetUpdate_ShowHeroWidget
 GameCallback_GUI_EntityIDChangedOrig = GameCallback_GUI_EntityIDChanged
 GameCallback_UnknownTaskOrig = GameCallback_UnknownTask
 Mission_OnSaveGameLoadedOrig = Mission_OnSaveGameLoaded
+GameCallback_ResourceTakenOrig = GameCallback_ResourceTaken
 
 function Mission_OnSaveGameLoaded()
 	Mission_OnSaveGameLoadedOrig()
@@ -172,14 +173,14 @@ function GameCallback_GUI_SelectionChanged()
 
 		--Check selected building Type
 		if Logic.IsConstructionComplete( EntityId ) == 1 then
-			
+
 			--Check for Coal button
 			if gvCoal.AllowedTypes[EntityType] then
 				XGUIEng.ShowWidget("ToggleCoalUsage",1)
 			else
 				XGUIEng.ShowWidget("ToggleCoalUsage",0)
 			end
-		
+
 			local ButtonStem = ""
 
 			--Is EntityType the Silvermine?
@@ -261,6 +262,12 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the Forester?
 			elseif UpgradeCategory == UpgradeCategories.Forester then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Forester"),1)
+			--Is EntityType the Woodcutter?
+			elseif UpgradeCategory == UpgradeCategories.Woodcutter then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Woodcutter"),1)
+			--Is EntityType the Coalmaker?
+			elseif UpgradeCategory == UpgradeCategories.Coalmaker then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Coalmaker"),1)
 			end
 			--Update Upgrade Buttons
 			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)
@@ -536,7 +543,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 		end
 
 		return allowed and checkorientation and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1) and (Logic.GetPlayerAttractionLimit(GUI.GetPlayerID()) > 0)
-		
+
 	elseif _eType == Entities.PB_WoodcuttersHut1 then
 
 		local checkorientation = true
@@ -839,30 +846,72 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 	GameCallback_GUI_EntityIDChangedOrig(_OldID, _NewID)
 end
 
+function GameCallback_ResourceTaken(_id, _type, _amount)
+
+	local etype = Logic.GetEntityType(_id)
+
+	if etype == Entities.PU_CoalMaker then
+		local work = Logic.GetSettlersWorkBuilding(_id)
+		local tab = gvCoal.Coalmaker.WoodBurned
+		tab[work] = tab[work] + _amount
+	end
+
+	if GameCallback_ResourceTakenOrig then
+		return GameCallback_ResourceTakenOrig(_id, _type, _amount)
+	else
+		return _id, _type, _amount
+	end
+end
+
 GameCallback_UnknownTask = function(_id)
 
 --[[0: weiter sofort
 	1: weiter nächster Tick
 	2: bleiben
 ]]
-	--[[if Logic.GetEntityType(_id) == Entities.PU_WoodCutter and GetEntityCurrentTaskIndex(_id) == 6 then
-		if WCutter.FindNearestTree(_id) > 0 then
-			WCutter.StartWork(_id, WCutter.FindNearestTree(_id))
-			return 1
-		else
-			SetEntityCurrentTaskIndex(_id, 0)
+	local etype = Logic.GetEntityType(_id)
+	local player = Logic.EntityGetPlayer(_id)
+	local work = Logic.GetSettlersWorkBuilding(_id)
+
+	if etype == Entities.PU_CoalMaker then
+		local tab = gvCoal.Coalmaker
+		if GetEntityCurrentTaskIndex(_id) == 15 then
+			local posX, posY = Logic.GetEntityPosition(_id)
+			local eff1 = Logic.CreateEffect(GGL_Effects.FXFire, posX, posY - 150)
+			local eff2 = Logic.CreateEffect(GGL_Effects.FXFireLo, posX, posY - 150)
+			local eff3 = Logic.CreateEffect(GGL_Effects.FXFireMedium, posX, posY - 150)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Coalmaker_RemoveFireEffect",1,{},{work, eff1, eff2, eff3})
 			return 1
 		end
-	end]]
-	
-	if Logic.GetEntityType(_id) == Entities.PU_CoalMaker then
-		local posX, posY = Logic.GetEntityPosition(_id)
-		local work = Logic.GetSettlersWorkBuilding(_id)
-		local eff1 = Logic.CreateEffect(GGL_Effects.FXFire, posX, posY - 150)
-		local eff2 = Logic.CreateEffect(GGL_Effects.FXFireLo, posX, posY - 150)
-		local eff3 = Logic.CreateEffect(GGL_Effects.FXFireMedium, posX, posY - 150)
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Coalmaker_RemoveFireEffect",1,{},{work, eff1, eff2, eff3})
-		return 1
+		for i = 1, table.getn(tab.Cycle) do
+			if GetEntityCurrentTaskIndex(_id) == tab.Cycle[i].TaskIndex then
+				Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, tab.Cycle[i].ResourceAmount)
+				tab.CoalEarned[work] = tab.CoalEarned[work] + tab.Cycle[i].ResourceAmount
+				return 0
+			end
+		end
+	elseif etype == Entities.PU_Miner then
+		local tab = gvCoal.Mine
+		local task = Logic.GetCurrentTaskList(_id)
+		local factor = (Logic.GetTechnologyState(player, Technologies.T_PickAxe) == 4 and tab.PickaxeFactor) or 1
+		local res = tab.ResourceByLevel[Logic.GetUpgradeLevelForBuilding(work) + 1]
+		if task == "TL_MINER_COALMINE_WORK1" then
+			for i = 1, table.getn(tab.Cycle.Outside) do
+				if GetEntityCurrentTaskIndex(_id) == tab.Cycle.Outside[i].TaskIndex then
+					Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, round(res * factor))
+					tab.AmountMined[work] = tab.AmountMined[work] + round(res * factor)
+					return 0
+				end
+			end
+		elseif task == "TL_MINER_COALMINE_WORK_INSIDE" then
+			for i = 1, table.getn(tab.Cycle.Inside) do
+				if GetEntityCurrentTaskIndex(_id) == tab.Cycle.Inside[i].TaskIndex then
+					Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, round(res * factor))
+					tab.AmountMined[work] = tab.AmountMined[work] + round(res * factor)
+					return 0
+				end
+			end
+		end
 	end
 end
 

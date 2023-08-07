@@ -664,6 +664,16 @@ function SpezEntityPlaced()
 
 	end
 
+	if entityType == Entities.PB_CoalmakersHut1 then
+		gvCoal.Coalmaker.WoodBurned[entityID] = 0
+		gvCoal.Coalmaker.CoalEarned[entityID] = 0
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmaker_Destroyed", 1,{},{entityID})
+	end
+	if entityType == Entities.PB_CoalMine1 or entityType == Entities.PB_CoalMine2 then
+		gvCoal.Mine.AmountMined[entityID] = 0
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmine_Destroyed", 1,{},{entityID})
+	end
+
 end
 
 function DomeFallen()

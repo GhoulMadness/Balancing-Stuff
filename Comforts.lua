@@ -2798,7 +2798,7 @@ GetLeadersTrainingAtMilitaryBuilding = function(_id)
 end
 function IsCannonType(_type)
 	assert(type(_type) == "number" and _type > 0, "invalid entity type")
-	if _type == Entities.PV_Cannon1 or _type == Entities.PV_Cannon2 or _type == Entities.PV_Cannon3 
+	if _type == Entities.PV_Cannon1 or _type == Entities.PV_Cannon2 or _type == Entities.PV_Cannon3
 	or _type == Entities.PV_Cannon4 or _type == Entities.PV_Cannon5 or _type == Entities.PV_Cannon5
 	or _type == Entities.PV_Catapult then
 		return true
