@@ -1967,8 +1967,12 @@ function SetEntityModel(_entityID, _id)
 	assert( type(_id) == "number", "model id needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:SetInt(_id)
 end
---[[GetMilitaryBuildingMaxTrainSlots
-CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]
+-- get max number of military building train slots (default 3)
+function GetMilitaryBuildingMaxTrainSlots(_entityID)
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 1, "entity is no military building")
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()
+end
 gvVisibilityStates = {	[0] = 257,
 						[1] = 65793
 					}

@@ -854,7 +854,9 @@ Es wurde ein Fehler behoben, der auftreten konnte, wenn die Holzfällerhütte ab
 In der Holzfällerhütte, der Kohlemine und der Köhlerei könnt ihr nun einsehen, wie viele Rohstoffe erhalten wurden. 
 In der Köhlerei wird zusätzlich die Menge verbrannter Baumstämme angezeigt.
 
-Die Menge geförderte Kohle aus der Kohlemine ist nun abhängig von der Ausbaustufe und kann durch die Spitzhacke weiter erhöht werden.
+Die Menge geförderter Kohle aus der Kohlemine ist nun abhängig von der Ausbaustufe und kann durch die Spitzhacke weiter erhöht werden.
+
+Fehlende Übersetzungen von Tooltips in polnischer, russischer und us-amerikanischer Sprache wurden hinzugefügt.
 
 
 
