@@ -101,7 +101,8 @@ WCutter.TreeTypes = {Entities.XD_AppleTree1,
 					Entities.XD_Umbrella1,
 					Entities.XD_Umbrella2,
 					Entities.XD_Umbrella3,
-					Entities.XD_Willow1}
+					Entities.XD_Willow1,
+					Entities.XD_ResourceTree}
 -- table filled with respective trigger type IDs
 WCutter.TriggerIDs = {	WorkControl = {	Start = {},
 										Inside = {},
@@ -112,9 +113,11 @@ WCutter.TriggerIDs = {	WorkControl = {	Start = {},
 						CutTree = {},
 						RemoveTree = {},
 						Behavior = {FinishAnim = {},
-									WCutterDied = {}}
+									WCutterDied = {}},
+						TreeDestroyed = {}
 					}
 WCutter.WoodEarned = {}
+WCutter.TargettedTrees = {}
 WCutter.GetWorkerIDByBuildingID = function(_id)
 	return WCutter.BuildingBelongingWorker[_id]
 end
@@ -200,8 +203,16 @@ end
 WCutter.FindNearestTree = function(_id)
 	local distancetable = {}
 	local x,y = Logic.GetEntityPosition(_id)
+	local sector = Logic.GetSector(_id)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(WCutter.TreeTypes)), CEntityIterator.InCircleFilter(x, y, WCutter.MaxRange)) do
-		table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
+		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
+			local x_, y_ = Logic.GetEntityPosition(eID)
+			local x__, y__ = EvaluateNearestUnblockedPosition(x_, y_, GetEntityTypeNumBlockedPoints(Logic.GetEntityType(eID)) * 100 + WCutter.ApproachRangeBonus, 100)
+			local sector2 = CUtil.GetSector(x__/100, y__/100)
+			if sector == sector2 then
+				table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
+			end
+		end
 	end
 	table.sort(distancetable, function(p1, p2) return p1.dist < p2.dist end)
 	if distancetable and next(distancetable) then
@@ -212,7 +223,7 @@ WCutter.FindNearestTree = function(_id)
 	return 0
 end
 WCutter_WorkControl_Start = function(_id, _buildingID)
-	
+
 	if not IsExisting(_id) then
 		return true
 	end
@@ -228,14 +239,14 @@ WCutter_WorkControl_Start = function(_id, _buildingID)
 	if GetDistance(GetPosition(_id), buildingpos) <= 100 then
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.CarrierModel[_id])
 		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
-		Logic.SetEntityScriptingValue(_id, -30, 513)
+		SetEntityVisibility(_id, 0)
 		WCutter.TriggerIDs.WorkControl.Start[_id] = nil
 		WCutter.TriggerIDs.WorkControl.Inside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Inside",1,{},{_id, _buildingID})
 		return true
 	end
 end
 WCutter_WorkControl_Inside = function(_id, _buildingID)
-	
+
 	if not IsExisting(_id) then
 		return true
 	end
@@ -243,7 +254,7 @@ WCutter_WorkControl_Inside = function(_id, _buildingID)
 		local buildingpos = GetPosition(_buildingID)
 		local targetpos = {	X = buildingpos.X + WCutter.HomeSpotOffset.X,
 							Y = buildingpos.Y + WCutter.HomeSpotOffset.Y}
-		if Logic.GetEntityScriptingValue(_id, -30) == 513 then
+		if GetEntityVisibility(_id) == 0 then
 			if Counter.Tick2("WCutter_WorkControl_Inside_Delay_".. _id, WCutter.WorkCycleDelay[_id]) then
 				SetEntityModel(_id, Models.U_Woodcutter)
 				Logic.MoveEntity(_id, math.floor(targetpos.X), math.floor(targetpos.Y))
@@ -259,7 +270,7 @@ WCutter_WorkControl_Inside = function(_id, _buildingID)
 	end
 end
 WCutter_WorkControl_Outside = function(_id, _buildingID)
-	
+
 	if not IsExisting(_id) then
 		return true
 	end
@@ -270,21 +281,43 @@ WCutter_WorkControl_Outside = function(_id, _buildingID)
 		if Counter.Tick2("WCutter_WorkControl_Outside_Delay_".. _id, math.ceil(WCutter.WorkCycleDelay[_id]/3)) then
 			local id = WCutter.FindNearestTree(_id)
 			if id > 0 then
+				WCutter.TriggerIDs.TreeDestroyed[id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","OnTargettedTree_Destroyed",1,{},{_id, id})
+				WCutter.TargettedTrees[id] = true
 				WCutter.StartCutting(_id, id, _buildingID)
+				WCutter.TriggerIDs.WorkControl.Outside[_id] = nil
 				return true
 			end
 		end
 	end
 end
+OnTargettedTree_Destroyed = function(_id, _treeid)
+
+	local entityID = Event.GetEntityID()
+	if entityID == _treeid then
+		if WCutter.TriggerIDs.TreeDestroyed[_treeid] then
+			WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
+			WCutter.TargettedTrees[_treeid] = nil
+			WCutter.EndWorkCycle(_id)
+		end
+		return true
+	end
+end
 WCutter.StartCutting = function(_id, _treeid, _buildingID)
-	
+
 	if not WCutter.TriggerIDs.WorkControl.Cut[_id] then
 		Logic.MoveSettler(_id, Logic.GetEntityPosition(_treeid))
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_ArrivedAtTreeCheck", 1, {}, {_id, _treeid, _buildingID})
 	end
 end
 WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
-	
+
+	if not IsValid(_treeid) then
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
+		WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
+		WCutter.TargettedTrees[_treeid] = nil
+		WCutter.EndWorkCycle(_id)
+		return true
+	end
 	local range = GetEntityTypeNumBlockedPoints(Logic.GetEntityType(_treeid)) * 100
 	if IsNear(_id, _treeid, range + WCutter.ApproachRangeBonus) then
 		Logic.SetTaskList(_id, TaskLists.TL_NPC_IDLE)
@@ -300,7 +333,7 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 	end
 end
 WCutter.CutTree = function(_id, _treeid, _buildingID)
-	
+
 	local posX, posY = Logic.GetEntityPosition(_treeid)
 	local num, restree = Logic.GetEntitiesInArea(Entities.XD_ResourceTree, posX, posY, 10, 1)
 	local res_amount
@@ -309,6 +342,9 @@ WCutter.CutTree = function(_id, _treeid, _buildingID)
 	else
 		res_amount = WCutter.DefaultResourceAmount
 	end
+	WCutter.TargettedTrees[_treeid] = nil
+	Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
+	WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
 	local newID, etype = WCutter.BlockTree(_treeid, 2)
 	_treeid = newID
 	WCutter.TriggerIDs.CutTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_CutTreeDelay", 1, {}, {_id, _treeid, etype, res_amount})
@@ -363,10 +399,8 @@ WCutter_RemoveTree = function(_id, _treeid, _res_amount)
 	end
 end
 WCutter.EndWorkCycle = function(_id)
+
 	local _buildingID = WCutter.GetBuildingIDByWorkerID(_id)
-	--[[if not _buildingID or not IsExisting(_buildingID) then
-		Logic.HurtEntity(_id, 100)
-	end]]
 	if IsExisting(_id) then
 		if WCutter.WorkActiveState[_buildingID] ~= 0 then
 			local posX, posY = Logic.GetEntityPosition(_buildingID)
