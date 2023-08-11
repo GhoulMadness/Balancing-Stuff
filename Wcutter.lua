@@ -21,7 +21,7 @@ WCutter.HomeSpotOffset = {	X = -200,
 							Y = -500}
 WCutter.BuildingBelongingWorker = {}
 WCutter.WorkActiveState = {}
-WCutter.TooltipText = {["de"] = "Holz erhalten: ", ["en"] = "Wood earned: ", ["pl"] = "Wood earned", ["ru"] = "Wood earned", ["us"] = "Wood earned"}
+WCutter.TooltipText = {["de"] = "Holz erhalten: ", ["en"] = "Wood earned: ", ["pl"] = "Wood earned", ["ru"] = "Wood earned", ["us"] = "Wood earned", ["gb"] = "Wood earned"}
 -- fake entity to replace tree (needs same blocking params)
 WCutter.FakeTreeType = {[1] = Entities.XD_Flower1,
 						[2] = Entities.XD_BuildBlockScriptEntity,

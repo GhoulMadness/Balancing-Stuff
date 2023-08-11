@@ -858,7 +858,7 @@ Die Menge geförderter Kohle aus der Kohlemine ist nun abhängig von der Ausbaus
 
 Fehlende Übersetzungen von Tooltips in polnischer, russischer und us-amerikanischer Sprache wurden hinzugefügt.
 
-Es konnte passieren, dass mehrere Holzfäller denselben Baum hacken wollten. Dazu kam es zu Fehlern. Jeder Baum kann nur noch durch einen Holzfäller gehackt werden.
+Es konnte passieren, dass mehrere Holzfäller denselben Baum hacken wollten. Dadurch kam es zu Fehlern. Jeder Baum kann nur noch durch einen Holzfäller gehackt werden.
 
 Holzfäller können nun keine unerreichbaren Bäume mehr anvisieren.
 
