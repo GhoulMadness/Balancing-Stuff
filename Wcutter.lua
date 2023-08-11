@@ -411,5 +411,12 @@ WCutter.EndWorkCycle = function(_id)
 	end
 end
 WCutter_SetCarrierModel = function(_id)
+
+	if not IsValid(_id) then
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.Start[_id])
+		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
+		WCutter.TriggerIDs.WorkControl.Start[_id] = nil
+		return true
+	end
 	SetEntityModel(_id, Models.U_Woodcutter_Backpack)
 end
