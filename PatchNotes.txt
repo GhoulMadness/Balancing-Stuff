@@ -862,5 +862,12 @@ Es konnte passieren, dass mehrere Holzfäller denselben Baum hacken wollten. Dad
 
 Holzfäller können nun keine unerreichbaren Bäume mehr anvisieren.
 
+--- Version 0.747
+
+Es wurde ein Fehler behoben, durch den die Anzahl erforschte Technologien in den Endstatistiken stets mit einer 0 angezeigt wurde.
+
+Es wurde einige Übersetzungsfehler behoben.
+
+Es wurde ein Fehler behoben, durch den das Laden von Spielständen durch die Verwendung von Holzfällern nicht mehr möglich war.
 
 

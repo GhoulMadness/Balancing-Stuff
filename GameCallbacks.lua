@@ -50,6 +50,49 @@ function Mission_OnSaveGameLoaded()
 	gvGUI_WidgetID.TaxesButtonsOP[2] = 	"SetNormalTaxes_OP"
 	gvGUI_WidgetID.TaxesButtonsOP[3] = 	"SetHighTaxes_OP"
 	gvGUI_WidgetID.TaxesButtonsOP[4] = 	"SetVeryHighTaxes_OP"
+
+	ResumeEntityOrig = Logic.ResumeEntity
+	Logic.ResumeEntity = function(_id)
+		ResumeEntityOrig(_id)
+		if Logic.IsHero(_id) == 1 or Logic.IsLeader(_id) == 1 or Logic.IsSerf(_id) == 1 or Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or Logic.IsWorker(_id) == 1 then
+			Logic.SetEntityScriptingValue(_id, 72, 1)
+		end
+	end
+
+	GetFoundationTopOrig = Logic.GetFoundationTop
+	Logic.GetFoundationTop = function(_id)
+		assert(IsValid(_id))
+		return GetFoundationTopOrig(_id)
+	end
+
+	GetAttachedEntitiesOrig = CEntity.GetAttachedEntities
+	CEntity.GetAttachedEntities = function(_id)
+		assert(IsValid(_id))
+		return GetAttachedEntitiesOrig(_id)
+	end
+
+	Entity_ConnectLeaderOrig = AI.Entity_ConnectLeader
+	AI.Entity_ConnectLeader = function(_id, _armyID)
+		assert(IsValid(_id))
+		assert(_armyID >= -1 and _armyID <= 8)
+		return Entity_ConnectLeaderOrig(_id, _armyID)
+	end
+
+	GroupAttackOrig = Logic.GroupAttack
+	Logic.GroupAttack = function(_id, _target)
+		assert(IsValid(_id))
+		assert(IsValid(_target))
+		return GroupAttackOrig(_id, _target)
+	end
+
+	Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
+	AI.Army_GetEntityIdOfEnemy = function(_player, _id)
+		if _id >= 0 and _id <= 8 then
+			return Army_GetEntityIdOfEnemyOrig(_player, _id)
+		else
+			return Army_GetEntityIdOfEnemyOrig(_player, 0)
+		end
+	end
 end
 -- 3 Diebe max. auf der Weihnachtsmap
 if gvXmasEventFlag == 1 then
@@ -309,9 +352,19 @@ end
 
 function GameCallback_OnTechnologyResearched(_PlayerID, _TechnologyType)
 
+	--Update Techs for Tech Race game mode in MP
+	if XNetwork ~= nil
+	and XNetwork.GameInformation_GetMPFreeGameMode() == 2 then
+		VC_OnTechnologyResearched( _PlayerID, _TechnologyType )
+	end
+
 	--calculate score
 	if Score ~= nil then
 		Score.CallBackResearched( _PlayerID, _TechnologyType )
+	end
+
+	if Statistics_OnTechnologyResearched then
+		Statistics_OnTechnologyResearched(_PlayerID, _TechologyType)
 	end
 
 	if _TechnologyType == Technologies.T_HeavyThunder then
