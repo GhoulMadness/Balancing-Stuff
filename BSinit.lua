@@ -32,6 +32,7 @@
 					["(2) bs koop dritte pruefung - gesandter des himmels"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) bs koop eingekesselt"] = true,
+					["(2) bs koop farben des glaubens"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
