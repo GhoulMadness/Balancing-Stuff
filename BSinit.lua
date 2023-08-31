@@ -58,6 +58,7 @@
 					["(3) bs koop canyon"] = true,
 					["(3) bs koop die grossen drei"] = true,
 					["(3) bs koop barmecia"] = true,
+					["(3) bs koop das grosse oedland"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
 					["(3) emsbs hochland"] = true,
