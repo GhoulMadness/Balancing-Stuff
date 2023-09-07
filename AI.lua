@@ -561,7 +561,8 @@ AITroopGenerator_Condition = function(_Name, _player)
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_army.player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Cannon)) do
 				if Logic.IsEntityInCategory(eID, EntityCategories.MilitaryBuilding) ~= 1 then
 					if AI.Entity_GetConnectedArmy(eID) == -1 and (Logic.GetCurrentTaskList(eID) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(eID) == "TL_VEHICLE_IDLE") then
-						local index = (_army.offensiveArmies[eID] or _army.defensiveArmies[eID]).HomespotIndex
+						local tab = (_army.offensiveArmies[eID] or _army.defensiveArmies[eID])
+						local index = (tab and tab.HomespotIndex) or math.random(1, table.getn(ArmyHomespots[_player].recruited))
 						local anchor = ArmyHomespots[_army.player].recruited[index]
 						local pos = GetPosition(eID)
 						if GetDistance(pos, anchor) > 500 then
@@ -592,7 +593,8 @@ AITroopGenerator_Condition = function(_Name, _player)
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_army.player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Cannon)) do
 				if Logic.IsEntityInCategory(eID, EntityCategories.MilitaryBuilding) ~= 1 then
 					if AI.Entity_GetConnectedArmy(eID) == -1 and (Logic.GetCurrentTaskList(eID) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(eID) == "TL_VEHICLE_IDLE") then
-						local index = (_army.offensiveArmies[eID] or _army.defensiveArmies[eID]).HomespotIndex
+						local tab = (_army.offensiveArmies[eID] or _army.defensiveArmies[eID])
+						local index = (tab and tab.HomespotIndex) or math.random(1, table.getn(ArmyHomespots[_player].recruited))
 						local anchor = ArmyHomespots[_army.player].recruited[index]
 						if GetDistance(GetPosition(eID), anchor) > 1200 then
 							Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
