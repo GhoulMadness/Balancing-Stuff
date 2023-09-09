@@ -843,5 +843,37 @@ Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fäh
 
 Dovbars Götterdämmerung und Erebos Höllenfeuer-Aura verursachen nun keinen Schaden mehr an Einheiten und Gebäude neutral gesinnter Spieler.
 
+--- Version 0.746
+
+Es wurde ein Fehler behoben, durch den Köhler nicht von der Segnung 'Heiligsprechnung' betroffen waren.
+
+Es wurde ein Fehler im Zusammenhang mit der Anzeige der Kohleverwendung für Zuschauer behoben.
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn die Holzfällerhütte abgerissen wurde während sich der Holzfäller innerhalb dieser befunden hat.
+
+In der Holzfällerhütte, der Kohlemine und der Köhlerei könnt ihr nun einsehen, wie viele Rohstoffe erhalten wurden. 
+In der Köhlerei wird zusätzlich die Menge verbrannter Baumstämme angezeigt.
+
+Die Menge geförderter Kohle aus der Kohlemine ist nun abhängig von der Ausbaustufe und kann durch die Spitzhacke weiter erhöht werden.
+
+Fehlende Übersetzungen von Tooltips in polnischer, russischer und us-amerikanischer Sprache wurden hinzugefügt.
+
+Es konnte passieren, dass mehrere Holzfäller denselben Baum hacken wollten. Dadurch kam es zu Fehlern. Jeder Baum kann nur noch durch einen Holzfäller gehackt werden.
+
+Holzfäller können nun keine unerreichbaren Bäume mehr anvisieren.
+
+--- Version 0.747
+
+Es wurde ein Fehler behoben, durch den die Anzahl erforschte Technologien in den Endstatistiken stets mit einer 0 angezeigt wurde.
+
+Es wurde einige Übersetzungsfehler behoben.
+
+Es wurde ein Fehler behoben, durch den das Laden von Spielständen durch die Verwendung von Holzfällern nicht mehr möglich war.
+
+--- Version 0.748
+
+BS-spezifischen Gebäuden wurden Raucheffekte (beim Gebäudebau), Flammeneffekte (wenn das Gebäude unter 50% HP fällt) sowie Flaggen hinzugefügt.
+
+BS-spezifische Statuen schneien nun im Winter ein.
 
 

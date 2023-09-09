@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.745
+	BS.Version = 0.748
 
 	BS.SpectatorPID = 17
 
@@ -32,6 +32,7 @@
 					["(2) bs koop dritte pruefung - gesandter des himmels"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) bs koop eingekesselt"] = true,
+					["(2) bs koop farben des glaubens"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
@@ -57,6 +58,7 @@
 					["(3) bs koop canyon"] = true,
 					["(3) bs koop die grossen drei"] = true,
 					["(3) bs koop barmecia"] = true,
+					["(3) bs koop das grosse oedland"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
 					["(3) emsbs hochland"] = true,

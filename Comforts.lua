@@ -896,8 +896,6 @@ GroupAttackOrig = Logic.GroupAttack
 Logic.GroupAttack = function(_id, _target)
 	assert(IsValid(_id))
 	assert(IsValid(_target))
-	--assert((Logic.IsEntityInCategory(_id, EntityCategories.MilitaryBuilding) == 1) or (Logic.GetSector(_id) == Logic.GetSector(_target)))
-	--assert((Logic.IsWorker(_target) == 0) or (Logic.IsSettlerAtWork(_target) == 0 and Logic.IsSettlerAtFarm(_target) == 0 and Logic.IsSettlerAtResidence(_target) == 0))
 	return GroupAttackOrig(_id, _target)
 end
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
@@ -1967,8 +1965,12 @@ function SetEntityModel(_entityID, _id)
 	assert( type(_id) == "number", "model id needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:SetInt(_id)
 end
---[[GetMilitaryBuildingMaxTrainSlots
-CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()]]
+-- get max number of military building train slots (default 3)
+function GetMilitaryBuildingMaxTrainSlots(_entityID)
+	assert( IsValid(_entityID) , "invalid entityID" )
+	assert( Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 1, "entity is no military building")
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()
+end
 gvVisibilityStates = {	[0] = 257,
 						[1] = 65793
 					}
@@ -2798,7 +2800,7 @@ GetLeadersTrainingAtMilitaryBuilding = function(_id)
 end
 function IsCannonType(_type)
 	assert(type(_type) == "number" and _type > 0, "invalid entity type")
-	if _type == Entities.PV_Cannon1 or _type == Entities.PV_Cannon2 or _type == Entities.PV_Cannon3 
+	if _type == Entities.PV_Cannon1 or _type == Entities.PV_Cannon2 or _type == Entities.PV_Cannon3
 	or _type == Entities.PV_Cannon4 or _type == Entities.PV_Cannon5 or _type == Entities.PV_Cannon5
 	or _type == Entities.PV_Catapult then
 		return true

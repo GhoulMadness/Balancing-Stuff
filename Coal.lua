@@ -36,8 +36,19 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 				gvCoal.Usage[_player][_type] = false
 			end
 		end,
-		CoalmakerEffectDuration = 10,
-		Mine = {Offset1 = {X = 0, Y = 0}, Offset2 = {X = 0, Y = 400}, Offset3 = {X = 0, Y = 1000}, SlopeHeightMin = 300,
+		Coalmaker = {EffectDuration = 10, CoalEarned = {}, WoodBurned = {},
+		TooltipText = {Coal = {["de"] = "Kohle erhalten: ", ["en"] = "Coal earned: ", ["pl"] = "Coal earned: ", ["ru"] = "Coal earned: ", ["us"] = "Coal earned: ", ["gb"] = "Coal earned: "},
+						Wood = {["de"] = "Holz verbrannt: ", ["en"] = "Wood burned: ", ["pl"] = "Wood burned: ", ["ru"] = "Wood burned: ", ["us"] = "Wood burned: ", ["gb"] = "Wood burned: "}},
+		Cycle = {{TaskIndex = 16, ResourceAmount = 15},
+				{TaskIndex = 19, ResourceAmount = 15},
+				{TaskIndex = 21, ResourceAmount = 20}}},
+		Mine = {Offset1 = {X = 0, Y = 0}, Offset2 = {X = 0, Y = 400}, Offset3 = {X = 0, Y = 1000}, SlopeHeightMin = 300, AmountMined = {},
+		ResourceByLevel = {4, 6}, PickaxeFactor = 1.5, TooltipText = {["de"] = "Kohle gefördert: ", ["en"] = "Coal mined: ", ["pl"] = "Coal mined", ["ru"] = "Coal mined", ["us"] = "Coal mined", ["gb"] = "Coal mined"},
+		Cycle = {Inside = {{TaskIndex = 4},
+							{TaskIndex = 8}},
+				Outside = {{TaskIndex = 12},
+							{TaskIndex = 15},
+							{TaskIndex = 20}}},
 		AllowedTextures = {	[12] = true,
 							[15] = true,
 							[28] = true,
@@ -87,7 +98,7 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 			local height1 = CUtil.GetTerrainNodeHeight(posX1/100, posY1/100)
 			local height2, blockingtype2, sector2, terrType2 = CUtil.GetTerrainInfo(posX2, posY2)
 			local height3, blockingtype3, sector3, terrType3 = CUtil.GetTerrainInfo(posX3, posY3)
-			return ((height2 - height1 >= gvCoal.Mine.SlopeHeightMin/2) and sector2 == 0 and gvCoal.Mine.AllowedTextures[terrType2]) 
+			return ((height2 - height1 >= gvCoal.Mine.SlopeHeightMin/2) and sector2 == 0 and gvCoal.Mine.AllowedTextures[terrType2])
 			or((height3 - height1 >= gvCoal.Mine.SlopeHeightMin) and sector3 == 0 and gvCoal.Mine.AllowedTextures[terrType3])
 		end}
 }
@@ -97,10 +108,27 @@ for k,_ in pairs(gvCoal.AllowedTypes) do
 	end
 end
 function Coalmaker_RemoveFireEffect(_id, ...)
-	if Counter.Tick2("Coalmaker_RemoveFireEffect_".. _id, gvCoal.CoalmakerEffectDuration) or Logic.IsEntityDestroyed(_id) then
+	if Counter.Tick2("Coalmaker_RemoveFireEffect_".. _id, gvCoal.Coalmaker.EffectDuration) or Logic.IsEntityDestroyed(_id) then
 		for i = 1, arg.n do
 			Logic.DestroyEffect(arg[i])
 		end
+		return true
+	end
+end
+function OnCoalmaker_Destroyed(_id)
+
+	local entityID = Event.GetEntityID()
+    if entityID == _id then
+		gvCoal.Coalmaker.WoodBurned[entityID] = nil
+		gvCoal.Coalmaker.CoalEarned[entityID] = nil
+		return true
+	end
+end
+function OnCoalmine_Destroyed(_id)
+
+	local entityID = Event.GetEntityID()
+    if entityID == _id then
+		gvCoal.Mine.AmountMined[entityID] = nil
 		return true
 	end
 end
