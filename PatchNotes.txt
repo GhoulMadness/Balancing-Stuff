@@ -872,8 +872,11 @@ Es wurde ein Fehler behoben, durch den das Laden von Spielständen durch die Ver
 
 --- Version 0.748
 
+Hauptmänner von Rekrutierungsarmeen suchen sich nun einen fixen Sammelpunkt anstatt diesen regelmäßig zu wechseln.
+
 BS-spezifischen Gebäuden wurden Raucheffekte (beim Gebäudebau), Flammeneffekte (wenn das Gebäude unter 50% HP fällt) sowie Flaggen hinzugefügt.
 
 BS-spezifische Statuen schneien nun im Winter ein.
 
+Es wurde ein Fehler im Zusammenhang mit Ari's gerufenen Banditen behoben.
 
