@@ -268,6 +268,20 @@ function OnAriTroopCreated()
 			Logic.CreateEntity(Entities.PU_Hero5_OutlawSoldier, posX, posY, 0, player)
 			Logic.LeaderGetOneSoldier(entityID)
 		end
+		local IDs = {Logic.GetSoldiersAttachedToLeader(entityID)}
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAriTroopDied", 1, {}, {entityID, unpack(IDs)})
+	end
+end
+function OnAriTroopDied(_id, _num, ...)
+	
+	local entityID = Event.GetEntityID()
+	if entityID == _id then
+		if _num > 0 then
+			for i = 1, _num do
+				SetHealth(arg[i], 0)
+			end
+		end
+		return true
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
