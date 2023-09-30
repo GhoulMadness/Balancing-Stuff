@@ -175,6 +175,33 @@ if CNetwork then
 
 	)
 
+	CNetwork.SetNetworkHandler("Ghoul_Hero9CallAdditionalWolfs",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.CU_Barbarian_Hero then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+
+				CLogger.Log("Ghoul_Hero9CallAdditionalWolfs", name, _playerID,_heroID)
+				-- Cooldown handling
+				gvHero9.CallAdditionalWolfs.NextCooldown = gvHero6.CallAdditionalWolfs.NextCooldown or {}
+				local starttime = Logic.GetTime()
+
+				if gvHero9.CallAdditionalWolfs.NextCooldown[_playerID] then
+					if gvHero9.CallAdditionalWolfs.NextCooldown[_playerID] > starttime then
+						return
+					end
+				end
+				-- update cooldown.
+				gvHero9.CallAdditionalWolfs.NextCooldown[_playerID] = Logic.GetTime() + (gvHero9.AbilityProperties.Summon.Cooldown)
+				-- execute stuff
+				gvHero9.SpawnAdditionalWolfs(_playerID, _heroID)
+			end
+
+		end
+
+	)
+
 	CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor",
 		function(name,_playerID,_heroID)
 			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then

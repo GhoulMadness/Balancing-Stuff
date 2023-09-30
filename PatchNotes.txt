@@ -880,3 +880,15 @@ BS-spezifische Statuen schneien nun im Winter ein.
 
 Es wurde ein Fehler im Zusammenhang mit Ari's gerufenen Banditen behoben.
 
+--- Version 0.749
+
+Ari Anzahl beschworener Trupps: 4 -> 3
+Ari Anzahl Soldaten pro Trupp: 6 -> 7
+
+Varg beschwört nun zusätzliche Wölfe während seine Berserkerwut aktiv ist. Die Anzahl zusätzlicher Wölfe wird weiter erhöht, wenn Varg über wenig Lebenspunkte verfügt.
+Basisanzahl beschworene Wölfe 5 -> 4 (steigt bei idealen Bedingungen auf 10 an)
+
+Für die verstärkte Veredlung mittels Kohle wird nun weniger Kohle benötigt.
+
+Helden werden von der KI nun nicht mehr pauschal stärker fokussiert. Der Fokus wird nun den Rahmenbedingungen entsprechend berechnet.
+

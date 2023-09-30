@@ -519,7 +519,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type)
 		newtarget = CheckForBetterTarget(_id, nil, nil) or GetNearestTarget(_player, _id)
 	end
 	tabname[_id] = tabname[_id] or {}
-	if newtarget and Logic.GetSector(newtarget) == Logic.GetSector(_id) then
+	if newtarget and newtarget > 0 and Logic.GetSector(newtarget) == Logic.GetSector(_id) then
 		tabname[_id].currenttarget = newtarget
 		tabname[_id].lasttime = Logic.GetTime()
 		Logic.GroupAttack(_id, newtarget)

@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.748
+	BS.Version = 0.749
 
 	BS.SpectatorPID = 17
 
@@ -30,9 +30,13 @@
 					["(2) bs koop erste pruefung - kampfgeschick"] = true,
 					["(2) bs koop zweite pruefung - taktische finesse"] = true,
 					["(2) bs koop dritte pruefung - gesandter des himmels"] = true,
+					["(2) bs koop vierte pruefung - das artefakt"] = true,
+					["(2) bs koop fuenfte pruefung - die dunkle bedrohung"] = true,
+					["(2) bs koop sechste pruefung - der böse graf"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) bs koop eingekesselt"] = true,
 					["(2) bs koop farben des glaubens"] = true,
+					["(2) bs koop sturm auf etaqa"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
@@ -346,8 +350,10 @@
 			"LocalMusic",
 			"VersionCheck",
 			"Hero6",
+			"Hero9",
 			"Hero13",
 			"Hero14",
+			"HeroTarget",
 			"VictoryStatue3",
 			"VictoryStatue4",
 			"WCutter",

@@ -530,6 +530,38 @@ end
 -------------------------------------------------------------------------------------------------------
 --------------------------- Misc Comforts -------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------
+--- author:Flodder
+-- Berechnet einen winkel zwischen 2 positionen.
+--- @return number angle
+function GetAngleBetween(_Pos1,_Pos2)
+	local delta_X = 0
+	local delta_Y = 0
+	local alpha   = 0
+	if type (_Pos1) == "string" or type (_Pos1) == "number" then
+		_Pos1 = GetPosition(GetEntityId(_Pos1))
+	end
+	if type (_Pos2) == "string" or type (_Pos2) == "number" then
+		_Pos2 = GetPosition(GetEntityId(_Pos2))
+	end
+	delta_X = _Pos1.X - _Pos2.X
+	delta_Y = _Pos1.Y - _Pos2.Y
+	if delta_X == 0 and delta_Y == 0 then
+		return 0
+	end
+	alpha = math.deg(math.asin(math.abs(delta_X)/(math.sqrt(__pow(delta_X, 2)+__pow(delta_Y, 2)))))
+	if delta_X >= 0 and delta_Y > 0 then
+		alpha = 270 - alpha
+	elseif delta_X < 0 and delta_Y > 0 then
+		alpha = 270 + alpha
+	elseif delta_X < 0 and delta_Y <= 0 then
+		alpha = 90  - alpha
+	elseif delta_X >= 0 and delta_Y <= 0 then
+		alpha = 90  + alpha
+	end
+	return alpha
+end
+-------------------------------------------------------------------------------------------------------
+-- Wood piles -----------------------------------------------------------------------------------------
 function CreateWoodPile( _posEntity, _resources )
 
     assert( type( _posEntity ) == "string" )
@@ -568,7 +600,7 @@ function DestroyWoodPile( _piletable, _index )
     table.remove( gvWoodPiles, _index )
 
 end
-
+-------------------------------------------------------------------------------------------------------
 function ReplacingEntity(_Entity, _EntityType)
 
 	local entityId      = Logic.GetEntityIDByName(_Entity)
@@ -851,7 +883,41 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 	return Counter,(Counter >= _amount)
 
 end
-
+function GetNumberOfAlliesInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local allies = BS.GetAllAlliedPlayerIDs(_player)
+	local count = 0
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(allies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		count = count + 1
+	end
+	return count
+end
+function GetNumberOfEnemiesInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local count = 0
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		count = count + 1
+	end
+	return count
+end
+function GetNumberOfPlayerEntitiesByCatInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local count = 0
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		count = count + 1
+	end
+	return count
+end
 function GetNearestEnemyDistance(_player, _position, _range)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
@@ -1865,6 +1931,58 @@ function GetEntityTypeNumBlockedPoints(_entityType)
 		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
 	end
 end
+-- gets ability duration (ability must be supported)
+-- currently only for ranged effect abilities ((de-)buffs)
+function GetAbilityDuration(_entityType, _ability)
+	assert(_entityType ~= 0, "invalid entity type")
+	assert(_ability == Abilities.AbilityRangedEffect, "currently only supports ranged effects e.g. buffs and debuffs")
+	if not BS.MemValues.EntityTypeAbilityDuration then
+		BS.MemValues.EntityTypeAbilityDuration = {}
+	end
+	if not BS.MemValues.EntityTypeAbilityDuration[_entityType] then
+		BS.MemValues.EntityTypeAbilityDuration[_entityType] = {}
+	end
+	if BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability] then
+		return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
+	else
+		BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][16][8]:GetInt()
+		return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
+	end
+end
+-- gets ability range (ability must be supported)
+function GetAbilityRange(_entityType, _ability)
+	assert(_entityType ~= 0, "invalid entity type")
+	if _ability == Abilities.AbilityPlaceBomb or _ability == Abilities.AbilityBuildCannon then
+		return
+	end
+	if not BS.MemValues.EntityTypeAbilityRange then
+		BS.MemValues.EntityTypeAbilityRange = {}
+	end
+	if not BS.MemValues.EntityTypeAbilityRange[_entityType] then
+		BS.MemValues.EntityTypeAbilityRange[_entityType] = {}
+	end
+	if BS.MemValues.EntityTypeAbilityRange[_entityType][_ability] then
+		return BS.MemValues.EntityTypeAbilityRange[_entityType][_ability]
+	else
+		local off
+		local index = BS.MemValues.IndexByAbility[_ability].Range
+		for i = 2, 6, 2 do
+			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][14+i][0]:GetInt() == BS.MemValues.VTableByAbility[_ability] then
+				BS.MemValues.EntityTypeAbilityRange[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][14+i][index]:GetFloat()
+				return BS.MemValues.EntityTypeAbilityRange[_entityType][_ability]
+			end
+		end
+	end
+end
+BS.MemValues.IndexByAbility = {	[Abilities.AbilityRangedEffect] = {AffectsDiplomacy = 5, AffectsCat = 6, Range = 7, Duration = 8, DamageFactor = 9, ArmorFactor = 10, HealthRecoveryFactor = 11, Effect = 12, HealEffect = 13},
+								[Abilities.AbilityCircularAttack] = {TaskList = 5, Animation = 6, DamageClass = 7, Damage = 8, Range = 9, Effect = 10},
+								[Abilities.AbilityInflictFear] = {TaskList = 5, Animation = 6, FlightDuration = 7, Range = 8, FlightRange = 9}}
+BS.MemValues.VTableByAbility = {[Abilities.AbilityRangedEffect] = tonumber("774E9C", 16),
+								[Abilities.AbilityCircularAttack] = tonumber("7774A0", 16),
+								[Abilities.AbilityInflictFear] = tonumber("776674", 16),
+								[Abilities.AbilityPlaceBomb] = tonumber("7783D8", 16),
+								[Abilities.AbilityBuildCannon] = tonumber("777510", 16)
+								}
 ------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- entity id related --------------------------------------------------------------------------
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
@@ -1989,36 +2107,42 @@ function SetEntityVisibility(_entityID, _flag)
 	assert( type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))
 end
-function GetMercenaryOfferLeft(id, slot)
-    assert(IsValid(id), "invalid")
-    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(id))
+function GetMercenaryOfferLeft(_id, _slot)
+    assert(IsValid(_id), "invalid entityID")
+    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))
     local vtable = tonumber("7782C0", 16)
     local number = (sv[32]:GetInt() - sv[31]:GetInt()) / 4
     for i=0,number-1 do
         if sv[31][i]:GetInt()>0 and sv[31][i][0]:GetInt()==vtable then
             local sv2 = sv[31][i]
             local number2 = (sv2[8]:GetInt() - sv2[7]:GetInt()) / 4
-            assert(number2 >= slot, "slot invalid")
-            return sv2[7][slot][19]:GetInt()
+            assert(number2 >= _slot, "slot invalid")
+            return sv2[7][_slot][19]:GetInt()
         end
     end
     assert(false, "behavior not found")
 end
-function SetMercenaryOfferLeft(id, slot, left)
-    assert(IsValid(id), "invalid")
-    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(id))
+function SetMercenaryOfferLeft(_id, _slot, _left)
+    assert(IsValid(_id), "invalid entityID")
+    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))
     local vtable = tonumber("7782C0", 16)
     local number = (sv[32]:GetInt() - sv[31]:GetInt()) / 4
     for i=0,number-1 do
         if sv[31][i]:GetInt()>0 and sv[31][i][0]:GetInt()==vtable then
             local sv2 = sv[31][i]
             local number2 = (sv2[8]:GetInt() - sv2[7]:GetInt()) / 4
-            assert(number2 >= slot, "slot invalid")
-            sv2[7][slot][19]:SetInt(left)
+            assert(number2 >= _slot, "slot invalid")
+            sv2[7][_slot][19]:SetInt(_left)
             return
         end
     end
     assert(false, "behavior not found")
+end
+function SetEntitySpawnLeaderAttachment(_id, _attach, _value)
+	assert(IsValid(_id), "invalid entityID")
+	assert(type(_attach) == "number" and type(_value) == "number", "attachment num and value params need to be integers")
+	CUtilMemory.GetMemory(tonumber(CEntity.Debug_GetAttachedEntitiesEntryPointer(_id), 16))[4]:SetInt(_value)
+	CUtilMemory.GetMemory(tonumber(CEntity.Debug_GetAttachedEntitiesEntryPointer(_id), 16))[3]:SetInt(_attach)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- statistics -----------------------------------------------------------------------------
@@ -2409,6 +2533,26 @@ BS.GetAllEnemyPlayerIDs = function(_playerID)
 	return playerIDTable
 
 end
+BS.GetAllAlliedPlayerIDs = function(_playerID)
+
+	local playerIDTable = {}
+	local maxplayers
+
+	if CNetwork then
+		maxplayers = 16
+	else
+		maxplayers = 8
+	end
+
+	for i = 1, maxplayers do
+		if Logic.GetDiplomacyState(i, _playerID) == Diplomacy.Friendly then
+			table.insert(playerIDTable, i)
+		end
+	end
+
+	return playerIDTable
+
+end
 BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 
 	if not Logic.IsEntityAlive(_entity) then
@@ -2589,12 +2733,21 @@ function CheckForBetterTarget(_eID, _target, _range)
 	end
 	for i = 1, table.getn(entities) do
 		if Logic.IsEntityAlive(entities[i]) then
+			local IsHero = (Logic.IsHero(entities[i]) == 1)
 			local ety = Logic.GetEntityType(entities[i])
 			local threatbonus
 			if Logic.GetFoundationTop(entities[i]) ~= 0 or (Logic.IsBuilding(entities[i]) == 0 and GetEntityTypeDamageRange(ety) > 0)
-			or (Logic.IsHero(entities[i]) == 1 and not IsMelee)
+			or (IsHero and not IsMelee)
 			or Logic.IsEntityInCategory(entities[i], EntityCategories.Cannon) == 1 then
-				threatbonus = 1
+				if IsHero then
+					threatbonus = gvHeroTarget.EvaluateThreatFactor(_eID, entities[i])
+				else
+					threatbonus = 1
+				end
+			end
+			-- something very dangerous is nearby, retreat as long as you can, then finish this foe!
+			if threatbonus and threatbonus < 0 then
+				return RetreatToMaxRange(_eID, entities[i], maxrange)
 			end
 			attach = CEntity.GetAttachedEntities(entities[i])[37]
 			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]
@@ -2650,6 +2803,23 @@ function CheckForBetterTarget(_eID, _target, _range)
 			end
 		end
 	end
+end
+RetreatToMaxRange = function(_id, _target, _dist)
+	local pos1 = GetPosition(_id)
+	local pos2 = GetPosition(_target)
+	local dist_12 = GetDistance(pos1, pos2)
+	local angle = GetAngleBetween(pos1, pos2)
+
+	local yoff = _dist * math.sin(math.rad(angle))
+	local xoff = _dist * math.cos(math.rad(angle))
+	local posX, posY = pos1.X + xoff. pos1.Y + yoff
+	--local posX, posY = pos1.X + _dist * dist_12, pos1.Y + _dist * dist_12
+	local sector = CUtil.GetSector(posX/100, posY/100)
+	if sector == 0 or sector ~= Logic.GetSector(_id) then
+		posX, posY = EvaluateNearestUnblockedPosition(posX, posY, 1000, 100)
+	end
+	Logic.MoveSettler(_id, posX, posY)
+	return -1
 end
 function GetPositionClump(_postable, _infrange, _step)
 	assert(type(_postable) == "table", "first input param type must be a table")

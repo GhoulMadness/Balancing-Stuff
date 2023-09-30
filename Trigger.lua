@@ -255,7 +255,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Ari ----------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-gvHero5 = {AbilityProperties = {Summon = {NumTroops = 6, Duration = 60}}}
+gvHero5 = {AbilityProperties = {Summon = {NumSoldiersPerTroop = 7, Duration = 60}}}
 function OnAriTroopCreated()
 
 	local entityID = Event.GetEntityID()
@@ -264,7 +264,7 @@ function OnAriTroopCreated()
 	if entityType == Entities.PU_Hero5_Outlaw then
 		local player = Logic.EntityGetPlayer(entityID)
 		local posX, posY = Logic.GetEntityPosition(entityID)
-		for i = 1, gvHero5.AbilityProperties.Summon.NumTroops do
+		for i = 1, gvHero5.AbilityProperties.Summon.NumSoldiersPerTroop do
 			Logic.CreateEntity(Entities.PU_Hero5_OutlawSoldier, posX, posY, 0, player)
 			Logic.LeaderGetOneSoldier(entityID)
 		end
@@ -273,7 +273,7 @@ function OnAriTroopCreated()
 	end
 end
 function OnAriTroopDied(_id, _num, ...)
-	
+
 	local entityID = Event.GetEntityID()
 	if entityID == _id then
 		if _num > 0 then
@@ -283,6 +283,25 @@ function OnAriTroopDied(_id, _num, ...)
 		end
 		return true
 	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Varg ---------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function OnVargWolfDied(_playerID)
+
+	local entityID = Event.GetEntityID()
+	if table_findvalue(gvHero9.WolfIDs[_playerID], entityID) ~= 0 then
+		removetablekeyvalue(gvHero9.WolfIDs[_playerID], entityID)
+	end
+	if not next(gvHero9.WolfIDs[_playerID]) then
+		return true
+	end
+end
+function Hero9_Wolf_DelayedAttachment(_id, _heroID)
+	if IsValid(_id) then
+		SetEntitySpawnLeaderAttachment(_id, 54, _heroID)
+	end
+	return true
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Catapult Stones ----------------------------------------------------------------------------------------------------------
