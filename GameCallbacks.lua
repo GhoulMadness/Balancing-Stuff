@@ -93,6 +93,20 @@ function Mission_OnSaveGameLoaded()
 			return Army_GetEntityIdOfEnemyOrig(_player, 0)
 		end
 	end
+
+	Army_SetScatterToleranceOrig = AI.Army_SetScatterTolerance
+	AI.Army_SetScatterTolerance = function(_player, _id, _val)
+		if _id >= 0 and _id <= 8 then
+			Army_SetScatterToleranceOrig(_player, _id, _val)
+		end
+	end
+
+	Army_SetSizeOrig = AI.Army_SetSize
+	AI.Army_SetSize = function(_player, _id, _val)
+		if _id >= 0 and _id <= 8 then
+			Army_SetSizeOrig(_player, _id, _val)
+		end
+	end
 end
 -- 3 Diebe max. auf der Weihnachtsmap
 if gvXmasEventFlag == 1 then

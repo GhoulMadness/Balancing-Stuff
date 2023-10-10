@@ -28,7 +28,7 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 							[Entities.PB_GunsmithWorkshop1] = 1,
 							[Entities.PB_GunsmithWorkshop2] = 2,
 							[Entities.PB_Silversmith2] = 1},
-		Usage = {{},{},{},{},{},{},{},{},{},{},{},{}},
+		Usage = {{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}},
 		AdjustTypeList = function(_flag, _player, _type)
 			if _flag == 1 then
 				gvCoal.Usage[_player][_type] = true
@@ -103,7 +103,7 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 		end}
 }
 for k,_ in pairs(gvCoal.AllowedTypes) do
-	for i = 1,12 do
+	for i = 1,16 do
 		gvCoal.Usage[i][k] = false
 	end
 end

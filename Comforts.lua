@@ -201,7 +201,7 @@ StartCutscene = function(_Name, _Callback)
 	Input.CutsceneMode()
 	-- Start cutscene
 	Cutscene.Start(_Name)
-	assert(cutsceneIsActive ~= true)
+	assert(cutsceneIsActive ~= true, "another cutscene is already/still active")
 	cutsceneIsActive = true
 	LocalMusic_UpdateMusic()
 	--	backup
@@ -562,10 +562,10 @@ function GetAngleBetween(_Pos1,_Pos2)
 end
 -------------------------------------------------------------------------------------------------------
 -- Wood piles -----------------------------------------------------------------------------------------
-function CreateWoodPile( _posEntity, _resources )
+function CreateWoodPile(_posEntity, _resources)
 
-    assert( type( _posEntity ) == "string" )
-    assert( type( _resources ) == "number" )
+    assert(type(_posEntity) == "string" or (type(_posEntity) == "number" and _posEntity > 0), "invalid entity param, needs to be either an entity ID or entity scripting name")
+    assert(type(_resources) == "number", "invalid resource amount")
     gvWoodPiles = gvWoodPiles or {
         JobID = StartSimpleJob("ControlWoodPiles"),
     }
@@ -601,6 +601,77 @@ function DestroyWoodPile( _piletable, _index )
 
 end
 -------------------------------------------------------------------------------------------------------
+function AddPages(_briefing)
+    local AP = function(_page)
+		table.insert(_briefing, _page)
+		return _page
+	end
+    local ASP = function(_entity, _title, _text, _dialog, _explore)
+		return AP(CreateShortPage(_entity, _title, _text, _dialog, _explore))
+	end
+    return AP, ASP
+end
+--**
+function CreateShortPage(_entity, _title, _text, _dialog, _explore)
+    local page = {
+        title = _title,
+        text = _text,
+        position = GetPosition(_entity),
+		action = function()
+		end
+    }
+    if _dialog then
+		if type(_dialog) == "boolean" then
+			page.dialogCamera = true
+		elseif type(_dialog) == "number" then
+			page.explore = _dialog
+		end
+      end
+    if _explore then
+		if type(_explore) == "boolean" then
+			page.dialogCamera = true
+		elseif type(_explore) == "number" then
+			page.explore = _explore
+		end
+    end
+    return page
+end
+function ActivateBriefingsExpansion()
+    if not unpack{true} then
+        local unpack2
+        unpack2 = function(_table, i)
+			i = i or 1
+			assert(type(_table) == "table")
+			if i <= table.getn(_table) then
+				return _table[i], unpack2(_table, i)
+			end
+		end
+        unpack = unpack2
+    end
+
+    Briefing_ExtraOrig = Briefing_Extra
+
+    Briefing_Extra = function(_v1, _v2)
+		for i = 1, 2 do
+			local theButton = "CinematicMC_Button" .. i
+			XGUIEng.DisableButton(theButton, 1)
+			XGUIEng.DisableButton(theButton, 0)
+		end
+
+		if _v1.action then
+			assert(type(_v1.action) == "function")
+			if type(_v1.parameters) == "table" then
+				_v1.action(unpack(_v1.parameters))
+			else
+				_v1.action(_v1.parameters)
+			end
+		end
+
+    Briefing_ExtraOrig(_v1, _v2)
+	end
+
+end
+-------------------------------------------------------------------------------------------------------
 function ReplacingEntity(_Entity, _EntityType)
 
 	local entityId      = Logic.GetEntityIDByName(_Entity)
@@ -630,7 +701,7 @@ end
 
 function ActivateShareExploration(_player1, _player2, _both)
 
-    assert(type(_player1) == "number" and type(_player2) == "number" and _player1 <= 16 and _player2 <= 16 and _player1 >= 1 and _player2 >= 1)
+    assert(type(_player1) == "number" and type(_player2) == "number" and _player1 <= 16 and _player2 <= 16 and _player1 >= 1 and _player2 >= 1, "invalid player IDs input")
 
     if _both == false then
         Logic.SetShareExplorationWithPlayerFlag(_player1, _player2, 1)
@@ -678,7 +749,7 @@ UniTechAmount = function(_PlayerID)
 
 end
 
-function GetEntityHealth( _entity )
+function GetEntityHealth(_entity)
 
 	local entityID
 
@@ -789,9 +860,9 @@ function AreEntitiesOfDiplomacyStateInArea(_player, _position, _range, _state)
 
 end
 
-function AreEntitiesOfCategoriesAndDiplomacyStateInArea( _player, _entityCategories, _position, _range, _state )
+function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategories, _position, _range, _state)
 
-	assert(type(_entityCategories) == "table")
+	assert(type(_entityCategories) == "table", "entityCategories param must be a table")
 	local i
 
 	if CNetwork then
@@ -802,7 +873,7 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea( _player, _entityCategor
 	local amount, bool
 	for i = 1,i do
 		if Logic.GetDiplomacyState( _player, i) == _state then
-			amount, bool = AreEntitiesOfTypeAndCategoryInArea( i, 0, _entityCategories, _position, _range, 1)
+			amount, bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
 
 			if bool then
 				return true
@@ -819,17 +890,16 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 
 	local Data = {}
 	local Counter = 0
-	assert(type(_entityCategories) == "table")
+	assert(type(_entityCategories) == "table", "entityCategories param must be a table")
 
 	if type(_entityTypes) == "table" then
 		for i = 1,table.getn(_entityTypes) do
-			Data[i] = {	Logic.GetPlayerEntitiesInArea(	_player,
-														_entityType[i],
-														_position.X,
-														_position.Y,
-														_range,
-														_amount)}
-
+			Data[i] = {Logic.GetPlayerEntitiesInArea(_player,
+													_entityType[i],
+													_position.X,
+													_position.Y,
+													_range,
+													_amount)}
 
 			for j=2, Data[i][1]+1 do
 				for k = 1,table.getn(_entityCategories) do
@@ -853,12 +923,12 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 
 	else
 
-		Data = {	Logic.GetPlayerEntitiesInArea(	_player,
-													_entityType,
-													_position.X,
-													_position.Y,
-													_range,
-													_amount)}
+		Data = {Logic.GetPlayerEntitiesInArea(_player,
+												_entityType,
+												_position.X,
+												_position.Y,
+												_range,
+												_amount)}
 
 		for j=2, Data[1]+1 do
 			for k = 1,table.getn(_entityCategories) do
@@ -941,27 +1011,27 @@ end
 
 GetFoundationTopOrig = Logic.GetFoundationTop
 Logic.GetFoundationTop = function(_id)
-	assert(IsValid(_id))
+	assert(IsValid(_id), "invalid entityID")
 	return GetFoundationTopOrig(_id)
 end
 
 GetAttachedEntitiesOrig = CEntity.GetAttachedEntities
 CEntity.GetAttachedEntities = function(_id)
-	assert(IsValid(_id))
+	assert(IsValid(_id), "invalid entityID")
 	return GetAttachedEntitiesOrig(_id)
 end
 
 Entity_ConnectLeaderOrig = AI.Entity_ConnectLeader
 AI.Entity_ConnectLeader = function(_id, _armyID)
-	assert(IsValid(_id))
+	assert(IsValid(_id), "invalid entityID")
 	assert(_armyID >= -1 and _armyID <= 8)
 	return Entity_ConnectLeaderOrig(_id, _armyID)
 end
 
 GroupAttackOrig = Logic.GroupAttack
 Logic.GroupAttack = function(_id, _target)
-	assert(IsValid(_id))
-	assert(IsValid(_target))
+	assert(IsValid(_id), "invalid attacker entityID")
+	assert(IsValid(_target), "invalid target entityID")
 	return GroupAttackOrig(_id, _target)
 end
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
@@ -972,14 +1042,27 @@ AI.Army_GetEntityIdOfEnemy = function(_player, _id)
 		return Army_GetEntityIdOfEnemyOrig(_player, 0)
 	end
 end
+Army_SetScatterToleranceOrig = AI.Army_SetScatterTolerance
+AI.Army_SetScatterTolerance = function(_player, _id, _val)
+	if _id >= 0 and _id <= 8 then
+		Army_SetScatterToleranceOrig(_player, _id, _val)
+	end
+end
+Army_SetSizeOrig = AI.Army_SetSize
+AI.Army_SetSize = function(_player, _id, _val)
+	if _id >= 0 and _id <= 8 then
+		Army_SetSizeOrig(_player, _id, _val)
+	end
+end
 GetArmyByLeaderID = function(_id)
-	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Leader) == 1, "invalid entity ID")
+	assert(IsValid(_id), "invalid entityID")
+	assert(Logic.IsLeader(_id) == 1, "entityID must be a leader")
 	local player = Logic.EntityGetPlayer(_id)
 	assert(ArmyTable and ArmyTable[player], "player ID ".. player .." has no armies")
-	for _, v in pairs(ArmyTable[player]) do
+	for k, v in pairs(ArmyTable[player]) do
 		if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
 			if table_findvalue(v.IDs, _id) ~= 0 then
-				return v
+				return k - 1
 			end
 		end
 	end
@@ -1182,7 +1265,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------
 StartCountdown = function (_Limit, _Callback, _Show, _Name, ...)
 
-	assert(type(_Limit) == "number")
+	assert(type(_Limit) == "number" and _Limit > 0, "Limit param must be a number greater than 0")
 	Counter.Index = (Counter.Index or 0) + 1
 
 	if _Show and CountdownIsVisisble() then
@@ -1297,25 +1380,25 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------
 function AddTribute( _tribute )
 
-	assert( type( _tribute ) == "table", "Tribut muß ein Table sein" )
-	assert( type( _tribute.text ) == "string", "Tribut.text muß ein String sein" )
-	assert( type( _tribute.cost ) == "table", "Tribut.cost muß ein Table sein" )
-	assert( type( _tribute.pId or _tribute.playerId ) == "number", "Tribut.pId muß eine Nummer sein" )
-	assert( not _tribute.Tribute , "Tribut.Tribute darf nicht vorbelegt sein")
+	assert(type(_tribute) == "table", "Tribute must be a table")
+	assert(type(_tribute.text) == "string", "Tribute.text must be a string")
+	assert(type(_tribute.cost) == "table", "Tribute.cost must be a table")
+	assert(type(_tribute.pId or _tribute.playerId) == "number", "Tribut.pId must be a number")
+	assert(not _tribute.Tribute , "Tribut.Tribute already in use")
 	uniqueTributeCounter = uniqueTributeCounter or 1
 	_tribute.Tribute = uniqueTributeCounter
 	uniqueTributeCounter = uniqueTributeCounter + 1
 	local tResCost = {}
 
-	for k, v in pairs( _tribute.cost ) do
-		assert( ResourceType[k] )
-		assert( type( v ) == "number" )
-		table.insert( tResCost, ResourceType[k] )
-		table.insert( tResCost, v )
+	for k, v in pairs(_tribute.cost) do
+		assert(ResourceType[k], "invalid resource type")
+		assert(type(v) == "number", "invalid resource costs")
+		table.insert(tResCost, ResourceType[k])
+		table.insert(tResCost, v)
 	end
 
-	Logic.AddTribute( _tribute.playerId or _tribute.pId, _tribute.Tribute, 0, 0, _tribute.text, unpack( tResCost ) )
-	SetupTributePaid( _tribute )
+	Logic.AddTribute(_tribute.playerId or _tribute.pId, _tribute.Tribute, 0, 0, _tribute.text, unpack(tResCost))
+	SetupTributePaid(_tribute)
 	return _tribute.Tribute
 
 end
@@ -1507,40 +1590,39 @@ function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
 
 end
 
-function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X , _Y ,_Orientation ,_Experience)
+function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X, _Y, _Orientation, _Experience)
 
 	if _LeaderType == nil or _LeaderType == 0 then
-		assert(_LeaderType ~= nil and _LeaderType ~= 0)
+		assert(_LeaderType ~= nil and _LeaderType ~= 0, "invalid leader type")
 		return 0
 	end
 	-- Create leader
-	local LeaderID = Logic.CreateEntity(_LeaderType, _X, _Y,_Orientation,_PlayerID)
+	local LeaderID = Logic.CreateEntity(_LeaderType, _X, _Y, _Orientation, _PlayerID)
 
 	if LeaderID == 0 then
-		assert(LeaderID~=0)
+		assert(LeaderID ~= 0, "leader creation failed. Aborting")
 		return 0
 	end
 
-	if _Experience then
-		if _Experience > 0 then
-			CEntity.SetLeaderExperience(LeaderID,_Experience)
-		end
+	if _Experience and _Experience > 0 then
+		CEntity.SetLeaderExperience(LeaderID, _Experience)
 	end
 
-	CreateSoldiersForLeader( LeaderID, _SoldierAmount )
+	CreateSoldiersForLeader(LeaderID, _SoldierAmount)
 	-- Return leader ID
 	return LeaderID
 
 end
 
-function CreateSoldiersForLeader( _LeaderID, _SoldierAmount )
+function CreateSoldiersForLeader(_LeaderID, _SoldierAmount)
 
 	-- Is a leader passed?
+	assert(_LeaderID ~= nil and type(_LeaderID) == "number" and _LeaderID > 0, "invalid leader id")
 	if _LeaderID == 0 then
 		return 0
 	end
 
-	if Logic.IsLeader( _LeaderID ) ~= 1 then
+	if Logic.IsLeader(_LeaderID) ~= 1 then
 		return 0
 	end
 
@@ -1560,19 +1642,42 @@ function CreateSoldiersForLeader( _LeaderID, _SoldierAmount )
 	local Counter
 
 	for Counter=1, _SoldierAmount, 1 do
-		local SoldierID = Logic.CreateEntity( SoldierType, LeaderX, LeaderY, 0, LeaderPlayerID )
+		local SoldierID = Logic.CreateEntity(SoldierType, LeaderX, LeaderY, 0, LeaderPlayerID)
 
 		if SoldierID == 0 then
-			assert(SoldierID~=0)
+			assert(SoldierID ~= 0, "soldier creation failed. Aborting")
 			return 0
 		end
 
-		Logic.LeaderGetOneSoldier( _LeaderID )
+		Logic.LeaderGetOneSoldier(_LeaderID)
 
 	end
 	-- Return number of soldiers
 	return _SoldierAmount
 
+end
+----------------------------------------------------------------------------------------------------------
+PlayerEntitiesInvulnerable_IsActive = {}
+function MakePlayerEntitiesInvulnerableLimitedTime(_PlayerID, _Timelimit)
+	_Timelimit = round(_Timelimit)
+	if not Counter.Tick2("MakePlayerEntitiesInvulnerableLimitedTime_Ticker".. _PlayerID, _Timelimit) then
+		if not PlayerEntitiesInvulnerable_IsActive[_PlayerID] then
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_PlayerID), CEntityIterator.IsSettlerOrBuildingFilter()) do
+				if Logic.IsEntityAlive(eID) then
+					MakeInvulnerable(eID)
+				end
+			end
+		PlayerEntitiesInvulnerable_IsActive[_PlayerID] = true
+		end
+	else
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_PlayerID), CEntityIterator.IsSettlerOrBuildingFilter()) do
+			if Logic.IsEntityAlive(eID) then
+				MakeVulnerable(eID)
+			end
+		end
+		PlayerEntitiesInvulnerable_IsActive[_PlayerID] = nil
+		return true
+	end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- Mem reading/writing --------------------------------------------------------------------------
@@ -1685,7 +1790,7 @@ BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
 -- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackSpeed(_entityType)
 
-	assert( _entityType ~= 0 , "invalid entityType" )
+	assert(_entityType ~= 0 , "invalid entityType")
 	if not BS.MemValues.EntityTypeBaseAttackSpeed then
 		BS.MemValues.EntityTypeBaseAttackSpeed = {}
 	end
@@ -1711,7 +1816,7 @@ end
 -- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetEntityTypeBaseAttackRange(_entityType)
 
-	assert( _entityType ~= 0 , "invalid entityType" )
+	assert(_entityType ~= 0 , "invalid entityType")
 	if not BS.MemValues.EntityTypeBaseAttackRange then
 		BS.MemValues.EntityTypeBaseAttackRange = {}
 	end
@@ -1739,7 +1844,7 @@ function GetEntityTypeBaseAttackRange(_entityType)
 end
 function GetEntityTypeBaseMinAttackRange(_entityType)
 
-	assert( _entityType ~= 0 , "invalid entityType" )
+	assert(_entityType ~= 0 , "invalid entityType")
 	if not BS.MemValues.EntityTypeBaseMinAttackRange then
 		BS.MemValues.EntityTypeBaseMinAttackRange = {}
 	end
@@ -1988,13 +2093,13 @@ BS.MemValues.VTableByAbility = {[Abilities.AbilityRangedEffect] = tonumber("774E
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
 function GetSettlerBaseMovementSpeed(_entityID)
 
-	assert( IsValid(_entityID), "invalid entityID" )
+	assert(IsValid(_entityID), "invalid entityID")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
 
 end
 function SetSettlerBaseMovementSpeed(_entityID, _val)
 
-	assert( IsValid(_entityID), "invalid entityID" )
+	assert(IsValid(_entityID), "invalid entityID")
 	assert(type(_val) == "number", "value input needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:SetFloat(_val)
 
@@ -2046,47 +2151,47 @@ function GetSettlerCurrentMovementSpeed(_entityID, _player)
 end
 -- get the current task, logic cant return animal tasks, returns number, not string
 function GetEntityCurrentTask(_entityID)
-	assert( IsValid(_entityID) , "invalid entityID" )
+	assert(IsValid(_entityID) , "invalid entityID")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
 end
 -- set entity current task
 function SetEntityCurrentTask(_entityID, _num)
-	assert( IsValid(_entityID) , "invalid entityID" )
-	assert( type(_num) == "number", "task needs to be a number")
+	assert(IsValid(_entityID) , "invalid entityID")
+	assert(type(_num) == "number", "task needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:SetInt(_num)
 end
 -- get entity current task sub-index
 function GetEntityCurrentTaskIndex(_entityID)
-	assert( IsValid(_entityID) , "invalid entityID" )
+	assert(IsValid(_entityID) , "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()
 end
 -- set entity current task sub-index
 function SetEntityCurrentTaskIndex(_entityID, _index)
-	assert( IsValid(_entityID) , "invalid entityID" )
-	assert( type(_index) == "number", "index needs to be a number")
+	assert(IsValid(_entityID) , "invalid entityID")
+	assert(type(_index) == "number", "index needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)
 end
 -- get entity size (relative to 1)
 function GetEntitySize(_entityID)
-	assert( IsValid(_entityID) , "invalid entityID" )
+	assert(IsValid(_entityID) , "invalid entityID")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
 end
 -- set entity size (relative to 1)
 function SetEntitySize(_entityID, _size)
-	assert( IsValid(_entityID) , "invalid entityID" )
-	assert( type(_size) == "number", "size needs to be a number")
+	assert(IsValid(_entityID) , "invalid entityID")
+	assert(type(_size) == "number", "size needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
 end
 -- set entity model (gets resetted when task changes)
 function SetEntityModel(_entityID, _id)
-	assert( IsValid(_entityID) , "invalid entityID" )
-	assert( type(_id) == "number", "model id needs to be a number")
+	assert(IsValid(_entityID) , "invalid entityID")
+	assert(type(_id) == "number", "model id needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:SetInt(_id)
 end
 -- get max number of military building train slots (default 3)
 function GetMilitaryBuildingMaxTrainSlots(_entityID)
-	assert( IsValid(_entityID) , "invalid entityID" )
-	assert( Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 1, "entity is no military building")
+	assert(IsValid(_entityID) , "invalid entityID")
+	assert(Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 1, "entity is no military building")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()
 end
 gvVisibilityStates = {	[0] = 257,
@@ -2094,7 +2199,7 @@ gvVisibilityStates = {	[0] = 257,
 					}
 -- get visibility of entity (0=invisible, 1=visible)
 function GetEntityVisibility(_entityID)
-	assert( IsValid(_entityID) , "invalid entityID" )
+	assert(IsValid(_entityID) , "invalid entityID")
 	for k,v in pairs(gvVisibilityStates) do
 		if Logic.GetEntityScriptingValue(_entityID, -30) == v then
 			return k
@@ -2103,8 +2208,8 @@ function GetEntityVisibility(_entityID)
 end
 -- changes visibility of entity (_flag: 0 = invisible, 1 = visible, -1 = toggle)
 function SetEntityVisibility(_entityID, _flag)
-	assert( IsValid(_entityID) , "invalid entityID" )
-	assert( type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
+	assert(IsValid(_entityID) , "invalid entityID")
+	assert(type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))
 end
 function GetMercenaryOfferLeft(_id, _slot)
@@ -2211,7 +2316,7 @@ function AI.Army_SetEntityActiveFlag(_id, _flag)
 end
 --AI.Army_GetOccupancyRate(_player, _armyId) %-Wert alive-slots/gesamt-slots
 function AI.Army_GetNextFreeSlot(_playerID)
-	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	local slot
 	local tabname = MapEditor_Armies[_playerID] or ArmyTable[_playerID]
 	for i = 9, 1, -1 do
@@ -2225,7 +2330,7 @@ function AI.Army_GetNextFreeSlot(_playerID)
 	return slot or false
 end
 function AI.Army_GetLeaderIDs(_playerID, _armyID)
-	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
 	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
 	local adress = GetArmyObjectPointer()
@@ -2241,9 +2346,9 @@ function AI.Army_GetLeaderIDs(_playerID, _armyID)
 	return tab
 end
 function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
-	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
-	assert(IsValid(_id))
+	assert(IsValid(_id), "invalid entityID")
 	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
 	local adress = GetArmyObjectPointer()
 	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
@@ -2259,9 +2364,9 @@ function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
 	AI.Army_SetEntityActiveFlag(_id, 0)
 end
 function AI.Entity_AddToArmy(_id, _playerID, _armyID)
-	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
-	assert(IsValid(_id))
+	assert(IsValid(_id), "invalid entityID")
 	local offsets = {50, 51, 56, 57, 62, 63, 68, 69}
 	local adress = GetArmyObjectPointer()
 	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
@@ -2276,7 +2381,7 @@ function AI.Entity_AddToArmy(_id, _playerID, _armyID)
 	AI.Entity_ConnectLeader(_id, _armyID)
 end
 function AI.Army_GetInternalID(_playerID, _armyID)
-	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0)
+	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
 	local adress = GetArmyObjectPointer()
 	local playerOffset = GetArmyPlayerObjectOffset(_playerID)
@@ -2611,7 +2716,7 @@ for i = 1,9 do
 	end
 end
 EvaluateArmyHomespots = function(_player, _pos, _army)
-	assert(type(_pos) == "table" and _pos.X and _pos.Y)
+	assert(type(_pos) == "table" and _pos.X and _pos.Y, "pos param needs to be a table filled with X and Y pos")
 	if not ArmyHomespots then
 		ArmyHomespots = {}
 	end

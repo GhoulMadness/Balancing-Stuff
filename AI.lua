@@ -234,20 +234,33 @@ ReinitChunkData = function(_playerId)
 	end
 	AI_AddEnemiesToChunkData(_playerId)
 end
+--TODO: can sometimes return already used slot?
 GetFirstFreeArmySlot = function(_player)
 	if not (ArmyTable and ArmyTable[_player]) then
 		return 0
 	end
 	local count
 	for k, v in pairs(ArmyTable[_player]) do
-		if not v or IsDead(v) then
-			ArmyTable[_player][k] = nil
-			ArmyHomespots[_player][k] = nil
+		if not v then
 			return k - 1
 		end
-		count = k - 1
+		count = k
 	end
-	return count + 1
+	return count or 0
+end
+RemoveUnusedArmySlots = function(_player)
+	local count = 0
+	for k, v in pairs(ArmyTable[_player]) do
+		if IsDead(v) then
+			RemoveArmyByID(_player, k - 1)
+			count = count + 1
+		end
+	end
+	return count
+end
+RemoveArmyByID = function(_player, _id)
+	ArmyTable[_player][_id + 1] = nil
+	ArmyHomespots[_player][_id + 1] = nil
 end
 SetupArmy = function(_army)
 
@@ -257,7 +270,7 @@ SetupArmy = function(_army)
 	if not ArmyTable[_army.player] then
 		ArmyTable[_army.player] = {}
 	end
-	ArmyTable[_army.player][_army.id + 1] = _army
+	ArmyTable[_army.player][_army.id + 1] = ArmyTable[_army.player][_army.id + 1] or _army
 	EvaluateArmyHomespots(_army.player, _army.position, _army.id + 1)
 	AI.Army_SetScatterTolerance(_army.player, _army.id, 0)
 	AI.Army_SetSize(_army.player, _army.id, 0)
@@ -315,15 +328,18 @@ end
 Advance = function(_army)
 
 	local enemyId = AI.Army_GetEntityIdOfEnemy(_army.player, _army.id)
+	local range = math.max(_army.rodeLength, ArmyTable[_army.player][_army.id+1].rodeLength)
+	local pos = _army.position
 
-	if enemyId > 0 then
+	if enemyId == 0 or not IsValid(enemyId) or Logic.GetSector(enemyId) ~= CUtil.GetSector(pos.X/100, pos.Y/100) then
+		enemyId = ({GetNearestEnemyDistance(_army.player, pos, range)})[2]
+	end
+	if enemyId then
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-			if Logic.GetSector(id) == Logic.GetSector(enemyId) or GetNearestEnemyDistance(_army.player, GetPosition(id), _army.rodeLength) then
+			if Logic.GetSector(id) == Logic.GetSector(enemyId) or GetNearestEnemyDistance(_army.player, GetPosition(id), range) then
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					if GetDistance(GetPosition(id), _army.position) < 1500 then
-						ManualControl_AttackTarget(_army.player, _army.id + 1, id)
-					end
+					ManualControl_AttackTarget(_army.player, _army.id + 1, id)
 				end
 				if ArmyTable[_army.player][_army.id + 1][id] then
 					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
@@ -340,8 +356,14 @@ end
 FrontalAttack = function(_army, _target)
 
 	local enemyId = _target or AI.Army_GetEntityIdOfEnemy(_army.player, _army.id)
+	local range = math.max(_army.rodeLength, ArmyTable[_army.player][_army.id+1].rodeLength)
 
 	if enemyId > 0 then
+		assert(IsValid(enemyId), "invalid enemy entityID")
+	else
+		enemyId = ({GetNearestEnemyDistance(_army.player, _army.position, range)})[2]
+	end
+	if enemyId and enemyId > 0 and IsValid(enemyId) then
 		for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if Logic.GetSector(id) == Logic.GetSector(enemyId) then
