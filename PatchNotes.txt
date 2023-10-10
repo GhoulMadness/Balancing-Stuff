@@ -892,3 +892,11 @@ Für die verstärkte Veredlung mittels Kohle wird nun weniger Kohle benötigt.
 
 Helden werden von der KI nun nicht mehr pauschal stärker fokussiert. Der Fokus wird nun den Rahmenbedingungen entsprechend berechnet.
 
+Es wurde ein Fehler behoben, durch den KI-Spawntruppen in seltenen Fällen keiner KI zugeordnet wurden und dadurch keine Befehle erhielten.
+
+Es wurde ein Fehler behoben, durch den eine sehr hohe Anzahl verschiedener Spawnarmeen das Spiel zum Absturz bringen konnte.
+
+Fehlermeldungen sind nun aussagekräftiger.
+
+Orgelkanone und Schwere Haubitze sind nun verfügbar.
+
