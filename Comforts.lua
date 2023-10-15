@@ -1679,6 +1679,33 @@ function MakePlayerEntitiesInvulnerableLimitedTime(_PlayerID, _Timelimit)
 		return true
 	end
 end
+----------------------------------------------------------------------------------------------------------
+function CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _step, _name)
+	local count = 0
+	local t = {}
+	local x_, y_
+	while count < _amount do
+		local check = true
+		x_ = math.random(_minX, _maxX)
+		y_ = math.random(_minY, _maxY)
+		if _step then
+			for k, v in pairs(t) do
+				if GetDistance(v, {X = x_, Y = y_}) < _step then
+					check = false
+				end
+			end
+		end
+		if check then
+			table.insert(t, {X = x_, Y = y_})
+			count = count + 1
+			local id = Logic.CreateEntity(_entityType, x_, y_, 0, _player)
+			if _name then
+				Logic.SetEntityName(id, _name)
+			end
+		end
+	end
+	return t
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- Mem reading/writing --------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
