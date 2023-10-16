@@ -37,7 +37,6 @@ else
 	Logic.SetTechnologyState(BS.SpectatorPID, Technologies.GT_Tactics, 3)
 end
 for i = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-	Logic.SetTechnologyState(i, Technologies.MU_Catapult, 0)
 	if gvXmasEventFlag or gvTutorialFlag then
 		Logic.SetTechnologyState(i, Technologies.B_VillageHall, 0)
 	end

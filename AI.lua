@@ -633,14 +633,24 @@ end
 AITroopGenerator_Action = function(_player)
 
 	local _army = MapEditor_Armies[_player]
+	local silver = Logic.GetPlayersGlobalResource(_player, ResourceType.SilverRaw) + Logic.GetPlayersGlobalResource(_player, ResourceType.Silver)
+	local coal = Logic.GetPlayersGlobalResource(_player, ResourceType.Knowledge)
 	-- Get entityType/Category
 	local eTyp, id = AITroopGenerator_EvaluateMilitaryBuildingsPriority(_player)
 	eTyp = eTyp or _army.AllowedTypes[math.random(table.getn(_army.AllowedTypes))]
 	if _army.techLVL == 3 then
 		if eTyp == Entities.PV_Cannon1 then
-			eTyp = Entities.PV_Cannon3
+			if silver >= 100 and coal >= 500 then
+				eTyp = Entities.PV_Cannon5
+			else
+				eTyp = Entities.PV_Cannon3
+			end
 		elseif eTyp == Entities.PV_Cannon2 then
-			eTyp = Entities.PV_Cannon4
+			if silver >= 150 and coal >= 500 then
+				eTyp = Entities.PV_Cannon6
+			else
+				eTyp = Entities.PV_Cannon4
+			end
 		end
 	end
 	local belowlimit = AITroopGenerator_IsBelowTroopLimit(_army)

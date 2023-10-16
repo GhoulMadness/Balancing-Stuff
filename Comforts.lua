@@ -1184,10 +1184,10 @@ function Unmuting()
 
 end
 
-function QuickTest()
+function QuickTest(_val)
 
 	local player = GUI.GetPlayerID()
-	local val = 1000000
+	local val = _val or 1000000
 	AddGold(player, val)
 	AddStone(player, val)
 	AddIron(player, val)
@@ -1195,6 +1195,7 @@ function QuickTest()
 	AddSulfur(player, val)
 	AddClay(player, val)
 	Logic.AddToPlayersGlobalResource(player, ResourceType.SilverRaw, val)
+	Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, val)
 	ResearchAllTechnologies(player, true, true, true, true, true)
 	Display.SetRenderFogOfWar(0)
 	GUI.MiniMap_SetRenderFogOfWar(0)

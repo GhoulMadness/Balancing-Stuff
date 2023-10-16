@@ -33,6 +33,7 @@
 					["(2) bs koop vierte pruefung - das artefakt"] = true,
 					["(2) bs koop fuenfte pruefung - die dunkle bedrohung"] = true,
 					["(2) bs koop sechste pruefung - der böse graf"] = true,
+					["(2) bs koop siebte pruefung - tanz der flammen"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) bs koop eingekesselt"] = true,
 					["(2) bs koop farben des glaubens"] = true,
@@ -231,7 +232,10 @@
 															[2] = "challenge_map2_won",
 															[3] = "challenge_map3_won"
 														},
-							["Build_VictoryStatue4"] = "challenge_map4_won"
+							["Build_VictoryStatue4"] = "challenge_map4_won",
+							["Buy_Cannon5"] = "challenge_map5_won",
+							["Buy_Cannon6"] = "challenge_map6_won",
+							["Buy_Catapult"] = "challenge_map7_won"
 						}
 
 	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
@@ -262,11 +266,14 @@
 										"Vqrys",
 										"Izzo",
 										"a8wh4t"},
-								[4] = {}
+								[4] = {},
+								[5] = {},
+								[6] = {},
+								[7] = {}
 							}
 	function BS.CheckForAchievements(_pID)
 
-		for i = 1,12 do
+		for i = 1,16 do
 			if _pID == i then
 				for k,v in pairs(BS.AchievementNames) do
 					if type(v) == "string" then

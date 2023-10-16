@@ -287,21 +287,29 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Varg ---------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-function OnVargWolfDied(_playerID)
+function Hero9_Died(_heroID)
 
-	local entityID = Event.GetEntityID()
-	if table_findvalue(gvHero9.WolfIDs[_playerID], entityID) ~= 0 then
-		removetablekeyvalue(gvHero9.WolfIDs[_playerID], entityID)
+	local target = Event.GetEntityID2()
+
+	if target == _heroID then
+
+		local health = Logic.GetEntityHealth(target)
+		local damage = CEntity.TriggerGetDamage()
+		if damage >= health then
+
+			local player = Logic.EntityGetPlayer(_heroID)
+
+			for i = 1, table.getn(gvHero9.WolfIDs[player]) do
+				SetHealth(gvHero9.WolfIDs[player][i], 0)
+			end
+
+			gvHero9.WolfIDs[player] = nil
+			return true
+
+		end
+
 	end
-	if not next(gvHero9.WolfIDs[_playerID]) then
-		return true
-	end
-end
-function Hero9_Wolf_DelayedAttachment(_id, _heroID)
-	if IsValid(_id) then
-		SetEntitySpawnLeaderAttachment(_id, 54, _heroID)
-	end
-	return true
+
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Catapult Stones ----------------------------------------------------------------------------------------------------------
@@ -1477,6 +1485,7 @@ end
 
 gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500,
 								[Entities.PV_Cannon4] = 1800,
+								[Entities.PV_Cannon6] = 2500,
 								[Entities.PV_Catapult] = 2000}
 for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
