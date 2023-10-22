@@ -2099,9 +2099,9 @@ function GetAbilityRange(_entityType, _ability)
 	else
 		local off
 		local index = BS.MemValues.IndexByAbility[_ability].Range
-		for i = 2, 6, 2 do
-			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][14+i][0]:GetInt() == BS.MemValues.VTableByAbility[_ability] then
-				BS.MemValues.EntityTypeAbilityRange[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][14+i][index]:GetFloat()
+		for i = 2, 10, 2 do
+			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][0]:GetInt() == BS.MemValues.VTableByAbility[_ability] then
+				BS.MemValues.EntityTypeAbilityRange[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][index]:GetFloat()
 				return BS.MemValues.EntityTypeAbilityRange[_entityType][_ability]
 			end
 		end
