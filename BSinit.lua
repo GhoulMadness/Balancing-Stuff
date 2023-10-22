@@ -38,6 +38,7 @@
 					["(2) bs koop eingekesselt"] = true,
 					["(2) bs koop farben des glaubens"] = true,
 					["(2) bs koop sturm auf etaqa"] = true,
+					["(2) bs koop nachbarschaft"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
