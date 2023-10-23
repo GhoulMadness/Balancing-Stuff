@@ -2945,7 +2945,7 @@ RetreatToMaxRange = function(_id, _target, _dist)
 
 	local yoff = _dist * math.sin(math.rad(angle))
 	local xoff = _dist * math.cos(math.rad(angle))
-	local posX, posY = pos1.X + xoff. pos1.Y + yoff
+	local posX, posY = pos1.X + xoff, pos1.Y + yoff
 	--local posX, posY = pos1.X + _dist * dist_12, pos1.Y + _dist * dist_12
 	local sector = CUtil.GetSector(posX/100, posY/100)
 	if sector == 0 or sector ~= Logic.GetSector(_id) then
