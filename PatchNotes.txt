@@ -898,5 +898,7 @@ Es wurde ein Fehler behoben, durch den eine sehr hohe Anzahl verschiedener Spawn
 
 Fehlermeldungen sind nun aussagekräftiger.
 
-Orgelkanone und Schwere Haubitze sind nun verfügbar.
+Es wurden weitere Einheiten und Objekte hinzugefügt.
+
+Die Stärke von Nebelvolk-Rüstungsupgrades (oft im späteren Spielverlauf von Koop-Maps) wurde reduziert.
 
