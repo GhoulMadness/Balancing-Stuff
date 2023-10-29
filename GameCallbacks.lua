@@ -826,6 +826,7 @@ function GameCallback_PaydayPayed(_player,_amount)
 		return _amount
 
 	else
+		LuaDebugger.Break()
 		return 0
 	end
 end
