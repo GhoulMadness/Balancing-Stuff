@@ -288,15 +288,24 @@ EnlargeArmy = function(_army, _troop, _pos)
 	local id = CreateGroup(_army.player, _troop.leaderType, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, _troop.experiencePoints or 0)
 	ConnectLeaderWithArmy(id, _army)
 end
-ConnectLeaderWithArmy = function(_id, _army)
+ConnectLeaderWithArmy = function(_id, _army, _type)
 	assert(IsValid(_id), "invalid leader id")
-	assert(type(_army) == "table", "army must be a valid army table")
-	table.insert(ArmyTable[_army.player][_army.id + 1].IDs, _id)
-	if Logic.IsEntityInCategory(_id, EntityCategories.EvilLeader) ~= 1 then
+	assert(type(_army) == "table" or type(_type) == "string", "invalid army")
+	if _army then
+		table.insert(ArmyTable[_army.player][_army.id + 1].IDs, _id)
+		if Logic.IsEntityInCategory(_id, EntityCategories.EvilLeader) ~= 1 then
+			Logic.LeaderChangeFormationType(_id, math.random(1, 7))
+		end
+		ArmyTable[_army.player][_army.id + 1][_id] = ArmyTable[_army.player][_army.id + 1][_id] or {}
+		ArmyTable[_army.player][_army.id + 1][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, _id, _army.id})
+	else
+		local _player = Logic.EntityGetPlayer(_id)
+		table.insert(MapEditor_Armies[_player][_type].IDs, _id)
+		MapEditor_Armies[_player][_type][_id] = MapEditor_Armies[_player][_type][_id] or {}
 		Logic.LeaderChangeFormationType(_id, math.random(1, 7))
+		MapEditor_Armies[_player][_type][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, _id, _type})
+		MapEditor_Armies[_player][_type][_id].HomespotIndex = math.random(1, table.getn(ArmyHomespots[_player].recruited))
 	end
-	ArmyTable[_army.player][_army.id + 1][_id] = ArmyTable[_army.player][_army.id + 1][_id] or {}
-	ArmyTable[_army.player][_army.id + 1][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_army.player, _id, _army.id})
 end
 Defend = function(_army)
 

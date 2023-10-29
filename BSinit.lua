@@ -34,6 +34,8 @@
 					["(2) bs koop fuenfte pruefung - die dunkle bedrohung"] = true,
 					["(2) bs koop sechste pruefung - der böse graf"] = true,
 					["(2) bs koop siebte pruefung - tanz der flammen"] = true,
+					["(2) bs koop achte pruefung - shering in gefahr"] = true,
+					["(2) bs koop neunte pruefung - rettet trogteburg"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) bs koop eingekesselt"] = true,
 					["(2) bs koop farben des glaubens"] = true,
