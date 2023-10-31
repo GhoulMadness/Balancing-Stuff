@@ -1,5 +1,5 @@
 AIEnemiesAC = AIEnemiesAC or {}
-for _playerId = 1,12 do
+for _playerId = 1,16 do
 	AIEnemiesAC[_playerId] = AIEnemiesAC[_playerId] or {}
 	AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total or 0
 	for i = 1,7 do
