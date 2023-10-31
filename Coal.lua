@@ -132,3 +132,12 @@ function OnCoalmine_Destroyed(_id)
 		return true
 	end
 end
+for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PB_CoalmakersHut1)) do
+	gvCoal.Coalmaker.WoodBurned[eID] = 0
+	gvCoal.Coalmaker.CoalEarned[eID] = 0
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmaker_Destroyed", 1,{},{eID})
+end
+for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(Entities.PB_CoalMine1, Entities.PB_CoalMine2)) do
+	gvCoal.Mine.AmountMined[eID] = 0
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmine_Destroyed", 1,{},{eID})
+end
