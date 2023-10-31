@@ -84,7 +84,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 				SpawnPos = { },
 				Finished = { }
 }
-for i = 1,12 do
+for i = 1,16 do
 	ArmyCreator.SpawnPos[i] = {X = 1000, Y = 1000}
 	if IsValid("start_pos_p"..i) then
 		ArmyCreator.SpawnPos[i] = GetPosition("start_pos_p"..i)
