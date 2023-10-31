@@ -902,3 +902,5 @@ Es wurden weitere Einheiten und Objekte hinzugefügt.
 
 Die Stärke von Nebelvolk-Rüstungsupgrades (oft im späteren Spielverlauf von Koop-Maps) wurde reduziert.
 
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Kohleminen und/oder Köhler bereits zu Spielbeginn platziert sind.
+
