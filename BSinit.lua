@@ -32,7 +32,7 @@
 					["(2) bs koop dritte pruefung - gesandter des himmels"] = true,
 					["(2) bs koop vierte pruefung - das artefakt"] = true,
 					["(2) bs koop fuenfte pruefung - die dunkle bedrohung"] = true,
-					["(2) bs koop sechste pruefung - der böse graf"] = true,
+					["(2) bs koop sechste pruefung - der boese graf"] = true,
 					["(2) bs koop siebte pruefung - tanz der flammen"] = true,
 					["(2) bs koop achte pruefung - shering in gefahr"] = true,
 					["(2) bs koop neunte pruefung - rettet trogteburg"] = true,
