@@ -953,6 +953,14 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 	return Counter,(Counter >= _amount)
 
 end
+function ArePlayerBuildingsInArea(_player, _x, _y, _range)
+	local count = 0
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(_x, _y, _range)) do
+		count = count + 1
+		break
+	end
+	return count > 0
+end
 function GetNumberOfAlliesInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
