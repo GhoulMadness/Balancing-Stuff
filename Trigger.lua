@@ -1506,7 +1506,8 @@ function OnAIEnemyCreated(_playerID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
 				break
-			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) 
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
 				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				break
 			end
@@ -1528,7 +1529,8 @@ function OnAIEnemyDestroyed(_playerID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
 				break
-			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) 
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
 				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				break
 			end

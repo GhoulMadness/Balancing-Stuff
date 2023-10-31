@@ -219,7 +219,8 @@ AI_AddEnemiesToChunkData = function(_playerId)
 			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
 			table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
 			AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
-		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0) or Logic.IsSerf(eID) == 1 then
+		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0) 
+		or Logic.IsSerf(eID) == 1 or etype == Entities.PU_Travelling_Salesman then
 			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
 		end
 	end
