@@ -904,3 +904,5 @@ Die Stärke von Nebelvolk-Rüstungsupgrades (oft im späteren Spielverlauf von K
 
 Es wurde ein Fehler behoben, der auftreten konnte, wenn Kohleminen und/oder Köhler bereits zu Spielbeginn platziert sind.
 
+Jeder Trupp der KI konnte den nächsten Gegner angreifen, wenn Feinde die Reichweite der KI unterschritten hatten. Dadurch konnte es vorkommen, dass einige Truppen Gegner angriffen, die nicht in Reichweite der KI waren. Die Logik wurde umgeschrieben, sodass nur noch Feinde in Reichweite getargetted werden.
+
