@@ -153,7 +153,9 @@ ControlMapEditor_Armies = function(_playerId, _type)
 		else
 			range = MapEditor_Armies[_playerId][_type].baseDefenseRange
 		end
-		if AreEntitiesOfDiplomacyStateInArea(_playerId, pos, range, Diplomacy.Hostile) then
+		local dist, eID = GetNearestEnemyDistance(_playerId, pos, range)
+		--if AreEntitiesOfDiplomacyStateInArea(_playerId, pos, range, Diplomacy.Hostile) then
+		if dist and dist <= range then
 			for i = 1, table.getn(MapEditor_Armies[_playerId][_type].IDs) do
 				local id = MapEditor_Armies[_playerId][_type].IDs[i]
 				if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) and Logic.LeaderGetNearbyBarracks(id) ~= 0 then
@@ -161,14 +163,14 @@ ControlMapEditor_Armies = function(_playerId, _type)
 				end
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
 					if GetDistance(GetPosition(id), pos) < 1200 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
-						ManualControl_AttackTarget(_playerId, nil, id, _type)
+						ManualControl_AttackTarget(_playerId, nil, id, _type, eID)
 					end
 				end
 				local tab = MapEditor_Armies[_playerId][_type][id]
 				if tab then
 					if (tab.lasttime and (tab.lasttime + 3 < Logic.GetTime() ))
 					or (tab.currenttarget and not Logic.IsEntityAlive(tab.currenttarget)) then
-						ManualControl_AttackTarget(_playerId, nil, id, _type)
+						ManualControl_AttackTarget(_playerId, nil, id, _type, eID)
 					end
 				end
 			end
@@ -179,7 +181,7 @@ ControlMapEditor_Armies = function(_playerId, _type)
 				if tab and tab.lasttime then
 					if GetDistance(GetPosition(id), pos) > 1200 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
 						local anchor = ArmyHomespots[_playerId].recruited[tab.HomespotIndex]
-						Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
+						Logic.MoveSettler(id, anchor.X, anchor.Y)
 					end
 				else
 					if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) then
@@ -321,12 +323,12 @@ Defend = function(_army)
 				Logic.GroupAttack(id, eID)
 			else
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					ManualControl_AttackTarget(_army.player, _army.id + 1, id)
+					ManualControl_AttackTarget(_army.player, _army.id + 1, id, nil, eID)
 				end
 				if ArmyTable[_army.player][_army.id + 1][id] then
 					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
 					or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
-						ManualControl_AttackTarget(_army.player, _army.id + 1, id)
+						ManualControl_AttackTarget(_army.player, _army.id + 1, id, nil, eID)
 					end
 				end
 			end
@@ -534,7 +536,7 @@ DestroyAITroopGenerator = function(_army)
 	_army.generatorID = nil
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ManualControl_AttackTarget = function(_player, _armyId, _id, _type)
+ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 
 	local tabname, range, target, newtarget
 	if not _armyId then
@@ -552,9 +554,17 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type)
 	end
 	tabname[_id] = tabname[_id] or {}
 	if newtarget and newtarget > 0 and Logic.GetSector(newtarget) == Logic.GetSector(_id) then
-		tabname[_id].currenttarget = newtarget
-		tabname[_id].lasttime = Logic.GetTime()
-		Logic.GroupAttack(_id, newtarget)
+		if GetDistance(tabname.position, newtarget) > range then
+			if _target then
+				tabname[_id].currenttarget = _target
+				tabname[_id].lasttime = Logic.GetTime()
+				Logic.GroupAttack(_id, _target)
+			end
+		else
+			tabname[_id].currenttarget = newtarget
+			tabname[_id].lasttime = Logic.GetTime()
+			Logic.GroupAttack(_id, newtarget)
+		end
 	end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
