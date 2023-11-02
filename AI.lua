@@ -154,7 +154,6 @@ ControlMapEditor_Armies = function(_playerId, _type)
 			range = MapEditor_Armies[_playerId][_type].baseDefenseRange
 		end
 		local dist, eID = GetNearestEnemyDistance(_playerId, pos, range)
-		--if AreEntitiesOfDiplomacyStateInArea(_playerId, pos, range, Diplomacy.Hostile) then
 		if dist and dist <= range then
 			for i = 1, table.getn(MapEditor_Armies[_playerId][_type].IDs) do
 				local id = MapEditor_Armies[_playerId][_type].IDs[i]
@@ -221,7 +220,7 @@ AI_AddEnemiesToChunkData = function(_playerId)
 			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
 			table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
 			AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
-		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0) 
+		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0)
 		or Logic.IsSerf(eID) == 1 or etype == Entities.PU_Travelling_Salesman then
 			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
 		end
