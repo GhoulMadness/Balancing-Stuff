@@ -906,3 +906,5 @@ Es wurde ein Fehler behoben, der auftreten konnte, wenn Kohleminen und/oder Köh
 
 Jeder Trupp der KI konnte den nächsten Gegner angreifen, wenn Feinde die Reichweite der KI unterschritten hatten. Dadurch konnte es vorkommen, dass einige Truppen Gegner angriffen, die nicht in Reichweite der KI waren. Die Logik wurde umgeschrieben, sodass nur noch Feinde in Reichweite getargetted werden.
 
+Belagerungskanone Bewegungstempo: 100 -> 120
+

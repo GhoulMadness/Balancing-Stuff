@@ -368,7 +368,8 @@
 			"VictoryStatue4",
 			"WCutter",
 			"Forester",
-			"Coal"
+			"Coal",
+			"Cannon5"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
@@ -396,7 +397,9 @@
 	--initializing animations for beautifications
 	BeautiAnimCheck()
 	--loading widget helper
-	Script.Load("MP_SettlerServer/WidgetHelper.lua")
+	if not WidgetHelper then
+		Script.Load("MP_SettlerServer/WidgetHelper.lua")
+	end
 	--additionaly load this script if there are any presents to steal on the map
 	if gvXmasEventFlag == 1 then
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")

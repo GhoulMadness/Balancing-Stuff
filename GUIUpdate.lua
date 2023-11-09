@@ -1159,11 +1159,13 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindHeavyCavalryLeader, 0)
 	end
 	-- cannons
-	local Cannon1 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
-	local Cannon2 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
-	local Cannon3 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
-	local Cannon4 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
-	local CannonAmount = Cannon1 + Cannon2 + Cannon3 + Cannon4
+	local CannonAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon5)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon6)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Catapult)
 	if CannonAmount > 0 then
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindCannon, 1)
 	else

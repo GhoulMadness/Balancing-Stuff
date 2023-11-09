@@ -310,11 +310,20 @@ function table_findvalue(_tid, _value)
 
 	local tpos
 
-	if type(_value) == "number" then
+	if type(_value) ~= "table" then
 		for i,val in pairs(_tid) do
-			if val == _value then
-				tpos = i
-				break
+			if type(val) == "table" then
+				for k, v in pairs(val) do
+					if v == _value then
+						tpos = k
+						break
+					end
+				end
+			else
+				if val == _value then
+					tpos = i
+					break
+				end
 			end
 		end
 
@@ -1066,11 +1075,22 @@ GetArmyByLeaderID = function(_id)
 	assert(IsValid(_id), "invalid entityID")
 	assert(Logic.IsLeader(_id) == 1, "entityID must be a leader")
 	local player = Logic.EntityGetPlayer(_id)
-	assert(ArmyTable and ArmyTable[player], "player ID ".. player .." has no armies")
-	for k, v in pairs(ArmyTable[player]) do
-		if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
-			if table_findvalue(v.IDs, _id) ~= 0 then
-				return k - 1
+	assert((ArmyTable and ArmyTable[player]) or (MapEditor_Armies and MapEditor_Armies[player]), "player ID ".. player .." has no armies")
+	if ArmyTable and ArmyTable[player] then
+		for k, v in pairs(ArmyTable[player]) do
+			if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
+				if table_findvalue(v.IDs, _id) ~= 0 then
+					return k - 1
+				end
+			end
+		end
+	end
+	if MapEditor_Armies and MapEditor_Armies[player] then
+		for k, v in pairs(MapEditor_Armies[player]) do
+			if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
+				if table_findvalue(v.IDs, _id) ~= 0 then
+					return k
+				end
 			end
 		end
 	end
@@ -1207,6 +1227,9 @@ function QuickTest(_val)
 	ResearchAllTechnologies(player, true, true, true, true, true)
 	Display.SetRenderFogOfWar(0)
 	GUI.MiniMap_SetRenderFogOfWar(0)
+	Sel = GUI.GetSelectedEntity
+	Game.ShowFPS(1)
+	Input.KeyBindDown(Keys.T, "LuaDebugger.Log(CUtil.GetTargetedEntity())", 2 )
 
 	if Tools then
 		Tools.ExploreArea(-1, -1, val)
@@ -2285,6 +2308,43 @@ function SetEntitySpawnLeaderAttachment(_id, _attach, _value)
 	CUtilMemory.GetMemory(tonumber(CEntity.Debug_GetAttachedEntitiesEntryPointer(_id), 16))[4]:SetInt(_value)
 	CUtilMemory.GetMemory(tonumber(CEntity.Debug_GetAttachedEntitiesEntryPointer(_id), 16))[3]:SetInt(_attach)
 end
+function GetEntityBattleWaitUntilRemaining(_id)
+	assert(IsValid(_id), "invalid entityID")
+	local beh = CUtil.GetBehaviour(_id, tonumber("7761E0", 16))
+	local num = CUtilMemory.GetMemory(tonumber(beh,16))[21]:GetInt()
+	return num
+end
+function GetEntityCurrentTarget(_id)
+	assert(IsValid(_id), "invalid entityID")
+	local ptr = CEntity.Debug_GetAttachedEntitiesEntryPointer(_id)
+	--LuaDebugger.Log(CUtilMemory.GetMemory(tonumber(ptr,16))[10]:GetInt())
+	--LuaDebugger.Log(CUtilMemory.GetMemory(tonumber(ptr,16))[10]:GetInt() == 7823124)
+	--local target = CUtilMemory.GetMemory(tonumber(ptr,16))[11][4]:GetInt()
+	--[[if target == 0 then
+		target = CUtilMemory.GetMemory(tonumber(ptr,16))[14][41]:GetInt()
+	end]]
+	--return target
+end
+
+function GetEntityTargetByAIData(_id)
+	assert(IsValid(_id), "invalid entityID")
+	local player = Logic.EntityGetPlayer(_id)
+	local army = GetArmyByLeaderID(_id)
+	assert(army ~= nil, "entity is not part of an army. Aborting")
+	local tab
+	if type(army) == "string" then
+		tab = MapEditor_Armies[player][army]
+	elseif type(army) == "number" then
+		tab = ArmyTable[player][army]
+	end
+	local target = tab[_id].currenttarget
+	if target and IsValid(target) then
+		local t = CEntity.GetAttachedEntities(target)
+		if table_findvalue(t, _id) ~= 0 then
+			return target
+		end
+	end
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- statistics -----------------------------------------------------------------------------
 -- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
@@ -2424,6 +2484,15 @@ function AI.Army_GetInternalID(_playerID, _armyID)
 	return adress[playerOffset][40 + 3 + (_armyID *84)]:GetInt()
 end
 ---------------------------------------------------------------------------------------------------------------------------------
+function CalculateTotalDamage(_attacker, _target)
+	local base = Logic.GetEntityDamage(_attacker)
+	local armor = Logic.GetEntityArmor(_target)
+	local atype, ttype = Logic.GetEntityType(_attacker), Logic.GetEntityType(_target)
+	local dclass = GetEntityTypeDamageClass(atype)
+	local aclass = GetEntityTypeArmorClass(ttype)
+	local factor = GetDamageFactor(dclass, aclass)
+	return math.max(round(base * factor) - armor, 1)
+end
 -- Rundungs-Comfort
 function round( _n )
 	assert(type(_n) == "number", "round val needs to be a number")

@@ -139,10 +139,8 @@ function LightningRod_Protected(_PID)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","LightningRod_UnProtected",1,{},{_PID})
 end
 function LightningRod_UnProtected(_PID,_SpecialTimer)
-	if _SpecialTimer == nil then
-		_SpecialTimer = 45
-	end
-	if Counter.Tick2("Unprotected".._PID,_SpecialTimer) == true then
+	_SpecialTimer = _SpecialTimer or 45
+	if Counter.Tick2("Unprotected".._PID, _SpecialTimer) == true then
 		gvLightning.RodProtected[_PID] = false
 		return true
 	end
@@ -903,6 +901,35 @@ function GUIAction_SelectEntityInCategory(_catstring)
 	local IDPosX, IDPosY = Logic.GetEntityPosition(EntityID)
 	Camera.ScrollSetLookAt(IDPosX, IDPosY)
 	GUI.SetSelectedEntity(EntityID )
+end
+function KeyBindings_SelectCannons()
+
+	local AllCannons = {}
+
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.Cannon), CEntityIterator.OfPlayerFilter(GUI.GetPlayerID()), CEntityIterator.IsSettlerFilter()) do
+		table.insert(AllCannons, eID)
+	end
+
+	if table.getn(AllCannons) == 0 then
+		return
+	end
+
+	local counter = gvKeyBindings_LastSelectedEntityPos
+
+	--Counter at the end of table?
+	counter = counter + 1
+	if counter >= table.getn(AllCannons) then
+		counter = 0
+	end
+
+	gvKeyBindings_LastSelectedEntityPos = counter
+
+	local EntityID = AllCannons[1 + counter]
+
+	local X, Y = Logic.GetEntityPosition(EntityID)
+	Camera.ScrollSetLookAt(X, Y)
+	GUI.SetSelectedEntity(EntityID)
+
 end
 function GUIAction_ActivateCoalUsage(_flag)
 	local player = GUI.GetPlayerID()

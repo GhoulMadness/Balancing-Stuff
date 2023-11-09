@@ -5,6 +5,9 @@ if EMS then
 		CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/EMS_Menu.xml","Normal")
 		CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/EMS_Menu_Additions.xml","Normal")
 		CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/EMS_RuleOverview.xml","Normal")
+		if BS_AdditionalPrecommits then
+			BS_AdditionalPrecommits()
+		end
 	end)
 	-- localizations and rule stuff
 	EMS.GC.HeroKeys[Entities.PU_Hero13] = "Dovbar"

@@ -538,6 +538,7 @@ end
 ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 
 	local tabname, range, target, newtarget
+
 	if not _armyId then
 		tabname = MapEditor_Armies[_player][_type]
 		range = tabname.baseDefenseRange
