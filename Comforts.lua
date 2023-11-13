@@ -777,6 +777,16 @@ function GetEntityHealth(_entity)
     return ( Health / MaxHealth ) * 100
 
 end
+function GenerateRandomWithSteps(_min, _max, _step)
+	local steps = math.ceil(_max - _min / _step)
+	local rand = math.random(0, steps)
+	return _min + rand * _step
+end
+function GetNearestEntityOfType(_x, _y, _entityType)
+	local range = Logic.WorldGetSize()
+	local num, id = Logic.GetEntitiesInArea(_entityType, _x, _y, range, 1)
+	return id
+end
 function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 
 	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
@@ -1001,6 +1011,16 @@ function GetNumberOfPlayerEntitiesByCatInRange(_player, _ecats, _position, _rang
 	assert(type(_range) == "number" and _range > 0, "invalid range")
 	local count = 0
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		count = count + 1
+	end
+	return count
+end
+function GetNumberOfPlayerUnitsInRange(_player, _position, _range)
+	assert(type(_player) == "table", "invalid player IDs")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local count = 0
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(_player)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.IsSettlerFilter()) do
 		count = count + 1
 	end
 	return count
@@ -1599,6 +1619,10 @@ GetDistance = function(_a, _b)
 
 end
 
+function IsPositionUnblocked(_x, _y)
+	local height, blockingtype, sector, terrType = CUtil.GetTerrainInfo(_x, _y)
+	return (sector ~= 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(x_/100, y_/100)))
+end
 function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
 
 	if Logic.IsEntityAlive(_EntityID) == false then
@@ -1720,23 +1744,61 @@ function CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, 
 		local check = true
 		x_ = math.random(_minX, _maxX)
 		y_ = math.random(_minY, _maxY)
-		if _step then
-			for k, v in pairs(t) do
-				if GetDistance(v, {X = x_, Y = y_}) < _step then
-					check = false
+		if IsPositionUnblocked(x_, y_) then
+			if _step then
+				for k, v in pairs(t) do
+					if GetDistance(v, {X = x_, Y = y_}) < _step then
+						check = false
+					end
 				end
 			end
-		end
-		if check then
-			table.insert(t, {X = x_, Y = y_})
-			count = count + 1
-			local id = Logic.CreateEntity(_entityType, x_, y_, 0, _player)
-			if _name then
-				Logic.SetEntityName(id, _name)
+			if check then
+				table.insert(t, {X = x_, Y = y_})
+				count = count + 1
+				local id = Logic.CreateEntity(_entityType, x_, y_, 0, _player)
+				if _name then
+					Logic.SetEntityName(id, _name .. "_" .. _player .. "_" .. count)
+				end
 			end
 		end
 	end
 	return t
+end
+function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _length, _sizeOffset, _step, _name)
+	local t = CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _step, _name)
+	local t2 = {}
+	for i = 1, table.getn(t) do
+		local len = 0
+		local x_, y_ = t[i].X, t[i].Y
+		while len < _length do
+			local x__, y__
+			local check = true
+			x__ = x_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
+			y__ = y_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
+			if IsPositionUnblocked(x__, y__) then
+				local eID = GetNearestEntityOfType(x__, y__, _entityType)
+				if eID then
+					local pos = GetPosition(eID)
+					local dist = GetDistance({X = x__, Y = y__}, pos)
+					if dist > _sizeOffset * math.sqrt(2) or dist < _sizeOffset then
+						check = false
+					end
+				end
+				if check then
+					t2[i] = t2[i] or {}
+					table.insert(t2[i], {X = x__, Y = y__})
+					local id = Logic.CreateEntity(_entityType, x__, y__, 0, _player)
+					if _name then
+						Logic.SetEntityName(id, _name .. "_" .. _player .. "_" .. i .. "_" .. len)
+					end
+					x_, y_ = x__, y__
+					len = len + 1
+				end
+			end
+		end
+		table.insert(t2[i], t[i])
+	end
+	return t2
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- Mem reading/writing --------------------------------------------------------------------------
