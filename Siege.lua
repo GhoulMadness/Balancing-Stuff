@@ -89,7 +89,9 @@ Siege_PitchFieldApplyDamage = function(_id, _index)
 			CEntity.DealDamageInArea(_id, X, Y, Siege.PitchBurningRange, Siege.PitchBurningDamage)
 		end
 	else
-		DestroyEntity(_id)
+		for i = 1, table.getn(Siege.PitchFieldPositions[_index]) do
+			DestroyEntity(Logic.GetEntityAtPosition(Siege.PitchFieldPositions[_index][i].X, Siege.PitchFieldPositions[_index][i].Y))
+		end
 		Siege.PitchFieldAlreadyTargetted[_index] = false
 		table.remove(Siege.PitchFieldPositions, _index)
 		return true
