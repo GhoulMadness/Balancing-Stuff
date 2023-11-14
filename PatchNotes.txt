@@ -908,3 +908,5 @@ Jeder Trupp der KI konnte den nächsten Gegner angreifen, wenn Feinde die Reichw
 
 Belagerungskanone Bewegungstempo: 100 -> 120
 
+Übersetzungen in das Englische wurden verbessert. Fehlende Übersetzungen wurden hinzugefügt.
+
