@@ -908,5 +908,7 @@ Jeder Trupp der KI konnte den nächsten Gegner angreifen, wenn Feinde die Reichw
 
 Belagerungskanone Bewegungstempo: 100 -> 120
 
+Die verwendete Version der EMS-GUI wurde aktualisiert. Vielen Dank an RobbiTheFox.
+
 Übersetzungen in das Englische wurden verbessert. Fehlende Übersetzungen wurden hinzugefügt.
 
