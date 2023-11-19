@@ -20,6 +20,9 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 				end
 			end
 		end}
+if not Siege.PitchBurners then
+	Siege.PitchBurnerInit()
+end
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,"", "Siege_EntityCreated")
 Siege_TrapControl = function()
 	for i = 1, table.getn(Siege.TrapPositions) do
@@ -97,5 +100,16 @@ Siege_PitchFieldApplyDamage = function(_id, _index)
 		return true
 	end
 end
-Siege_PitchBurnerControl = function()
+Siege.PitchBurnerInit = function()
+	Siege.PitchBurners = Siege.PitchBurners or {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PU_PitchBurner), CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs))) do
+		table.insert(Siege.PitchBurners, eID)
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerControl",1,{},{eID})
+	end
+end
+Siege_PitchBurnerControl = function(_id)
+	if not IsValid(_id) then
+		return true
+	end
+
 end
