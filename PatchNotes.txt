@@ -916,3 +916,5 @@ Die verwendete Version der EMS-GUI wurde aktualisiert. Vielen Dank an RobbiTheFo
 
 Übersetzungen in das Englische wurden verbessert. Fehlende Übersetzungen wurden hinzugefügt.
 
+Leibeigene konnten nach Leerhacken eines Steinhaufens zu einem nahen Grabstein laufen und versuchten, diesen abzubauen. Da es aber nicht möglich ist, Grabsteine abzubauen, standen die Leibeigenen nur untätig um diesen herum. Leibeigene können nun nicht mehr automatisch an Grabsteine laufen.
+
