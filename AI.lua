@@ -585,67 +585,10 @@ end
 AITroopGenerator_Condition = function(_Name, _player)
 
 	local _army = MapEditor_Armies[_player]
+	-- Already enough troops?
 	local limitreached = AITroopGenerator_IsAtTroopLimit(_army)
-	-- Already enough troops
-	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack)
-		or
-		limitreached then
+	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) then
 		return false
-	end
-
-	-- not enough troops
-	if not limitreached then
-
-		local numBarr, numArch, numStab, numFoun = AI.Village_GetNumberOfMilitaryBuildings(_army.player)
-
-		if numBarr + numArch + numStab + numFoun ~= 0 then
-			-- Connect unemployed leader
-			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_army.player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Cannon)) do
-				if Logic.IsEntityInCategory(eID, EntityCategories.MilitaryBuilding) ~= 1 then
-					if AI.Entity_GetConnectedArmy(eID) == -1 and (Logic.GetCurrentTaskList(eID) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(eID) == "TL_VEHICLE_IDLE") then
-						local tab = (_army.offensiveArmies[eID] or _army.defensiveArmies[eID])
-						local index = (tab and tab.HomespotIndex) or math.random(1, table.getn(ArmyHomespots[_player].recruited))
-						local anchor = ArmyHomespots[_army.player].recruited[index]
-						local pos = GetPosition(eID)
-						if GetDistance(pos, anchor) > 500 then
-							if string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(eID))), "cu") ~= nil then
-
-								if (({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Barracks2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery1, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_Archery2, pos.X, pos.Y, 1500, 1)})[1] + ({Logic.GetPlayerEntitiesInArea(_army.player, Entities.PB_MercenaryTower, pos.X, pos.Y, 1500, 1)})[1]) ~= 0 then
-									Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
-								end
-								if string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(eID))), "veteran") ~= nil then
-									Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
-								end
-							else
-								local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(eID)
-
-								if MilitaryBuildingID ~= 0	then
-									if Logic.IsConstructionComplete( MilitaryBuildingID ) == 1 then
-										if Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(eID) == Logic.LeaderGetMaxNumberOfSoldiers(eID)) then
-											Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		else
-			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_army.player), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Cannon)) do
-				if Logic.IsEntityInCategory(eID, EntityCategories.MilitaryBuilding) ~= 1 then
-					if AI.Entity_GetConnectedArmy(eID) == -1 and (Logic.GetCurrentTaskList(eID) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(eID) == "TL_VEHICLE_IDLE") then
-						local tab = (_army.offensiveArmies[eID] or _army.defensiveArmies[eID])
-						local index = (tab and tab.HomespotIndex) or math.random(1, table.getn(ArmyHomespots[_player].recruited))
-						local anchor = ArmyHomespots[_army.player].recruited[index]
-						if GetDistance(GetPosition(eID), anchor) > 1200 then
-							Logic.GroupAttackMove(eID, anchor.X, anchor.Y, math.random(360))
-						end
-					end
-				end
-			end
-		end
-
 	end
 	return not limitreached
 
@@ -653,36 +596,39 @@ end
 AITroopGenerator_Action = function(_player)
 
 	local _army = MapEditor_Armies[_player]
-	local silver = Logic.GetPlayersGlobalResource(_player, ResourceType.SilverRaw) + Logic.GetPlayersGlobalResource(_player, ResourceType.Silver)
-	local coal = Logic.GetPlayersGlobalResource(_player, ResourceType.Knowledge)
-	-- Get entityType/Category
-	local eTyp, id = AITroopGenerator_EvaluateMilitaryBuildingsPriority(_player)
-	eTyp = eTyp or _army.AllowedTypes[math.random(table.getn(_army.AllowedTypes))]
-	if _army.techLVL == 3 then
-		if eTyp == Entities.PV_Cannon1 then
-			if silver >= 100 and coal >= 500 then
-				eTyp = Entities.PV_Cannon5
-			else
-				eTyp = Entities.PV_Cannon3
-			end
-		elseif eTyp == Entities.PV_Cannon2 then
-			if silver >= 150 and coal >= 500 then
-				eTyp = Entities.PV_Cannon6
-			else
-				eTyp = Entities.PV_Cannon4
-			end
-		end
-	end
 	local belowlimit = AITroopGenerator_IsBelowTroopLimit(_army)
 	if belowlimit then
-		if MapEditor_Armies[_player].multiTraining and id then
-			if IsCannonType(eTyp) then
-				(SendEvent or CSendEvent).BuyCannon(id, eTyp)
-			else
-				Logic.BarracksBuyLeader(id, eTyp)
+		local silver = Logic.GetPlayersGlobalResource(_player, ResourceType.SilverRaw) + Logic.GetPlayersGlobalResource(_player, ResourceType.Silver)
+		local coal = Logic.GetPlayersGlobalResource(_player, ResourceType.Knowledge)
+		-- Get entityType/Category (cannon = etype; else ucat)
+		local eTyp, id = AITroopGenerator_EvaluateMilitaryBuildingsPriority(_player)
+		eTyp = eTyp or _army.AllowedTypes[math.random(table.getn(_army.AllowedTypes))]
+		if eTyp then
+			if _army.techLVL == 3 then
+				if eTyp == Entities.PV_Cannon1 then
+					if silver >= 100 and coal >= 500 then
+						eTyp = Entities.PV_Cannon5
+					else
+						eTyp = Entities.PV_Cannon3
+					end
+				elseif eTyp == Entities.PV_Cannon2 then
+					if silver >= 150 and coal >= 500 then
+						eTyp = Entities.PV_Cannon6
+					else
+						eTyp = Entities.PV_Cannon4
+					end
+				end
 			end
-		else
-			AI.Army_BuyLeader(_player, _army.id, eTyp)
+
+			if _army.multiTraining and id then
+				if IsCannonType(eTyp) then
+					(SendEvent or CSendEvent).BuyCannon(id, eTyp)
+				else
+					Logic.BarracksBuyLeader(id, eTyp)
+				end
+			else
+				AI.Army_BuyLeader(_player, _army.id, eTyp)
+			end
 		end
 	end
 	return false
@@ -715,13 +661,37 @@ AITroopGenerator_CheckLeaderAttachedToBarracks = function(_player, _id)
 				_type = "offensiveArmies"
 			end
 		end
-		table.insert(MapEditor_Armies[_player][_type].IDs, _id)
-		MapEditor_Armies[_player][_type][_id] = MapEditor_Armies[_player][_type][_id] or {}
+		table.insert(tab[_type].IDs, _id)
+		tab[_type][_id] = tab[_type][_id] or {}
 		Logic.LeaderChangeFormationType(_id, math.random(1, 7))
-		MapEditor_Armies[_player][_type][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, _id, _type})
-		MapEditor_Armies[_player][_type][_id].HomespotIndex = math.random(1, table.getn(ArmyHomespots[_player].recruited))
+		tab[_type][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, _id, _type})
+		tab[_type][_id].IdleCheck = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "AITroopGenerator_CheckForIdle", 1, {}, {_player, _id, _type})
+		tab[_type][_id].HomespotIndex = math.random(1, table.getn(ArmyHomespots[_player].recruited))
 	end
 	return true
+end
+AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
+	if not IsValid(_id) then
+		return true
+	end
+	if Logic.GetCurrentTaskList(_id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(_id) == "TL_VEHICLE_IDLE" then
+		local tab = MapEditor_Armies[_player][_spec][_id]
+		local index = (tab and tab.HomespotIndex) or math.random(1, table.getn(ArmyHomespots[_player].recruited))
+		local anchor = ArmyHomespots[_player].recruited[index]
+		local pos = GetPosition(_id)
+		if GetDistance(pos, anchor) > 500 then
+			local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(_id)
+
+			if MilitaryBuildingID ~= 0 then
+				if Logic.IsConstructionComplete(MilitaryBuildingID) == 1 then
+					if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id)) then
+						Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
+						return true
+					end
+				end
+			end
+		end
+	end
 end
 AITroopGenerator_RemoveLeader = function(_player, _id, _spec)
 
@@ -742,7 +712,7 @@ end
 AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_player)
 
 	local num = {}
-	num.Barracks, num.Archery, num.Stables, num.Foundry = AI.Village_GetNumberOfMilitaryBuildings(_player)
+	num.Barracks, num.Archery, num.Stable, num.Foundry = AI.Village_GetNumberOfMilitaryBuildings(_player)
 	if MapEditor_Armies[_player].prioritylist_lastUpdate == 0 or Logic.GetTime() > MapEditor_Armies[_player].prioritylist_lastUpdate + 30 then
 		local armorclasspercT = GetPercentageOfLeadersPerArmorClass(AIEnemiesAC[_player])
 		for i = 1,7 do
