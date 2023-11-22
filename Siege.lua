@@ -9,6 +9,13 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			Siege.PitchFieldPositions = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - range, _x + range, _y - range, _y + range, _length, 200, 800, "PitchField")
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchFieldsControl",1)
 		end,
+		PitchBurnerInit = function()
+			Siege.PitchBurners = Siege.PitchBurners or {}
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PU_PitchBurner), CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs))) do
+				table.insert(Siege.PitchBurners, eID)
+				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerControl",1,{},{eID})
+			end
+		end,
 		SearchForNearestBowman = function(_x, _y)
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs)), CEntityIterator.OfCategoryFilter(EntityCategories.Bow)) do
 				if Logic.IsLeader(eID) == 1 then
@@ -98,13 +105,6 @@ Siege_PitchFieldApplyDamage = function(_id, _index)
 		Siege.PitchFieldAlreadyTargetted[_index] = false
 		table.remove(Siege.PitchFieldPositions, _index)
 		return true
-	end
-end
-Siege.PitchBurnerInit = function()
-	Siege.PitchBurners = Siege.PitchBurners or {}
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PU_PitchBurner), CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs))) do
-		table.insert(Siege.PitchBurners, eID)
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerControl",1,{},{eID})
 	end
 end
 Siege_PitchBurnerControl = function(_id)
