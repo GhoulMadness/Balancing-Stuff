@@ -1,5 +1,6 @@
 Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationRange = 500, TrapDamage = 100, TrapDamageRange = 1200,
 		PitchFieldPositions = {}, PitchFieldDefaultPlayer = 8, PitchFieldEnemyTreshold = 10, PitchFieldActivationRange = 500, PitchFieldAlreadyTargetted = {},
+		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 15,
 		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800,
 		CreateTraps = function(_player, _x, _y, _range, _amount)
 			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - range, _x + range, _y - range, _y + range, 500, "TrapHole")
@@ -111,5 +112,34 @@ Siege_PitchBurnerControl = function(_id)
 	if not IsValid(_id) then
 		return true
 	end
-
+	local player = Logic.EntityGetPlayer(_id)
+	local pos = GetPosition(_id)
+	local dist, eID = GetNearestEnemyDistance(player, pos, Siege.PitchBurnerRange)
+	if eID then
+		local num, IDs = GetPlayerEntitiesByCatInRange(player, {EntityCategories.Leader}, pos, Siege.PitchBurnerRange)
+		if num >= Siege.PitchBurnerEnemyTreshold then
+			local t = {}
+			for i = 1, num do
+				t[i] = GetPosition(IDs[i])
+			end
+			local clump = GetPositionClump(t, Siege.PitchBurnerRange, 100)
+			local angle = GetAngleBetween(pos, clump)
+			Logic.RotateEntity(_id, angle)
+			Logic.SetTaskList(_id, TaskLists.TL_PITCHBURNER_DROPOIL)
+			Logic.CreateEffect(GGL_Effects.FX_DropOil, clump.X, clump.Y)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_EVERY_TURN,"", "Siege_PitchBurnerApplyDamage",1,{},{_id, clump.X, clump.Y})
+			return true
+		end
+	end
+end
+function Siege_PitchBurnerApplyDamage(_id, _x, _y)
+	if not IsValid(_id) then
+		return true
+	end
+	if Counter.Tick2("Siege_PitchBurnerApplyDamage_" .. _id) <= Siege.PitchBurningDuration then
+		Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], _x, _y)
+		CEntity.DealDamageInArea(_id, _x, _y, Siege.PitchBurningRange, Siege.PitchBurningDamage)
+	else
+		return true
+	end
 end

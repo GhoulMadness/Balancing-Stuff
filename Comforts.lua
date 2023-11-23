@@ -1015,6 +1015,17 @@ function GetNumberOfPlayerEntitiesByCatInRange(_player, _ecats, _position, _rang
 	end
 	return count
 end
+function GetPlayerEntitiesByCatInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, eID)
+	end
+	return table.getn(t), t
+end
 function GetNumberOfPlayerUnitsInRange(_player, _position, _range)
 	assert(type(_player) == "table", "invalid player IDs")
 	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
