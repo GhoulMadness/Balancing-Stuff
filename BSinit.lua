@@ -387,7 +387,9 @@
 	--cooldown handling levy taxes TODO: this is not at the correct place
 	gvLastTimeButtonPressed = -240000
 	--additional chat taunts added
-	BonusKeys()
+	if CNetwork then
+		BonusKeys()
+	end
 	--internal payday activation (for treasury technology - debenture)
 	for i = 1,16 do
 		CUtil.Payday_SetActive(i, true)
