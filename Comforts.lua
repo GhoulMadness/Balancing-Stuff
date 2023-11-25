@@ -3808,7 +3808,7 @@ ChestRandomPositions_ChestControl = function(...)
 				for j = 1, XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 					entities = {Logic.GetPlayerEntitiesInArea(j, 0, pos.X, pos.Y, ChestRandomPositions.ChestOpenerRange, 1)}
 					if entities[1] > 0 then
-						if Logic.IsHero(entities[2]) == 1 then
+						if Logic.IsHero(entities[2]) == 1 or Logic.GetEntityType(entities[2]) == Entities.CU_VeteranCaptain then
 							local res
 							local randomval = math.random(1, ChestRandomPositions.Resources.Silver.Chance + i)
 							if randomval <= ChestRandomPositions.Resources.Silver.Chance then
