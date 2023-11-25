@@ -2389,14 +2389,10 @@ function GetEntityBattleWaitUntilRemaining(_id)
 end
 function GetEntityCurrentTarget(_id)
 	assert(IsValid(_id), "invalid entityID")
-	local ptr = CEntity.Debug_GetAttachedEntitiesEntryPointer(_id)
-	--LuaDebugger.Log(CUtilMemory.GetMemory(tonumber(ptr,16))[10]:GetInt())
-	--LuaDebugger.Log(CUtilMemory.GetMemory(tonumber(ptr,16))[10]:GetInt() == 7823124)
-	--local target = CUtilMemory.GetMemory(tonumber(ptr,16))[11][4]:GetInt()
-	--[[if target == 0 then
-		target = CUtilMemory.GetMemory(tonumber(ptr,16))[14][41]:GetInt()
-	end]]
-	--return target
+	local t = CEntity.GetReversedAttachedEntities(_id)
+	if next(t) then
+		return (t[32] and t[32][1]) or (t[35] and t[35][1]) or (t[51] and t[51][1])
+	end
 end
 
 function GetEntityTargetByAIData(_id)
