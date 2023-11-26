@@ -3,11 +3,11 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 15,
 		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800,
 		CreateTraps = function(_player, _x, _y, _range, _amount)
-			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - range, _x + range, _y - range, _y + range, 500, "TrapHole")
+			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, 500, "TrapHole")
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_TrapControl",1)
 		end,
 		CreatePitchFields = function(_x, _y, _range, _length, _amount)
-			Siege.PitchFieldPositions = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - range, _x + range, _y - range, _y + range, _length, 200, 800, "PitchField")
+			Siege.PitchFieldPositions = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - _range, _x + _range, _y - _range, _y + _range, _length, 200, 800, "PitchField")
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchFieldsControl",1)
 		end,
 		PitchBurnerInit = function()
@@ -21,8 +21,8 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs)), CEntityIterator.OfCategoryFilter(EntityCategories.Bow)) do
 				if Logic.IsLeader(eID) == 1 then
 					local pos = GetPosition(eID)
-					local range
-					if GetDistance(pos, {X = _x, Y = _y}) <= GetEntityTypeMaxAttackRange(eID, Logic.EntityGetPlayer(eID))
+					local range = GetEntityTypeMaxAttackRange(eID, Logic.EntityGetPlayer(eID))
+					if GetDistance(pos, {X = _x, Y = _y}) <= range then
 						return eID
 					end
 				end

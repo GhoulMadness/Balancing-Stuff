@@ -1000,7 +1000,7 @@ GameCallback_UnknownTask = function(_id)
 				local damage = CalculateTotalDamage(_id, target)
 				local offX, offY = RotateOffset(v.Offset.X, v.Offset.Y, Logic.GetEntityOrientation(_id))
 				CUtil.CreateProjectile(GGL_Effects[v.Effect], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
-				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFire)
+				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFireShort)
 				--CEntity.DealDamageInArea(_id, posX2, posY2, GetEntityTypeDamageRange(etype), damage)
 				return 0
 			end

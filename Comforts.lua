@@ -1632,7 +1632,7 @@ end
 
 function IsPositionUnblocked(_x, _y)
 	local height, blockingtype, sector, terrType = CUtil.GetTerrainInfo(_x, _y)
-	return (sector ~= 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(x_/100, y_/100)))
+	return (sector ~= 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_x/100, _y/100)))
 end
 function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
 
