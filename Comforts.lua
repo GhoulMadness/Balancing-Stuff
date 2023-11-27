@@ -1786,7 +1786,7 @@ function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _ma
 	local t = CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _step, _name)
 	local t2 = {}
 	for i = 1, table.getn(t) do
-		local len = 0
+		local len = 1
 		local x_, y_ = t[i].X, t[i].Y
 		while len < _length do
 			local x__, y__
@@ -1794,6 +1794,9 @@ function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _ma
 			x__ = x_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
 			y__ = y_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
 			if IsPositionUnblocked(x__, y__) then
+				if (x__ == x_ and y__ == y_) or (table_findvalue(t, x__) ~= 0 and table_findvalue(t, y__) ~= 0) then
+					check = false
+				end
 				--[[local eID = GetNearestEntityOfType(x__, y__, _entityType)
 				if eID then
 					local pos = GetPosition(eID)

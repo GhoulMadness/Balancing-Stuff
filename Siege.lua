@@ -1,4 +1,4 @@
-Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationRange = 500, TrapDamage = 100, TrapDamageRange = 1200,
+Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationRange = 300, TrapDamage = 100, TrapDamageRange = 800,
 		PitchFieldPositions = {}, PitchFieldDefaultPlayer = 8, PitchFieldEnemyTreshold = 10, PitchFieldActivationRange = 500, PitchFieldAlreadyTargetted = {},
 		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 15,
 		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800,
@@ -33,16 +33,20 @@ if not Siege.PitchBurners then
 end
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,"", "Siege_EntityCreated")
 Siege_TrapControl = function()
-	for i = 1, table.getn(Siege.TrapPositions) do
-		local X, Y = Siege.TrapPositions[i].X, Siege.TrapPositions[i].Y
-		local id = Logic.GetEntityAtPosition(X, Y)
-		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(Siege.AttackerIDs),
-		CEntityIterator.InCircleFilter(X, Y, Siege.TrapActivationRange),
-		CEntityIterator.IsSettlerOrBuildingFilter()) do
-			CEntity.DealDamageInArea(id, X, Y, Siege.TrapDamageRange, Siege.TrapDamage)
-			ReplaceEntity(id, Entities.XD_TrapHole2)
-			table.remove(Siege.TrapPositions, i)
-			break
+	local max = table.getn(Siege.TrapPositions)
+	for i = 1, max do
+		if i <= max then
+			local X, Y = Siege.TrapPositions[i].X, Siege.TrapPositions[i].Y
+			local id = Logic.GetEntityAtPosition(X, Y)
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(Siege.AttackerIDs)),
+			CEntityIterator.InCircleFilter(X, Y, Siege.TrapActivationRange),
+			CEntityIterator.IsSettlerOrBuildingFilter()) do
+				CEntity.DealDamageInArea(id, X, Y, Siege.TrapDamageRange, Siege.TrapDamage)
+				ReplaceEntity(id, Entities.XD_TrapHole2)
+				table.remove(Siege.TrapPositions, i)
+				max = max - 1
+				break
+			end
 		end
 	end
 	if not next(Siege.TrapPositions) then
