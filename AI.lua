@@ -307,6 +307,8 @@ ConnectLeaderWithArmy = function(_id, _army, _type)
 		Logic.LeaderChangeFormationType(_id, math.random(1, 7))
 		MapEditor_Armies[_player][_type][_id].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "AITroopGenerator_RemoveLeader", 1, {}, {_player, _id, _type})
 		MapEditor_Armies[_player][_type][_id].HomespotIndex = math.random(1, table.getn(ArmyHomespots[_player].recruited))
+		local anchor = ArmyHomespots[_player].recruited[MapEditor_Armies[_player][_type][_id].HomespotIndex]
+		Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
 	end
 end
 Defend = function(_army)
