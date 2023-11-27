@@ -1048,6 +1048,18 @@ function GetNearestEnemyDistance(_player, _position, _range)
 	end
 	return false
 end
+function GetNearestEnemy(_player, _position, _range)
+	ChunkWrapper.UpdatePositions(AIchunks[_player])
+	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
+	if next(entities) then
+		for i = 1, table.getn(entities) do
+			if Logic.IsEntityAlive(entities[i]) then
+				return entities[i]
+			end
+		end
+	end
+	return false
+end
 
 ResumeEntityOrig = Logic.ResumeEntity
 Logic.ResumeEntity = function(_id)

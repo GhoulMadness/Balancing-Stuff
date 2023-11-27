@@ -539,7 +539,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 
-	local tabname, range, target, newtarget
+	local tabname, range, pos, newtarget
 
 	if not _armyId then
 		tabname = MapEditor_Armies[_player][_type]
@@ -548,12 +548,11 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 		tabname = ArmyTable[_player][_armyId]
 		range = tabname.rodeLength
 	end
-	if tabname[_id] and tabname[_id].currenttarget then
-		target = tabname[_id].currenttarget
-		newtarget = CheckForBetterTarget(_id, target, nil) or GetNearestTarget(_player, _id)
-	else
-		newtarget = CheckForBetterTarget(_id, nil, nil) or GetNearestTarget(_player, _id)
-	end
+	pos = GetPosition(_id)
+	newtarget = CheckForBetterTarget(_id, tabname[_id] and tabname[_id].currenttarget, nil)
+				or GetNearestEnemy(_player, pos, range - GetDistance(pos, tabname.position))
+				or GetNearestTarget(_player, _id)
+
 	tabname[_id] = tabname[_id] or {}
 	if newtarget and newtarget > 0 and Logic.GetSector(newtarget) == Logic.GetSector(_id) then
 		if GetDistance(tabname.position, newtarget) > range then
