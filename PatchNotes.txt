@@ -924,3 +924,5 @@ Es wurde ein Fehler behoben, durch den es möglich war, dass die KI mehr Truppen
 
 Die zusätzlichen Sprüche/Taunts per Tastenkombi für den MP haben im SP das Spiel zum crashen gebracht. Sie sind nun im SP nicht mehr verfügbar.
 
+NPCs sind nun immun gegen Blitzeinschläge.
+

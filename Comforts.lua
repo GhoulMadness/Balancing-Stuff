@@ -1527,6 +1527,13 @@ function GetAllAIs()
 	end
 	return AITable
 end
+function IsPlayerHuman(_player)
+	if CNetwork then
+		return XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 1
+	else
+		return _player == 1
+	end
+end
 function GetAllHumenPlayer()
 	local t = {}
 	local max
@@ -1787,14 +1794,14 @@ function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _ma
 			x__ = x_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
 			y__ = y_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
 			if IsPositionUnblocked(x__, y__) then
-				local eID = GetNearestEntityOfType(x__, y__, _entityType)
+				--[[local eID = GetNearestEntityOfType(x__, y__, _entityType)
 				if eID then
 					local pos = GetPosition(eID)
 					local dist = GetDistance({X = x__, Y = y__}, pos)
 					if dist > _sizeOffset * math.sqrt(2) or dist < _sizeOffset then
 						check = false
 					end
-				end
+				end]]
 				if check then
 					t2[i] = t2[i] or {}
 					table.insert(t2[i], {X = x__, Y = y__})
