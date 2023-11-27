@@ -1037,18 +1037,13 @@ function GetNumberOfPlayerUnitsInRange(_player, _position, _range)
 	return count
 end
 function GetNearestEnemyDistance(_player, _position, _range)
-	ChunkWrapper.UpdatePositions(AIchunks[_player])
-	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
-	if next(entities) then
-		for i = 1, table.getn(entities) do
-			if Logic.IsEntityAlive(entities[i]) then
-				return GetDistance(entities[i], _position), entities[i]
-			end
-		end
+	local id = GetNearestEnemyInRange(_player, _position, _range)
+	if id then
+		return GetDistance(id, _position), id
 	end
 	return false
 end
-function GetNearestEnemy(_player, _position, _range)
+function GetNearestEnemyInRange(_player, _position, _range)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
 	if next(entities) then
