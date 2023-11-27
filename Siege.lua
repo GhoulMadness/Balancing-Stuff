@@ -70,7 +70,7 @@ end
 Siege_PitchFieldsControl = function()
 	for i = 1, table.getn(Siege.PitchFieldPositions) do
 		if not Siege.PitchFieldAlreadyTargetted[i] then
-			local centerindex = math.floor(table.getn(Siege.PitchFieldPositions[i]))
+			local centerindex = math.floor(table.getn(Siege.PitchFieldPositions[i])/2)
 			local num = GetNumberOfPlayerUnitsInRange(Siege.AttackerIDs, Siege.PitchFieldPositions[i][centerindex], Siege.PitchFieldActivationRange)
 			if num >= Siege.PitchFieldEnemyTreshold then
 				local id = Siege.SearchForNearestBowman(Siege.PitchFieldPositions[i][centerindex].X, Siege.PitchFieldPositions[i][centerindex].Y)
