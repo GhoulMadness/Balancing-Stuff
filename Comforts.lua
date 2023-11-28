@@ -778,7 +778,7 @@ function GetEntityHealth(_entity)
 
 end
 function GenerateRandomWithSteps(_min, _max, _step)
-	local steps = math.ceil(_max - _min / _step)
+	local steps = math.ceil((_max - _min) / _step)
 	local rand = math.random(0, steps)
 	return _min + rand * _step
 end
@@ -1801,7 +1801,7 @@ function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _ma
 			x__ = x_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
 			y__ = y_ + GenerateRandomWithSteps(-_sizeOffset, _sizeOffset, _sizeOffset)
 			if IsPositionUnblocked(x__, y__) then
-				if (x__ == x_ and y__ == y_) or (table_findvalue(t, x__) ~= 0 and table_findvalue(t, y__) ~= 0) then
+				if (x__ == x_ and y__ == y_) or (table_findvalue(t[i], x__) ~= 0 and table_findvalue(t[i], y__) ~= 0) then
 					check = false
 				end
 				--[[local eID = GetNearestEntityOfType(x__, y__, _entityType)

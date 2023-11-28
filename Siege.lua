@@ -7,6 +7,12 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_TrapControl",1)
 		end,
 		CreatePitchFields = function(_x, _y, _range, _length, _amount)
+			for i = 1, table.getn(Siege.DefenderIDs) do
+				Logic.SetDiplomacyState(Siege.DefenderIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
+			end
+			for i = 1, table.getn(Siege.AttackerIDs) do
+				Logic.SetDiplomacyState(Siege.AttackerIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
+			end
 			Siege.PitchFieldPositions = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - _range, _x + _range, _y - _range, _y + _range, _length, 200, 800, "PitchField")
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchFieldsControl",1)
 		end,
