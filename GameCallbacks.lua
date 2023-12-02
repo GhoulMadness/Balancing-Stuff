@@ -340,6 +340,13 @@ function GameCallback_GUI_SelectionChanged()
 		or Logic.IsEntityInCategory(EntityId,EntityCategories.CavalryLight) == 1 then
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 1)
 		end
+		if EntityType == Entities.PV_Ram then
+			if not RamSelectionSoundActive and not RamMoveSoundActive and not RamAttackSoundActive then
+				RamSelectionSoundActive = true
+				Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Select .. ".wav", 152)
+				StartCountdown(3, function() RamSelectionSoundActive = nil end, false)
+			end
+		end
 	end
 
 	--Update all buttons in the visible container
@@ -1003,6 +1010,24 @@ GameCallback_UnknownTask = function(_id)
 				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFireShort)
 				--CEntity.DealDamageInArea(_id, posX2, posY2, GetEntityTypeDamageRange(etype), damage)
 				return 0
+			end
+		end
+		return 0
+	elseif etype == Entities.PV_Ram then
+		if GUI.GetPlayerID() == player then
+			local task = Logic.GetCurrentTaskList(_id)
+			if task == "TL_RAM_DRIVE" then
+				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
+					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Move .. ".wav", 152)
+					RamMoveSoundActive = true
+					StartCountdown(3, function() RamMoveSoundActive = false end, false)
+				end
+			elseif task == "TL_BATTLE_RAM" then
+				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
+					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)] .. ".wav", 152)
+					RamMoveSoundActive = true
+					StartCountdown(3, function() RamMoveSoundActive = false end, false)
+				end
 			end
 		end
 		return 0
