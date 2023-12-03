@@ -2404,6 +2404,10 @@ function GetEntityBattleWaitUntilRemaining(_id)
 	local num = CUtilMemory.GetMemory(tonumber(beh,16))[21]:GetInt()
 	return num
 end
+function GetConvertSettlersTarget(_heroID)
+	local t = CEntity.GetReversedAttachedEntities(_heroID)
+	return (next(t) and t[62] and t[62][1])
+end
 function GetEntityCurrentTarget(_id)
 	assert(IsValid(_id), "invalid entityID")
 	local t = CEntity.GetReversedAttachedEntities(_id)

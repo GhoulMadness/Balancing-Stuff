@@ -111,10 +111,21 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 					end
 					return factor
 				end},
+				AreEntitiesThreatenedByConvertSettler = function(_heroID)
+					if Logic.HeroGetAbiltityChargeSeconds(_heroID, Abilities.AbilityConvertSettlers) < Logic.HeroGetAbilityRechargeTime(_heroID, Abilities.AbilityConvertSettlers) then
+						local id = GetConvertSettlersTarget(_heroID)
+						return id ~= nil
+					end
+				end,
 				EvaluateThreatFactor = function(_id, _heroID)
 				assert(IsValid(_id) and IsValid(_heroID), "invalid entity ID")
 				local type = Logic.GetEntityType(_heroID)
 				local factor = gvHeroTarget.BaseThreatVal[type]
+				if type == Entities.PU_Hero6 then
+					if gvHeroTarget.AreEntitiesThreatenedByConvertSettler(_heroID) then
+						factor = factor * 3
+					end
+				end
 				local threat, ability = unpack(gvHeroTarget.MainThreat[type])
 					return factor * gvHeroTarget.FactorByThreatType[threat](_id, _heroID, ability)
 				end
