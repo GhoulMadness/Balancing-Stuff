@@ -3123,15 +3123,19 @@ function GetPositionClump(_postable, _infrange, _step)
 	assert(type(_step) == "number", "third input param type must be a number")
 	local tab = {}
 	for k, v in pairs(_postable) do
-		v.pos.X = dekaround(v.pos.X)
-		for i = v.pos.X - _infrange, v.pos.X + _infrange, _step do
+		if v.pos then
+			v.X = v.pos.X
+			v.Y = v.pos.Y
+		end
+		v.X = dekaround(v.X)
+		for i = v.X - _infrange, v.X + _infrange, _step do
 			tab[i] = {}
-			v.pos.Y = dekaround(v.pos.Y)
-			for j = v.pos.Y - _infrange, v.pos.Y + _infrange, _step do
+			v.Y = dekaround(v.Y)
+			for j = v.Y - _infrange, v.Y + _infrange, _step do
 				if not tab[i][j] then
 					tab[i][j] = 0
 				end
-				tab[i][j] = tab[i][j] + v.factor
+				tab[i][j] = tab[i][j] + (v.factor or 1)
 			end
 		end
 	end

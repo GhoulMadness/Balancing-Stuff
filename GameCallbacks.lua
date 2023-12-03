@@ -1020,13 +1020,13 @@ GameCallback_UnknownTask = function(_id)
 				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
 					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Move .. ".wav", 152)
 					RamMoveSoundActive = true
-					StartCountdown(3, function() RamMoveSoundActive = false end, false)
+					StartCountdown(5, function() RamMoveSoundActive = false end, false)
 				end
 			elseif task == "TL_BATTLE_RAM" then
 				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
 					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)] .. ".wav", 152)
 					RamMoveSoundActive = true
-					StartCountdown(3, function() RamMoveSoundActive = false end, false)
+					StartCountdown(10, function() RamMoveSoundActive = false end, false)
 				end
 			end
 		end
