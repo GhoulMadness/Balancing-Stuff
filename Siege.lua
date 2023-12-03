@@ -8,9 +8,9 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_TrapControl", 1)
 		end,
 		CreatePitchFields = function(_x, _y, _range, _length, _amount)
-			for i = 1, table.getn(Siege.DefenderIDs) do
+			--[[for i = 1, table.getn(Siege.DefenderIDs) do
 				Logic.SetDiplomacyState(Siege.DefenderIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
-			end
+			end]]
 			for i = 1, table.getn(Siege.AttackerIDs) do
 				Logic.SetDiplomacyState(Siege.AttackerIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
 			end
@@ -141,7 +141,7 @@ Siege_PitchFieldsControl = function()
 					local posX, posY = Logic.GetEntityPosition(id)
 					local posX2, posY2 = Siege.PitchFieldPositions[i][centerindex].X, Siege.PitchFieldPositions[i][centerindex].Y
 					local target = Logic.GetEntityAtPosition(posX2, posY2)
-					local projectile = CUtil.CreateProjectile(GGL_Effects.FXHero14_Arrow, posX, posY, posX2, posY2, 1000, 2000, target, id, Logic.EntityGetPlayer(id))
+					local projectile = CUtil.CreateProjectile(GGL_Effects.FXHero14_Arrow, posX, posY, posX2, posY2, 0, 0, target, id, Logic.EntityGetPlayer(id))
 					if not Siege_ArcherLightOilSound then
 						Stream.Start("Voice\\stronghold\\Arch_Light_Pitch1.wav", 152)
 						Siege_ArcherLightOilSound = true
