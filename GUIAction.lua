@@ -139,10 +139,8 @@ function LightningRod_Protected(_PID)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","LightningRod_UnProtected",1,{},{_PID})
 end
 function LightningRod_UnProtected(_PID,_SpecialTimer)
-	if _SpecialTimer == nil then
-		_SpecialTimer = 45
-	end
-	if Counter.Tick2("Unprotected".._PID,_SpecialTimer) == true then
+	_SpecialTimer = _SpecialTimer or 45
+	if Counter.Tick2("Unprotected".._PID, _SpecialTimer) == true then
 		gvLightning.RodProtected[_PID] = false
 		return true
 	end
@@ -362,7 +360,7 @@ function GUIAction_ChangeToThunderstorm(_playerID, _EntityID)
 end
 -----------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Hero6Sacrilege()
-	local heroID = GUI.GetSelectedEntity()
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(),Entities.PU_Hero6,1)})[2]
 	local player = Logic.EntityGetPlayer(heroID)
 	local starttime = Logic.GetTime()
 	gvHero6.LastTimeUsed.Sacrilege = starttime
@@ -375,15 +373,26 @@ function GUIAction_Hero6Sacrilege()
 	end
 end
 -----------------------------------------------------------------------------------------------------------------------------
+function GUIAction_Hero9CallWolfs()
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(), Entities.CU_Barbarian_Hero,1)})[2]
+	local player = Logic.EntityGetPlayer(heroID)
+	GUI.SettlerSummon(heroID)
+	if CNetwork then
+		CNetwork.SendCommand("Ghoul_Hero9CallAdditionalWolfs", player, heroID)
+	else
+		gvHero9.SpawnAdditionalWolfs(player, heroID)
+	end
+end
+-----------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Hero13StoneArmor()
 
-	local heroID = GUI.GetSelectedEntity()
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(), Entities.PU_Hero13,1)})[2]
 	local player = Logic.EntityGetPlayer(heroID)
 	local starttime = Logic.GetTimeMs()
 	gvHero13.LastTimeUsed.StoneArmor = starttime/1000
 
 	if CNetwork then
-		CNetwork.SendCommand("Ghoul_Hero13StoneArmor",GUI.GetPlayerID(),heroID)
+		CNetwork.SendCommand("Ghoul_Hero13StoneArmor", player, heroID)
 	else
 		if not gvHero13.TriggerIDs.StoneArmor.DamageStoring[player] then
 			gvHero13.TriggerIDs.StoneArmor.DamageStoring[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_StoneArmor_StoreDamage", 1, nil, {heroID,starttime})
@@ -892,6 +901,35 @@ function GUIAction_SelectEntityInCategory(_catstring)
 	local IDPosX, IDPosY = Logic.GetEntityPosition(EntityID)
 	Camera.ScrollSetLookAt(IDPosX, IDPosY)
 	GUI.SetSelectedEntity(EntityID )
+end
+function KeyBindings_SelectCannons()
+
+	local AllCannons = {}
+
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.Cannon), CEntityIterator.OfPlayerFilter(GUI.GetPlayerID()), CEntityIterator.IsSettlerFilter()) do
+		table.insert(AllCannons, eID)
+	end
+
+	if table.getn(AllCannons) == 0 then
+		return
+	end
+
+	local counter = gvKeyBindings_LastSelectedEntityPos
+
+	--Counter at the end of table?
+	counter = counter + 1
+	if counter >= table.getn(AllCannons) then
+		counter = 0
+	end
+
+	gvKeyBindings_LastSelectedEntityPos = counter
+
+	local EntityID = AllCannons[1 + counter]
+
+	local X, Y = Logic.GetEntityPosition(EntityID)
+	Camera.ScrollSetLookAt(X, Y)
+	GUI.SetSelectedEntity(EntityID)
+
 end
 function GUIAction_ActivateCoalUsage(_flag)
 	local player = GUI.GetPlayerID()

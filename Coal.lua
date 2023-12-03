@@ -10,15 +10,15 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 							[Entities.PB_GunsmithWorkshop1] = true,
 							[Entities.PB_GunsmithWorkshop2] = true,
 							[Entities.PB_Silversmith2] = true},
-		ResourceNeeded = {	[Entities.CB_Mint1] = 8,
-							[Entities.PB_Alchemist2] = 12,
-							[Entities.PB_Blacksmith1] = 8,
-							[Entities.PB_Blacksmith2] = 10,
-							[Entities.PB_Blacksmith3] = 12,
-							[Entities.PB_Brickworks2] = 8,
-							[Entities.PB_GunsmithWorkshop1] = 8,
-							[Entities.PB_GunsmithWorkshop2] = 10,
-							[Entities.PB_Silversmith2] = 100},
+		ResourceNeeded = {	[Entities.CB_Mint1] = 6,
+							[Entities.PB_Alchemist2] = 9,
+							[Entities.PB_Blacksmith1] = 6,
+							[Entities.PB_Blacksmith2] = 8,
+							[Entities.PB_Blacksmith3] = 10,
+							[Entities.PB_Brickworks2] = 6,
+							[Entities.PB_GunsmithWorkshop1] = 6,
+							[Entities.PB_GunsmithWorkshop2] = 8,
+							[Entities.PB_Silversmith2] = 75},
 		ResourceBonus = {	[Entities.CB_Mint1] = 2,
 							[Entities.PB_Alchemist2] = 2,
 							[Entities.PB_Blacksmith1] = 1,
@@ -28,7 +28,7 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 							[Entities.PB_GunsmithWorkshop1] = 1,
 							[Entities.PB_GunsmithWorkshop2] = 2,
 							[Entities.PB_Silversmith2] = 1},
-		Usage = {{},{},{},{},{},{},{},{},{},{},{},{}},
+		Usage = {{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}},
 		AdjustTypeList = function(_flag, _player, _type)
 			if _flag == 1 then
 				gvCoal.Usage[_player][_type] = true
@@ -103,7 +103,7 @@ gvCoal = { AllowedTypes = {	[Entities.CB_Mint1] = true,
 		end}
 }
 for k,_ in pairs(gvCoal.AllowedTypes) do
-	for i = 1,12 do
+	for i = 1,16 do
 		gvCoal.Usage[i][k] = false
 	end
 end
@@ -131,4 +131,13 @@ function OnCoalmine_Destroyed(_id)
 		gvCoal.Mine.AmountMined[entityID] = nil
 		return true
 	end
+end
+for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PB_CoalmakersHut1)) do
+	gvCoal.Coalmaker.WoodBurned[eID] = 0
+	gvCoal.Coalmaker.CoalEarned[eID] = 0
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmaker_Destroyed", 1,{},{eID})
+end
+for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(Entities.PB_CoalMine1, Entities.PB_CoalMine2)) do
+	gvCoal.Mine.AmountMined[eID] = 0
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmine_Destroyed", 1,{},{eID})
 end

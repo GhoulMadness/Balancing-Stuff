@@ -93,8 +93,22 @@ function Mission_OnSaveGameLoaded()
 			return Army_GetEntityIdOfEnemyOrig(_player, 0)
 		end
 	end
+
+	Army_SetScatterToleranceOrig = AI.Army_SetScatterTolerance
+	AI.Army_SetScatterTolerance = function(_player, _id, _val)
+		if _id >= 0 and _id <= 8 then
+			Army_SetScatterToleranceOrig(_player, _id, _val)
+		end
+	end
+
+	Army_SetSizeOrig = AI.Army_SetSize
+	AI.Army_SetSize = function(_player, _id, _val)
+		if _id >= 0 and _id <= 8 then
+			Army_SetSizeOrig(_player, _id, _val)
+		end
+	end
 end
--- 3 Diebe max. auf der Weihnachtsmap
+-- 3 thiefs max. on xmas-tree related maps
 if gvXmasEventFlag == 1 then
 	function GameCallback_PreBuyLeader(_buildingID, _uCat)
 		local player = Logic.EntityGetPlayer(_buildingID)
@@ -326,6 +340,13 @@ function GameCallback_GUI_SelectionChanged()
 		or Logic.IsEntityInCategory(EntityId,EntityCategories.CavalryLight) == 1 then
 			XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionLeader, 1)
 		end
+		if EntityType == Entities.PV_Ram then
+			if not RamSelectionSoundActive and not RamMoveSoundActive and not RamAttackSoundActive then
+				RamSelectionSoundActive = true
+				Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Select .. ".wav", 152)
+				StartCountdown(3, function() RamSelectionSoundActive = nil end, false)
+			end
+		end
 	end
 
 	--Update all buttons in the visible container
@@ -461,7 +482,7 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 	local criticaltresholdsilver = 400
 	local criticaltresholdgold = 2500
 
-	--Sound nur abspielen, wenn die neuen Sounds nicht initialisiert wurden
+	-- play sound only, when new sound isn't implemented in game already
 	if Sounds.VoicesMentor_JOIN_Silversmith == nil then
 		if _type == ResourceType.SilverRaw then
 			if resremain <= criticaltresholdsilver and resremain > criticaltresholdsilver - _amount then
@@ -613,7 +634,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		local checkpos = true
 
-		-- Schlösser dürfen nicht nahe anderer Schlösser oder Burgen gebaut werden
+		-- castles are not allowed to be placed near each other (also not near existing hq's)
 		for _,v in pairs(gvCastle.PositionTable) do
 
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvCastle.BlockRange then
@@ -628,7 +649,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		local checkpos = true
 
-		-- Türme dürfen nicht nahe anderer Türme gebaut werden
+		-- towers are not allowed to be placed near each other
 		for _,v in pairs(gvTower.PositionTable) do
 
 			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
@@ -659,7 +680,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 
-		-- auf Weihnachtsmap darf nicht nahe der Weihnachtsbäume platziert werden
+		-- on winter maps with xmas-tree mechanic no building placements allowed near trees
 		elseif gvXmasEventFlag and gvPresent then
 
 			local checktree1
@@ -680,7 +701,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 				local checktowerpos = true
 
-				-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Weihnachtsbaum-Karte auch nicht nahe der Bäume)
+				-- towers are not allowed to be placed near other towers (on winter maps with xmas-tree mechanic also not near the trees)
 				for _,v in pairs(gvTower.PositionTable) do
 
 					if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
@@ -699,7 +720,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 				return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
 			end
 
-		-- Auf der Experimente-Karte dürfen in der Mitte nur Dario-Statuen errichtet werden
+		-- on WT21 Map only Dario Statues allowed near the center
 		elseif gvXmas2021ExpFlag and WT21 then
 
 			local checkpos = true
@@ -723,7 +744,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 					local checktowerpos = true
 
-					-- Türme dürfen nicht nahe anderer Türme gebaut werden (Auf der Experimente-Karte auch nicht nahe der Mitte)
+					-- towers are not allowed to be placed near other towers (on WT21 Map also not near the center of the map)
 					for _,v in pairs(gvTower.PositionTable) do
 
 						if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvTower.BlockRange then
@@ -812,6 +833,7 @@ function GameCallback_PaydayPayed(_player,_amount)
 		return _amount
 
 	else
+		LuaDebugger.Break()
 		return 0
 	end
 end
@@ -821,7 +843,8 @@ end
 function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 
 	local player = Logic.EntityGetPlayer(_OldID)
-	-- needed when troop on top of the archers tower is upgraded
+	--[[ needed when troop on top of the archers tower is upgraded
+	currently deprecated, because troops do not upgrade anymore when research is done ]]
 	for k,v in pairs(gvArchers_Tower.SlotData) do
 
 		local slot = table_findvalue(gvArchers_Tower.SlotData[k],_OldID)
@@ -965,9 +988,52 @@ GameCallback_UnknownTask = function(_id)
 				end
 			end
 		end
+	elseif etype == Entities.PV_Cannon5 then
+		for k, v in pairs(Cannon5.TaskIndexes) do
+			if GetEntityCurrentTaskIndex(_id) == k then
+				local posX, posY = Logic.GetEntityPosition(_id)
+				local target = GetEntityCurrentTarget(_id)
+				if not target or target == 0 then
+					if (AITable and AITable[player]) or (MapEditor_Armies and MapEditor_Armies[player]) then
+						target = GetEntityTargetByAIData(_id)
+						if not target then
+							return 0
+						end
+					else
+						return 0
+					end
+				end
+				local posX2, posY2 = Logic.GetEntityPosition(target)
+				local damage = CalculateTotalDamage(_id, target)
+				local offX, offY = RotateOffset(v.Offset.X, v.Offset.Y, Logic.GetEntityOrientation(_id))
+				CUtil.CreateProjectile(GGL_Effects[v.Effect], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
+				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFireShort)
+				--CEntity.DealDamageInArea(_id, posX2, posY2, GetEntityTypeDamageRange(etype), damage)
+				return 0
+			end
+		end
+		return 0
+	elseif etype == Entities.PV_Ram then
+		if GUI.GetPlayerID() == player then
+			local task = Logic.GetCurrentTaskList(_id)
+			if task == "TL_RAM_DRIVE" then
+				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
+					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Move .. ".wav", 152)
+					RamMoveSoundActive = true
+					StartCountdown(5, function() RamMoveSoundActive = false end, false)
+				end
+			elseif task == "TL_BATTLE_RAM" then
+				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
+					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)] .. ".wav", 152)
+					RamMoveSoundActive = true
+					StartCountdown(10, function() RamMoveSoundActive = false end, false)
+				end
+			end
+		end
+		return 0
 	end
 end
-
+-- adjusted, so feedback message is only received by player clicking the button, not all players
 function GameCallback_OnPointToResource(_foundPos, _unused)
 
 	if gvScoutUsedPointToResources then

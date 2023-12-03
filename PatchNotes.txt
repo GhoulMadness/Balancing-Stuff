@@ -880,3 +880,49 @@ BS-spezifische Statuen schneien nun im Winter ein.
 
 Es wurde ein Fehler im Zusammenhang mit Ari's gerufenen Banditen behoben.
 
+--- Version 0.749
+
+Ari Anzahl beschworener Trupps: 4 -> 3
+Ari Anzahl Soldaten pro Trupp: 6 -> 7
+
+Varg beschwört nun zusätzliche Wölfe während seine Berserkerwut aktiv ist. Die Anzahl zusätzlicher Wölfe wird weiter erhöht, wenn Varg über wenig Lebenspunkte verfügt.
+Basisanzahl beschworene Wölfe 5 -> 4 (steigt bei idealen Bedingungen auf 10 an)
+
+Für die verstärkte Veredlung mittels Kohle wird nun weniger Kohle benötigt.
+
+Helden werden von der KI nun nicht mehr pauschal stärker fokussiert. Der Fokus wird nun den Rahmenbedingungen entsprechend berechnet.
+
+Es wurde ein Fehler behoben, durch den KI-Spawntruppen in seltenen Fällen keiner KI zugeordnet wurden und dadurch keine Befehle erhielten.
+
+Es wurde ein Fehler behoben, durch den eine sehr hohe Anzahl verschiedener Spawnarmeen das Spiel zum Absturz bringen konnte.
+
+Fehlermeldungen sind nun aussagekräftiger.
+
+Es wurden weitere Einheiten und Objekte hinzugefügt.
+
+Weitere Kooperations-Karten (unter Anderem auch Prüfungskarten) sind nun verfügbar.
+
+Die Stärke von Nebelvolk-Rüstungsupgrades (oft im späteren Spielverlauf von Koop-Maps) wurde reduziert.
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Kohleminen und/oder Köhler bereits zu Spielbeginn platziert sind.
+
+Jeder Trupp der KI konnte den nächsten Gegner angreifen, wenn Feinde die Reichweite der KI unterschritten hatten. Dadurch konnte es vorkommen, dass einige Truppen Gegner angriffen, die nicht in Reichweite der KI waren. Die Logik wurde umgeschrieben, sodass nur noch Feinde in Reichweite getargetted werden.
+
+Belagerungskanone Bewegungstempo: 100 -> 120
+
+Hellebardier Schaden: 21 -> 22
+
+Die verwendete Version der EMS-GUI wurde aktualisiert. Vielen Dank an RobbiTheFox.
+
+Übersetzungen in das Englische wurden verbessert. Fehlende Übersetzungen wurden hinzugefügt.
+
+Leibeigene konnten nach Leerhacken eines Steinhaufens zu einem nahen Grabstein laufen und versuchten, diesen abzubauen. Da es aber nicht möglich ist, Grabsteine abzubauen, standen die Leibeigenen nur untätig um diesen herum. Leibeigene können nun nicht mehr automatisch an Grabsteine laufen.
+
+Es wurde ein Fehler behoben, durch den die KI kaum Reiter ausbildete, auch wenn die Rahmenbedingungen hierfür ideal waren.
+
+Es wurde ein Fehler behoben, durch den es möglich war, dass die KI mehr Truppen ausbilden konnte, als sie kontrollieren konnte (die Truppen blieben vor dem Militärgebäude stehen, bis wieder Truppenslots frei wurden).
+
+Die zusätzlichen Sprüche/Taunts per Tastenkombi für den MP haben im SP das Spiel zum crashen gebracht. Sie sind nun im SP nicht mehr verfügbar.
+
+NPCs sind nun immun gegen Blitzeinschläge.
+

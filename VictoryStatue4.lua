@@ -8,6 +8,6 @@ gvVStatue4.BlockRange = 700 + math.floor(((Logic.WorldGetSize()/80)^2)/400)
 gvVStatue4.Limit = 5
 gvVStatue4.PositionTable = {}
 gvVStatue4.Amount = {}
-for i = 1,12 do
+for i = 1,16 do
 	gvVStatue4.Amount[i] = 0
 end

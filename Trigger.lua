@@ -255,7 +255,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Ari ----------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-gvHero5 = {AbilityProperties = {Summon = {NumTroops = 6, Duration = 60}}}
+gvHero5 = {AbilityProperties = {Summon = {NumSoldiersPerTroop = 7, Duration = 60}}}
 function OnAriTroopCreated()
 
 	local entityID = Event.GetEntityID()
@@ -264,7 +264,7 @@ function OnAriTroopCreated()
 	if entityType == Entities.PU_Hero5_Outlaw then
 		local player = Logic.EntityGetPlayer(entityID)
 		local posX, posY = Logic.GetEntityPosition(entityID)
-		for i = 1, gvHero5.AbilityProperties.Summon.NumTroops do
+		for i = 1, gvHero5.AbilityProperties.Summon.NumSoldiersPerTroop do
 			Logic.CreateEntity(Entities.PU_Hero5_OutlawSoldier, posX, posY, 0, player)
 			Logic.LeaderGetOneSoldier(entityID)
 		end
@@ -273,7 +273,7 @@ function OnAriTroopCreated()
 	end
 end
 function OnAriTroopDied(_id, _num, ...)
-	
+
 	local entityID = Event.GetEntityID()
 	if entityID == _id then
 		if _num > 0 then
@@ -283,6 +283,33 @@ function OnAriTroopDied(_id, _num, ...)
 		end
 		return true
 	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------ Trigger for Varg ---------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function Hero9_Died(_heroID)
+
+	local target = Event.GetEntityID2()
+
+	if target == _heroID then
+
+		local health = Logic.GetEntityHealth(target)
+		local damage = CEntity.TriggerGetDamage()
+		if damage >= health then
+
+			local player = Logic.EntityGetPlayer(_heroID)
+
+			for i = 1, table.getn(gvHero9.WolfIDs[player]) do
+				SetHealth(gvHero9.WolfIDs[player][i], 0)
+			end
+
+			gvHero9.WolfIDs[player] = nil
+			return true
+
+		end
+
+	end
+
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------ Trigger for Catapult Stones ----------------------------------------------------------------------------------------------------------
@@ -1458,6 +1485,7 @@ end
 
 gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500,
 								[Entities.PV_Cannon4] = 1800,
+								[Entities.PV_Cannon6] = 2500,
 								[Entities.PV_Catapult] = 2000}
 for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
@@ -1478,7 +1506,8 @@ function OnAIEnemyCreated(_playerID)
 				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
 				break
-			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
 				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
 				break
 			end
@@ -1500,7 +1529,8 @@ function OnAIEnemyDestroyed(_playerID)
 				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
 				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
 				break
-			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID)) or Logic.IsSerf(entityID) == 1 then
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
 				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
 				break
 			end

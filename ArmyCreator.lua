@@ -31,6 +31,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.PV_Cannon3] = 15,
 												[Entities.PV_Cannon4] = 18,
 												[Entities.PV_Catapult] = 50,
+												[Entities.PV_Ram] = 20,
 												[Entities.CU_BanditLeaderSword1] = 6,
 												[Entities.CU_BanditLeaderBow1] = 8,
 												[Entities.CU_Barbarian_LeaderClub1] = 7,
@@ -76,6 +77,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.PV_Cannon3] = true,
 									[Entities.PV_Cannon4] = true,
 									[Entities.PV_Catapult] = true,
+									[Entities.PV_Ram] = true,
 									[Entities.PU_Thief] = true,
 									[Entities.PU_BattleSerf] = true,
 									[Entities.PU_Scout] = true
@@ -84,7 +86,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 				SpawnPos = { },
 				Finished = { }
 }
-for i = 1,12 do
+for i = 1,16 do
 	ArmyCreator.SpawnPos[i] = {X = 1000, Y = 1000}
 	if IsValid("start_pos_p"..i) then
 		ArmyCreator.SpawnPos[i] = GetPosition("start_pos_p"..i)
@@ -116,6 +118,7 @@ for i = 1,12 do
 									[Entities.PV_Cannon3] = 0,
 									[Entities.PV_Cannon4] = 0,
 									[Entities.PV_Catapult] = 0,
+									[Entities.PV_Ram] = 0,
 									[Entities.CU_BanditLeaderSword1] = 0,
 									[Entities.CU_BanditLeaderBow1] = 0,
 									[Entities.CU_Barbarian_LeaderClub1] = 0,

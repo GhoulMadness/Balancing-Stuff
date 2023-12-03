@@ -514,7 +514,19 @@ function GUIUpdate_MintTaxBonus()
 	NumOfMints = math.min(NumOfMints, BS.MintValues.MaxNumberOfMints)
 	local LeaderCosts = -math.floor((Logic.GetPlayerPaydayLeaderCosts(PlayerID))*(NumOfMints*BS.MintValues.BonusPerMint))
 	local TaxIncome = math.floor((Logic.GetPlayerPaydayCost(PlayerID)*(NumOfMints*BS.MintValues.BonusPerMint)))
-	local String = "@color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." aktueller Bonus: @color:"..BS.DefaultColorValues.BrightGreen.r..","..BS.DefaultColorValues.BrightGreen.g..","..BS.DefaultColorValues.BrightGreen.b..","..BS.DefaultColorValues.BrightGreen.a.." " .. NumOfMints*BS.MintValues.BonusInPercent .. " % @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." erhöhter Zahltag  @cr @cr zusätzliche Taler/Zahltag: @color:100,230,100,255 " ..TaxIncome.. " @cr @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." erhöhter Sold/Zahltag: @color:210,20,20,255 "..LeaderCosts
+	local Text1, Text2, Text3, Text4
+	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
+		Text1 = "aktueller Bonus"
+		Text2 = "erhöhter Zahltag"
+		Text3 = "zusätzliche Taler/Zahltag"
+		Text4 = "erhöhter Sold/Zahltag"
+	else
+		Text1 = "current bonus"
+		Text2 = "increased payday"
+		Text3 = "additional thalers/payday"
+		Text4 = "increased pay/payday"
+	end
+	local String = "@color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." " .. Text1 .. ": @color:"..BS.DefaultColorValues.BrightGreen.r..","..BS.DefaultColorValues.BrightGreen.g..","..BS.DefaultColorValues.BrightGreen.b..","..BS.DefaultColorValues.BrightGreen.a.." " .. NumOfMints*BS.MintValues.BonusInPercent .. " % @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." " .. Text2 .. " @cr @cr " .. Text3 .. ": @color:100,230,100,255 " ..TaxIncome.. " @cr @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b..","..BS.DefaultColorValues.White.a.." " .. Text4 .. ": @color:210,20,20,255 "..LeaderCosts
 	XGUIEng.SetText(CurrentWidgetID, String)
 
 end
@@ -1159,11 +1171,13 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindHeavyCavalryLeader, 0)
 	end
 	-- cannons
-	local Cannon1 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
-	local Cannon2 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
-	local Cannon3 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
-	local Cannon4 = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
-	local CannonAmount = Cannon1 + Cannon2 + Cannon3 + Cannon4
+	local CannonAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon5)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon6)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Catapult)
 	if CannonAmount > 0 then
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindCannon, 1)
 	else

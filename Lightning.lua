@@ -185,11 +185,13 @@ end
 function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
     for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
-
-		-- wenn Serf, dann...
+		-- don't touch npcs
+		if Logic.GetEntityName(eID) ~= nil and not IsPlayerHuman(Logic.EntityGetPlayer(eID)) then
+		end
+		-- damage for serfs
 		if Logic.IsSerf(eID) == 1 then
 			Logic.HurtEntity(eID, _damage)
-		-- wenn Held oder Kanone, dann...
+		-- damage for heroes and cannons
 		elseif Logic.IsHero(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 			if Logic.IsEntityAlive(eID) then
 				local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.8)
@@ -201,7 +203,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				end
 				Logic.HurtEntity(eID, damage)
 			end
-		-- wenn Leader, dann...
+		-- damage for other leaders
 		elseif Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then
 			local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
 			if Soldiers[1] > 0 then
@@ -222,7 +224,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				end
 				Logic.HurtEntity(eID, damage)
 			end
-		-- wenn Gebäude, dann...
+		-- damage for buildings
 		elseif Logic.IsBuilding(eID) == 1 then
 			if gvLightning.IsLightningProofBuilding(eID) ~= true then
 				if Logic.IsConstructionComplete(eID) == 1 then
@@ -245,7 +247,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				end
 			end
 
-		-- wenn alles andere (Soldier), dann...
+		-- damage everything else (e.g. soldiers)
 		else
 			if Logic.IsEntityAlive(eID) then
 				if ExtendedStatistics then
@@ -257,7 +259,7 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 				Logic.HurtEntity(eID, _damage)
 			end
 		end
-		-- Signal für den Spieler + Begrenzung Ton nur 1/sek
+		-- signal for player + limitation sound once per sec
 		if GUI.GetPlayerID() == Logic.EntityGetPlayer(eID) and gvLightning.IsLightningProofBuilding(eID) ~= true and Logic.IsEntityAlive(eID) then
 			gvLightning.RecentlyDamaged[Logic.EntityGetPlayer(eID)] = true
 			GUI.ScriptSignal(_posX, _posY, 0)

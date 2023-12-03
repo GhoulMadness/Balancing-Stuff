@@ -22,7 +22,7 @@ if CNetwork then
 	end
 else
 	gvCastle.AmountOfCastles[1] = 0
-	gvCastle.HQIDTable = {Logic.GetEntities(Entities.PB_Headquarters1,12)}
+	gvCastle.HQIDTable = {Logic.GetEntities(Entities.PB_Headquarters1,16)}
 	table.remove(gvCastle.HQIDTable,1)
 	for k = 1,table.getn(gvCastle.HQIDTable) do
 		local posX,posY = Logic.GetEntityPosition(gvCastle.HQIDTable[k])

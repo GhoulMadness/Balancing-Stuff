@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.748
+	BS.Version = 0.749
 
 	BS.SpectatorPID = 17
 
@@ -30,9 +30,16 @@
 					["(2) bs koop erste pruefung - kampfgeschick"] = true,
 					["(2) bs koop zweite pruefung - taktische finesse"] = true,
 					["(2) bs koop dritte pruefung - gesandter des himmels"] = true,
+					["(2) bs koop vierte pruefung - das artefakt"] = true,
+					["(2) bs koop fuenfte pruefung - die dunkle bedrohung"] = true,
+					["(2) bs koop sechste pruefung - der boese graf"] = true,
+					["(2) bs koop siebte pruefung - tanz der flammen"] = true,
+					["(2) bs koop achte pruefung - shering in gefahr"] = true,
+					["(2) bs koop neunte pruefung - rettet trogteburg"] = true,
 					["(2) bs koop eisigerfjord (remastered)"] = true,
 					["(2) bs koop eingekesselt"] = true,
 					["(2) bs koop farben des glaubens"] = true,
+					["(2) bs koop sturm auf etaqa"] = true,
 					["(2) emsbs dunkelforst"] = true,
 					["(2) emsbs kampf am kap"] = true,
 					["(2) emsbs leichenfledderer"] = true,
@@ -59,6 +66,7 @@
 					["(3) bs koop die grossen drei"] = true,
 					["(3) bs koop barmecia"] = true,
 					["(3) bs koop das grosse oedland"] = true,
+					["(3) bs koop nachbarschaft"] = true,
 					["(3) emsbs der lachende dritte"] = true,
 					["(3) emsbs eingekesselt"] = true,
 					["(3) emsbs hochland"] = true,
@@ -227,7 +235,10 @@
 															[2] = "challenge_map2_won",
 															[3] = "challenge_map3_won"
 														},
-							["Build_VictoryStatue4"] = "challenge_map4_won"
+							["Build_VictoryStatue4"] = "challenge_map4_won",
+							["Buy_Cannon5"] = "challenge_map5_won",
+							["Buy_Cannon6"] = "challenge_map6_won",
+							["Buy_Catapult"] = "challenge_map7_won"
 						}
 
 	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
@@ -258,11 +269,14 @@
 										"Vqrys",
 										"Izzo",
 										"a8wh4t"},
-								[4] = {}
+								[4] = {},
+								[5] = {},
+								[6] = {},
+								[7] = {}
 							}
 	function BS.CheckForAchievements(_pID)
 
-		for i = 1,12 do
+		for i = 1,16 do
 			if _pID == i then
 				for k,v in pairs(BS.AchievementNames) do
 					if type(v) == "string" then
@@ -346,13 +360,16 @@
 			"LocalMusic",
 			"VersionCheck",
 			"Hero6",
+			"Hero9",
 			"Hero13",
 			"Hero14",
+			"HeroTarget",
 			"VictoryStatue3",
 			"VictoryStatue4",
 			"WCutter",
 			"Forester",
-			"Coal"
+			"Coal",
+			"Cannon5"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
@@ -370,7 +387,9 @@
 	--cooldown handling levy taxes TODO: this is not at the correct place
 	gvLastTimeButtonPressed = -240000
 	--additional chat taunts added
-	BonusKeys()
+	if CNetwork then
+		BonusKeys()
+	end
 	--internal payday activation (for treasury technology - debenture)
 	for i = 1,16 do
 		CUtil.Payday_SetActive(i, true)
@@ -380,7 +399,9 @@
 	--initializing animations for beautifications
 	BeautiAnimCheck()
 	--loading widget helper
-	Script.Load("MP_SettlerServer/WidgetHelper.lua")
+	if not WidgetHelper then
+		Script.Load("MP_SettlerServer/WidgetHelper.lua")
+	end
 	--additionaly load this script if there are any presents to steal on the map
 	if gvXmasEventFlag == 1 then
 		Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\PresentControl.lua")
