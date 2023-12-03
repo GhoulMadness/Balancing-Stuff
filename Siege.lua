@@ -43,8 +43,8 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			end
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_NoDamageToWallsAndGates", 1)
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_EntityBurnedToDeathSounds", 1)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_TrapCalculateDamage", 1)
 			if gvChallengeFlag then
-				Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_TrapCalculateDamage", 1)
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,"", "Siege_EntityCreated", 1)
 			end
 		end,
@@ -83,7 +83,7 @@ Siege_TrapCalculateDamage = function()
 		local target = Event.GetEntityID2()
 		-- damage to heroes much higher
 		if Logic.IsHero(target) == 1 then
-			CEntity.TriggerSetDamage(CEntity.TriggerGetDamage()*5)
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage()*5/gvDiffLVL))
 		end
 	end
 end
@@ -110,6 +110,7 @@ Siege_EntityBurnedToDeathSounds = function()
 				if GetDistance({X = x, Y = y}, GetPosition(target)) <= 5000 then
 					Siege_BurnedToDeathSound[GUI.GetPlayerID()] = true
 					Stream.Start("Sounds\\military\\".. Siege.BurnedToDeathSounds[1+XGUIEng.GetRandom(table.getn(Siege.BurnedToDeathSounds)-1)] ..".wav", 152)
+					StartCountdown(6, function() Siege_BurnedToDeathSound[GUI.GetPlayerID()] = false end, false)
 				end
 			end
 		end
