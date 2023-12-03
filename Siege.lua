@@ -206,7 +206,7 @@ Siege_PitchBurnerControl = function(_id)
 			local angle = GetAngleBetween(pos, clump)
 			Logic.RotateEntity(_id, angle)
 			Logic.SetTaskList(_id, TaskLists.TL_PITCHBURNER_DROPOIL)
-			Logic.CreateEffect(GGL_Effects.FX_DropOil, clump.X, clump.Y)
+			Logic.CreateEffect(GGL_Effects.FXDropOil, clump.X, clump.Y)
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerApplyDamage", 1, {}, {_id, clump.X, clump.Y})
 			if not Siege_PitchBurnerDropOilSound then
 				Stream.Start("Voice\\stronghold\\" .. Siege.DropOilSounds[1+XGUIEng.GetRandom(table.getn(Siege.DropOilSounds)-1)] .. ".wav", 152)
