@@ -66,7 +66,7 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 					local dist = GetDistance(_id, _heroID)
 					if type == Entities.PU_Hero13 then
 						if gvHero13.TriggerIDs[_ability].Judgment[player] then
-							if dist < gvHero13[_ability].Judgment.BaseRange then
+							if dist < gvHero13.AbilityProperties[_ability].Judgment.BaseRange then
 								if GetHealth(_heroID) < 30 then
 									return -1
 								else
