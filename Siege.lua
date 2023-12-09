@@ -1,16 +1,13 @@
 Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationRange = 300, TrapDamage = 100, TrapDamageRange = 800,
 		PitchFieldPositions = {}, PitchFieldDefaultPlayer = 8, PitchFieldEnemyTreshold = 10, PitchFieldActivationRange = 500, PitchFieldAlreadyTargetted = {},
 		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 1,
-		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800,
+		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800, PitchBurningDamageFactorToHeroes = 5, PitchBurningDamageFactorToVehicles = 3, PitchBurningDamageFactorToUnderlings = 3,
 		FireEffectCasted = {},
-		CreateTraps = function(_player, _x, _y, _range, _amount)
-			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, 500, "TrapHole")
+		CreateTraps = function(_player, _x, _y, _range, _amount, _spacing)
+			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, _spacing, "TrapHole")
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_TrapControl", 1)
 		end,
 		CreatePitchFields = function(_x, _y, _range, _length, _amount)
-			--[[for i = 1, table.getn(Siege.DefenderIDs) do
-				Logic.SetDiplomacyState(Siege.DefenderIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
-			end]]
 			for i = 1, table.getn(Siege.AttackerIDs) do
 				Logic.SetDiplomacyState(Siege.AttackerIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
 			end
@@ -24,6 +21,23 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerControl", 1, {}, {eID})
 			end
 		end,
+		FireEffectOffsets = {{X = 0, Y = 0},
+							{X = 300, Y = 0},
+							{X = 300, Y = 300},
+							{X = 0, Y = 300},
+							{X = 600, Y = 0},
+							{X = 600, Y = 300},
+							{X = 600, Y = 600},
+							{X = 0, Y = 600},
+							{X = 300, Y = 600},
+							{X = -300, Y = 0},
+							{X = -300, Y = -300},
+							{X = 0, Y = -300},
+							{X = -600, Y = 0},
+							{X = -600, Y = -300},
+							{X = -600, Y = -600},
+							{X = 0, Y = -600},
+							{X = -300, Y = -600}},
 		SearchForNearestBowman = function(_x, _y)
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs)), CEntityIterator.OfCategoryFilter(EntityCategories.Bow)) do
 				if Logic.IsLeader(eID) == 1 then
@@ -83,7 +97,15 @@ Siege_TrapCalculateDamage = function()
 		local target = Event.GetEntityID2()
 		-- damage to heroes much higher
 		if Logic.IsHero(target) == 1 then
-			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage()*5/gvDiffLVL))
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToHeroes / gvDiffLVL))
+		end
+		-- damage to cannons, catapults and rams also increased, but not as much as heroes
+		if Logic.IsEntityInCategory(target, EntityCategories.Cannon) == 1 then
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToVehicles / gvDiffLVL))
+		end
+		-- damage to summoned entities, such as ari bandits, much higher
+		if IsHeroSummonedEntity(target) then
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToUnderlings / gvDiffLVL))
 		end
 	end
 end
@@ -160,21 +182,15 @@ Siege_PitchFieldHitControl = function(_projectile, _id, _index)
 		return true
 	end
 end
---[[Siege_PitchFieldHitControl = function(_projectile, _id, _index)
-	local target = Event.GetEntityID2()
-	local projectile = CEntity.HurtTrigger.GetProjectileID()
-	if projectile == _projectile then
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN,"", "Siege_PitchFieldApplyDamage", 1, {}, {_id, _index})
-		return true
-	end
-end]]
 Siege_PitchFieldApplyDamage = function(_id, _index)
 	if not Counter.Tick2("Siege_PitchFieldApplyDamage_" .. _index, Siege.PitchBurningDuration) then
 		Siege.FireEffectCasted[_index] = Siege.FireEffectCasted[_index] or {}
 		for i = 1, table.getn(Siege.PitchFieldPositions[_index]) do
 			local X, Y = Siege.PitchFieldPositions[_index][i].X, Siege.PitchFieldPositions[_index][i].Y
 			if not Siege.FireEffectCasted[_index][i] then
-				Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], X, Y)
+				for i = 1, table.getn(Siege.FireEffectOffsets) do
+					Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], X + Siege.FireEffectOffsets[i].X, Y + Siege.FireEffectOffsets[i].Y)
+				end
 				Siege.FireEffectCasted[_index][i] = true
 			end
 			CEntity.DealDamageInArea(_id, X, Y, Siege.PitchBurningRange, Siege.PitchBurningDamage)
@@ -223,7 +239,9 @@ function Siege_PitchBurnerApplyDamage(_id, _x, _y)
 	end
 	if not Counter.Tick2("Siege_PitchBurnerApplyDamage_" .. _id, Siege.PitchBurningDuration) then
 		if not Siege.FireEffectCasted[_id] then
-			Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], _x, _y)
+			for i = 1, table.getn(Siege.FireEffectOffsets) do
+				Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], _x + Siege.FireEffectOffsets[i].X, _y + Siege.FireEffectOffsets[i].Y)
+			end
 			Siege.FireEffectCasted[_id] = true
 		end
 		CEntity.DealDamageInArea(_id, _x, _y, Siege.PitchBurningRange, Siege.PitchBurningDamage)

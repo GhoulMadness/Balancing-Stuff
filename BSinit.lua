@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.749
+	BS.Version = 0.750
 
 	BS.SpectatorPID = 17
 
@@ -227,6 +227,12 @@
 	BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 							["Build_VictoryStatue2"] = "challenge_map2_won",
 							["Build_VictoryStatue3"] = "challenge_map3_won",
+							["Build_VictoryStatue4"] = "challenge_map4_won",
+							["Build_VictoryStatue5"] = "challenge_map5_won",
+							["Build_VictoryStatue6"] = "challenge_map6_won",
+							["Build_VictoryStatue7"] = "challenge_map7_won",
+							["Build_VictoryStatue8"] = "challenge_map8_won",
+							["Build_VictoryStatue9"] = "challenge_map9_won",
 							["BuyHeroWindowBuyHero14"] = {	[1] = "challenge_map1_won",
 															[2] = "challenge_map2_won",
 															[3] = "challenge_map3_won"
@@ -235,10 +241,24 @@
 															[2] = "challenge_map2_won",
 															[3] = "challenge_map3_won"
 														},
-							["Build_VictoryStatue4"] = "challenge_map4_won",
-							["Buy_Cannon5"] = "challenge_map5_won",
-							["Buy_Cannon6"] = "challenge_map6_won",
-							["Buy_Catapult"] = "challenge_map7_won"
+							["Buy_Catapult"] = {[1] = "challenge_map4_won",
+												[2] = "challenge_map5_won",
+												[3] = "challenge_map6_won"
+												},
+							["Buy_Cannon5"] = { [1] = "challenge_map7_won",
+												[2] = "challenge_map8_won",
+												[3] = "challenge_map9_won"
+												},
+							["Buy_Cannon6"] = {	[1] = "challenge_map1_won",
+												[2] = "challenge_map2_won",
+												[3] = "challenge_map3_won",
+												[4] = "challenge_map6_won",
+												[5] = "challenge_map5_won",
+												[6] = "challenge_map6_won",
+												[7] = "challenge_map7_won",
+												[8] = "challenge_map8_won",
+												[9] = "challenge_map9_won"
+												}
 						}
 
 	BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
@@ -272,7 +292,9 @@
 								[4] = {},
 								[5] = {},
 								[6] = {},
-								[7] = {}
+								[7] = {},
+								[8] = {},
+								[9] = {}
 							}
 	function BS.CheckForAchievements(_pID)
 

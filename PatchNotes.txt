@@ -926,3 +926,10 @@ Die zusätzlichen Sprüche/Taunts per Tastenkombi für den MP haben im SP das Sp
 
 NPCs sind nun immun gegen Blitzeinschläge.
 
+--- Version 0.750
+
+Schaden Schwere Haubitze: 992 -> 500
+
+Ausgewählte Truppen auf Karten mit dem Armee-Erstellungs-Tool erschienen pro Spieler alle auf derselben Stelle. 
+Sie erscheinen nun mit ein wenig Abstand zueinander.
+

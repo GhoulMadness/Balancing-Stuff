@@ -1,4 +1,4 @@
--- default win condition comfort
+-- default win condition comfort override
 function VC_Deathmatch()
 
 	if XNetwork.Manager_DoesExist() == 0 then
@@ -135,6 +135,9 @@ function VC_Deathmatch()
 	end
 
 end
+
+-- briefing function override, so player military units can't move during briefings to get tactical advantages
+---@param _briefing table briefingData
 PrepareBriefing = function(_briefing)
 
 	-- stop humen players leaders from moving
@@ -185,6 +188,92 @@ PrepareBriefing = function(_briefing)
 	XGUIEng.ShowWidget("CinematicMiniMapContainer",1)
 
 end
+-------------------------------------------------------------------------------------------------------
+------------------------------- Pages briefing comfort ------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+---@param _briefing table briefingData
+---@return table briefingData
+function AddPages(_briefing)
+    local AP = function(_page)
+		table.insert(_briefing, _page)
+		return _page
+	end
+    local ASP = function(_entity, _title, _text, _dialog, _explore)
+		return AP(CreateShortPage(_entity, _title, _text, _dialog, _explore))
+	end
+    return AP, ASP
+end
+--**
+-- function to create short pages
+---@param _entity string|entityID entityName or entityID
+---@param _title string pageTitle
+---@param _text string pageText
+---@param _dialog boolean CameraZoom
+---@param _explore number ExploreArea
+---@return table pageData
+function CreateShortPage(_entity, _title, _text, _dialog, _explore)
+    local page = {
+        title = _title,
+        text = _text,
+        position = GetPosition(_entity),
+		action = function()
+		end
+    }
+    if _dialog then
+		if type(_dialog) == "boolean" then
+			page.dialogCamera = true
+		elseif type(_dialog) == "number" then
+			page.explore = _dialog
+		end
+      end
+    if _explore then
+		if type(_explore) == "boolean" then
+			page.dialogCamera = true
+		elseif type(_explore) == "number" then
+			page.explore = _explore
+		end
+    end
+    return page
+end
+function ActivateBriefingsExpansion()
+    if not unpack{true} then
+        local unpack2
+        unpack2 = function(_table, i)
+			i = i or 1
+			assert(type(_table) == "table")
+			if i <= table.getn(_table) then
+				return _table[i], unpack2(_table, i)
+			end
+		end
+        unpack = unpack2
+    end
+
+    Briefing_ExtraOrig = Briefing_Extra
+
+    Briefing_Extra = function(_v1, _v2)
+		for i = 1, 2 do
+			local theButton = "CinematicMC_Button" .. i
+			XGUIEng.DisableButton(theButton, 1)
+			XGUIEng.DisableButton(theButton, 0)
+		end
+
+		if _v1.action then
+			assert(type(_v1.action) == "function")
+			if type(_v1.parameters) == "table" then
+				_v1.action(unpack(_v1.parameters))
+			else
+				_v1.action(_v1.parameters)
+			end
+		end
+
+    Briefing_ExtraOrig(_v1, _v2)
+	end
+
+end
+
+-- override cutscene comfort
+---@param _Name string CutsceneName, must be defined in cutscenes.xml in data/externalmap
+---@param _Callback function Called when cutscene is done
 StartCutscene = function(_Name, _Callback)
 
 	GameCallback_EscapeOrig = GameCallback_Escape
@@ -239,6 +328,10 @@ CutsceneDone = function()
 	end
 
 end
+
+-- get difficulty string to translate diff lvl (sp campaign) to shown string
+---@param _lvl integer
+---@return string
 DiffLVLToString = function(_lvl)
 	if _lvl == 1 then
 		return "Schwer"
@@ -248,6 +341,9 @@ DiffLVLToString = function(_lvl)
 		return "Leicht"
 	end
 end
+
+-- returns number of human playing player, in SP always 1
+---@return integer
 function GetNumberOfPlayingHumanPlayer()
 
 	if not CNetwork then
@@ -265,9 +361,11 @@ function GetNumberOfPlayingHumanPlayer()
 	return count
 
 end
-
+-- player name override to show name in statistics
 gvPlayerName = gvPlayerName or {}
-
+-- sets playerName into the GUI
+---@param _playerId integer playerID
+---@param _name string playerName
 function SetPlayerName(_playerId, _name)
 
 	local name = XGUIEng.GetStringTableText(_name)
@@ -281,8 +379,27 @@ function SetPlayerName(_playerId, _name)
 	gvPlayerName[_playerId] = _name
 
 end
---[[ find numeric indexed table holes
-returns table with holes indexes or, if no holes were found, false]]
+
+-- returns if a value is found inside an array or not
+---@param _wert any value to search
+---@param _table array to search within
+---@return boolean
+function IstDrin(_wert, _table)
+
+	for i = 1, table.getn(_table) do
+		if _table[i] == _wert then
+			return true
+		end
+	end
+
+	return false
+
+end
+
+-- find numeric indexed table holes
+-- returns table with holes indexes or, if no holes were found, false
+---@param _t table table of any iteration
+---@return table table filled with table holes
 function table_findholes(_t)
 	assert(type(_t) == "table", "input type must be a table")
 	local last, holes = nil, {}
@@ -306,6 +423,11 @@ function table_findholes(_t)
 	end
 	return false
 end
+
+-- returns position of value in table, or if not found 0
+---@param _tid table table of any iteration
+---@param _value any
+---@return integer|0 table position
 function table_findvalue(_tid, _value)
 
 	local tpos
@@ -367,6 +489,10 @@ function table_findvalue(_tid, _value)
 
 end
 
+-- remove table entry by value (in case you don't know the position in table)
+---@param _tid table table of any iteration
+---@param _key string|number|table
+---@return string|number|table
 function removetablekeyvalue(_tid, _key)
 
 	local tpos
@@ -539,9 +665,11 @@ end
 -------------------------------------------------------------------------------------------------------
 --------------------------- Misc Comforts -------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------
---- author:Flodder
--- Berechnet einen winkel zwischen 2 positionen.
---- @return number angle
+-- author:Flodder
+-- Berechnet einen winkel zwischen 2 positionen
+---@param _Pos1 integer|string|table entityID or entityName or positionTable
+---@param _Pos2 integer|string|table entityID or entityName or positionTable
+---@return number angle
 function GetAngleBetween(_Pos1,_Pos2)
 	local delta_X = 0
 	local delta_Y = 0
@@ -569,8 +697,11 @@ function GetAngleBetween(_Pos1,_Pos2)
 	end
 	return alpha
 end
+
 -------------------------------------------------------------------------------------------------------
 -- Wood piles -----------------------------------------------------------------------------------------
+---@param _posEntity string|integer entityName or entityID
+---@param _resources integer NumResources
 function CreateWoodPile(_posEntity, _resources)
 
     assert(type(_posEntity) == "string" or (type(_posEntity) == "number" and _posEntity > 0), "invalid entity param, needs to be either an entity ID or entity scripting name")
@@ -609,78 +740,11 @@ function DestroyWoodPile( _piletable, _index )
     table.remove( gvWoodPiles, _index )
 
 end
--------------------------------------------------------------------------------------------------------
-function AddPages(_briefing)
-    local AP = function(_page)
-		table.insert(_briefing, _page)
-		return _page
-	end
-    local ASP = function(_entity, _title, _text, _dialog, _explore)
-		return AP(CreateShortPage(_entity, _title, _text, _dialog, _explore))
-	end
-    return AP, ASP
-end
---**
-function CreateShortPage(_entity, _title, _text, _dialog, _explore)
-    local page = {
-        title = _title,
-        text = _text,
-        position = GetPosition(_entity),
-		action = function()
-		end
-    }
-    if _dialog then
-		if type(_dialog) == "boolean" then
-			page.dialogCamera = true
-		elseif type(_dialog) == "number" then
-			page.explore = _dialog
-		end
-      end
-    if _explore then
-		if type(_explore) == "boolean" then
-			page.dialogCamera = true
-		elseif type(_explore) == "number" then
-			page.explore = _explore
-		end
-    end
-    return page
-end
-function ActivateBriefingsExpansion()
-    if not unpack{true} then
-        local unpack2
-        unpack2 = function(_table, i)
-			i = i or 1
-			assert(type(_table) == "table")
-			if i <= table.getn(_table) then
-				return _table[i], unpack2(_table, i)
-			end
-		end
-        unpack = unpack2
-    end
-
-    Briefing_ExtraOrig = Briefing_Extra
-
-    Briefing_Extra = function(_v1, _v2)
-		for i = 1, 2 do
-			local theButton = "CinematicMC_Button" .. i
-			XGUIEng.DisableButton(theButton, 1)
-			XGUIEng.DisableButton(theButton, 0)
-		end
-
-		if _v1.action then
-			assert(type(_v1.action) == "function")
-			if type(_v1.parameters) == "table" then
-				_v1.action(unpack(_v1.parameters))
-			else
-				_v1.action(_v1.parameters)
-			end
-		end
-
-    Briefing_ExtraOrig(_v1, _v2)
-	end
-
-end
--------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+-- ReplaceEntity comfort, pretty much only different name given ---------------------------------------
+---@param _Entity string|integer entityName or entityID
+---@param _EntityType integer entityType
+---@return integer entityID
 function ReplacingEntity(_Entity, _EntityType)
 
 	local entityId      = Logic.GetEntityIDByName(_Entity)
@@ -708,6 +772,10 @@ function ReplacingEntity(_Entity, _EntityType)
 
 end
 
+-- activating exploration between two players comfort, param _both optional
+---@param _player1 integer playerID
+---@param _player2 integer playerID
+---@param _both boolean?
 function ActivateShareExploration(_player1, _player2, _both)
 
     assert(type(_player1) == "number" and type(_player2) == "number" and _player1 <= 16 and _player2 <= 16 and _player1 >= 1 and _player2 >= 1, "invalid player IDs input")
@@ -721,43 +789,18 @@ function ActivateShareExploration(_player1, _player2, _both)
 
 end
 
+-- comfort to check if an entityID is really a military leader (e.g. not a hero or top of a tower)
+---@param _entityID integer entityID
+---@return boolean
 function IsMilitaryLeader(_entityID)
 
 	return Logic.IsHero(_entityID) == 0 and Logic.IsSerf(_entityID) == 0 and Logic.IsEntityInCategory(_entityID, EntityCategories.Soldier) == 0 and Logic.IsBuilding(_entityID) == 0 and Logic.IsWorker(_entityID) == 0 and string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(_entityID))), "soldier") == nil and Logic.IsLeader(_entityID) == 1 and Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 0
 
 end
 
-gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,Technologies.GT_Printing,Technologies.GT_Library,
-								Technologies.GT_Construction,Technologies.GT_GearWheel,Technologies.GT_ChainBlock,Technologies.GT_Architecture,
-								Technologies.GT_Alchemy,Technologies.GT_Alloying,Technologies.GT_Metallurgy,Technologies.GT_Chemistry,
-								Technologies.GT_Mercenaries,Technologies.GT_StandingArmy,Technologies.GT_Tactics,Technologies.GT_Strategies,
-								Technologies.GT_Mathematics,Technologies.GT_Binocular,Technologies.GT_PulledBarrel,Technologies.GT_Matchlock,
-								Technologies.GT_Taxation,Technologies.GT_Banking,Technologies.GT_Laws,Technologies.GT_Gilds},
-			MercenaryTower = {	Technologies.T_KnightsCulture, Technologies.T_BearmanCulture, Technologies.T_BanditCulture, Technologies.T_BarbarianCulture},
-			Special = {			Technologies.T_Coinage, Technologies.T_Scale, Technologies.T_WeatherForecast, Technologies.T_ChangeWeather, Technologies.T_CropCycle},
-			TroopUpgrades = {	Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery,
-								Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_WoodAging, Technologies.T_Turnery, Technologies.T_MasterOfSmithery,
-								Technologies.T_IronCasting, Technologies.T_Fletching, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder, Technologies.T_BlisteringCannonballs,
-								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor},
-			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
-								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
-				}
-
-UniTechAmount = function(_PlayerID)
-
-	local Player = _PlayerID
-	local amount = 0
-
-	for i = 1,table.getn(gvTechTable.University) do
-		if Logic.GetTechnologyState(Player, gvTechTable.University[i]) == 4 then
-			amount = amount + 1
-		end
-	end
-
-	return amount
-
-end
-
+-- Gets current health percentage of entityID
+---@param _entity integer entityID
+---@return number percentage health
 function GetEntityHealth(_entity)
 
 	local entityID
@@ -777,16 +820,36 @@ function GetEntityHealth(_entity)
     return ( Health / MaxHealth ) * 100
 
 end
+
+-- comfort to generate random value with defined step offset
+---@param _min number lower limit
+---@param _max number upper limit
+---@param _step number offset for steps
+---@return number
 function GenerateRandomWithSteps(_min, _max, _step)
 	local steps = math.ceil((_max - _min) / _step)
 	local rand = math.random(0, steps)
 	return _min + rand * _step
 end
+
+-- function to get nearest other entityID of same entityType
+---@param _x number	positionX
+---@param _y number positionY
+---@param _entityType integer entityType
+---@return integer
 function GetNearestEntityOfType(_x, _y, _entityType)
 	local range = Logic.WorldGetSize()
 	local num, id = Logic.GetEntitiesInArea(_entityType, _x, _y, range, 1)
 	return id
 end
+
+-- comfort to evaluate if number of entities of given playerID are in range of given Position
+---@param _player integer playerID
+---@param _entityType integer entityType
+---@param _position table positionTable
+---@param _range number search range
+---@param _amount integer needed amount of entities
+---@return boolean
 function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 
 	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
@@ -859,6 +922,13 @@ function AreEntitiesInArea(_player, _entityType, _position, _range, _amount)
 	return Count >= _amount
 
 end
+
+-- Comfort to evaluate if entities of given player and diplomacy state are in range of given position
+---@param _player integer playerID
+---@param _position table positionTable
+---@param _range number search range
+---@param _state integer DiplomacyState
+---@return boolean
 function AreEntitiesOfDiplomacyStateInArea(_player, _position, _range, _state)
 
 	local maxplayers = 8
@@ -879,6 +949,13 @@ function AreEntitiesOfDiplomacyStateInArea(_player, _position, _range, _state)
 
 end
 
+-- Comfort to evaluate if entities of given player, entity categories and diplomacy state are in range of given position
+---@param _player integer playerID
+---@param _entityCategories table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@param _state integer DiplomacyState
+---@return boolean
 function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategories, _position, _range, _state)
 
 	assert(type(_entityCategories) == "table", "entityCategories param must be a table")
@@ -905,6 +982,14 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 
 end
 
+-- Comfort to evaluate if entities of given player, entity categories and diplomacy state are in range of given position
+---@param _player integer playerID
+---@param _entityTypes table|integer entityType(s)
+---@param _entityCategories table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@param _amount integer needed amount of entities
+---@return boolean
 function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCategories, _position, _range, _amount)
 
 	local Data = {}
@@ -972,6 +1057,13 @@ function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCatego
 	return Counter,(Counter >= _amount)
 
 end
+
+-- Comfort to evaluate if any building of given player is in range of given position
+---@param _player integer playerID
+---@param _x number positionX
+---@param _y number positionY
+---@param _range number search range
+---@return boolean
 function ArePlayerBuildingsInArea(_player, _x, _y, _range)
 	local count = 0
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(_x, _y, _range)) do
@@ -980,6 +1072,13 @@ function ArePlayerBuildingsInArea(_player, _x, _y, _range)
 	end
 	return count > 0
 end
+
+-- Comfort to get the amount of entities friendly to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return integer
 function GetNumberOfAlliesInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
@@ -992,6 +1091,13 @@ function GetNumberOfAlliesInRange(_player, _ecats, _position, _range)
 	end
 	return count
 end
+
+-- Comfort to get the amount of entities hostile to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return integer
 function GetNumberOfEnemiesInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
@@ -1004,6 +1110,13 @@ function GetNumberOfEnemiesInRange(_player, _ecats, _position, _range)
 	end
 	return count
 end
+
+-- Comfort to get the amount of entities of playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return integer
 function GetNumberOfPlayerEntitiesByCatInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
@@ -1015,6 +1128,14 @@ function GetNumberOfPlayerEntitiesByCatInRange(_player, _ecats, _position, _rang
 	end
 	return count
 end
+
+-- Comfort to get the amount and entityIDs of entities of playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return integer amount found entities
+---@return table table with entityIDs
 function GetPlayerEntitiesByCatInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
@@ -1026,6 +1147,12 @@ function GetPlayerEntitiesByCatInRange(_player, _ecats, _position, _range)
 	end
 	return table.getn(t), t
 end
+
+-- Comfort to get the amount of entities of playerIDs based off range to given position
+---@param _player table playerIDs
+---@param _position table positionTable
+---@param _range number search range
+---@return integer
 function GetNumberOfPlayerUnitsInRange(_player, _position, _range)
 	assert(type(_player) == "table", "invalid player IDs")
 	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
@@ -1036,6 +1163,14 @@ function GetNumberOfPlayerUnitsInRange(_player, _position, _range)
 	end
 	return count
 end
+
+-- Comfort to get the distance and the entityID of the nearest enemy to a given player, position and range
+-- player needs active armies!
+---@param _player integer playerID
+---@param _position table positionTable
+---@param _range number search range
+---@return number distance to enemy
+---@return integer entityID of nearest enemy
 function GetNearestEnemyDistance(_player, _position, _range)
 	local id = GetNearestEnemyInRange(_player, _position, _range)
 	if id then
@@ -1043,6 +1178,13 @@ function GetNearestEnemyDistance(_player, _position, _range)
 	end
 	return false
 end
+
+-- Comfort to get the entityID of the nearest enemy to a given player, position and range
+-- player needs active armies!
+---@param _player integer playerID
+---@param _position table positionTable
+---@param _range number search range
+---@return integer entityID of nearest enemy
 function GetNearestEnemyInRange(_player, _position, _range)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
@@ -1056,6 +1198,7 @@ function GetNearestEnemyInRange(_player, _position, _range)
 	return false
 end
 
+-- override so the OSI of the entity is shown again after resuming (workaround for ubi bug)
 ResumeEntityOrig = Logic.ResumeEntity
 Logic.ResumeEntity = function(_id)
 	ResumeEntityOrig(_id)
@@ -1064,18 +1207,21 @@ Logic.ResumeEntity = function(_id)
 	end
 end
 
+-- added some assertion so we don't get a crash
 GetFoundationTopOrig = Logic.GetFoundationTop
 Logic.GetFoundationTop = function(_id)
 	assert(IsValid(_id), "invalid entityID")
 	return GetFoundationTopOrig(_id)
 end
 
+-- added some assertion so we don't get a crash
 GetAttachedEntitiesOrig = CEntity.GetAttachedEntities
 CEntity.GetAttachedEntities = function(_id)
 	assert(IsValid(_id), "invalid entityID")
 	return GetAttachedEntitiesOrig(_id)
 end
 
+-- added some assertion so we don't get a crash; function allows only armyIDs between -1 and 8
 Entity_ConnectLeaderOrig = AI.Entity_ConnectLeader
 AI.Entity_ConnectLeader = function(_id, _armyID)
 	assert(IsValid(_id), "invalid entityID")
@@ -1083,12 +1229,15 @@ AI.Entity_ConnectLeader = function(_id, _armyID)
 	return Entity_ConnectLeaderOrig(_id, _armyID)
 end
 
+-- added some assertion so we don't get a crash
 GroupAttackOrig = Logic.GroupAttack
 Logic.GroupAttack = function(_id, _target)
 	assert(IsValid(_id), "invalid attacker entityID")
 	assert(IsValid(_target), "invalid target entityID")
 	return GroupAttackOrig(_id, _target)
 end
+
+-- function allows only armyIDs between -1 and 8
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
 AI.Army_GetEntityIdOfEnemy = function(_player, _id)
 	if _id >= 0 and _id <= 8 then
@@ -1097,18 +1246,27 @@ AI.Army_GetEntityIdOfEnemy = function(_player, _id)
 		return Army_GetEntityIdOfEnemyOrig(_player, 0)
 	end
 end
+
+-- function allows only armyIDs between -1 and 8
 Army_SetScatterToleranceOrig = AI.Army_SetScatterTolerance
 AI.Army_SetScatterTolerance = function(_player, _id, _val)
 	if _id >= 0 and _id <= 8 then
 		Army_SetScatterToleranceOrig(_player, _id, _val)
 	end
 end
+
+-- function allows only armyIDs between -1 and 8
 Army_SetSizeOrig = AI.Army_SetSize
 AI.Army_SetSize = function(_player, _id, _val)
 	if _id >= 0 and _id <= 8 then
 		Army_SetSizeOrig(_player, _id, _val)
 	end
 end
+
+-- Comfort to get the armyID by leaderID
+--player needs active armies!
+---@param _id integer leaderID
+---@return integer armyID
 GetArmyByLeaderID = function(_id)
 	assert(IsValid(_id), "invalid entityID")
 	assert(Logic.IsLeader(_id) == 1, "entityID must be a leader")
@@ -1133,6 +1291,10 @@ GetArmyByLeaderID = function(_id)
 		end
 	end
 end
+
+-- Comfort to evaluate if entity or army is dead ~= not existing (e.g. heroes)
+---@param _name integer|string|table leaderID or leaderName or armyTable
+---@return boolean
 IsDead = function(_name)
 
 	if type(_name) == "table" then
@@ -1172,6 +1334,10 @@ IsDead = function(_name)
 	return false
 
 end
+
+-- Comfort to evaluate if given army is at or above full strength
+---@param _army table armyTable
+---@return boolean
 HasFullStrength = function(_army)
 
 	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
@@ -1182,6 +1348,10 @@ HasFullStrength = function(_army)
 	return false
 
 end
+
+-- Comfort to evaluate if given army is below full strength
+---@param _army table armyTable
+---@return boolean
 IsWeak = function(_army)
 
 	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
@@ -1191,6 +1361,10 @@ IsWeak = function(_army)
 	end
 
 end
+
+-- Comfort to evaluate if given army is below a third of full strength
+---@param _army table armyTable
+---@return boolean
 IsVeryWeak = function(_army)
 
 	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
@@ -1199,6 +1373,8 @@ IsVeryWeak = function(_army)
 		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / 3)
 	end
 end
+
+-- table with maximum soldiers based off leader type
 MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 							[Entities.PU_LeaderSword2] = 4,
 							[Entities.PU_LeaderSword3] = 8,
@@ -1240,9 +1416,15 @@ MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 							[Entities.CU_VeteranCaptain] = 0,
 							[Entities.CU_VeteranLieutenant] = 2,
 							[Entities.CU_VeteranMajor] = 2}
+
+-- Comfort to get the maximum number of soldiers by leader type
+---@param _type integer entityType of leader
+---@return integer maximum number of soldiers
 function LeaderTypeGetMaximumNumberOfSoldiers(_type)
 	return MaxSoldiersByLeaderType[_type] or 0
 end
+
+-- comfort to unmute game feedback and the mentor
 function Unmuting()
 
 	GUI.SetFeedbackSoundOutputState(1)
@@ -1250,6 +1432,43 @@ function Unmuting()
 
 end
 
+-- technologies sorted by categories; view UniTechAmount or QuickTest
+gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,Technologies.GT_Printing,Technologies.GT_Library,
+								Technologies.GT_Construction,Technologies.GT_GearWheel,Technologies.GT_ChainBlock,Technologies.GT_Architecture,
+								Technologies.GT_Alchemy,Technologies.GT_Alloying,Technologies.GT_Metallurgy,Technologies.GT_Chemistry,
+								Technologies.GT_Mercenaries,Technologies.GT_StandingArmy,Technologies.GT_Tactics,Technologies.GT_Strategies,
+								Technologies.GT_Mathematics,Technologies.GT_Binocular,Technologies.GT_PulledBarrel,Technologies.GT_Matchlock,
+								Technologies.GT_Taxation,Technologies.GT_Banking,Technologies.GT_Laws,Technologies.GT_Gilds},
+			MercenaryTower = {	Technologies.T_KnightsCulture, Technologies.T_BearmanCulture, Technologies.T_BanditCulture, Technologies.T_BarbarianCulture},
+			Special = {			Technologies.T_Coinage, Technologies.T_Scale, Technologies.T_WeatherForecast, Technologies.T_ChangeWeather, Technologies.T_CropCycle},
+			TroopUpgrades = {	Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery,
+								Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_WoodAging, Technologies.T_Turnery, Technologies.T_MasterOfSmithery,
+								Technologies.T_IronCasting, Technologies.T_Fletching, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder, Technologies.T_BlisteringCannonballs,
+								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor},
+			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
+								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
+				}
+
+-- Gets amount of university technologies already researched by playerID
+---@param _PlayerID integer playerID
+---@return integer
+UniTechAmount = function(_PlayerID)
+
+	local Player = _PlayerID
+	local amount = 0
+
+	for i = 1,table.getn(gvTechTable.University) do
+		if Logic.GetTechnologyState(Player, gvTechTable.University[i]) == 4 then
+			amount = amount + 1
+		end
+	end
+
+	return amount
+
+end
+
+-- Comfort for quick testing. Gives large amounts of resources, speeds up the game, researches technologies and more
+---@param _val number? optional, number of resources to provide and range to explore
 function QuickTest(_val)
 
 	local player = GUI.GetPlayerID()
@@ -1277,6 +1496,13 @@ function QuickTest(_val)
 	end
 end
 
+-- Comfort to research technologies by technology categories for a player
+---@param _PlayerID integer playerID
+---@param _UniTechsFlag boolean? Should University Technologies be researched?
+---@param _MercTechsFlag boolean? Should MercenaryTower Technologies be researched?
+---@param _SpecTechsFlag boolean? Should Special Technologies be researched (e.g. weather, tech requirements for mint, tradepost and veggie plantation etc.)?
+---@param _TroopTechsFlag boolean? Should Troop Technologies be researched?
+---@param _SilverTechsFlag boolean? Should Silver Technologies be researched?
 function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _SpecTechsFlag, _TroopTechsFlag, _SilverTechsFlag)
 
 	_UniTechsFlag = _UniTechsFlag or false
@@ -1304,6 +1530,7 @@ function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _Spec
 	end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- comfort to completely hide the GUI
 function HideGUI()
 
 	Game.GUIActivate(0)
@@ -1312,6 +1539,7 @@ function HideGUI()
 
 end
 
+-- comfort to show the GUI
 function ShowGUI()
 
 	Game.GUIActivate(1)
@@ -1319,20 +1547,15 @@ function ShowGUI()
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 
 end
-
-function IstDrin(_wert, _table)
-
-	for i = 1, table.getn(_table) do
-		if _table[i] == _wert then
-			return true
-		end
-	end
-
-	return false
-
-end
 ------------------------------------------ Countdown Comfort --------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
+-- Comfort to start an delayed action
+---@param _Limit integer TimeLimit for the countdown, when reaching zero, callback function is called
+---@param _Callback function Callback function when counter reaches zero
+---@param _Show? boolean Should the remaining time be displayed? Only 1 timer at the same time possible
+---@param _Name? string optional parameter to display the function name at a message when countdown can't be shown
+---@param ... any? parameters for the Callback function
+---@return integer Index of the Counter
 StartCountdown = function (_Limit, _Callback, _Show, _Name, ...)
 
 	assert(type(_Limit) == "number" and _Limit > 0, "Limit param must be a number greater than 0")
@@ -1363,6 +1586,8 @@ StartCountdown = function (_Limit, _Callback, _Show, _Name, ...)
 
 end
 
+-- Comfort to stop a countdown
+---@param _Id integer Counter Index
 StopCountdown = function(_Id)
 
 	if Counter.Index == nil then
@@ -1436,6 +1661,8 @@ CountdownTick = function()
 
 end
 
+-- comfort to evaluate if a counter is currently shown or not
+---@return boolean
 CountdownIsVisisble = function()
 
 	for i = 1, Counter.Index do
@@ -1448,7 +1675,10 @@ CountdownIsVisisble = function()
 
 end
 --------------------------------------------------------------------------------------------------------------------------------------
-function AddTribute( _tribute )
+-- Comfort to add a tribute
+---@param _tribute table Table filled with tribute data (e.g. tribute = {text ="", cost={resourceType, costs}, pId or playerId})
+---@return integer Tribute ID
+function AddTribute(_tribute)
 
 	assert(type(_tribute) == "table", "Tribute must be a table")
 	assert(type(_tribute.text) == "string", "Tribute.text must be a string")
@@ -1473,6 +1703,12 @@ function AddTribute( _tribute )
 
 end
 ----------------------------------------------------------------------------------------------------------------------------------------
+-- Comfort to check whether a position is explored; deprecated
+---@param _pID integer playerID
+---@param _x number positionX
+---@param _y number positionY
+---@param _range number Range to check for playerEntities
+---@return integer flag
 function IsPositionExplored(_pID, _x, _y, _range)
 
 	_range = _range or 7000
@@ -1486,7 +1722,9 @@ function IsPositionExplored(_pID, _x, _y, _range)
 	end
 
 end
+
 -- returns the start positions (HQ) of the current player as a table
+---@return table positionTable of current player's first HQ found
 function GetPlayerStartPosition()
 
 	local playerID = GUI.GetPlayerID()
@@ -1510,6 +1748,8 @@ function GetPlayerStartPosition()
 
 end
 
+-- Comfort to get all AI playerIDs
+---@return table AI playerID table
 function GetAllAIs()
 
 	local AITable = {}
@@ -1534,6 +1774,10 @@ function GetAllAIs()
 	end
 	return AITable
 end
+
+-- Comfort to check whether a given player is human or not
+---@param _player integer playerID
+---@return boolean
 function IsPlayerHuman(_player)
 	if CNetwork then
 		return XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_player) == 1
@@ -1541,6 +1785,9 @@ function IsPlayerHuman(_player)
 		return _player == 1
 	end
 end
+
+-- Comfort to get all humen player IDs
+---@return table
 function GetAllHumenPlayer()
 	local t = {}
 	local max
@@ -1556,10 +1803,11 @@ function GetAllHumenPlayer()
 	end
 	return t
 end
+
 -- comfort to let a group of given player IDs share the same diplomacy state
--- param1: table with player IDs
--- param2: diplomacy state
-function SetPlayerDiplomacy(_PlayerID,_Diplomacy)
+---@param _PlayerID table with player IDs
+---@param _Diplomacy integer diplomacy state
+function SetPlayerDiplomacy(_PlayerID, _Diplomacy)
 
 	assert(type(_PlayerID) == "table","first argument must be a table filled with valid player IDs")
 	assert(type(_Diplomacy) == "number","second argument must be a number (either Diplomacy.XXX or ID of the given diplomacy state)")
@@ -1574,10 +1822,11 @@ function SetPlayerDiplomacy(_PlayerID,_Diplomacy)
 	end
 
 end
+
 -- comfort to set the diplomacy state between a player ID or a group of given player IDs and all AI player IDs on the map
--- param1: player ID or table with player IDs (optional, default: all humen player IDs on the map)
--- param2: diplomacy state (optional, default: hostile)
-function SetHumanPlayerDiplomacyToAllAIs(_PlayerID,_Diplomacy)
+---@param _PlayerID integer|table player ID or table with player IDs (optional, default: all humen player IDs on the map)
+---@param _Diplomacy integer? diplomacy state (optional, default: hostile)
+function SetHumanPlayerDiplomacyToAllAIs(_PlayerID, _Diplomacy)
 
 	assert(type(_PlayerID) ~= "string","Argument must be either a valid player ID or a table filled with valid player IDs")
 
@@ -1626,6 +1875,10 @@ function SetHumanPlayerDiplomacyToAllAIs(_PlayerID,_Diplomacy)
 
 end
 
+-- returns the distance between two points
+---@param _a integer|string|table entityID or entityName or positionTable
+---@param _b integer|string|table entityID or entityName or positionTable
+---@return number distance
 GetDistance = function(_a, _b)
 
 	if type(_a) ~= "table" then
@@ -1644,10 +1897,18 @@ GetDistance = function(_a, _b)
 
 end
 
+-- evaluates whether a position is unblocked or not
+---@param _x table positionTable
+---@param _y table positionTable
+---@return boolean
 function IsPositionUnblocked(_x, _y)
 	local height, blockingtype, sector, terrType = CUtil.GetTerrainInfo(_x, _y)
 	return (sector ~= 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_x/100, _y/100)))
 end
+
+-- sets the health of an entity to a given percentage
+---@param _EntityID integer entityID
+---@param _HealthInPercent number Health percentage
 function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
 
 	if Logic.IsEntityAlive(_EntityID) == false then
@@ -1671,6 +1932,15 @@ function ChangeHealthOfEntity(_EntityID, _HealthInPercent)
 
 end
 
+-- creates a military group
+---@param _PlayerID integer playerID
+---@param _LeaderType integer entityType of leader
+---@param _SoldierAmount integer amount of soldiers for leader
+---@param _X number positionX
+---@param _Y number positionY
+---@param _Orientation number leader rotation
+---@param _Experience integer? leader experience points (optional)
+---@return integer EntityID of leader
 function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X, _Y, _Orientation, _Experience)
 
 	if _LeaderType == nil or _LeaderType == 0 then
@@ -1695,6 +1965,10 @@ function CreateGroup(_PlayerID, _LeaderType, _SoldierAmount, _X, _Y, _Orientatio
 
 end
 
+-- creates soldiers for a leader
+---@param _LeaderID integer entityID of leader
+---@param _SoldierAmount integer amount of soldiers for leader
+---@return integer amount of soldiers
 function CreateSoldiersForLeader(_LeaderID, _SoldierAmount)
 
 	-- Is a leader passed?
@@ -1739,6 +2013,10 @@ function CreateSoldiersForLeader(_LeaderID, _SoldierAmount)
 end
 ----------------------------------------------------------------------------------------------------------
 PlayerEntitiesInvulnerable_IsActive = {}
+-- makes all settlers and buildings of a given player invulnerable for a given amount of time
+-- start as SimpleJob or HiResJob
+---@param _PlayerID integer playerID
+---@param _Timelimit integer timeLimit in seconds (SimpleJob) or ticks (HiResJob)
 function MakePlayerEntitiesInvulnerableLimitedTime(_PlayerID, _Timelimit)
 	_Timelimit = round(_Timelimit)
 	if not Counter.Tick2("MakePlayerEntitiesInvulnerableLimitedTime_Ticker".. _PlayerID, _Timelimit) then
@@ -1761,6 +2039,17 @@ function MakePlayerEntitiesInvulnerableLimitedTime(_PlayerID, _Timelimit)
 	end
 end
 ----------------------------------------------------------------------------------------------------------
+-- creates entities of type in a given area (shape = rectangle)
+---@param _entityType integer entityType
+---@param _amount integer number of entities to be created
+---@param _player integer playerID
+---@param _minX number lower limit positionX
+---@param _maxX number upper limit positionX
+---@param _minY number lower limit positionY
+---@param _maxY number upper limit positionY
+---@param _step number? minimum distance between any entities to be created (optional)
+---@param _name string? entityName pattern created entities receive (optional)
+---@return table positionTable
 function CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _step, _name)
 	local count = 0
 	local t = {}
@@ -1789,7 +2078,23 @@ function CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, 
 	end
 	return t
 end
+
+-- creates entity trails of type in a given area
+---@param _entityType integer entityType
+---@param _amount integer number of entities to be created
+---@param _player integer playerID
+---@param _minX number lower limit positionX
+---@param _maxX number upper limit positionX
+---@param _minY number lower limit positionY
+---@param _maxY number upper limit positionY
+---@param _length integer length of entity trails created
+---@param _sizeOffset number position offset between two entities in the same trail
+---@param _step number? minimum distance between any entities of another trail to be created (optional)
+---@param _name string? entityName pattern created entities receive (optional)
+---@return table positionTable by trail index and created entity index, respectively
 function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _length, _sizeOffset, _step, _name)
+	assert(_entityType > 0, "invalid entity type. Aborting")
+	assert(_length > 1, "entity trails length must be larger than 1, otherwise no trail creation possible")
 	local t = CreateEntitiesInRectangle(_entityType, _amount, _player, _minX, _maxX, _minY, _maxY, _step, _name)
 	local t2 = {}
 	for i = 1, table.getn(t) do
@@ -1804,14 +2109,6 @@ function CreateEntityTrailsInRectangle(_entityType, _amount, _player, _minX, _ma
 				if (x__ == x_ and y__ == y_) or (table_findvalue(t[i], x__) ~= 0 and table_findvalue(t[i], y__) ~= 0) then
 					check = false
 				end
-				--[[local eID = GetNearestEntityOfType(x__, y__, _entityType)
-				if eID then
-					local pos = GetPosition(eID)
-					local dist = GetDistance({X = x__, Y = y__}, pos)
-					if dist > _sizeOffset * math.sqrt(2) or dist < _sizeOffset then
-						check = false
-					end
-				end]]
 				if check then
 					t2[i] = t2[i] or {}
 					table.insert(t2[i], {X = x__, Y = y__})
@@ -1854,6 +2151,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- misc -----------------------------------------------------------------------------------------
 -- returns the current weather gfx
+---@return integer
 function GetCurrentWeatherGfxSet()
 
 	return CUtilMemory.GetMemory(tonumber("0x85A3A0", 16))[0][11][10]:GetInt()
@@ -1863,6 +2161,8 @@ end
 NighttimeGFXSets = {[1] = {9, 19},
 					[2] = {13, 20, 28},
 					[3] = {14, 21}}
+-- returns whether it's currently night or not
+---@return boolean
 function IsNighttime()
 
 	local found = 0
@@ -1875,6 +2175,8 @@ function IsNighttime()
 	return found ~= 0
 end
 
+-- overrides internal clipping limit maximum (Display.SetFarClipPlaneMinAndMax(_min, _max) is internally capped at some values)
+---@param _val integer new clipping limit maximum
 function SetInternalClippingLimitMax(_val)
 
 	assert(type(_val) == "number", "Clipping Limit needs to be a number")
@@ -1882,13 +2184,18 @@ function SetInternalClippingLimitMax(_val)
 
 end
 
+-- overrides internal clipping limit minimum (Display.SetFarClipPlaneMinAndMax(_min, _max) is internally capped at some values)
+---@param _val integer new clipping limit minimum
 function SetInternalClippingLimitMin(_val)
 
 	assert(type(_val) == "number", "Clipping Limit needs to be a number")
 	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
 
 end
+
 -- returns the weather movement speed modifier
+---@param _weatherstate integer weather state (1 summer, 2 rain, 3 winter)
+---@return number speed modifier
 function GetWeatherSpeedModifier(_weatherstate)
 	assert(_weatherstate > 0 and _weatherstate <= 3, "invalid weatherstate")
 	if _weatherstate == 1 then
@@ -1903,7 +2210,11 @@ function GetWeatherSpeedModifier(_weatherstate)
 		return BS.MemValues.WeatherSpeedModifier[_weatherstate]
 	end
 end
+
 -- returns the technology raw speed modifier and the operation (+/*), both defined in the respective xml
+---@param _techID integer technology ID (Technologies.XXX)
+---@return number speed modifier
+---@return string technology math operation (+/*)
 function GetTechnologySpeedModifier(_techID)
 	if not BS.MemValues.TechnologySpeedModifier then
 		BS.MemValues.TechnologySpeedModifier = {}
@@ -1913,7 +2224,11 @@ function GetTechnologySpeedModifier(_techID)
 	end
 	return BS.MemValues.TechnologySpeedModifier[_techID]
 end
+
 -- returns the technology raw attack range modifier and the operation (+/*), both defined in the respective xml
+---@param _techID integer technology ID (Technologies.XXX)
+---@return number attack range modifier
+---@return string technology math operation (+/*)
 function GetTechnologyAttackRangeModifier(_techID)
 	if not BS.MemValues.TechnologyAttackRangeModifier then
 		BS.MemValues.TechnologyAttackRangeModifier = {}
@@ -1937,6 +2252,8 @@ BehaviorExceptionEntityTypeTable = { 	[Entities.PU_Hero1]  = true,
 									}
 
 -- returns entity type base attack speed (not affected by technologies (if there'd be any), just the raw value defined in the respective xml)
+---@param _entityType integer entityType
+---@return integer attack speed (battle wait until)
 function GetEntityTypeBaseAttackSpeed(_entityType)
 
 	assert(_entityType ~= 0 , "invalid entityType")
@@ -1962,7 +2279,10 @@ function GetEntityTypeBaseAttackSpeed(_entityType)
 		return BS.MemValues.EntityTypeBaseAttackSpeed[_entityType]
 	end
 end
+
 -- returns entity type base attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
+---@param _entityType integer entityType
+---@return number base attack range
 function GetEntityTypeBaseAttackRange(_entityType)
 
 	assert(_entityType ~= 0 , "invalid entityType")
@@ -1991,6 +2311,10 @@ function GetEntityTypeBaseAttackRange(_entityType)
 		return BS.MemValues.EntityTypeBaseAttackRange[_entityType]
 	end
 end
+
+-- returns entity type min attack range (not affected by weather or technologies, just the raw value defined in the respective xml)
+---@param _entityType integer entityType
+---@return number min attack range
 function GetEntityTypeBaseMinAttackRange(_entityType)
 
 	assert(_entityType ~= 0 , "invalid entityType")
@@ -2019,12 +2343,17 @@ function GetEntityTypeBaseMinAttackRange(_entityType)
 		return BS.MemValues.EntityTypeBaseMinAttackRange[_entityType]
 	end
 end
-function GetEntityTypeMaxAttackRange(_entity,_player)
+
+-- returns entity type max attack range (affected by weather and technologies)
+---@param _entity integer entityID
+---@param _player integer playerID
+---@return number attack range
+function GetEntityTypeMaxAttackRange(_entity, _player)
 
 	local entityType = Logic.GetEntityType(_entity)
 	local RangeTechBonusFlat
 	local RangeTechBonusMultiplier
-	--Check auf Technologie Modifikatoren
+	--check technology modifiers
 	for k,v in pairs(BS.EntityCatModifierTechs.AttackRange) do
 		if Logic.IsEntityInCategory(_entity, k) == 1 then
 			RangeTechBonusFlat = 0
@@ -2044,7 +2373,10 @@ function GetEntityTypeMaxAttackRange(_entity,_player)
 
 	return GetEntityTypeBaseAttackRange(entityType) + (RangeTechBonusFlat or 0) * (RangeTechBonusMultiplier or 1)
 end
+
 -- gets entity type damage range (only use for types with given damage range!)
+---@param _entityType integer entityType
+---@return number damage range
 function GetEntityTypeDamageRange(_entityType)
 
 	assert(_entityType ~= nil, "invalid entityType")
@@ -2073,7 +2405,10 @@ function GetEntityTypeDamageRange(_entityType)
 		return BS.MemValues.EntityTypeDamageRange[_entityType]
 	end
 end
+
 -- gets entity type damage class
+---@param _entityType integer entityType
+---@return integer damage class
 function GetEntityTypeDamageClass(_entityType)
 
 	assert(_entityType ~= nil, "invalid entityType")
@@ -2099,7 +2434,10 @@ function GetEntityTypeDamageClass(_entityType)
 		return BS.MemValues.EntityTypeDamageClass[_entityType]
 	end
 end
+
 -- gets entity type armor class
+---@param _entityType integer entityType
+---@return integer armor class
 function GetEntityTypeArmorClass(_entityType)
 	assert(_entityType ~= nil , "invalid entityType")
 	if not BS.MemValues.EntityTypeArmorClass then
@@ -2121,13 +2459,20 @@ function GetEntityTypeArmorClass(_entityType)
 		return BS.MemValues.EntityTypeArmorClass[_entityType]
 	end
 end
+
 -- gets damage factor related to the damageclass/armorclass
+---@param _damageclass integer damage class
+---@param _armorclass integer armor class
+---@return number damage factor
 function GetDamageFactor(_damageclass, _armorclass)
 	assert(_damageclass > 0 and _damageclass <= 9, "invalid damageclass")
 	assert(_armorclass > 0 and _armorclass <= 7, "invalid armorclass")
 	return GetDamageModifierPointer()[_damageclass][_armorclass]:GetFloat()
 end
+
 -- gets entityType attraction places provided (e.g. village center)
+---@param _entityType integer entityType
+---@return integer attraction places provided
 function GetAttractionPlacesProvided(_entityType)
 	assert(_entityType ~= nil , "invalid entityType")
 	if not BS.MemValues.EntityTypeAttractionPlacesProvided then
@@ -2140,7 +2485,10 @@ function GetAttractionPlacesProvided(_entityType)
 		return BS.MemValues.EntityTypeAttractionPlacesProvided[_entityType]
 	end
 end
+
 -- gets building type blocking properties, returns Blocked1X, Blocked1Y, Blocked2X, Blocked2Y
+---@param _entityType integer entityType
+---@return table blocking area {X1, Y1, X2, Y2}
 function GetBuildingTypeBlockingArea(_entityType)
 	assert(_entityType ~= 0, "invalid entity type")
 	if not BS.MemValues.BuildingTypeBlockingArea then
@@ -2156,7 +2504,10 @@ function GetBuildingTypeBlockingArea(_entityType)
 		return unpack(BS.MemValues.BuildingTypeBlockingArea[_entityType])
 	end
 end
+
 -- gets building type terrain pos properties, returns TerrainPos1X, TerrainPos1Y, TerrainPos2X, TerrainPos2Y
+---@param _entityType integer entityType
+---@return table terrain pos area {X1, Y1, X2, Y2}
 function GetBuildingTypeTerrainPosArea(_entityType)
 	assert(_entityType ~= 0, "invalid entity type")
 	if not BS.MemValues.BuildingTypeTerrainPosArea then
@@ -2172,7 +2523,10 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	end
 end
+
 -- gets entity type num blocked points value (block field in s-m x and y)
+---@param _entityType integer entityType
+---@return integer number blocked points (s-m/grids)
 function GetEntityTypeNumBlockedPoints(_entityType)
 	assert(_entityType ~= 0, "invalid entity type")
 	if not BS.MemValues.EntityTypeNumBlockedPoints then
@@ -2185,8 +2539,12 @@ function GetEntityTypeNumBlockedPoints(_entityType)
 		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
 	end
 end
+
 -- gets ability duration (ability must be supported)
 -- currently only for ranged effect abilities ((de-)buffs)
+---@param _entityType integer entityType
+---@param _ability integer AbilityCategory (Abilities.XXX)
+---@return integer ability duration in seconds
 function GetAbilityDuration(_entityType, _ability)
 	assert(_entityType ~= 0, "invalid entity type")
 	assert(_ability == Abilities.AbilityRangedEffect, "currently only supports ranged effects e.g. buffs and debuffs")
@@ -2203,7 +2561,11 @@ function GetAbilityDuration(_entityType, _ability)
 		return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
 	end
 end
+
 -- gets ability range (ability must be supported)
+---@param _entityType integer entityType
+---@param _ability integer AbilityCategory (Abilities.XXX)
+---@return number ability range in s-cm
 function GetAbilityRange(_entityType, _ability)
 	assert(_entityType ~= 0, "invalid entity type")
 	if _ability == Abilities.AbilityPlaceBomb or _ability == Abilities.AbilityBuildCannon then
@@ -2240,12 +2602,19 @@ BS.MemValues.VTableByAbility = {[Abilities.AbilityRangedEffect] = tonumber("774E
 ------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- entity id related --------------------------------------------------------------------------
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
+---@param _entityID integer entityID
+---@return number settler base movement speed
 function GetSettlerBaseMovementSpeed(_entityID)
 
 	assert(IsValid(_entityID), "invalid entityID")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][1][5]:GetFloat()
 
 end
+
+-- sets settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
+---@param _entityID integer entityID
+---@param _val number base movement speed
+---@return number settler base movement speed
 function SetSettlerBaseMovementSpeed(_entityID, _val)
 
 	assert(IsValid(_entityID), "invalid entityID")
@@ -2269,7 +2638,11 @@ BS.EntityCatModifierTechs = {["Speed"] = {	[EntityCategories.Hero] = {Technologi
 												[EntityCategories.Rifle] = {Technologies.T_Sights}
 												}
 							}
+
 -- return settler movement speed
+---@param _entityID integer entityID
+---@param _player integer playerID
+---@return number settler current movement speed
 function GetSettlerCurrentMovementSpeed(_entityID, _player)
 
 	local BaseSpeed = round(GetSettlerBaseMovementSpeed(_entityID))
@@ -2298,55 +2671,84 @@ function GetSettlerCurrentMovementSpeed(_entityID, _player)
 	end
 	return (BaseSpeed + (SpeedTechBonus or 0)) * (SpeedWeatherFactor or 1) * (SpeedHeroMultiplier or 1)
 end
+
 -- get the current task, logic cant return animal tasks, returns number, not string
+---@param _entityID integer entityID
+---@return integer entity current tasklist
 function GetEntityCurrentTask(_entityID)
 	assert(IsValid(_entityID) , "invalid entityID")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:GetInt()
 end
+
 -- set entity current task
+---@param _entityID integer entityID
+---@param _num integer tasklist ID
+---@return integer entity current tasklist
 function SetEntityCurrentTask(_entityID, _num)
 	assert(IsValid(_entityID) , "invalid entityID")
 	assert(type(_num) == "number", "task needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[36]:SetInt(_num)
 end
+
 -- get entity current task sub-index
+---@param _entityID integer entityID
+---@return integer entity current task index
 function GetEntityCurrentTaskIndex(_entityID)
 	assert(IsValid(_entityID) , "invalid entityID" )
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:GetInt()
 end
+
 -- set entity current task sub-index
+---@param _entityID integer entityID
+---@param _index integer task index
+---@return integer entity current task index
 function SetEntityCurrentTaskIndex(_entityID, _index)
 	assert(IsValid(_entityID) , "invalid entityID")
 	assert(type(_index) == "number", "index needs to be a number")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[37]:SetInt(_index)
 end
+
 -- get entity size (relative to 1)
+---@param _entityID integer entityID
+---@return number entity size (factor relative to 1)
 function GetEntitySize(_entityID)
 	assert(IsValid(_entityID) , "invalid entityID")
 	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:GetFloat()
 end
+
 -- set entity size (relative to 1)
+---@param _entityID integer entityID
+---@param _size entity size
 function SetEntitySize(_entityID, _size)
 	assert(IsValid(_entityID) , "invalid entityID")
 	assert(type(_size) == "number", "size needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
 end
+
 -- set entity model (gets resetted when task changes)
+---@param _entityID integer entityID
+---@param _id model id
 function SetEntityModel(_entityID, _id)
 	assert(IsValid(_entityID) , "invalid entityID")
 	assert(type(_id) == "number", "model id needs to be a number")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:SetInt(_id)
 end
+
 -- get max number of military building train slots (default 3)
+---@param _entityID integer entityID
+---@return integer train slots
 function GetMilitaryBuildingMaxTrainSlots(_entityID)
 	assert(IsValid(_entityID) , "invalid entityID")
 	assert(Logic.IsEntityInCategory(_entityID, EntityCategories.MilitaryBuilding) == 1, "entity is no military building")
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[31][2][3][7]:GetInt()
 end
+
 gvVisibilityStates = {	[0] = 257,
 						[1] = 65793
 					}
 -- get visibility of entity (0=invisible, 1=visible)
+---@param _entityID integer entityID
+---@return integer visibility state
 function GetEntityVisibility(_entityID)
 	assert(IsValid(_entityID) , "invalid entityID")
 	for k,v in pairs(gvVisibilityStates) do
@@ -2355,12 +2757,20 @@ function GetEntityVisibility(_entityID)
 		end
 	end
 end
+
 -- changes visibility of entity (_flag: 0 = invisible, 1 = visible, -1 = toggle)
+---@param _entityID integer entityID
+---@param _flag integer visibility state
 function SetEntityVisibility(_entityID, _flag)
 	assert(IsValid(_entityID) , "invalid entityID")
 	assert(type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))
 end
+
+-- get mercenary camp offers left by slot
+---@param _id integer mercenary camp entityID
+---@param _slot integer offer slot (0-3)
+---@return integer offers left
 function GetMercenaryOfferLeft(_id, _slot)
     assert(IsValid(_id), "invalid entityID")
     local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))
@@ -2376,6 +2786,11 @@ function GetMercenaryOfferLeft(_id, _slot)
     end
     assert(false, "behavior not found")
 end
+
+-- set mercenary camp offers left by slot
+---@param _id integer mercenary camp entityID
+---@param _slot integer offer slot (0-3)
+---@param _left integer offers left
 function SetMercenaryOfferLeft(_id, _slot, _left)
     assert(IsValid(_id), "invalid entityID")
     local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))
@@ -2392,22 +2807,28 @@ function SetMercenaryOfferLeft(_id, _slot, _left)
     end
     assert(false, "behavior not found")
 end
-function SetEntitySpawnLeaderAttachment(_id, _attach, _value)
-	assert(IsValid(_id), "invalid entityID")
-	assert(type(_attach) == "number" and type(_value) == "number", "attachment num and value params need to be integers")
-	CUtilMemory.GetMemory(tonumber(CEntity.Debug_GetAttachedEntitiesEntryPointer(_id), 16))[4]:SetInt(_value)
-	CUtilMemory.GetMemory(tonumber(CEntity.Debug_GetAttachedEntitiesEntryPointer(_id), 16))[3]:SetInt(_attach)
-end
+
+-- gets entityID BattleWaitUntil remaining
+---@param _id integer entityID
+---@return integer BattleWaitUntil remaining
 function GetEntityBattleWaitUntilRemaining(_id)
 	assert(IsValid(_id), "invalid entityID")
 	local beh = CUtil.GetBehaviour(_id, tonumber("7761E0", 16))
 	local num = CUtilMemory.GetMemory(tonumber(beh,16))[21]:GetInt()
 	return num
 end
+
+-- gets ability convert settler target (e.g. Helias)
+---@param _heroID integer entityID
+---@return integer target entityID
 function GetConvertSettlersTarget(_heroID)
 	local t = CEntity.GetReversedAttachedEntities(_heroID)
 	return (next(t) and t[62] and t[62][1])
 end
+
+-- gets entity's current attack target
+---@param _id integer entityID
+---@return integer target entityID
 function GetEntityCurrentTarget(_id)
 	assert(IsValid(_id), "invalid entityID")
 	local t = CEntity.GetReversedAttachedEntities(_id)
@@ -2416,6 +2837,10 @@ function GetEntityCurrentTarget(_id)
 	end
 end
 
+-- gets entity's current attack target based off army data
+-- entityID needs to be a leader and part of an active army
+---@param _id integer entityID
+---@return integer target entityID
 function GetEntityTargetByAIData(_id)
 	assert(IsValid(_id), "invalid entityID")
 	local player = Logic.EntityGetPlayer(_id)
@@ -2438,6 +2863,9 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- statistics -----------------------------------------------------------------------------
 -- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
+---@param _playerID integer playerID
+---@param _statistic integer statistic type
+---@return integer statistic points
 function GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	assert(type(_playerID) == "number", "PlayerID needs to be a number")
 	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
@@ -2445,7 +2873,12 @@ function GetPlayerKillStatisticsProperties(_playerID, _statistic)
 	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
 	return GetPlayerStatusPointer(_playerID)[82 + _statistic]:GetInt()
 end
+
 -- sets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
+---@param _playerID integer playerID
+---@param _statistic integer statistic type
+---@param _value integer statistic points
+---@return integer statistic points
 function SetPlayerKillStatisticsProperties(_playerID, _statistic, _value)
 	assert(type(_playerID) == "number", "PlayerID needs to be a number")
 	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
@@ -2454,7 +2887,12 @@ function SetPlayerKillStatisticsProperties(_playerID, _statistic, _value)
 	assert(type(_value) == "number", "Value needs to be a number")
 	return GetPlayerStatusPointer(_playerID)[82 + _statistic]:SetInt(_value)
 end
+
 -- adds value to respective player kill statistic (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
+---@param _playerID integer playerID
+---@param _statistic integer statistic type
+---@param _value integer statistic points
+---@return integer statistic points
 function AddValueToPlayerKillStatistic(_playerID, _statistic, _value)
 	assert(type(_playerID) == "number", "PlayerID needs to be a number")
 	assert(_playerID > 0 and _playerID < 17, "invalid PlayerID")
@@ -2462,7 +2900,7 @@ function AddValueToPlayerKillStatistic(_playerID, _statistic, _value)
 	assert(_statistic >= 0 and _statistic <= 3, "invalid statistic type")
 	assert(type(_value) == "number", "Value needs to be a number")
 	local currstat = GetPlayerKillStatisticsProperties(_playerID, _statistic)
-	SetPlayerKillStatisticsProperties(_playerID, _statistic, currstat + _value)
+	return SetPlayerKillStatisticsProperties(_playerID, _statistic, currstat + _value)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------- army related ----------------------------------------------------------------------
@@ -2482,6 +2920,10 @@ function GetArmyPlayerObjectOffset(_playerID)
 	end
 	return playerOffset
 end
+
+-- sets entity attached to army active flag (default activated anyway)
+---@param _id integer entityID
+---@param _flag integer active flag (0 = deactivated, 1 = activated)
 function AI.Army_SetEntityActiveFlag(_id, _flag)
 	assert(IsValid(_id))
 	assert(_flag == 0 or _flag == 1)
@@ -2500,7 +2942,11 @@ function AI.Army_SetEntityActiveFlag(_id, _flag)
 		end
 	end
 end
+
 --AI.Army_GetOccupancyRate(_player, _armyId) %-Wert alive-slots/gesamt-slots
+-- gets first army slot of player with free troop slots
+---@param _playerID integer playerID
+---@return integer AI army slot
 function AI.Army_GetNextFreeSlot(_playerID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	local slot
@@ -2515,6 +2961,11 @@ function AI.Army_GetNextFreeSlot(_playerID)
 	end
 	return slot or false
 end
+
+-- gets all leader IDs in AI army
+---@param _playerID integer playerID
+---@param _armyID integer armyID
+---@return table entity IDs table
 function AI.Army_GetLeaderIDs(_playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
@@ -2531,6 +2982,11 @@ function AI.Army_GetLeaderIDs(_playerID, _armyID)
 	end
 	return tab
 end
+
+-- remove leader from army
+---@param _id integer entityID
+---@param _playerID integer playerID
+---@param _armyID integer armyID
 function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
@@ -2549,6 +3005,11 @@ function AI.Entity_RemoveFromArmy(_id, _playerID, _armyID)
 	AI.Entity_ConnectLeader(_id, -1)
 	AI.Army_SetEntityActiveFlag(_id, 0)
 end
+
+-- add leader to army
+---@param _id integer entityID
+---@param _playerID integer playerID
+---@param _armyID integer armyID
 function AI.Entity_AddToArmy(_id, _playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
@@ -2566,6 +3027,11 @@ function AI.Entity_AddToArmy(_id, _playerID, _armyID)
 	end
 	AI.Entity_ConnectLeader(_id, _armyID)
 end
+
+-- get army's internal ID
+---@param _playerID integer playerID
+---@param _armyID integer armyID
+---@return integer internal armyID
 function AI.Army_GetInternalID(_playerID, _armyID)
 	assert(XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(_playerID) == 0, "player is human. Aborting")
 	assert(_armyID >= 0 and _armyID <= 8, "invalid armyID")
@@ -2574,6 +3040,10 @@ function AI.Army_GetInternalID(_playerID, _armyID)
 	return adress[playerOffset][40 + 3 + (_armyID *84)]:GetInt()
 end
 ---------------------------------------------------------------------------------------------------------------------------------
+-- calculate estimated damage dealt by attacker to target by damageclass/armorclass (does not include random damage)
+---@param _attacker integer attacker entityID
+---@param _target integer target entityID
+---@return number damage
 function CalculateTotalDamage(_attacker, _target)
 	local base = Logic.GetEntityDamage(_attacker)
 	local armor = Logic.GetEntityArmor(_target)
@@ -2583,15 +3053,31 @@ function CalculateTotalDamage(_attacker, _target)
 	local factor = GetDamageFactor(dclass, aclass)
 	return math.max(round(base * factor) - armor, 1)
 end
--- Rundungs-Comfort
-function round( _n )
+
+-- rounding comfort
+---@param _n number number to be rounded
+---@return number number
+function round(_n)
 	assert(type(_n) == "number", "round val needs to be a number")
 	return math.floor( _n + 0.5 )
 end
+
+-- rounding comfort to next 100 step
+---@param _n number number to be rounded
+---@return number number
 function dekaround(_n)
 	assert(type(_n) == "number", "round val needs to be a number")
 	return math.floor( _n / 100 + 0.5 ) * 100
 end
+
+-- creating cost table for leaders to be upgraded
+---@param _player integer playerID
+---@param _ltype1 integer lower leaderType to be upgraded
+---@param _ltype2 integer upper leaderType (upgraded)
+---@param _stype1 integer lower soldierType to be upgraded
+---@param _stype2 integer upper soldierType (upgraded)
+---@param _numsol integer total number of soldiers
+---@return number number
 function CreateCostDifferenceTable(_player, _ltype1, _ltype2, _stype1, _stype2, _numsol)
 	local lcost, solcost, uplcost, upsolcost = {},{},{},{}
 	local cost = {}
@@ -2610,6 +3096,11 @@ function CreateCostDifferenceTable(_player, _ltype1, _ltype2, _stype1, _stype2, 
 	end
 	return cost
 end
+
+-- get entity ID's nearest appropiate military building
+---@param _playerId integer playerID
+---@param _id integer entityID
+---@return integer entityID
 function GetNearestBarracks(_playerId, _id)
 	local ucat = GetUpgradeCategoryByEntityID(_id)
 	local btype
@@ -2635,6 +3126,11 @@ function GetNearestBarracks(_playerId, _id)
 	end
 end
 BS.UCatByType = {}
+
+-- gets upgrade category by entity type
+---@param _type integer EntityType
+---@param _flag boolean is EntityType a building? (true for building, false for settler)
+---@return integer upgradeCategory
 function GetUpgradeCategoryByEntityType(_type, _flag)
 	if _flag then
 		return Logic.GetUpgradeCategoryByBuildingType(_type)
@@ -2649,22 +3145,35 @@ function GetUpgradeCategoryByEntityType(_type, _flag)
 	end
 	return BS.UCatByType[_type]
 end
+
+-- gets upgrade category by entityID
+---@param _id integer entityID
+---@return integer upgradeCategory
 function GetUpgradeCategoryByEntityID(_id)
 	local building = (Logic.IsBuilding(_id) == 1)
 	local type = Logic.GetEntityType(_id)
 	return GetUpgradeCategoryByEntityType(type, building)
 end
+
+-- gets upgrade category by leaderID
+---@param _id integer leader entityID
+---@return integer upgradeCategory
 function GetUpgradeCategoryByLeaderID(_id)
 	local soldiertype = Logic.LeaderGetSoldiersType(_id)
 	return Logic.LeaderGetUpgradeCategoryFromSoldierType(Logic.EntityGetPlayer(_id), soldiertype) - 1
 end
+
 CategoriesOfEntities = {}
-function GetAllCategoriesOfEntity(id)
-    local type = Logic.GetEntityType(id)
+
+-- gets all entityCategories of given entityID
+---@param _id integer entityID
+---@return table table filled with entityCategories
+function GetAllCategoriesOfEntity(_id)
+    local type = Logic.GetEntityType(_id)
     if not CategoriesOfEntities[type] then
         local cats = {}
         for k, v in pairs(EntityCategories) do
-            if Logic.IsEntityInCategory(id, v) == 1 then
+            if Logic.IsEntityInCategory(_id, v) == 1 then
                 cats[v] = true
             end
         end
@@ -2673,6 +3182,10 @@ function GetAllCategoriesOfEntity(id)
 
     return CategoriesOfEntities[type]
 end
+
+-- gets all entity types in given entityCategory
+---@param _entityCat integer entityCategory
+---@return table table filled with entity types
 GetAllEntityTypesInEntityCategory = function(_entityCat)
 	local tab = {}
 	for k, v in pairs(Entities) do
@@ -2682,6 +3195,11 @@ GetAllEntityTypesInEntityCategory = function(_entityCat)
 	end
 	return tab
 end
+
+-- gets all player entities in given entityCategory
+---@param _playerID integer playerID
+---@param _entityCat integer entityCategory
+---@return table table filled with entity IDs
 GetAllPlayerEntitiesOfCategory = function(_playerID, _entityCat)
 	local eTypes = GetAllEntityTypesInEntityCategory(_entityCat)
 	local playerEntities = {}
@@ -2697,6 +3215,11 @@ GetAllPlayerEntitiesOfCategory = function(_playerID, _entityCat)
 	end
 	return playerEntities
 end
+
+-- gets entities of player (optional filtered by entityType)
+---@param _playerID integer playerID
+---@param _entityType integer? entityType (optional)
+---@return table table filled with entity IDs
 function GetPlayerEntities(_playerID, _entityType)
 	local playerEntities = {}
 	if _entityType ~= nil then
@@ -2727,6 +3250,8 @@ function GetPlayerEntities(_playerID, _entityType)
 		return playerEntities
 	end
 end
+
+-- comfort to remove village centers and save data into a table
 function RemoveVillageCenters()
 	StartVillageCenters = {{},{},{}}
 	local vcId
@@ -2751,6 +3276,8 @@ function RemoveVillageCenters()
 		end
 	end
 end
+
+-- comfort to recreate village centers (also look at RemoveVillageCenters())
 function RecreateVillageCenters()
 	local vcdata, eId
 	for i = 1,3 do
@@ -2760,6 +3287,8 @@ function RecreateVillageCenters()
 		end
 	end
 end
+
+-- comfort to make all player entities non selectable
 function SetPlayerEntitiesNonSelectable()
 	StartAllPlayerEntities = {}
 	local eId
@@ -2779,6 +3308,8 @@ function SetPlayerEntitiesNonSelectable()
 		end
 	end
 end
+
+-- comfort to make all player entities non selectable (also look at SetPlayerEntitiesNonSelectable())
 function SetPlayerEntitiesSelectable()
 	for k = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
 		StartAllPlayerEntities[k] = GetPlayerEntities(k)
@@ -2787,6 +3318,11 @@ function SetPlayerEntitiesSelectable()
 		end
 	end
 end
+
+-- comfort to increase kill statistic by 1
+---@param _attackerPID integer playerID of attacker
+---@param _targetPID integer playerID of target
+---@param _scoretype string "Settler" in case settler was killed; "Building" in case building was destroyed
 function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)
 	if Logic.GetDiplomacyState(_attackerPID, _targetPID) == Diplomacy.Hostile then
 		if _scoretype == "Settler" then
@@ -2806,6 +3342,12 @@ function BS.ManualUpdate_KillScore(_attackerPID, _targetPID, _scoretype)
 		end
 	end
 end
+
+-- comfort to increase entity max damage dealt
+---@param _heroID integer entityID of hurter
+---@param _damage number damage dealt
+---@param _maxdmg number upper limit for damage dealt
+---@param _scoretype string "Settler" in case settler was killed; "Building" in case building was destroyed
 function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)
 	local playerID = Logic.EntityGetPlayer(_heroID)
 	ExtendedStatistics.Players[playerID][_scoretype] = ExtendedStatistics.Players[playerID][_scoretype] + (math.min(_damage, _maxdmg))
@@ -2813,6 +3355,10 @@ function BS.ManualUpdate_DamageDealt(_heroID, _damage, _maxdmg, _scoretype)
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] = (ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID] or 0) + (math.min(_damage, _maxdmg))
 	ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage = math.max(ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage, ExtendedStatistics.Players[playerID].MostDeadlyEntityDamage_T[_heroID])
 end
+
+-- gets all playerIDs hostile to given playerID
+---@param _playerID integer playerID
+---@return table table filled with playerIDs
 BS.GetAllEnemyPlayerIDs = function(_playerID)
 
 	local playerIDTable = {}
@@ -2833,6 +3379,10 @@ BS.GetAllEnemyPlayerIDs = function(_playerID)
 	return playerIDTable
 
 end
+
+-- gets all playerIDs friendly to given playerID
+---@param _playerID integer playerID
+---@return table table filled with playerIDs
 BS.GetAllAlliedPlayerIDs = function(_playerID)
 
 	local playerIDTable = {}
@@ -2853,6 +3403,11 @@ BS.GetAllAlliedPlayerIDs = function(_playerID)
 	return playerIDTable
 
 end
+
+-- gets nearest hostile building in given range of given entity
+---@param _entity integer entityID
+---@param _range number maximum search range (should be equal or lower than entity's attack range)
+---@return integer entityID of nearest hostile building
 BS.CheckForNearestHostileBuildingInAttackRange = function(_entity, _range)
 
 	if not Logic.IsEntityAlive(_entity) then
@@ -2899,10 +3454,16 @@ gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Castle4] = true,
 					[Entities.PB_Castle5] = true
 				}
+
+-- returns if building id is either a hero ability building (e.g. salim trap) or a construction site and thus inappropiate for certain purposes
+---@param _id integer entityID of building
+---@return boolean
 function IsInappropiateBuilding(_id)
 	local str = string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(_id)))
 	return (string.find(str, "hero") ~= nil or string.find(str, "zb") ~= nil)
 end
+
+-- table to save damage factor data
 DamageFactorToArmorClass = {}
 for i = 1,9 do
 	DamageFactorToArmorClass[i] = {}
@@ -2910,6 +3471,11 @@ for i = 1,9 do
 		DamageFactorToArmorClass[i][k] = GetDamageFactor(i, k)
 	end
 end
+
+-- creates randomly generated gathering spots for leaders of a certain army
+---@param _player integer playerID
+---@param _pos table positionTable
+---@param _army integer? armyID (only needed for spawn armies; nil for recruiting armies)
 EvaluateArmyHomespots = function(_player, _pos, _army)
 	assert(type(_pos) == "table" and _pos.X and _pos.Y, "pos param needs to be a table filled with X and Y pos")
 	if not ArmyHomespots then
@@ -2958,6 +3524,12 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		end
 	end
 end
+
+-- comfort to search the nearest valid target for a given leader ID
+-- player of leader needs to have active armies
+---@param _player integer playerID
+---@param _id integer entityID of leader
+---@return integer entityID of nearest enemy
 function GetNearestTarget(_player, _id)
 	if not Logic.IsEntityAlive(_id) then
 		return
@@ -2990,6 +3562,13 @@ function GetNearestTarget(_player, _id)
 	end
 	return false
 end
+
+-- comfort to evaluate and measure if a better suited target for a given leader ID is nearby
+-- player of leader needs to have active armies
+---@param _eID integer entityID of leader
+---@param _target integer? entityID of preferred target (optional)
+---@param _range number base value of search range for a better target
+---@return integer entityID of better target
 function CheckForBetterTarget(_eID, _target, _range)
 
 	if not Logic.IsEntityAlive(_eID) then
@@ -3104,6 +3683,12 @@ function CheckForBetterTarget(_eID, _target, _range)
 		end
 	end
 end
+
+-- lets a leader retreat to a given distance relative to a target
+---@param _id integer entityID of leader
+---@param _target integer entityID of target
+---@param _dist
+---@return integer always -1, see ManualControlAttackTarget in AI.lua
 RetreatToMaxRange = function(_id, _target, _dist)
 	local pos1 = GetPosition(_id)
 	local pos2 = GetPosition(_target)
@@ -3113,7 +3698,6 @@ RetreatToMaxRange = function(_id, _target, _dist)
 	local yoff = _dist * math.sin(math.rad(angle))
 	local xoff = _dist * math.cos(math.rad(angle))
 	local posX, posY = pos1.X + xoff, pos1.Y + yoff
-	--local posX, posY = pos1.X + _dist * dist_12, pos1.Y + _dist * dist_12
 	local sector = CUtil.GetSector(posX/100, posY/100)
 	if sector == 0 or sector ~= Logic.GetSector(_id) then
 		posX, posY = EvaluateNearestUnblockedPosition(posX, posY, 1000, 100)
@@ -3121,6 +3705,14 @@ RetreatToMaxRange = function(_id, _target, _dist)
 	Logic.MoveSettler(_id, posX, posY)
 	return -1
 end
+
+-- creates a height map with given positions (via position interferences)
+-- returns position with most other positions nearby (by highscore or numeric count)
+---@param _postable table table filled with positions. Optional: use key factor to get individual inteference count results
+---@param _infrange integer range used for interference. Each position given creates an inteference at any position within this range
+---@param _step integer limits the steps made for interference creation. FYI: Larger steps increase performance significantly, but also reduce output quality
+---@return table positionTable
+---@return integer|number highscore value of clump; if individual factor was assigned, returns float, not integer
 function GetPositionClump(_postable, _infrange, _step)
 	assert(type(_postable) == "table", "first input param type must be a table")
 	assert(type(_infrange) == "number", "second input param type must be a number")
@@ -3156,6 +3748,7 @@ function GetPositionClump(_postable, _infrange, _step)
 	end
 	return clumppos, highscore
 end
+
 function GetPercentageOfLeadersPerArmorClass(_table)
 	assert(type(_table) == "table", "input type must be a table")
 	assert(_table.total ~= nil, "invalid input")
@@ -3206,6 +3799,7 @@ BS.GetBestDamageClassByArmorClass = function(_ACid)
 		end
 	end
 end
+-- table filled with upgrade categories in respective damageclass
 BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Entities.PV_Cannon1},
 										[2] = UpgradeCategories.LeaderBow,
 										[3] = UpgradeCategories.LeaderHeavyCavalry,
@@ -3216,6 +3810,7 @@ BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Ent
 										[8] = UpgradeCategories.LeaderPoleArm,
 										[9] = UpgradeCategories.LeaderCavalry
 										}
+-- table filled with upgrade categories by barrack building type string key
 BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm, UpgradeCategories.LeaderElite, UpgradeCategories.BlackKnightLeaderSword3, UpgradeCategories.BlackKnightLeaderMace1, UpgradeCategories.LeaderBandit, UpgradeCategories.LeaderBarbarian},
 									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle, UpgradeCategories.LeaderBanditBow},
 									["Stable"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry},
@@ -3228,6 +3823,10 @@ GetUpgradeCategoryInDamageClass = function(_dclass)
 		return BS.GetUpgradeCategoryByDamageClass[_dclass]
 	end
 end
+
+-- returns true when there's a free training slot in military building or false if not (3 slots in general, 1 for foundries)
+---@param _id integer entityID
+---@return boolean
 MilitaryBuildingIsTrainingSlotFree = function(_id)
 	if not _id or not Logic.IsEntityAlive(_id) then
 		return
@@ -3248,6 +3847,10 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 		return count < 3
 	end
 end
+
+-- returns number of currently training leader IDs in military building
+---@param _id integer entityID
+---@return integer count training leader
 GetLeadersTrainingAtMilitaryBuilding = function(_id)
 	if not _id or not Logic.IsEntityAlive(_id) then
 		return
@@ -3272,6 +3875,10 @@ GetLeadersTrainingAtMilitaryBuilding = function(_id)
 		return count
 	end
 end
+
+-- returns true if entity is a cannon or false if not
+---@param _type integer entityType
+---@return boolean
 function IsCannonType(_type)
 	assert(type(_type) == "number" and _type > 0, "invalid entity type")
 	if _type == Entities.PV_Cannon1 or _type == Entities.PV_Cannon2 or _type == Entities.PV_Cannon3
@@ -3281,11 +3888,56 @@ function IsCannonType(_type)
 	end
 	return false
 end
+
+-- returns hero id by summoned entity id
+---@param _id integer summoned entity id
+---@return integer hero id or nil
+function GetSummonedEntityHero(_id)
+	assert(IsValid(_id), "invalid entityID")
+	if Logic.IsEntityInCategory(_id, EntityCategories.Soldier) == 1 then
+		_id = (CEntity.GetAttachedEntities(_id)[31] and CEntity.GetAttachedEntities(_id)[31][1]) or _id
+	end
+	return (CEntity.GetAttachedEntities(_id) and CEntity.GetAttachedEntities(_id)[54] and CEntity.GetAttachedEntities(_id)[54][1])
+end
+
+-- checks whether entity id was summoned by hero or not
+---@param _id integer summoned entity id
+---@return boolean
+function IsHeroSummonedEntity(_id)
+	assert(IsValid(_id), "invalid entityID")
+	return GetSummonedEntityHero(_id) ~= nil
+end
+
+-- returns remaining lifetime of summoned leader
+---@param _id integer summoned leader entity id
+---@return integer lifetime left in seconds
+function GetSummonedEntityLifetimeLeft(_id)
+	assert(IsValid(_id), "invalid entityID")
+	assert(IsHeroSummonedEntity(_id), "entity is no summoned leader. Aborting")
+	local beh = CUtil.GetBehaviour(_id, tonumber("775D9C", 16))
+	local time = CUtilMemory.GetMemory(tonumber(beh,16))[5]:GetInt()
+	return time or 0
+end
+
+-- rotates a given offset
+---@param _x number positionX
+---@param _y number positionY
+---@param _rot number rotation angle in degree
+---@return number positionX
+---@return number positionY
 RotateOffset = function(_x, _y, _rot)
 
 	_rot = math.rad(_rot)
 	return _x * math.cos(_rot) - _y * math.sin(_rot), _x * math.sin(_rot) + _y * math.cos(_rot)
 end
+
+-- gets nearest unblocked position near a possibly blocked position
+---@param _posX number positionX
+---@param _posY number positionY
+---@param _offset integer maximum search range near position
+---@param _step integer limits max loop counts, thus higher value increases performance but lowers result quality
+---@return number positionX
+---@return number positionY
 EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
@@ -3310,6 +3962,13 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 	end
 	return xspawn, yspawn
 end
+
+-- gets nearest unblocked sector near a given position
+---@param _posX number positionX
+---@param _posY number positionY
+---@param _offset integer maximum search range near position
+---@param _step integer limits max loop counts, thus higher value increases performance but lowers result quality
+---@return integer sector, or if not any unblocked sector found, returns 0
 EvaluateNearestUnblockedSector = function(_posX, _posY, _offset, _step)
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
@@ -3326,7 +3985,7 @@ EvaluateNearestUnblockedSector = function(_posX, _posY, _offset, _step)
 			end
 		end
 	end
-	return 1
+	return 0
 end
 RechargeWidgetByEntityType = {["LevyTaxes"] = {	[Entities.PB_Headquarters1] = "Levy_Duties_Recharge",
 												[Entities.PB_Headquarters2] = "Levy_Duties_Recharge",
@@ -3754,6 +4413,10 @@ ChestRandomPositions.OpenedSound = {Type = Sounds.Misc_Chat2, Volume = 125}
 ChestRandomPositions.ChestType = Entities.XD_ChestGold
 -- default script name given to created chests
 ChestRandomPositions.ScriptNamePattern = "RandomPosChest"
+
+-- comfort to create random positions for random chests
+---@param _amount integer amount of positions to be raffled
+---@return table table filled with positionTables
 ChestRandomPositions.GetRandomPositions = function(_amount)
     local chunks = ChunkWrapper.new()
     for id in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(ChestRandomPositions.AllowedTypes))) do
@@ -3803,6 +4466,12 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
     return postable
 end
 ChestRandomPositions.ActiveState = {}
+
+-- comfort to create chests with random positions and random content
+-- chests can by opened by any hero. Content amount increases per time
+-- chests mostly contain thalers, but can also contain silver with a small chance instead
+---@param _amount integer? amount of chests to be created (optional, if not assigned calculates amount by total map area size
+---@return table table filled with chest IDs
 ChestRandomPositions.CreateChests = function(_amount)
 
 	_amount = _amount or round(((Mapsize/100)^ChestRandomPositions.DefValueExponent)/ChestRandomPositions.DefValueQuotient)
@@ -3819,6 +4488,8 @@ ChestRandomPositions.CreateChests = function(_amount)
 	return chestIDtable
 end
 
+-- job to control random chests
+---@param ... integer all chest entity IDs that should be controlled
 ChestRandomPositions_ChestControl = function(...)
 
 	if not cutsceneIsActive and not briefingIsActive then
