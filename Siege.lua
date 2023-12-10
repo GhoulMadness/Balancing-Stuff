@@ -1,7 +1,7 @@
 Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationRange = 300, TrapDamage = 100, TrapDamageRange = 800,
 		PitchFieldPositions = {}, PitchFieldDefaultPlayer = 8, PitchFieldEnemyTreshold = 10, PitchFieldActivationRange = 500, PitchFieldAlreadyTargetted = {},
-		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 1,
-		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800, PitchBurningDamageFactorToHeroes = 5, PitchBurningDamageFactorToVehicles = 3, PitchBurningDamageFactorToUnderlings = 3,
+		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 1, PitchBurnerRefillDelay = 30 * (gvDiffLVL or 1), PitchBurnerVatEmpty = {},
+		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800, PitchBurningDamageFactorToHeroes = 5, PitchBurningDamageFactorToVehicles = 4, PitchBurningDamageFactorToUnderlings = 3,
 		FireEffectCasted = {},
 		CreateTraps = function(_player, _x, _y, _range, _amount, _spacing)
 			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, _spacing, "TrapHole")
@@ -18,6 +18,7 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			Siege.PitchBurners = Siege.PitchBurners or {}
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfTypeFilter(Entities.PU_PitchBurner), CEntityIterator.OfAnyPlayerFilter(unpack(Siege.DefenderIDs))) do
 				table.insert(Siege.PitchBurners, eID)
+				Siege.PitchBurnerVatEmpty[eID] = false
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerControl", 1, {}, {eID})
 			end
 		end,
@@ -97,15 +98,15 @@ Siege_TrapCalculateDamage = function()
 		local target = Event.GetEntityID2()
 		-- damage to heroes much higher
 		if Logic.IsHero(target) == 1 then
-			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToHeroes / gvDiffLVL))
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToHeroes / (gvDiffLVL or 1)))
 		end
 		-- damage to cannons, catapults and rams also increased, but not as much as heroes
 		if Logic.IsEntityInCategory(target, EntityCategories.Cannon) == 1 then
-			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToVehicles / gvDiffLVL))
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToVehicles / (gvDiffLVL or 1)))
 		end
 		-- damage to summoned entities, such as ari bandits, much higher
 		if IsHeroSummonedEntity(target) then
-			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToUnderlings / gvDiffLVL))
+			CEntity.TriggerSetDamage(round(CEntity.TriggerGetDamage() * Siege.PitchBurningDamageFactorToUnderlings / (gvDiffLVL or 1)))
 		end
 	end
 end
@@ -189,7 +190,9 @@ Siege_PitchFieldApplyDamage = function(_id, _index)
 			local X, Y = Siege.PitchFieldPositions[_index][i].X, Siege.PitchFieldPositions[_index][i].Y
 			if not Siege.FireEffectCasted[_index][i] then
 				for i = 1, table.getn(Siege.FireEffectOffsets) do
-					Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], X + Siege.FireEffectOffsets[i].X, Y + Siege.FireEffectOffsets[i].Y)
+					Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)],
+					X + Siege.FireEffectOffsets[i].X + GenerateRandomWithSteps(-50, 50, 10),
+					Y + Siege.FireEffectOffsets[i].Y + GenerateRandomWithSteps(-50, 50, 10))
 				end
 				Siege.FireEffectCasted[_index][i] = true
 			end
@@ -208,39 +211,53 @@ Siege_PitchBurnerControl = function(_id)
 	if not IsValid(_id) then
 		return true
 	end
-	local player = Logic.EntityGetPlayer(_id)
-	local pos = GetPosition(_id)
-	local eID = GetNearestEnemyInRange(player, pos, Siege.PitchBurnerRange)
-	if eID then
-		local num, IDs = GetPlayerEntitiesByCatInRange(player, {EntityCategories.Leader, EntityCategories.Cannon}, pos, Siege.PitchBurnerRange)
-		if num >= Siege.PitchBurnerEnemyTreshold then
-			local t = {}
-			for i = 1, num do
-				t[i] = GetPosition(IDs[i])
+	if not Siege.PitchBurnerVatEmpty[_id] then
+		local player = Logic.EntityGetPlayer(_id)
+		local pos = GetPosition(_id)
+		local eID = GetNearestEnemyInRange(player, pos, Siege.PitchBurnerRange)
+		if eID then
+			local num, IDs = GetPlayerEntitiesByCatInRange(player, {EntityCategories.Leader, EntityCategories.Cannon}, pos, Siege.PitchBurnerRange)
+			if num >= Siege.PitchBurnerEnemyTreshold then
+				local t = {}
+				for i = 1, num do
+					t[i] = GetPosition(IDs[i])
+				end
+				local clump = GetPositionClump(t, Siege.PitchBurnerRange, 100)
+				local angle = GetAngleBetween(pos, clump)
+				Logic.RotateEntity(_id, angle)
+				Logic.SetTaskList(_id, TaskLists.TL_PITCHBURNER_DROPOIL)
+				Logic.CreateEffect(GGL_Effects.FXDropOil, clump.X, clump.Y)
+				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerApplyDamage", 1, {}, {_id, clump.X, clump.Y})
+				if not Siege_PitchBurnerDropOilSound then
+					Stream.Start("Voice\\stronghold\\" .. Siege.DropOilSounds[1+XGUIEng.GetRandom(table.getn(Siege.DropOilSounds)-1)] .. ".wav", 152)
+					Siege_PitchBurnerDropOilSound = true
+					StartCountdown(5, function() Siege_PitchBurnerDropOilSound = false end, false)
+				end
+				Siege.PitchBurnerVatEmpty[_id] = true
+				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerRefillVat", 1, {}, {_id})
 			end
-			local clump = GetPositionClump(t, Siege.PitchBurnerRange, 100)
-			local angle = GetAngleBetween(pos, clump)
-			Logic.RotateEntity(_id, angle)
-			Logic.SetTaskList(_id, TaskLists.TL_PITCHBURNER_DROPOIL)
-			Logic.CreateEffect(GGL_Effects.FXDropOil, clump.X, clump.Y)
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerApplyDamage", 1, {}, {_id, clump.X, clump.Y})
-			if not Siege_PitchBurnerDropOilSound then
-				Stream.Start("Voice\\stronghold\\" .. Siege.DropOilSounds[1+XGUIEng.GetRandom(table.getn(Siege.DropOilSounds)-1)] .. ".wav", 152)
-				Siege_PitchBurnerDropOilSound = true
-				StartCountdown(5, function() Siege_PitchBurnerDropOilSound = false end, false)
-			end
-			return true
 		end
 	end
 end
-function Siege_PitchBurnerApplyDamage(_id, _x, _y)
+Siege_PitchBurnerRefillVat = function(_id)
 	if not IsValid(_id) then
 		return true
 	end
-	if not Counter.Tick2("Siege_PitchBurnerApplyDamage_" .. _id, Siege.PitchBurningDuration) then
+	if Counter.Tick2("Siege_PitchBurnerRefillVat_Counter_" .. _id, Siege.PitchBurnerRefillDelay) then
+		Siege.PitchBurnerVatEmpty[_id] = false
+		return true
+	end
+end
+Siege_PitchBurnerApplyDamage = function(_id, _x, _y)
+	if not IsValid(_id) then
+		return true
+	end
+	if not Counter.Tick2("Siege_PitchBurnerApplyDamage_Counter_" .. _id, Siege.PitchBurningDuration) then
 		if not Siege.FireEffectCasted[_id] then
 			for i = 1, table.getn(Siege.FireEffectOffsets) do
-				Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)], _x + Siege.FireEffectOffsets[i].X, _y + Siege.FireEffectOffsets[i].Y)
+				Logic.CreateEffect(CatapultStoneOnHitEffects[math.random(1,4)],
+				_x + Siege.FireEffectOffsets[i].X + GenerateRandomWithSteps(-50, 50, 10),
+				_y + Siege.FireEffectOffsets[i].Y + GenerateRandomWithSteps(-50, 50, 10))
 			end
 			Siege.FireEffectCasted[_id] = true
 		end

@@ -930,6 +930,10 @@ NPCs sind nun immun gegen Blitzeinschläge.
 
 Schaden Schwere Haubitze: 992 -> 500
 
+Schaden Sturmbock: 70 -> 90
+Lebenspunkte Sturmbock: 500 -> 800
+Rüstung Sturmbock 5 -> 8
+
 Ausgewählte Truppen auf Karten mit dem Armee-Erstellungs-Tool erschienen pro Spieler alle auf derselben Stelle. 
 Sie erscheinen nun mit ein wenig Abstand zueinander.
 
