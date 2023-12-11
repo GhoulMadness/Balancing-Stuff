@@ -59,6 +59,7 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_NoDamageToWallsAndGates", 1)
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_EntityBurnedToDeathSounds", 1)
 			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY,"", "Siege_TrapCalculateDamage", 1)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"", "Siege_GateDestroyedControl", 1)
 			if gvChallengeFlag then
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,"", "Siege_EntityCreated", 1)
 			end
@@ -114,9 +115,25 @@ Siege_NoDamageToWallsAndGates = function()
 	local target = Event.GetEntityID2()
 	if Logic.IsEntityInCategory(target, EntityCategories.Wall) == 1 or Logic.IsEntityInCategory(target, EntityCategories.Bridge) == 1 then
 		local attacker = Event.GetEntityID1()
-		if Logic.IsEntityInCategory(attacker, EntityCategories.Cannon) ~= 1 then
+		if Logic.IsEntityInCategory(attacker, EntityCategories.Cannon) ~= 1 or Logic.GetEntityType(target) ~= Entities.XD_OSO_Wall_Gate_Slim_Closed2 then
 			CEntity.TriggerSetDamage(0)
 		end
+	end
+end
+Siege_GateDestroyedControl = function()
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+
+	if entityType == Entities.XD_OSO_Wall_Gate_Slim_Closed2 then
+		local posX, posY = Logic.GetEntityPosition(entityID)
+		local degree = Logic.GetEntityOrientation(entityID)
+		for i = 1, table.getn(Siege.FireEffectOffsets) do
+			Logic.CreateEffect(GGL_Effects.FXCrushBuildingLarge,
+			posX + Siege.FireEffectOffsets[i].X + GenerateRandomWithSteps(-50, 50, 10),
+			posY + Siege.FireEffectOffsets[i].Y + GenerateRandomWithSteps(-50, 50, 10))
+		end
+		Logic.CreateEntity(Entities.XD_Wall_Gate_Ruin, posX, posY, degree, 0)
+		return Logic.GetNumberOfEntitiesOfType(Entities.XD_OSO_Wall_Gate_Slim_Closed2) ~= 0
 	end
 end
 Siege_EntityBurnedToDeathSounds = function()
