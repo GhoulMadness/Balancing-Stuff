@@ -978,7 +978,7 @@ technische Infos:
 
 			Wölfe rufen-CD:		300									180
 
-			Wölfe Anzahl:		5									2
+			Wölfe Anzahl:		4 - 10								2
 
 			Wölfe R.klasse:		Eisen								keine
 
@@ -993,6 +993,9 @@ technische Infos:
 			Wölfe Sold:			-									20/Zahltag
 
 			Lebensdauer[s]		90									180
+
+			Neu: Varg beschwört nun zusätzliche Wölfe während seine Berserkerwut aktiv ist.
+			Die Anzahl zusätzlicher Wölfe wird weiter erhöht, wenn Varg über wenig Lebenspunkte verfügt.
 
 		Armbrustschütze*:
 
@@ -2876,22 +2879,175 @@ Neuerungen im Balancing Stuff:
 			Preise erzielt. Im BS ist Handel grundsätzlich erlaubt, da sowohl Inflation als auch Deflation stark limitiert sind. Hier könnt ihr gewöhnlichen Handel treiben, nicht aber
 			die Händler gnadenlos über´s Ohr hauen.
 
-		Silber
+		Silber:
 
 			Silber ist eine weitere Ressource im BS. Ihr könnt Silber wie andere Ressourcen auch aus entsprechenden Schächten fördern und auch veredeln. Allerdings wird es nicht leicht
 			sein, an große Mengen dieser Ressource zu gelangen. Jede Ausgabe von Silber muss also wohlüberlegt sein. Silber kann für den Bau gewaltiger Gebäude wie dem Dom, für mächtige
 			Technologien zum Verstärken Euer Truppen sowie zum Ausheben mächtiger Krieger verwendet werden.
 
-		Kohle
+		Kohle:
 
 			Kohle ist eine weitere Ressource im BS. Ihr könnt Kohle durch Kohleminen fördern oder mit Köhlereien produzieren.
 			Die Verwendung von Kohle kann in verschiedenen Schmelzen aktiviert werden, wodurch sich ihre Produktivität deutlich erhöht.
 
-		Tag-Nacht-Zyklus
+		Tag-Nacht-Zyklus:
 
 			Es wurde ein Tag-Nacht-Zyklus eingebaut, um das Siedler-Ambiente noch realistischer zu gestalten. Dieser ist rein optischer Natur und hat keine weiteren Einflüsse auf das Spielgeschehen.
 			Die Dauer eines Tages ist von Map zu Map unterschiedlich und kann auch je nach Map von Regen und Winter begleitet werden. Die aktuelle Tageszeit könnt Ihr an einer Mechanischen Uhr
 			einsehen.
+
+		Prüfungs-Maps:
+
+			Auf diesen Karten ist zusätzlich zu gewöhnlichen Schwierigkeitsstufen die extrem schwere Stufe 'Herausforderung' vorhanden.
+			Diese wird von Euch Höchstleistungen abfordern und Euer Können im Balancing Stuff auf eine schwere Probe stellen.
+			In diesem Modus könnt Ihr Euer Können beweisen. Es winken fantastische Belohnungen für alle, die die Prüfungen dieser Karten bestehen!
+			Je nach Karte werden Gebäude, Militäreinheiten oder Helden freigeschaltet, die nur auf diese Weise erhältlich sind.
+
+			Es gelten natürlich auch einige Regeln:
+
+			Um auf diesen Karten die Belohnungen zu erhalten, ist in der Multiplayer-Lobby lediglich das Anschalten des CC (Chain Construction) erlaubt.
+			Jegliche andere Änderung macht einen Erhalt der Belohnungen unmöglich. Auch solltet ihr ohne LuaDebugger spielen.
+			Verschiebt hierzu vor dem Spielen die entsprechende .dll in ein anderes Spielverzeichnis.
+			Der Erhalt der Belohnungen ist nur im Multiplayer möglich.
+			Sollte es berechtigten Zweifel daran geben, ob ein Spieler die Belohnungen regulär oder doch unter unlauteren Bedingungen erhalten hat, so sollte dieser bereitstehen zu einer Prüfung durch ein Replay der Partie.
+			Jeglicher Versuch, sich diese Belohnungen zu erschummeln, kann zu einem Ausschluss aus dem Spielmodus führen.
+
+			Grundsätzlich gilt: Spielt nach gesundem Menschenverstand.
+			Fällt euch ein Fehler auf oder irgendeine Art, das Spielgeschehen auf anomale Art zu vereinfachen, meldet diese und nutzt sie nicht weiter aus.
+
+			Nachfolgend werden die Maps und die erhältlichen Belohnungen kurz beschrieben:
+
+
+		(2) BS Koop Erste Prüfung - Kampfgeschick
+
+			Auf dieser Karte gilt es, sich mit limitierendem Bauplatz, Ressourcen und Technologien allen einfallenden Feinden zu erwehren.
+			Schafft Ihr es, Eure Burgen 60 Minuten lang erfolgreich zu verteidigen?
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Siegessäule" frei.
+
+			Besonderheiten:
+			Einige Technologien sind bereits zu Beginn verfügbar. Andere sind im gesamten Spielverlauf verboten.
+			Weitere Technologien werden durch das Besiegen von Feinden freigeschaltet. Dabei zählen besiegte Feinde von Euch sowie Eurem Verbündeten.
+			Feindliche Truppen sind nahe ihrer Sammelpunkte unverwundbar. Es wird Euch also nicht viel nützen, Euch an diesen Punkten aufzustellen.
+			Nach dem Ablauf der 60 Minuten müsst ihr alle verbliebenen Feinde besiegen, um die Siegmeldung zu erhalten.
+			Fällt die Burg eines Spielers, hat der andere automatisch auch verloren.
+			Eure Soldaten verlangen auf dieser Karte keinen Sold.
+
+		(2) BS Koop Zweite Prüfung - Taktische Finesse
+
+			Auf dieser Karte gilt es, mit einer begrenzten Anzahl von Starttruppen die gegnerische Burg zu vernichten.
+			Die Anzahl und der Typ der Starttruppen muss der Spieler selbst entscheiden.
+			So hat jeder Spieler eine gewisse Anzahl von Kommandopunkten zum Spielstart (abhängig vom Schwierigkeitsgrad) und kann damit seine Armee selbst aufbauen.
+			Schafft Ihr es, die Burg Eures Feindes innerhalb eines Zeitlimits zu zerstören?
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Bestienstatue" frei.
+
+		(2) BS Koop Dritte Prüfung - Gesandter des Himmels
+
+			Auf dieser Karte gilt es, trotz aller Hürden einen Dom zu errichten.
+			Schafft Ihr es, innerhalb eines Zeitlimits (abhängig vom Schwierigkeitsgrad) diese Aufgabe zu erfüllen?
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue des edlen Kaisers" frei.
+
+			Besonderheiten:
+			Große Teile der Karte entsprechen der Umgebung der Kampagnenkarten "Barmecia" und "Cleycourt".
+			Es gibt auf dieser Karte eine Vielzahl an Wegen, an Silber zu gelangen.
+			Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen.
+			Die umliegenden Ufer des Doms sind Barmecia heilig. Hier dürft ihr keine Gebäude platzieren!
+			Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+			Einige Dörfer und Siedlungen sind Euch anfangs neutral gesinnt, können im Laufe des Spiels jedoch zu Feinden oder aber auch Verbündeten werden.
+			Entscheidungen im Spielverlauf, Lösen von Aufgaben und gewisse Gegebenheiten sind hierbei ausschlaggebend.
+			Nachdem ihr dem Dom errichtet habt, müsst ihr diesen die üblichen zehn Minuten verteidigen, um das Spiel zu gewinnen.
+			Die ein oder andere Partei wird erbittert versuchen, den Dom niederzubrennen. Seid also besser auf hartnäckige Angreifer vorbereitet.
+
+		(2) BS Koop Vierte Prüfung - Das Artefakt
+
+			Auf dieser Karte gilt es, ein verschwundenes Artefakt wiederzubeschaffen während Feindestruppen unerbittlich Eure Siedlungen sowie die Eurer Verbündeten überfallen.
+			Schafft Ihr es, Euch der Feinde zu erwehren und gleichzeitig diese Aufgabe zu erfüllen?
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Säule der Furcht" frei.
+
+			Besonderheiten:
+			Große Teile der Karte entsprechen der Umgebung der Kampagnenkarten "Ridgewood".
+			Es gibt auf dieser Karte eine Vielzahl an Wegen, an Silber zu gelangen.
+			Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen.
+			Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+			Fällt ein Dorfzentrum eines Eurer Nachbarn, habt ihr das Spiel verloren. Gebt gut Acht, sodass diese nicht von Euren Feinden vernichtet werden.
+
+		(2) BS Koop Fünfte Prüfung - Die dunkle Bedrohung
+
+			Auf dieser Karte gilt es, ein verbündetes Dorf eine gewisse Zeit lang vor allen Angriffen zu schützen.
+			Ihr könnt dabei Eure Armee mithilfe des Armee-Erstellungs-Tools selbst erstellen.
+			Nach Ablauf des Zeitlimits erscheinen Erecs Truppen.
+			Es ist an Euch, gemeinsam mit Erec alle Feinde zu vernichten.
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue der Verzweiflung" frei.
+
+			Besonderheiten:
+			Große Teile der Karte entsprechen der Umgebung der Freispielkarte "Berge des Lichts".
+			Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen.
+			Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+			Nach Erecs Ankunft beginnt ein unerbittlicher Winter.
+			Fällt die Burg oder der Pavillon Eures Verbündeten, habt ihr das Spiel verloren. Gebt gut Acht, sodass diese nicht von Euren Feinden vernichtet werden.
+
+		(2) BS Koop Sechste Prüfung - Der böse Graf
+
+			Auf dieser Map gilt es, die Kathedrale von Antrium zu verteidigen, während der zweite Spieler eine schlagkräftige Armee aufstellt.
+			Vernichtet anschließend gemeinsam die Truppen Graf Nerlons des Jüngeren.
+			Eilt Euch. Nach einiger Zeit setzt der Winter ein und der böse Graf Nerlon der Ältere wird ebenfalls alles daran setzen, die Kathedrale von Antrium zu vernichten.
+			Ihr werdet Euch aller Angriffe erwehren und die Siedlungen beider Grafen vernichten müssen, um siegreich zu sein.
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue der Täuschung" frei.
+
+			Besonderheiten:
+			Große Teile der Karte entsprechen der Umgebung der Freispielkarte "Antrium".
+			Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen.
+			Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+			Die Oberstadt Antriums ist vor Einbruch des Winters relativ sicher. Ihr könnt jedoch auch Wege schaffen, Eurem Verbündeten zuvor zu Hilfe zu eilen.
+
+		(2) BS Koop Siebte Prüfung - Tanz der Flammen
+
+			Auf dieser Karte gilt es, mit einer begrenzten Anzahl von Starttruppen die gegnerische Burg zu vernichten.
+			Die Anzahl und der Typ der Starttruppen muss der Spieler selbst entscheiden.
+			So hat jeder Spieler eine gewisse Anzahl von Kommandopunkten zum Spielstart (abhängig vom Schwierigkeitsgrad) und kann damit seine Armee selbst aufbauen.
+			Schafft Ihr es, die Burg Eures Feindes innerhalb eines Zeitlimits zu zerstören?
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue der Verbotenen" frei.
+
+			Besonderheiten:
+			Feindliche Wälle, Tore und Türme sind auf dieser Karte besonders massiv und sind mit gewöhnlichen Truppen nicht einzureißen.
+			Ihr könnt auf dieser Karte keine Kanonen auswählen. Stattdessen könnt ihr Sturmböcke auswählen. Nur mit diesen kann die imposante Festungsanlage bezwungen werden.
+			Doch gebt Acht: Auf dem Weg zur Festung erwarten Euch einige böse Überraschungen...
+
+		(2) BS Koop Achte Prüfung - Shering in Gefahr
+
+			Auf dieser Karte gilt es, schnellstmöglich einem Verbündeten zu Hilfe zu eilen.
+			Ihr werdet so schnell wie möglich eine wirkungsvolle Wirtschaft aufbauen müssen, um bereits nach kurzer Zeit gemeinsam mit Eurem Verbündeten seine Siedlung zu verteidigen.
+			Schlagt dann gemeinsam zurück und vernichtet alle Feinde.
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue des Kriegsherrn" frei.
+
+			Besonderheiten:
+			Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen.
+			Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+			Der Feind wird im Laufe der Zeit immer mächtiger. Ihr solltet Euch nicht allzu viel Zeit lassen.
+			Der Feind verfügt über ein ergiebiges Kohle- und Silbervorkommen. Mit diesem wird er sich sicherlich nicht zurückhalten, Orgelkanonen und Schwere Haubitzen zu produzieren.
+
+		(2) BS Koop Neunte Prüfung - Rettet Trogteburg
+
+			Auf dieser Karte gilt es, binnen eines Zeitlimits möglichst viele angrenzende Dörfer und Städte von Euren guten Absichten zu überzeugen.
+			Nach Ablauf des Zeitlimits werden schier unglaublich mächtige Horden von Barbaren versuchen, die Stadt Trogteburg dem Erdboden gleich zu machen.
+			Nur, wenn ihr genügend umliegende Dörfer von Eurer Sache überzeugt habt, hat Trogteburg eine Chance.
+			Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue der Weisheit" frei.
+
+			Besonderheiten:
+			Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen.
+			Ihr könnt mit vielen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+			Mit einigen NPCs könnt ihr erst nach Ablauf einer gewissen Zeit reden, mit anderen erst, wenn ihr Euch einen Namen gemacht habt.
+			Der Feind wird im Laufe der Zeit immer mächtiger. Ihr solltet Euch nicht allzu viel Zeit lassen.
+
+
+		Weitere Belohnungen:
+
+			Schließt ihr die Prüfungs-Maps 1 - 3 auf dem Modus "Herausforderung" erfolgreich ab, wird der Held "Erebos" freigeschaltet.
+
+			Schließt ihr die Prüfungs-Maps 4 - 6 auf dem Modus "Herausforderung" erfolgreich ab, wird die Rekrutierung von Katapulten in Kanonenmanufakturen freigeschaltet.
+
+			Schließt ihr die Prüfungs-Maps 7 - 9 auf dem Modus "Herausforderung" erfolgreich ab, wird die Rekrutierung von Orgelkanonen in Kanonenmanufakturen freigeschaltet.
+
+			Schließt ihr die Prüfungs-Maps 1 - 9 auf dem Modus "Herausforderung" erfolgreich ab, wird die Rekrutierung von Schweren Haubitzen in Kanonenmanufakturen freigeschaltet.
 
 
 Maps:
