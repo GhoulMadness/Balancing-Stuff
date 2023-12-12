@@ -107,7 +107,7 @@
 					["(4) emsbs winterzauber"] = true,
 					["(4) emsbs sparrowdale"] = true,
 					["(4) emsbs osterfieber"] = true,
-					["(4) emsbs silberland"] = true
+					["(4) emsbs rmg gezeiten"] = true
 					},
 				[5] = 	{
 					["(5) bs koop der grosse aufstand"] = true,
