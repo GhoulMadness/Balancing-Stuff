@@ -133,6 +133,7 @@ Siege_GateDestroyedControl = function()
 			posY + Siege.FireEffectOffsets[i].Y + GenerateRandomWithSteps(-50, 50, 10))
 		end
 		Logic.CreateEntity(Entities.XD_Wall_Gate_Ruin, posX, posY, degree, 0)
+		Stream.Start("Voice\\stronghold\\general_gatehouse.wav", 152)
 		return Logic.GetNumberOfEntitiesOfType(Entities.XD_OSO_Wall_Gate_Slim_Closed2) ~= 0
 	end
 end
@@ -280,6 +281,7 @@ Siege_PitchBurnerApplyDamage = function(_id, _x, _y)
 		end
 		CEntity.DealDamageInArea(_id, _x, _y, Siege.PitchBurningRange, Siege.PitchBurningDamage)
 	else
+		Siege.FireEffectCasted[_id] = false
 		return true
 	end
 end
@@ -295,4 +297,13 @@ function Defeat()
 	end
 	Trigger.DisableTriggerSystem(1)
 	Stream.Start("Voice\\stronghold\\" .. Siege.DefeatSounds[1+XGUIEng.GetRandom(table.getn(Siege.DefeatSounds)-1)] .. ".wav", 152)
+end
+GUIAction_ToggleMenuOrig = GUIAction_ToggleMenu
+function GUIAction_ToggleMenu(_Menu, _Status)
+
+	if _Menu == "MainMenuBoxQuitWindow" or _Menu == "MainMenuBoxQuitAppWindow" then
+		Stream.Start("Voice\\stronghold\\general_quitgame.wav", 152)
+	end
+	GUIAction_ToggleMenuOrig(_Menu, _Status)
+
 end
