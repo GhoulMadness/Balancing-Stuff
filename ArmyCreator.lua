@@ -170,7 +170,6 @@ end
 ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 
 	ArmyCreator.Finished[_playerID] = true
-
 	ArmyCreator.PlayerTroops[_playerID] = _trooptable
 
 	if ArmyCreator.OnSetupFinished then
@@ -180,25 +179,20 @@ ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 			local count = 0
 
 			for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-
 				if ArmyCreator.Finished[i] then
-
 					count = count + 1
-
 				end
-
 			end
 
 			if count == GetNumberOfPlayingHumanPlayer() then
 
 				local playersleft = GetNumberOfPlayingHumanPlayer()
 
-				for i = 1, 12 do
+				for i = 1, 16 do
 
 					if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(i) ~= 0 then
 
 						ArmyCreator.CreateTroops(i, ArmyCreator.PlayerTroops[i])
-
 						playersleft = playersleft - 1
 
 					end
@@ -218,13 +212,10 @@ ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 		else
 
 			ArmyCreator.CreateTroops(_playerID, _trooptable)
-
 			ArmyCreator.OnSetupFinished()
 
 		end
-
 	end
-
 end
 ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 
@@ -236,38 +227,20 @@ ArmyCreator.CreateTroops = function(_playerID, _trooptable)
 
 		elseif ArmyCreator.TroopOnlyLeader[k] then
 
-			if v > 1 then
-
+			if v >= 1 then
 				for i = 1,v do
-
 					Logic.CreateEntity(k, ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, math.random(360), _playerID)
-
 				end
-
-			elseif v == 1 then
-
-				Logic.CreateEntity(k, ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, math.random(360), _playerID)
-
 			end
 
 		else
 
-			if v > 1 then
-
+			if v >= 1 then
 				for i = 1,v do
-
-					CreateMilitaryGroup(_playerID, k, 16, ArmyCreator.SpawnPos[_playerID])
-
+					AI.Entity_CreateFormation(_playerID, k, 0, LeaderTypeGetMaximumNumberOfSoldiers(k), ArmyCreator.SpawnPos[_playerID].X, ArmyCreator.SpawnPos[_playerID].Y, 0, 0, 0, 0)
 				end
-
-			elseif v == 1 then
-
-				CreateMilitaryGroup(_playerID, k, 16, ArmyCreator.SpawnPos[_playerID])
-
 			end
 
 		end
-
 	end
-
 end

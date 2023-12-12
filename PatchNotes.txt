@@ -926,3 +926,22 @@ Die zusätzlichen Sprüche/Taunts per Tastenkombi für den MP haben im SP das Sp
 
 NPCs sind nun immun gegen Blitzeinschläge.
 
+--- Version 0.750
+
+Schaden Schwere Haubitze: 992 -> 500
+
+Schaden Sturmbock: 70 -> 90
+Lebenspunkte Sturmbock: 500 -> 800
+Rüstung Sturmbock 5 -> 8
+
+Statue des Bündnis Kosten:
+Silber: 350 -> 250
+Steine: 1000 -> 1500
+
+Ausgewählte Truppen auf Karten mit dem Armee-Erstellungs-Tool erschienen pro Spieler alle auf derselben Stelle. 
+Sie erscheinen nun mit ein wenig Abstand zueinander.
+
+Es wurden mehrere Fehler auf Prüfungskarten behoben.
+
+Die Changelog.txt wurde auf den neuesten Stand gebracht.
+
