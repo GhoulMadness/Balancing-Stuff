@@ -1194,6 +1194,7 @@ function GetNearestEnemyInRange(_player, _position, _range)
 				return entities[i]
 			end
 		end
+		return false
 	end
 	return false
 end
