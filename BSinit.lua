@@ -365,13 +365,13 @@
 			"Lightning",
 			"DZTradePunishment",
 			"SilversmithGrievance",
+			"Comforts",
 			"ChunkWrapper",
 			"AI",
 			"Castle",
 			"Tower",
 			"Archers_Tower",
 			"Scaremonger",
-			"Comforts",
 			"Trigger",
 			"CMod_Additions",
 			"InterfaceTools",
@@ -386,8 +386,7 @@
 			"Hero13",
 			"Hero14",
 			"HeroTarget",
-			"VictoryStatue3",
-			"VictoryStatue4",
+			"VictoryStatues",
 			"WCutter",
 			"Forester",
 			"Coal",
@@ -406,8 +405,6 @@
 	--needed for Victory
 	gvMission = gvMission or {}
 	gvMission.PlayerID = GUI.GetPlayerID()
-	--cooldown handling levy taxes TODO: this is not at the correct place
-	gvLastTimeButtonPressed = -240000
 	--additional chat taunts added
 	if CNetwork then
 		BonusKeys()
@@ -450,9 +447,9 @@
 	--Trigger for towers
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnTowerCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnTowerDestroyed", 1)
-	--Trigger for victory statue4
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnVStatue4Created", 1)
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnVStatue4Destroyed", 1)
+	--Trigger for victory statues
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnVStatuesCreated", 1)
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnVStatuesDestroyed", 1)
 	--Trigger for drakes headshot
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "DrakeHeadshotDamage", 1)
 	--Trigger for poison damage (kala, mary)
@@ -480,8 +477,6 @@
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "SerfCreated", 1)
 	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "SerfDestroyed", 1)
 	StartCountdown(5,SerfHPRegen,false)
-	--Trigger for victory statue3 destroyed
-	Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnVictoryStatue3Destroyed", 1)
 	--Winter and Night sounds (wolfs howling, snowbird, etc.)
 	StartSimpleJob("WinterTheme")
 	--calculating ingame time (used for mechanical clock gui)

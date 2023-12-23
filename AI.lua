@@ -355,88 +355,6 @@ SetupAITroopSpawnGenerator = function(_Name, _army)
 					{_Name, _army.player, _army.id},
 					{_army.player, _army.id})
 end
-AITroopSpawnGenerator_Condition = function(_Name, _player, _id)
-
-	local army = ArmyTable[_player][_id + 1]
-	-- Not enough troops
-	if Counter.Tick2(_Name,10) then
-
-		-- First spawn done
-		if army.firstSpawnDone == nil or army.firstSpawnDone == false then
-			return true
-		else
-
-			if not army.IDs or (table.getn(army.IDs) < army.strength and (army.noEnemy == nil or army.noEnemy == false or GetClosestEntity(army, army.noEnemyDistance) == 0)) then
-				return Counter.Tick2(_Name.."_Respawn", army.respawnTime/10)
-			end
-		end
-	end
-end
-AITroopSpawnGenerator_Action = function(_player, _id)
-
-	local army = ArmyTable[_player][_id + 1]
-	-- Any current spawn index? No? Create one
-	if army.spawnIndex == nil then
-		army.spawnIndex = 1
-	end
-
-	-- Is any generator building there and dead...destroy this generator
-	if army.spawnGenerator ~= nil and IsDead(army.spawnGenerator) then
-		army.generatorID = nil
-		return true
-	end
-
-	-- Get missing army count
-	local missingTroops = army.strength
-	if army.IDs then
-		 missingTroops = army.strength - (table.getn(army.IDs) or 0)
-	end
-
-	-- Is max spawn amount set
-	if army.firstSpawnDone ~= nil and army.maxSpawnAmount ~= nil then
-		-- Set to max
-		missingTroops = math.min(missingTroops, army.maxSpawnAmount)
-	end
-
-	-- Spawn missing army
-	local i
-	for i=1,missingTroops do
-
-		-- Any data there
-		if army.spawnTypes[army.spawnIndex] == nil then
-
-			-- End of queue reached, destroy job or restart
-			if army.endless ~= nil and army.endless then
-				-- restart
-				army.spawnIndex = 1
-
-			else
-
-				-- stop job
-				army.generatorID = nil
-				return true
-			end
-		end
-
-		-- Min number...if should not refresh, number is zero
-		local minNumber = army.spawnTypes[army.spawnIndex][2]
-		if army.refresh ~= nil and not army.refresh then
-			minNumber = 0
-		end
-
-		-- Enlarge army
-		local troopDescription = {leaderType = army.spawnTypes[army.spawnIndex][1], maxNumberOfSoldiers = army.spawnTypes[army.spawnIndex][2], minNumberOfSoldiers = minNumber}
-		EnlargeArmy(army, troopDescription, army.spawnPos)
-		-- Next index
-		army.spawnIndex = army.spawnIndex + 1
-
-	end
-
-	-- First spawn done
-	army.firstSpawnDone = true
-	return false
-
-end
 
 -- checks whether army troop generator is active or not (either recruitment army or spawn troops army)
 ---@param _army table army table
@@ -911,4 +829,87 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_player)
 			end
 		end
 	end
+end
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------ Triggers for general AI data --------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500,
+								[Entities.PV_Cannon4] = 1800,
+								[Entities.PV_Cannon6] = 2500,
+								[Entities.PV_Catapult] = 2000}
+for k,v in pairs(gvAntiBuildingCannonsRange) do
+	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
+end
+
+function OnAIEnemyCreated(_playerID)
+
+	local entityID = Event.GetEntityID()
+	local playerID = Logic.EntityGetPlayer(entityID)
+	local etype = Logic.GetEntityType(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
+
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
+				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
+				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
+				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
+				break
+			end
+		end
+	end
+end
+function OnAIEnemyDestroyed(_playerID)
+
+	local entityID = Event.GetEntityID()
+	local playerID = Logic.EntityGetPlayer(entityID)
+	local etype = Logic.GetEntityType(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
+
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
+				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
+				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
+				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
+				break
+			end
+		end
+	end
+end
+function OnAIDiplomacyChanged(_playerID)
+	local p = Event.GetSourcePlayerID()
+	local p2 = Event.GetTargetPlayerID()
+	local state = Event.GetDiplomacyState()
+
+	if p == _playerID or p2 == _playerID then
+		ReinitChunkData(_playerID)
+	end
+end
+function AITower_RedirectTarget()
+
+	local attacker = Event.GetEntityID1()
+	local target = Event.GetEntityID2()
+	local playerID = Logic.EntityGetPlayer(attacker)
+
+	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) == 0 and AIchunks[playerID] then
+
+		if Logic.IsEntityInCategory(attacker, EntityCategories.MilitaryBuilding) == 1 then
+			local newtarget = CheckForBetterTarget(attacker, target)
+			if newtarget and Logic.IsEntityAlive(newtarget) then
+				Logic.GroupAttack(attacker, newtarget)
+			end
+		end
+	end
+
 end

@@ -29,3 +29,41 @@ else
 		gvCastle.PositionTable[k]={X = posX, Y = posY}
 	end
 end
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------- Trigger for Castles ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+function OnCastleCreated()
+
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+
+	if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then
+		local playerID = GetPlayer(entityID)
+		local posX,posY = Logic.GetEntityPosition(entityID)
+		local pos = {X = posX, Y = posY}
+		table.insert(gvCastle.PositionTable,pos)
+
+		if gvCastle.AmountOfCastles[playerID] then
+			gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] + 1
+		end
+
+	end
+end
+
+function OnCastleDestroyed()
+
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+
+	if entityType == Entities.PB_Castle1 or entityType == Entities.PB_Castle2 or entityType == Entities.PB_Castle3 or entityType == Entities.PB_Castle4 or entityType == Entities.PB_Castle5 then
+		local playerID = GetPlayer(entityID)
+		local posX,posY = Logic.GetEntityPosition(entityID)
+		local pos = {X = posX, Y = posY}
+		removetablekeyvalue(gvCastle.PositionTable,pos)
+
+		if gvCastle.AmountOfCastles[playerID] then
+			gvCastle.AmountOfCastles[playerID] = gvCastle.AmountOfCastles[playerID] - 1
+		end
+
+	end
+end

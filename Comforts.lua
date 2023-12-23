@@ -1199,6 +1199,32 @@ function GetNearestEnemyInRange(_player, _position, _range)
 	return false
 end
 
+-- Comfort to get the entityID of the nearest enemy to a given player, position, range and cone
+---@param _player integer playerID
+---@param _position table positionTable of cone
+---@param _centerAngle number center angle cone is facing
+---@param _spreadAngle maximum spread angle of cone
+---@param _range number search range
+---@return integer entityID of nearest enemy
+function GetNearestEnemyInRangeAndCone(_player, _position, _centerAngle, _spreadAngle, _range)
+
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)),
+	CEntityIterator.IsSettlerOrBuildingFilter(),
+	CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+		if Logic.IsEntityAlive(eID) then
+			if IsInCone(GetPosition(eID), _position, _centerAngle, _spreadAngle) then
+				table.insert(t, {id = eID, dist = GetDistance(eID, _position)})
+			end
+		end
+	end
+	table.sort(t, function(p1, p2)
+		return p1.dist < p2.dist
+	end)
+	return t[1].id
+end
+
 -- override so the OSI of the entity is shown again after resuming (workaround for ubi bug)
 ResumeEntityOrig = Logic.ResumeEntity
 Logic.ResumeEntity = function(_id)
@@ -1896,6 +1922,33 @@ GetDistance = function(_a, _b)
 		return math.sqrt((_a[1] - _b[1])^2+(_a[2] - _b[2])^2)
 	end
 
+end
+
+--- author:mcb
+-- checks if a position is in a cone originating from another position.
+-- imagine it as checking if an entity at the position center, looking at direction middleAlpha
+-- and a field of view of betaAvailable to either side can see pos.
+-- (assumes being able to look through any other object and having infinite vision range).
+-- (the angle of the entire cone is betaAvaiable * 2, its outer birders are at middleAlpha+betaAvaiable and middleAlpha-betaAvaiable).
+-- (depending on the circumstances, should be coupled by a distance check via GetDistance).
+---@param _pos table positionTable
+---@param _center table positionTable of center of cone
+---@param _middleAlpha number center angle cone should be facing
+---@param _betaAvaiable number max spread angle
+---@return boolean
+function IsInCone(_pos, _center, _middleAlpha, _betaAvaiable)
+	local a = GetAngleBetween(_center, _pos)
+	local lb = _middleAlpha - _betaAvaiable
+	local hb = _middleAlpha + _betaAvaiable
+	if a >= lb and a <= hb then
+		return true
+	end
+	a = math.mod((a + 180), 360)
+	lb = math.mod((lb + 180), 360)
+	hb = math.mod((hb + 180), 360)
+	if a >= lb and a <= hb then
+		return true
+	end
 end
 
 -- evaluates whether a position is unblocked or not

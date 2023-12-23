@@ -7,8 +7,8 @@ function GUITooltip_ExtraDuties()
 	local TaxAmount = Logic.GetPlayerTaxIncome(PlayerID)
 	local TaxBonus = 1
 
-	for i = 1, gvVictoryStatue3.Amount[PlayerID] do
-		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
+	for i = 1, gvVStatue3.Amount[PlayerID] do
+		TaxBonus = TaxBonus + (math.max(gvVStatue3.BaseValue - (i - 1) * gvVStatue3.DecreaseValue, gvVStatue3.MinimumValue))
 	end
 	local TaxName = ""
 	local TextString = ""

@@ -3,16 +3,27 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 		PitchBurnerRange = 500, PitchBurnerEnemyTreshold = 1, PitchBurnerRefillDelay = 30 * (gvDiffLVL or 1), PitchBurnerVatEmpty = {},
 		PitchBurningDuration = 20, PitchBurningDamage = 50, PitchBurningRange = 800, PitchBurningDamageFactorToHeroes = 5, PitchBurningDamageFactorToVehicles = 4, PitchBurningDamageFactorToUnderlings = 3,
 		FireEffectCasted = {},
+		TriggerIDs = {},
 		CreateTraps = function(_player, _x, _y, _range, _amount, _spacing)
-			Siege.TrapPositions = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, _spacing, "TrapHole")
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_TrapControl", 1)
+			local t = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, _spacing, "TrapHole")
+			for i in t do
+				table.insert(Siege.TrapPositions, t[i])
+			end
+			if not Siege.TriggerIDs.TrapControl then
+				Siege.TriggerIDs.TrapControl = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_TrapControl", 1)
+			end
 		end,
 		CreatePitchFields = function(_x, _y, _range, _length, _amount)
 			for i = 1, table.getn(Siege.AttackerIDs) do
 				Logic.SetDiplomacyState(Siege.AttackerIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
 			end
-			Siege.PitchFieldPositions = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - _range, _x + _range, _y - _range, _y + _range, _length, 200, 800, "PitchField")
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchFieldsControl", 1)
+			local t = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - _range, _x + _range, _y - _range, _y + _range, _length, 200, 800, "PitchField")
+			for i in t do
+				table.insert(Siege.PitchFieldPositions, t[i])
+			end
+			if not Siege.TriggerIDs.PitchFieldControl then
+				Siege.TriggerIDs.PitchFieldControl = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchFieldsControl", 1)
+			end
 		end,
 		PitchBurnerInit = function()
 			Siege.PitchBurners = Siege.PitchBurners or {}

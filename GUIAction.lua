@@ -162,8 +162,8 @@ function BS.LevyTax(_playerID)
 
 	local TaxBonus = 1
 
-	for i = 1, gvVictoryStatue3.Amount[_playerID] do
-		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
+	for i = 1, gvVStatue3.Amount[_playerID] do
+		TaxBonus = TaxBonus + (math.max(gvVStatue3.BaseValue - (i - 1) * gvVStatue3.DecreaseValue, gvVStatue3.MinimumValue))
 	end
 
 	Logic.AddToPlayersGlobalResource(_playerID, ResourceType.GoldRaw, round(Logic.GetPlayerTaxIncome(_playerID) * TaxBonus))
