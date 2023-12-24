@@ -945,3 +945,10 @@ Es wurden mehrere Fehler auf Prüfungskarten behoben.
 
 Die Changelog.txt wurde auf den neuesten Stand gebracht.
 
+--- Version 0.751
+
+Es wurden Vorschaubilder für die Orgelkanone und die schwere Haubitze hinzugefügt. 
+Der Dank geht hierbei an totalwarANGEL, der diese bereitgestellt hat.
+
+Verschossene Projektile von Fernkämpfern, die sich auf Gebäuden erhöhter Position (wie z.B. Brücken) befinden, werden nun um den entsprechenden Höhenversatz korrigiert.
+

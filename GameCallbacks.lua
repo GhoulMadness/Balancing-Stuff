@@ -1077,7 +1077,12 @@ GameCallback_UnknownTask = function(_id)
 				local posX2, posY2 = Logic.GetEntityPosition(target)
 				local damage = CalculateTotalDamage(_id, target)
 				local offX, offY = RotateOffset(v.Offset.X, v.Offset.Y, Logic.GetEntityOrientation(_id))
-				CUtil.CreateProjectile(GGL_Effects[v.Effect], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
+				local effID = v.Effect
+				local type = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(_id)
+				if type then
+					effID = ProjectileHeightCheck.GetGatlingProjectileEffectByEffectAndBridgeEntity(effID, type)
+				end
+				CUtil.CreateProjectile(GGL_Effects[effID], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
 				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFireShort)
 				--CEntity.DealDamageInArea(_id, posX2, posY2, GetEntityTypeDamageRange(etype), damage)
 				return 0
@@ -1102,6 +1107,25 @@ GameCallback_UnknownTask = function(_id)
 			end
 		end
 		return 0
+	else
+		local task = Logic.GetCurrentTaskList(_id)
+		if ProjectileHeightCheck.TaskLists[task] then
+			local type = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(_id)
+			if type then
+				local target = GetEntityCurrentTarget(_id)
+				local posX, posY = Logic.GetEntityPosition(_id)
+				local posX2, posY2 = Logic.GetEntityPosition(target)
+				local damage = CalculateTotalDamage(_id, target)
+				local effID = ProjectileHeightCheck.GetProjectileEffectByEntityTypeAndBridgeEntity(etype, type)
+				CUtil.CreateProjectile(GGL_Effects[effID], posX, posY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
+				SetEntityCurrentTaskIndex(_id, GetEntityCurrentTaskIndex(_id)+2)
+				return 2
+			else
+				return 0
+			end
+		else
+			return 0
+		end
 	end
 end
 -- adjusted, so feedback message is only received by player clicking the button, not all players

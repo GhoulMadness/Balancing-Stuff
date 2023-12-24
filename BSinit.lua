@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.750
+	BS.Version = 0.751
 
 	BS.SpectatorPID = 17
 
@@ -390,7 +390,8 @@
 			"WCutter",
 			"Forester",
 			"Coal",
-			"Cannon5"
+			"Cannon5",
+			"ProjectileHeight"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
