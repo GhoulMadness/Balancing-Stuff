@@ -1,5 +1,7 @@
 ProjectileHeightCheck = ProjectileHeightCheck or {}
 
+-- max distance of bridge center entity stands on (see pb_bridge4.xml)
+ProjectileHeightCheck.BridgeSearchRange = 2400
 ProjectileHeightCheck.TaskLists = {["TL_BATTLE_BOW"] = true,
 									["TL_BATTLE_CROSSBOW"] = true,
 									["TL_BATTLE_SKIRMISHER"] = true,
@@ -7,20 +9,26 @@ ProjectileHeightCheck.TaskLists = {["TL_BATTLE_BOW"] = true,
 									["TL_BATTLE_VEHICLE"] = true,
 									["TL_BATTLE_GATLING"] = true
 									}
-ProjectileHeightCheck.EffectsSuffixByBuilding = {[Entities.PB_Archers_Tower] = "AtArchersTower",
-												[Entities.PB_Bridge1] = "AtBridge",
-												[Entities.PB_Bridge2] = "AtBridge",
-												[Entities.PB_Bridge3] = "AtBridge",
-												[Entities.PB_Bridge4] = "AtBridge",
-												[Entities.PB_DrawBridgeClosed1] = "AtDrawBridge",
-												[Entities.PB_DrawBridgeClosed2] = "AtDrawBridge",
-												[Entities.XD_OSO_Wall_Straight2] = "AtFortification2",
-												[Entities.XD_OSO_Wall_Straight2_90] = "AtFortification2",
-												[Entities.XD_OSO_Wall_Straight2_180] = "AtFortification2",
-												[Entities.XD_OSO_Wall_Straight2_270] = "AtFortification2",
-												[Entities.XD_OSO_Wall_Tower2] = "AtFortification3",
-												[Entities.XD_OSO_Wall_Tower3] = "AtFortification3"
+ProjectileHeightCheck.EffectsSuffixByBuilding = {[Entities.PB_Archers_Tower] = "ArchersTower",
+												[Entities.PB_Bridge1] = "Bridge",
+												[Entities.PB_Bridge2] = "Bridge",
+												[Entities.PB_Bridge3] = "Bridge",
+												[Entities.PB_Bridge4] = "Bridge",
+												[Entities.PB_DrawBridgeClosed1] = "DrawBridge",
+												[Entities.PB_DrawBridgeClosed2] = "DrawBridge",
+												[Entities.XD_OSO_Wall_Straight2] = "Fortification2",
+												[Entities.XD_OSO_Wall_Straight2_90] = "Fortification2",
+												[Entities.XD_OSO_Wall_Straight2_180] = "Fortification2",
+												[Entities.XD_OSO_Wall_Straight2_270] = "Fortification2",
+												[Entities.XD_OSO_Wall_Tower2] = "Fortification3",
+												[Entities.XD_OSO_Wall_Tower3] = "Fortification3"
 												}
+ProjectileHeightCheck.HeightOffsetBySuffix = {["ArchersTower"] = 735,
+											["Bridge"] = 690,
+											["DrawBridge"] = 443,
+											["Fortification2"] = 680,
+											["Fortification3"] = 1040
+											}
 ProjectileHeightCheck.ProjectileByEntity = {[Entities.PU_LeaderBow1] = "FXArrow",
 											[Entities.PU_SoldierBow1] = "FXArrow",
 											[Entities.PU_LeaderBow2] = "FXArrow",
@@ -50,13 +58,12 @@ ProjectileHeightCheck.ProjectileByEntity = {[Entities.PU_LeaderBow1] = "FXArrow"
 											}
 ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn = function(_id)
 	local pos = GetPosition(_id)
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.Bridge), CEntityIterator.InCircleFilter(pos.X, pos.Y, 500)) do
-		return Logic.GetEntityType(eID)
-	end
+	local bridge = GetNearestBridge(pos.X, pos.Y, ProjectileHeightCheck.BridgeSearchRange)
+	return (bridge and Logic.GetEntityType(bridge))
 end
-ProjectileHeightCheck.GetProjectileEffectByEntityTypeAndBridgeEntity = function(_etype, _btype)
-	return (ProjectileHeightCheck.ProjectileByEntity[_etype] .. "_" .. ProjectileHeightCheck.EffectsSuffixByBuilding[_btype])
+ProjectileHeightCheck.GetProjectileEffectByEntityTypeAndBridgeEntity = function(_etype, _btype, _direction)
+	return (ProjectileHeightCheck.ProjectileByEntity[_etype] .. "_" .. _direction .. ProjectileHeightCheck.EffectsSuffixByBuilding[_btype])
 end
-ProjectileHeightCheck.GetGatlingProjectileEffectByEffectAndBridgeEntity = function(_effect, _btype)
-	return (_effect .. "_" .. ProjectileHeightCheck.EffectsSuffixByBuilding[_btype])
+ProjectileHeightCheck.GetGatlingProjectileEffectByEffectAndBridgeEntity = function(_effect, _btype, _direction)
+	return (_effect .. "_" .. _direction .. ProjectileHeightCheck.EffectsSuffixByBuilding[_btype])
 end

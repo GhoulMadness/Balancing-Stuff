@@ -1078,9 +1078,18 @@ GameCallback_UnknownTask = function(_id)
 				local damage = CalculateTotalDamage(_id, target)
 				local offX, offY = RotateOffset(v.Offset.X, v.Offset.Y, Logic.GetEntityOrientation(_id))
 				local effID = v.Effect
-				local type = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(_id)
-				if type then
-					effID = ProjectileHeightCheck.GetGatlingProjectileEffectByEffectAndBridgeEntity(effID, type)
+				-- is entity on bridge attacking entity on "normal" ground?
+				if IsPositionAffectedByBridgeHeight(posX, posY) then
+					local btype = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(_id)
+					if btype then
+						effID = ProjectileHeightCheck.GetGatlingProjectileEffectByEffectAndBridgeEntity(effID, btype, "At")
+					end
+				-- is entity on "normal" ground attacking entity standing on bridge?
+				elseif IsPositionAffectedByBridgeHeight(posX2, posY2) and Logic.IsBuilding(target) == 0 then
+					local btype = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(target)
+					if btype then
+						effID = ProjectileHeightCheck.GetGatlingProjectileEffectByEffectAndBridgeEntity(effID, btype, "To")
+					end
 				end
 				CUtil.CreateProjectile(GGL_Effects[effID], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
 				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFireShort)
@@ -1110,16 +1119,34 @@ GameCallback_UnknownTask = function(_id)
 	else
 		local task = Logic.GetCurrentTaskList(_id)
 		if ProjectileHeightCheck.TaskLists[task] then
-			local type = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(_id)
-			if type then
-				local target = GetEntityCurrentTarget(_id)
-				local posX, posY = Logic.GetEntityPosition(_id)
-				local posX2, posY2 = Logic.GetEntityPosition(target)
-				local damage = CalculateTotalDamage(_id, target)
-				local effID = ProjectileHeightCheck.GetProjectileEffectByEntityTypeAndBridgeEntity(etype, type)
-				CUtil.CreateProjectile(GGL_Effects[effID], posX, posY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
-				SetEntityCurrentTaskIndex(_id, GetEntityCurrentTaskIndex(_id)+2)
-				return 2
+			local target = GetEntityCurrentTarget(_id)
+			local posX, posY = Logic.GetEntityPosition(_id)
+			local posX2, posY2 = Logic.GetEntityPosition(target)
+			-- is entity on bridge attacking entity on "normal" ground?
+			if IsPositionAffectedByBridgeHeight(posX, posY) then
+				local btype = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(_id)
+				if btype then
+					local damage = CalculateTotalDamage(_id, target)
+					local effID = ProjectileHeightCheck.GetProjectileEffectByEntityTypeAndBridgeEntity(etype, btype, "At")
+					CUtil.CreateProjectile(GGL_Effects[effID], posX, posY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
+					SetEntityCurrentTaskIndex(_id, GetEntityCurrentTaskIndex(_id)+2)
+					return 2
+				else
+					return 0
+				end
+			-- is entity on "normal" ground attacking entity standing on bridge?
+			elseif IsPositionAffectedByBridgeHeight(posX2, posY2) and Logic.IsBuilding(target) == 0 then
+				local btype = ProjectileHeightCheck.GetBridgeEntityTypeEntityStandsOn(target)
+				if btype then
+					local damage = CalculateTotalDamage(_id, target)
+					local effID = ProjectileHeightCheck.GetProjectileEffectByEntityTypeAndBridgeEntity(etype, btype, "To")
+					CUtil.CreateProjectile(GGL_Effects[effID], posX, posY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
+					SetEntityCurrentTaskIndex(_id, GetEntityCurrentTaskIndex(_id)+2)
+					return 2
+				else
+					return 0
+				end
+			-- TODO: check if entity on bridge is attacking another entity on bridge is missing. Rare case, worth the effort?
 			else
 				return 0
 			end

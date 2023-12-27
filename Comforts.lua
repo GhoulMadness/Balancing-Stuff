@@ -843,6 +843,23 @@ function GetNearestEntityOfType(_x, _y, _entityType)
 	return id
 end
 
+-- function to get the nearest entity of bridge category
+---@param _x number	positionX
+---@param _y number positionY
+---@param _range number? search range (optional, default: map size)
+---@return integer
+function GetNearestBridge(_x, _y, _range)
+
+	local bt = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.Bridge), CEntityIterator.InCircleFilter(_x, _y, _range or Logic.WorldGetSize())) do
+		table.insert(bt, {id = eID, dist = GetDistance(eID, {X = _x, Y = _y})})
+	end
+	table.sort(bt, function(p1, p2)
+		return p1.dist < p2.dist
+	end)
+	return (bt[1] and bt[1].id)
+end
+
 -- comfort to evaluate if number of entities of given playerID are in range of given Position
 ---@param _player integer playerID
 ---@param _entityType integer entityType
@@ -3971,6 +3988,28 @@ function GetSummonedEntityLifetimeLeft(_id)
 	local beh = CUtil.GetBehaviour(_id, tonumber("775D9C", 16))
 	local time = CUtilMemory.GetMemory(tonumber(beh,16))[5]:GetInt()
 	return time or 0
+end
+
+-- returns blocking type of a given position
+-- 0 = unblocked, 1 = hard blocked by entity or terrain type(red, no placement or movement allowed), 2 = bridge area, 3 = bridge area + hard blocked (2+1),
+-- 4 = soft blocked/terrain pos area (green, no placement allowed), 5 = within blocking area (buildings, pits, etc., 1+4 overlapping), 6 = bridge + terrain pos (2+4),
+-- 8 = water during snow transition, 9 = hard blocked by slope
+---@param _x number positionX
+---@param _y number positionY
+---@return integer blocking type
+function GetPositionBlockingType(_x, _y)
+	assert(type(_x) == "number" and type(_y) == "number", "invalid position input")
+	local max = Logic.WorldGetSize()
+	assert(_x <= max and _y <= max and _x >= 0 and _y >= 0, "invalid position; not within map size")
+	return CUtil.GetBlocking100(_x, _y)
+end
+
+-- checks whether given position is affected by bridge entity category height
+---@param _x number positionX
+---@param _y number positionY
+---@return boolean
+function IsPositionAffectedByBridgeHeight(_x, _y)
+	return (GetPositionBlockingType(_x, _y) == 2 or GetPositionBlockingType(_x, _y) == 6)
 end
 
 -- rotates a given offset

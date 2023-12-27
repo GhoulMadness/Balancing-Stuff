@@ -951,4 +951,15 @@ Es wurden Vorschaubilder für die Orgelkanone und die schwere Haubitze hinzugef�
 Der Dank geht hierbei an totalwarANGEL, der diese bereitgestellt hat.
 
 Verschossene Projektile von Fernkämpfern, die sich auf Gebäuden erhöhter Position (wie z.B. Brücken) befinden, werden nun um den entsprechenden Höhenversatz korrigiert.
+Gleichermaßen wird die Höhe des Ziels korrigiert, wenn ein Fernkämpfer Projektile auf eine Einheit, die sich auf einer erhöhten Position befindet, verschießt.
+
+Bogenschützen-Bandit Balancing:
+Sichtreichweite: 2900 -> 2700
+Angriffsreichweite: 2900 -> 2700
+Rüstungswert: 3 -> 2
+
+Leichter Scharfschütze Balancing:
+Schaden: 17 -> 21
+
+
 
