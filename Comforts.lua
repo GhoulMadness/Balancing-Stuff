@@ -3556,6 +3556,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	if not ArmyHomespots[_player] then
 		ArmyHomespots[_player] = {}
 	end
+	_pos.X, _pos.Y = dekaround(_pos.X), round(_pos.Y)
 	local sec, id = 0, Logic.GetEntityAtPosition(_pos.X, _pos.Y)
 	if id > 0 then
 		sec = Logic.GetSector(id)
@@ -3563,7 +3564,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		sec = CUtil.GetSector(_pos.X/100, _pos.Y/100)
 	end
 	if sec == 0 then
-		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 1000, 100)
+		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 5000, 100)
 	end
 	local calcP = function(_XY)
 		local size = Logic.WorldGetSize()
