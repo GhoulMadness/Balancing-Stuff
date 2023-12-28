@@ -1206,9 +1206,14 @@ function GetNearestEnemyInRange(_player, _position, _range)
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
 	if next(entities) then
+		local sector = CUtil.GetSector(round(_position.X/100), round(_position.Y/100))
+		local eID = Logic.GetEntityAtPosition(_position.X, _position.Y)
+		if eID > 0 then
+			sector = Logic.GetSector(eID)
+		end
 		for i = 1, table.getn(entities) do
 			local id = entities[i]
-			if Logic.IsEntityAlive(id) and Logic.GetSector(id) == CUtil.GetSector(_position.X/100, _position.Y/100) then
+			if Logic.IsEntityAlive(id) and Logic.GetSector(id) == sector then
 				return entities[i]
 			end
 		end

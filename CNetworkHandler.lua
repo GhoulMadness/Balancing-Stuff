@@ -476,6 +476,16 @@ if CNetwork then
 
 	)
 
+	CNetwork.SetNetworkHandler("Ghoul_UpgradeLeaderCommand",
+		function(name, _leaderID, _playerID, ...)
+			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
+				CLogger.Log("Ghoul_UpgradeLeaderCommand", name, _leaderID, _playerID, arg)
+				-- execute stuff
+				GUIAction_ActionUpgradeLeader(_leaderID, _playerID, unpack(arg))
+			end
+		end
+	)
+
 	CNetwork.SetNetworkHandler("BuyHero",
 		function(name, _playerID, _buildingID, _type)
 			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
@@ -489,27 +499,72 @@ if CNetwork then
 						end
 					end
 					if count == 3 then
+					    CLogger.Log("BuyHero", _playerID, _type, _buildingID)
 						SendEvent.BuyHero(_playerID, _buildingID, _type)
 					end
 				else
+					CLogger.Log("BuyHero", _playerID, _type, _buildingID)
 					SendEvent.BuyHero(_playerID, _buildingID, _type)
 				end
 			end
 		end
 	)
 
-	CNetwork.SetNetworkHandler("Ghoul_UpgradeLeaderCommand",
-		function(name, _leaderID, _playerID, ...)
-			if CNetwork.IsAllowedToManipulatePlayer(name, _playerID) then
-				CLogger.Log("Ghoul_UpgradeLeaderCommand", name, _leaderID, _playerID, arg)
-				-- execute stuff
-				GUIAction_ActionUpgradeLeader(_leaderID, _playerID, unpack(arg))
+	CNetwork.SetNetworkHandler("BuyCannon",
+		function(name, _buildingID, _ctype)
+			if Logic.IsEntityAlive(_buildingID) then
+				local playerID = Logic.EntityGetPlayer(_buildingID)
+				if CNetwork.IsAllowedToManipulatePlayer(name, playerID) then
+					if _ctype == Entities.PV_Catapult then
+						local count = 0
+						for i = 4,6 do
+							for k,v in pairs(BS.AchievementWhitelist[i]) do
+								if v == XNetwork.GameInformation_GetLogicPlayerUserName(playerID) then
+									count = count + 1
+								end
+							end
+						end
+						if count == 3 then
+							CLogger.Log("BuyCannon", playerID, _buildingID, _ctype)
+							SendEvent.BuyCannon(_buildingID, _ctype)
+						end
+					elseif _ctype == Entities.PV_Cannon5 then
+						local count = 0
+						for i = 7,9 do
+							for k,v in pairs(BS.AchievementWhitelist[i]) do
+								if v == XNetwork.GameInformation_GetLogicPlayerUserName(playerID) then
+									count = count + 1
+								end
+							end
+						end
+						if count == 3 then
+							CLogger.Log("BuyCannon", playerID, _buildingID, _ctype)
+							SendEvent.BuyCannon(_buildingID, _ctype)
+						end
+					elseif _ctype == Entities.PV_Cannon6 then
+						local count = 0
+						for i = 1,9 do
+							for k,v in pairs(BS.AchievementWhitelist[i]) do
+								if v == XNetwork.GameInformation_GetLogicPlayerUserName(playerID) then
+									count = count + 1
+								end
+							end
+						end
+						if count == 3 then
+							CLogger.Log("BuyCannon", playerID, _buildingID, _ctype)
+							SendEvent.BuyCannon(_buildingID, _ctype)
+						end
+					else
+						CLogger.Log("BuyCannon", playerID, _buildingID, _ctype)
+						SendEvent.BuyCannon(_buildingID, _ctype)
+					end
+				end
 			end
 		end
 	)
 
 	CommandCallback_PlaceBuilding = function(_name, _player, _upgradeCategory, _x, _y, _rotation, ...)
-		for i = 1,4 do
+		for i = 1,9 do
 			if _upgradeCategory == UpgradeCategories["VictoryStatue"..i] then
 				for k,v in pairs(BS.AchievementWhitelist[i]) do
 					if v == XNetwork.GameInformation_GetLogicPlayerUserName(_player) then
