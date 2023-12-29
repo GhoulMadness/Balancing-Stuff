@@ -4000,7 +4000,7 @@ end
 -- returns blocking type of a given position
 -- 0 = unblocked, 1 = hard blocked by entity or terrain type(red, no placement or movement allowed), 2 = bridge area, 3 = bridge area + hard blocked (2+1),
 -- 4 = soft blocked/terrain pos area (green, no placement allowed), 5 = within blocking area (buildings, pits, etc., 1+4 overlapping), 6 = bridge + terrain pos (2+4),
--- 8 = water during snow transition, 9 = hard blocked by slope
+-- 8 = unblocked slope (only below water surface), 9 = hard blocked by slope (8+1)
 ---@param _x number positionX
 ---@param _y number positionY
 ---@return integer blocking type
@@ -4548,7 +4548,7 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
             local _X, _Y = GetPosition(eID).X + offX, GetPosition(eID).Y + offY
             local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
 
-            if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
+            if sector > 0 and math.mod(blockingtype, 2) == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
                 local distcheck = true
                 for _, v in pairs(postable) do
                     if GetDistance(v, {X = _X, Y = _Y}) < ChestRandomPositions.MinDistance then
