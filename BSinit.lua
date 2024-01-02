@@ -533,6 +533,10 @@
 	BS.CheckForAchievements(GUI.GetPlayerID())
 	-- check for temporarily disabled technologies
 	BS.CheckForDateRestrictions(Framework.GetSystemTimeDateString())
+	-- vstatue7 not available on coop maps
+	if not gvEMSFlag then
+		XGUIEng.ShowWidget("Build_VictoryStatue7", 0)
+	end
 	--Simis Rotation Widget pushed to the left side, so it visually fits better in the upscaled GUI
 	XGUIEng.SetWidgetPosition("RotateBack",389, 4)
 	--give players their respective favorite color (if given/set in simis mp QoL)
