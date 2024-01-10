@@ -55,8 +55,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadNoWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\leave_silversmith.wav", 262)
-					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_LEAVE_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -70,8 +69,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadNoWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\mad_silversmith.wav", 262)
-					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_MAD_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -84,8 +82,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadNoWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\sad_silversmith.wav", 262)
-					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_SAD_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -103,8 +100,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\leave_silversmith.wav", 262)
-					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_LEAVE_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -119,8 +115,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\mad_silversmith.wav", 262)
-					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_MAD_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -134,8 +129,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadTaxesBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\sad_silversmith.wav", 262)
-					--StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooHighTaxes,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_SAD_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -153,8 +147,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\leave_silversmith.wav", 262)
-					----StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooMuchWork,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_LEAVE_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -169,8 +162,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\mad_silversmith.wav", 262)
-					----StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooMuchWork,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_MAD_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return
@@ -184,8 +176,7 @@ function ControlSiversmithGrievance()
 				gvSpeech.GrievanceSadTooMuchWorkBanGameTimeMS = GameTimeMS + gcFeedbackSettlerBanTimeMS
 
 				if EntityType == Entities.PU_Silversmith then
-					Stream.Start("Sounds\\VoicesMentor\\sad_silversmith.wav", 262)
-					----StartCountdown(math.ceil(Stream.GetDuration()),GrievanceReasonTooMuchWork,false)
+					Sound.PlayQueuedFeedbackSound(Sounds.VoicesMentor_SAD_Silversmith, 262)
 					gvSpeech.SecondsToWait = gcSpeechSecondsToWaitLimit
 				end
 				return

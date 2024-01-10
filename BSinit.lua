@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.751
+	BS.Version = 0.752
 
 	BS.SpectatorPID = 17
 
@@ -365,7 +365,6 @@
 			"MercenaryTower",
 			"Lightning",
 			"DZTradePunishment",
-			"SilversmithGrievance",
 			"Comforts",
 			"ChunkWrapper",
 			"AI",
@@ -398,6 +397,8 @@
 	end
 	--needed to use etype instead of ucat for some functions(e.g. recruiting)
 	CUtil.EnableEntityTypeAsUgradeCategory()
+	--as long as not removed own change again, use this instead
+	CUtil.DisableHeightFix()
 	--load special gfx
 	BS.GfxInit()
 	--disables the creation of fow (needed for minimap)

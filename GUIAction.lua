@@ -263,7 +263,7 @@ function GUIAction_LighthouseHireTroops()
 			gvLighthouse.PrepareSpawn(pID,eID)
 		end
 	else
-		Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)
+		Sound.PlayFeedbackSound(Sounds.VoicesMentor_INFO_NotEnough,110)
 	end
 end
 function GUIAction_MercenaryTower(_ucat)
@@ -771,13 +771,13 @@ function GUIAction_UpgradeLeader(_LeaderID)
 		--currently upgrading
 		if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) ~= Logic.GetTotalUpgradeTimeForBuilding(BarracksID) then
 			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfUpgrade"))
-			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_04.wav",130)
+			Sound.PlayFeedbackSound(Sounds.VoicesMentor_COMMENT_BadPlay_rnd_04, 130)
 			return
 		end
 		--currently researching
 		if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
 			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfResearch"))
-			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_03.wav",110)
+			Sound.PlayFeedbackSound(Sounds.VoicesMentor_COMMENT_BadPlay_rnd_03, 130)
 			return
 		end
 		etype = Logic.GetEntityType(_LeaderID)

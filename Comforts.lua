@@ -1201,19 +1201,26 @@ end
 ---@param _player integer playerID
 ---@param _position table positionTable
 ---@param _range number search range
+---@param _seccheck boolean? should sector be checked? (optional, true by default)
 ---@return integer entityID of nearest enemy
-function GetNearestEnemyInRange(_player, _position, _range)
+function GetNearestEnemyInRange(_player, _position, _range, _seccheck)
+	if _seccheck == nil then
+		_seccheck = true
+	end
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
 	if next(entities) then
-		local sector = CUtil.GetSector(round(_position.X/100), round(_position.Y/100))
-		local eID = Logic.GetEntityAtPosition(_position.X, _position.Y)
-		if eID > 0 then
-			sector = Logic.GetSector(eID)
+		local sector
+		if _seccheck then
+			sector = CUtil.GetSector(round(_position.X/100), round(_position.Y/100))
+			local eID = Logic.GetEntityAtPosition(_position.X, _position.Y)
+			if eID > 0 then
+				sector = Logic.GetSector(eID)
+			end
 		end
 		for i = 1, table.getn(entities) do
 			local id = entities[i]
-			if Logic.IsEntityAlive(id) and Logic.GetSector(id) == sector then
+			if Logic.IsEntityAlive(id) and not _seccheck or (_seccheck and Logic.GetSector(id) == sector) then
 				return entities[i]
 			end
 		end

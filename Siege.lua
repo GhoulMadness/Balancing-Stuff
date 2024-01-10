@@ -75,11 +75,11 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,"", "Siege_EntityCreated", 1)
 			end
 		end,
-		RamSounds = {Move = "engineer_mram", Select = "engineer_sram", Attack = {"engineer_ram1", "engineer_atks1", "engineer_atks2", "engineer_atks3", "engineer_atks4", "engineer_atkw1"}},
-		DropOilSounds = {"engineer_pouroil1", "engineer_pouroil2", "engineer_pouroil3", "engineer_pouroil4", "engineer_pouroil5", "engineer_pouroil6", "engineer_pouroil7", "engineer_pouroil8", "engineer_pouroil9"},
-		BurnedToDeathSounds = {"burn1", "burn2", "burn3", "burn4", "burn5", "burn6", "burn7", "burn8", "burn9", "burn10"},
-		DefeatSounds = {"wf_vict_01", "wf_vict_02", "wf_vict_03", "wf_vict_04"},
-		VictorySounds = {"general_victory1", "general_victory2", "general_victory3", "general_victory4", "general_victory5"}
+		RamSounds = {Move = "Engineer_MRam", Select = "Engineer_SRam", Attack = {"Engineer_Ram1", "Engineer_AtkS1", "Engineer_AtkS2", "Engineer_AtkS3", "Engineer_AtkS4", "Engineer_AtkW1"}},
+		DropOilSounds = {"Engineer_PourOil1", "Engineer_PourOil2", "Engineer_PourOil3", "Engineer_PourOil4", "Engineer_PourOil5", "Engineer_PourOil6", "Engineer_PourOil7", "Engineer_PourOil8", "Engineer_PourOil9"},
+		BurnedToDeathSounds = {"Burn1", "Burn2", "Burn3", "Burn4", "Burn5", "Burn6", "Burn7", "Burn8", "Burn9", "Burn10"},
+		DefeatSounds = {"Wf_Vict_01", "Wf_Vict_02", "Wf_Vict_03", "Wf_Vict_04"},
+		VictorySounds = {"General_Victory1", "General_Victory2", "General_Victory3", "General_Victory4", "General_Victory5"}
 		}
 
 Siege_TrapControl = function()
@@ -144,7 +144,7 @@ Siege_GateDestroyedControl = function()
 			posY + Siege.FireEffectOffsets[i].Y + GenerateRandomWithSteps(-50, 50, 10))
 		end
 		Logic.CreateEntity(Entities.XD_Wall_Gate_Ruin, posX, posY, degree, 0)
-		Stream.Start("Voice\\stronghold\\general_gatehouse.wav", 152)
+		Sound.PlayGUISound(Sounds.Stronghold_General_Gatehouse, 152)
 		return Logic.GetNumberOfEntitiesOfType(Entities.XD_OSO_Wall_Gate_Slim_Closed2) ~= 0
 	end
 end
@@ -161,7 +161,7 @@ Siege_EntityBurnedToDeathSounds = function()
 				local x, y = Camera.ScrollGetLookAt()
 				if GetDistance({X = x, Y = y}, GetPosition(target)) <= 5000 then
 					Siege_BurnedToDeathSound[GUI.GetPlayerID()] = true
-					Stream.Start("Sounds\\military\\".. Siege.BurnedToDeathSounds[1+XGUIEng.GetRandom(table.getn(Siege.BurnedToDeathSounds)-1)] ..".wav", 152)
+					Sound.PlayGUISound(Sounds["Military_".. Siege.BurnedToDeathSounds[1+XGUIEng.GetRandom(table.getn(Siege.BurnedToDeathSounds)-1)]], 152)
 					StartCountdown(6, function() Siege_BurnedToDeathSound[GUI.GetPlayerID()] = false end, false)
 				end
 			end
@@ -195,7 +195,7 @@ Siege_PitchFieldsControl = function()
 					local target = Logic.GetEntityAtPosition(posX2, posY2)
 					local projectile = CUtil.CreateProjectile(GGL_Effects.FXHero14_Arrow, posX, posY, posX2, posY2, 0, 0, target, id, Logic.EntityGetPlayer(id))
 					if not Siege_ArcherLightOilSound then
-						Stream.Start("Voice\\stronghold\\Arch_Light_Pitch1.wav", 152)
+						Sound.PlayGUISound(Sounds.Stronghold_Arch_Light_Pitch1, 152)
 						Siege_ArcherLightOilSound = true
 						StartCountdown(5, function() Siege_ArcherLightOilSound = false end, false)
 					end
@@ -243,7 +243,7 @@ Siege_PitchBurnerControl = function(_id)
 	if not Siege.PitchBurnerVatEmpty[_id] then
 		local player = Logic.EntityGetPlayer(_id)
 		local pos = GetPosition(_id)
-		local eID = GetNearestEnemyInRange(player, pos, Siege.PitchBurnerRange)
+		local eID = GetNearestEnemyInRange(player, pos, Siege.PitchBurnerRange, false)
 		if eID then
 			local num, IDs = GetPlayerEntitiesByCatInRange(player, {EntityCategories.Leader, EntityCategories.Cannon}, pos, Siege.PitchBurnerRange)
 			if num >= Siege.PitchBurnerEnemyTreshold then
@@ -258,7 +258,7 @@ Siege_PitchBurnerControl = function(_id)
 				--Logic.CreateEffect(GGL_Effects.FXDropOil, clump.X, clump.Y)
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerApplyDamage", 1, {}, {_id, clump.X, clump.Y})
 				if not Siege_PitchBurnerDropOilSound then
-					Stream.Start("Voice\\stronghold\\" .. Siege.DropOilSounds[1+XGUIEng.GetRandom(table.getn(Siege.DropOilSounds)-1)] .. ".wav", 152)
+					Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.DropOilSounds[1+XGUIEng.GetRandom(table.getn(Siege.DropOilSounds)-1)]], 152)
 					Siege_PitchBurnerDropOilSound = true
 					StartCountdown(5, function() Siege_PitchBurnerDropOilSound = false end, false)
 				end
@@ -300,20 +300,20 @@ function Victory()
 	if Logic.PlayerGetGameState(gvMission.PlayerID) == 1 then
 		Logic.PlayerSetGameStateToWon(gvMission.PlayerID)
     end
-	Stream.Start("Voice\\stronghold\\" .. Siege.VictorySounds[1+XGUIEng.GetRandom(table.getn(Siege.VictorySounds)-1)] .. ".wav", 152)
+	Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.VictorySounds[1+XGUIEng.GetRandom(table.getn(Siege.VictorySounds)-1)]], 152)
 end
 function Defeat()
 	if Logic.PlayerGetGameState(gvMission.PlayerID) == 1 then
 		Logic.PlayerSetGameStateToLost(gvMission.PlayerID)
 	end
 	Trigger.DisableTriggerSystem(1)
-	Stream.Start("Voice\\stronghold\\" .. Siege.DefeatSounds[1+XGUIEng.GetRandom(table.getn(Siege.DefeatSounds)-1)] .. ".wav", 152)
+	Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.DefeatSounds[1+XGUIEng.GetRandom(table.getn(Siege.DefeatSounds)-1)]], 152)
 end
 GUIAction_ToggleMenuOrig = GUIAction_ToggleMenu
 function GUIAction_ToggleMenu(_Menu, _Status)
 
 	if _Menu == "MainMenuBoxQuitWindow" or _Menu == "MainMenuBoxQuitAppWindow" then
-		Stream.Start("Voice\\stronghold\\general_quitgame.wav", 152)
+		Sound.PlayGUISound(Sounds.Stronghold_General_QuitGame, 152)
 	end
 	GUIAction_ToggleMenuOrig(_Menu, _Status)
 

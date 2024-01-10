@@ -539,29 +539,12 @@ function SpezEntityPlaced()
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "DomePlaced", 1,{},{pos[1],pos[2]})
 	end
 
-	if entityType == Entities.PU_Silversmith then
-		--wenn neue Sounds vorhanden, wird das bereits über xml geregelt
-		if Sounds.VoicesMentor_JOIN_Silversmith ~= nil then
-			return
-		end
-
-		if Logic.GetNumberOfEntitiesOfTypeOfPlayer(playerID, entityType) == 1 then
-			if playerID == GUI.GetPlayerID() then
-				Sound.PlayFeedbackSound(0, 0)
-				GUI.SetFeedbackSoundOutputState(0)
-				Music.SetVolumeAdjustment(Music.GetVolumeAdjustment() * 0.5)
-				Stream.Start("Sounds\\VoicesMentor\\join_silversmith.wav", 292)
-				StartCountdown(math.ceil(Stream.GetDuration()), Unmuting, false)
-			end
-		end
-
-	end
-
 	if entityType == Entities.PB_CoalmakersHut1 then
 		gvCoal.Coalmaker.WoodBurned[entityID] = 0
 		gvCoal.Coalmaker.CoalEarned[entityID] = 0
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmaker_Destroyed", 1,{},{entityID})
 	end
+
 	if entityType == Entities.PB_CoalMine1 or entityType == Entities.PB_CoalMine2 then
 		gvCoal.Mine.AmountMined[entityID] = 0
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmine_Destroyed", 1,{},{entityID})

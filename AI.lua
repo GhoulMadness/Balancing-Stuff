@@ -747,6 +747,7 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 
 			if MilitaryBuildingID ~= 0 then
 				if Logic.IsConstructionComplete(MilitaryBuildingID) == 1 then
+					--Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger", 1, {}, {_id, MilitaryBuildingID})
 					if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id)) then
 						Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
 						return true
@@ -754,6 +755,27 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 				end
 			end
 		end
+	end
+end
+
+RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger = function(_id, _barrackID)
+
+	local entityID = Event.GetEntityID()
+
+	if entityID == _id then
+		if Logic.IsEntityAlive(_barrackID) then
+			local attach = CEntity.GetAttachedEntities(_barrackID)[42]
+			if (attach and next(attach)) then
+				table.foreach(attach, function(_key, _value)
+					if Logic.IsLeader(_value) == 0 then
+						if not CEntity.GetAttachedEntities(_value)[31] then
+							Logic.DestroyEntity(_value)
+						end
+					end
+				end)
+			end
+		end
+		return true
 	end
 end
 

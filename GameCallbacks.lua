@@ -367,7 +367,7 @@ function GameCallback_GUI_SelectionChanged()
 		if EntityType == Entities.PV_Ram then
 			if not RamSelectionSoundActive and not RamMoveSoundActive and not RamAttackSoundActive then
 				RamSelectionSoundActive = true
-				Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Select .. ".wav", 152)
+				Sound.PlayFeedbackSound(Sounds["Stronghold_" .. Siege.RamSounds.Select], 152)
 				StartCountdown(3, function() RamSelectionSoundActive = nil end, false)
 			end
 		end
@@ -501,38 +501,6 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 
 	local playerID = Logic.EntityGetPlayer(_extractor)
 	local work = Logic.GetSettlersWorkBuilding(_extractor)
-	local resremain = Logic.GetResourceAmountBelowMine(work)
-	--respective values "mine_running_low" sound is played
-	local criticaltresholdsilver = 400
-	local criticaltresholdgold = 2500
-
-	-- play sound only, when new sound isn't implemented in game already
-	if Sounds.VoicesMentor_JOIN_Silversmith == nil then
-		if _type == ResourceType.SilverRaw then
-			if resremain <= criticaltresholdsilver and resremain > criticaltresholdsilver - _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowsilver.wav", 292)
-				end
-			end
-			if resremain <= _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 292)
-				end
-			end
-
-		elseif _type == ResourceType.GoldRaw then
-			if resremain <= criticaltresholdgold and resremain > criticaltresholdgold - _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowgold.wav", 292)
-				end
-			end
-			if resremain <= _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptygold.wav", 292)
-				end
-			end
-		end
-	end
 
 	if Logic.GetTechnologyState(playerID, Technologies.T_PickAxe) == 4 then
 		if _e ~= nil then
@@ -1103,13 +1071,13 @@ GameCallback_UnknownTask = function(_id)
 			local task = Logic.GetCurrentTaskList(_id)
 			if task == "TL_RAM_DRIVE" then
 				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
-					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Move .. ".wav", 152)
+					Sound.PlayFeedbackSound(Sounds["Stronghold_" .. Siege.RamSounds.Move], 152)
 					RamMoveSoundActive = true
 					StartCountdown(5, function() RamMoveSoundActive = false end, false)
 				end
 			elseif task == "TL_BATTLE_RAM" then
 				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
-					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)] .. ".wav", 152)
+					Sound.PlayFeedbackSound(Sounds["Stronghold_" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)]], 152)
 					RamMoveSoundActive = true
 					StartCountdown(10, function() RamMoveSoundActive = false end, false)
 				end
