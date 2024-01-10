@@ -961,5 +961,15 @@ Rüstungswert: 3 -> 2
 Leichter Scharfschütze Balancing:
 Schaden: 17 -> 21
 
+--- Version 0.752
+
+Sämtliche neue Sounds werden nun beim Map-Initialisieren dem Sound-Table hinzugefügt. 
+Neu hinzugefügte Feedback-Sounds können sich dadurch nicht mehr mit bestehenden überlagern.
+
+Kimichuras Fix des Höhenoffsets von Projektilen in Bezug auf Brücken überlagerte sich mit dem in der Version 0.751 hinzugefügten eigenen Fix, wodurch die Projektile doppelt in der Höhe korrigiert wurden.
+Daher wird Kimichuras Fix in BS vorerst deaktiviert. Langfristig ist jedoch geplant, den eigenen Fix wieder zu entfernen und Kimichuras Fix zu verwenden.
+
+
+
 
 
