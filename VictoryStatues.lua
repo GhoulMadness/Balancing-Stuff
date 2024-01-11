@@ -137,14 +137,12 @@ gvVStatue7.VictoryTimer = function(_player)
 	table.insert(allies, _player)
 	for i = 1, table.getn(enemies) do
 		Logic.PlayerSetGameStateToLost(enemies[i])
-		Defeat()
 	end
 	for i = 1, table.getn(allies) do
 		Logic.PlayerSetGameStateToWon(allies[i])
-		Victory()
 	end
 end
-VStatue7_Placed = function(_player, _x, _y)
+gvVStatue7.Placed = function(_player, _x, _y)
 	GUI.ScriptSignal(_x, _y, 1)
 	GUI.CreateMinimapPulse(_x, _y, 1)
 
@@ -235,7 +233,7 @@ function OnVStatuesCreated()
 
 		elseif entityType == Entities.PB_VictoryStatue7 then
 			gvVStatue7.Amount[playerID] = gvVStatue7.Amount[playerID] + 1
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "VStatue7_Placed", 1,{},{playerID, pos.X, pos.Y})
+			gvVStatue7.Placed(playerID, pos.X, pos.Y)
 
 		elseif entityType == Entities.PB_VictoryStatue8 then
 			table.insert(gvVStatue8.PositionTable,pos)

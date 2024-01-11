@@ -183,7 +183,7 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "VStatue6_ApplyDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
 
 	elseif eType == Entities.PB_VictoryStatue7 then
-		gvVStatue7.Countdown[_PlayerID] = StartCountdown(10*60, VStatue7.VictoryTimer, true, "VStatue7_Victory_".. _PlayerID, _PlayerID)
+		gvVStatue7.Countdown[_PlayerID] = StartCountdown(10*60, gvVStatue7.VictoryTimer, true, "VStatue7_Victory_".. _PlayerID, _PlayerID)
 
 	elseif eType == Entities.PB_VictoryStatue8 then
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "VStatue8_CalculateDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
