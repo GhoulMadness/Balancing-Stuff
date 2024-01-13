@@ -1220,7 +1220,7 @@ function GetNearestEnemyInRange(_player, _position, _range, _seccheck)
 		end
 		for i = 1, table.getn(entities) do
 			local id = entities[i]
-			if Logic.IsEntityAlive(id) and not _seccheck or (_seccheck and Logic.GetSector(id) == sector) then
+			if Logic.IsEntityAlive(id) and (not _seccheck or (_seccheck and Logic.GetSector(id) == sector)) then
 				return entities[i]
 			end
 		end
