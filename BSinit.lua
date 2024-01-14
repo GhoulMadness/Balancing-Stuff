@@ -1,6 +1,6 @@
 	BS = BS or {}
 
-	BS.Version = 0.752
+	BS.Version = 0.753
 
 	BS.SpectatorPID = 17
 
@@ -295,7 +295,8 @@
 								[7] = {"Izzo",
 										"a8wh4t"},
 								[8] = {},
-								[9] = {}
+								[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
+										"Novator12", "Novator12Slave"}
 							}
 	function BS.CheckForAchievements(_pID)
 
@@ -390,15 +391,12 @@
 			"WCutter",
 			"Forester",
 			"Coal",
-			"Cannon5",
-			"ProjectileHeight"
+			"Cannon5"
 		};
 		table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 	end
 	--needed to use etype instead of ucat for some functions(e.g. recruiting)
 	CUtil.EnableEntityTypeAsUgradeCategory()
-	--as long as not removed own change again, use this instead
-	CUtil.DisableHeightFix()
 	--load special gfx
 	BS.GfxInit()
 	--disables the creation of fow (needed for minimap)
