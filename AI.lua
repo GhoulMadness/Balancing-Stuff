@@ -49,6 +49,30 @@ ReinitChunkData = function(_playerId)
 	AI_AddEnemiesToChunkData(_playerId)
 end
 
+RemoveCurrentTargetData = function(_playerID)
+	if ArmyTable and ArmyTable[_playerID] then
+		for k, v in pairs(ArmyTable[_playerID]) do
+			for k2, v2 in pairs(v) do
+				if type(k2) == "number" then
+					v2.currenttarget = nil
+				end
+			end
+		end
+	end
+	if MapEditor_Armies and MapEditor_Armies[_playerID] then
+		for k, v in pairs(MapEditor_Armies[_playerID].defensiveArmies) do
+			if type(k) == "number" then
+				v.currenttarget = nil
+			end
+		end
+		for k, v in pairs(MapEditor_Armies[_playerID].offensiveArmies) do
+			if type(k) == "number" then
+				v.currenttarget = nil
+			end
+		end
+	end
+end
+
 -- creates spawn army (just the initialization, no troops)
 ---@param _army table army table (.player: army player ID, .id: army ID (0 - n), .strength: army max number of troops, .position: army position, .rodeLength: army max attack range)
 SetupArmy = function(_army)
@@ -916,6 +940,7 @@ function OnAIDiplomacyChanged(_playerID)
 
 	if p == _playerID or p2 == _playerID then
 		ReinitChunkData(_playerID)
+		RemoveCurrentTargetData(_playerID)
 	end
 end
 function AITower_RedirectTarget()
