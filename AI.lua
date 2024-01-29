@@ -74,7 +74,9 @@ RemoveCurrentTargetData = function(_playerID)
 end
 
 -- creates spawn army (just the initialization, no troops)
----@param _army table army table (.player: army player ID, .id: army ID (0 - n), .strength: army max number of troops, .position: army position, .rodeLength: army max attack range)
+-- (.player: army player ID, .id: army ID (0 - n), .strength: army max number of troops, .position: army position,
+-- .rodeLength: army max attack range .enemySearchPosition: search enemies near this position instead of army position (optional))
+---@param _army table army table
 SetupArmy = function(_army)
 
 	if not ArmyTable then
@@ -413,7 +415,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 	end
 	pos = GetPosition(_id)
 	newtarget = CheckForBetterTarget(_id, tabname[_id] and tabname[_id].currenttarget, nil)
-				or GetNearestEnemyInRange(_player, pos, range - GetDistance(pos, tabname.position))
+				or GetNearestEnemyInRange(_player, pos, range - GetDistance(pos, tabname.enemySearchPosition or tabname.position))
 				or GetNearestTarget(_player, _id)
 
 	tabname[_id] = tabname[_id] or {}
@@ -443,7 +445,8 @@ end
 ---@param _peaceTime integer time in seconds army will be more passive and has a smaller action range
 ---@param _multiTrain boolean? allows or forbids the player to recruit leader in multiple military buildings of the same type simultanously (optional, default: true)
 ---@param _defenseRange number? defines maximum attack range during army peace time and used for defense armies (optional, default: max range * 2/3)
-MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime, _multiTrain, _defenseRange)
+---@param _attackPosition table? army will start searching enemies near this position instead of army position (optional)
+MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime, _multiTrain, _defenseRange, _attackPosition)
 
 	-- Valid
 	if 	_strength == 0 or _strength > 3 or
@@ -547,6 +550,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 												},
 								offensiveArmies = {strength	= _strength * 15,
 													position = position,
+													enemySearchPosition = _attackPosition,
 													rodeLength = _range,
 													baseDefenseRange = _defenseRange or (_range*2)/3,
 													AttackAllowed =	false,
