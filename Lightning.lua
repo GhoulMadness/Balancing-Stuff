@@ -185,44 +185,53 @@ end
 function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 
     for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_posX, _posY, _range)) do
-		-- don't touch npcs
-		if Logic.GetEntityName(eID) ~= nil and not IsPlayerHuman(Logic.EntityGetPlayer(eID)) then
-		end
 		-- damage for serfs
 		if Logic.IsSerf(eID) == 1 then
-			Logic.HurtEntity(eID, _damage)
+			-- don't touch npcs
+			if Logic.GetEntityName(eID) ~= nil and not IsPlayerHuman(Logic.EntityGetPlayer(eID)) then
+			else
+				Logic.HurtEntity(eID, _damage)
+			end
 		-- damage for heroes and cannons
 		elseif Logic.IsHero(eID) == 1 or Logic.IsEntityInCategory(eID, EntityCategories.Cannon) == 1 then
 			if Logic.IsEntityAlive(eID) then
-				local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.8)
-				if ExtendedStatistics then
-					if damage >= Logic.GetEntityHealth(eID) then
-						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+				-- don't touch npcs
+				if Logic.GetEntityName(eID) ~= nil and not IsPlayerHuman(Logic.EntityGetPlayer(eID)) then
+				else
+					local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.8)
+					if ExtendedStatistics then
+						if damage >= Logic.GetEntityHealth(eID) then
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+						end
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + damage
 					end
-					ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + damage
+					Logic.HurtEntity(eID, damage)
 				end
-				Logic.HurtEntity(eID, damage)
 			end
 		-- damage for other leaders
 		elseif Logic.IsLeader(eID) == 1 and Logic.IsHero(eID) == 0 and Logic.IsSettler(eID) == 1 then
-			local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
-			if Soldiers[1] > 0 then
-				for i = 2, math.floor(Soldiers[1]/2) do
-					if ExtendedStatistics then
-						ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning + 1
-						ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning + Logic.GetEntityHealth(Soldiers[i])
-					end
-					ChangeHealthOfEntity(Soldiers[i],0)
-				end
+			-- don't touch npcs
+			if Logic.GetEntityName(eID) ~= nil and not IsPlayerHuman(Logic.EntityGetPlayer(eID)) then
 			else
-				local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.6)
-				if ExtendedStatistics then
-					if damage >= Logic.GetEntityHealth(eID) then
-						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+				local Soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
+				if Soldiers[1] > 0 then
+					for i = 2, math.floor(Soldiers[1]/2) do
+						if ExtendedStatistics then
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].UnitsLostThroughLightning + 1
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(Soldiers[i])].DamageTakenByLightning + Logic.GetEntityHealth(Soldiers[i])
+						end
+						ChangeHealthOfEntity(Soldiers[i],0)
 					end
-					ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + damage
+				else
+					local damage = _damage + math.floor(Logic.GetEntityMaxHealth(eID) * 0.6)
+					if ExtendedStatistics then
+						if damage >= Logic.GetEntityHealth(eID) then
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+						end
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + damage
+					end
+					Logic.HurtEntity(eID, damage)
 				end
-				Logic.HurtEntity(eID, damage)
 			end
 		-- damage for buildings
 		elseif Logic.IsBuilding(eID) == 1 then
@@ -250,13 +259,17 @@ function gvLightning.Damage(_posX,_posY,_range,_damage,_buildingdamage)
 		-- damage everything else (e.g. soldiers)
 		else
 			if Logic.IsEntityAlive(eID) then
-				if ExtendedStatistics then
-					if _damage >= Logic.GetEntityHealth(eID) then
-						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+				-- don't touch npcs
+				if Logic.GetEntityName(eID) ~= nil and not IsPlayerHuman(Logic.EntityGetPlayer(eID)) or Logic.IsWorker(eID) == 1 then
+				else
+					if ExtendedStatistics then
+						if _damage >= Logic.GetEntityHealth(eID) then
+							ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].UnitsLostThroughLightning + 1
+						end
+						ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + _damage
 					end
-					ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning = ExtendedStatistics.Players[Logic.EntityGetPlayer(eID)].DamageTakenByLightning + _damage
+					Logic.HurtEntity(eID, _damage)
 				end
-				Logic.HurtEntity(eID, _damage)
 			end
 		end
 		-- signal for player + limitation sound once per sec
