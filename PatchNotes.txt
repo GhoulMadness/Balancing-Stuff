@@ -973,6 +973,13 @@ Daher wird Kimichuras Fix in BS vorerst deaktiviert. Langfristig ist jedoch gepl
 
 Die Änderung aus Version 0.751 bezüglich der Projektile und alle mitbetroffenen Komponenten wurden wieder entfernt.
 
+--- Version 0.754
+
+Armeen können nun mit einer von der Armee-Position abweichenden Position konfiguriert werden, um die bevorzugt Gegner gesucht werden sollen.
+
+Gebäude, auf die Einheiten gestellt werden können, beeinflussen sich gegenseitig in der Höhe, wenn diese über verschiedene Höhen und eine gewisse Nähe verfügen. 
+Um dieser Problematik entgegenzuwirken, werden nun die Höhen auf entsprechenden Maps zu Spielbeginn neu berechnet und gesetzt.
+
 
 
 

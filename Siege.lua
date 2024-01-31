@@ -64,6 +64,7 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 		Init = function()
 			CMod.PushArchive("Balancing_Stuff_in_Dev\\music.bba")
 			Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\localmusic_siege.lua")
+			Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\recalculate_bridge_height.lua")
 			if not Siege.PitchBurners then
 				Siege.PitchBurnerInit()
 			end
@@ -137,6 +138,19 @@ Siege_GateDestroyedControl = function()
 
 	if entityType == Entities.XD_OSO_Wall_Gate_Slim_Closed2 then
 		local posX, posY = Logic.GetEntityPosition(entityID)
+		local areaX, areaY = {}, {}
+		areaX[1], areaY[1], areaX[2], areaY[2] = GetBuildingTypeBridgeArea(entityType)
+		table.sort(areaX, function(p1, p2)
+			return p1 < p2
+		end)
+		table.sort(areaY, function(p1, p2)
+			return p1 < p2
+		end)
+		for x = posX + areaX[1], posX + areaX[2], 100 do
+			for y = posY + areaY[1], posY + areaY[2], 100 do
+				CUtil.ResetTerrainEntityHeight(round(x/100), round(y/100))
+			end
+		end
 		local degree = Logic.GetEntityOrientation(entityID)
 		for i = 1, table.getn(Siege.FireEffectOffsets) do
 			Logic.CreateEffect(GGL_Effects.FXCrushBuildingLarge,

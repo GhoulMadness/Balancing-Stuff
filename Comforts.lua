@@ -2600,9 +2600,18 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 	if BS.MemValues.BuildingTypeTerrainPosArea[_entityType] then
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 37
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 37
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 29
+		end
 		BS.MemValues.BuildingTypeTerrainPosArea[_entityType] = {}
 		for i = 1,4 do
-			table.insert(BS.MemValues.BuildingTypeTerrainPosArea[_entityType], GetEntityTypePointer(_entityType)[37 + i]:GetFloat())
+			table.insert(BS.MemValues.BuildingTypeTerrainPosArea[_entityType], pointer[behpos + i]:GetFloat())
 		end
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	end
@@ -2621,6 +2630,41 @@ function GetEntityTypeNumBlockedPoints(_entityType)
 	else
 		BS.MemValues.EntityTypeNumBlockedPoints[_entityType] = GetEntityTypePointer(_entityType)[22]:GetInt()
 		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
+	end
+end
+
+-- gets building type bridge area properties, returns Blocked1X, Blocked1Y, Blocked2X, Blocked2Y
+---@param _entityType integer entityType
+---@return table blocking area {X1, Y1, X2, Y2}
+function GetBuildingTypeBridgeArea(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeBridgeArea then
+		BS.MemValues.BuildingTypeBridgeArea = {}
+	end
+	if BS.MemValues.BuildingTypeBridgeArea[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeBridgeArea[_entityType])
+	else
+		BS.MemValues.BuildingTypeBridgeArea[_entityType] = {}
+		for i = 1,4 do
+			table.insert(BS.MemValues.BuildingTypeBridgeArea[_entityType], GetEntityTypePointer(_entityType)[126][i-1]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeBridgeArea[_entityType])
+	end
+end
+
+-- gets building type bridge height
+---@param _entityType integer entityType
+---@return integer height
+function GetBuildingTypeBridgeHeight(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeBridgeHeight then
+		BS.MemValues.BuildingTypeBridgeHeight = {}
+	end
+	if BS.MemValues.BuildingTypeBridgeHeight[_entityType] then
+		return BS.MemValues.BuildingTypeBridgeHeight[_entityType]
+	else
+		BS.MemValues.BuildingTypeBridgeHeight[_entityType] = GetEntityTypePointer(_entityType)[129]:GetInt()
+		return BS.MemValues.BuildingTypeBridgeHeight[_entityType]
 	end
 end
 
