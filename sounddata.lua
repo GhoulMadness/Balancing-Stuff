@@ -60,7 +60,7 @@ local SoundData = {["Military"] = {	"Burn1",
 										"Wf_Vict_04"}
 					}
 for k, v in pairs(SoundData) do
-	table.foreach(v, function(_, _value)
+	table.foreachi(v, function(_, _value)
 		CUtil.AddSound(k .. "\\" .. _value)
 	end)
 end

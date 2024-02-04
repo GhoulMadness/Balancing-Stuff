@@ -397,7 +397,7 @@ do
 		"Coal",
 		"Cannon5"
 	};
-	table.foreach(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
+	table.foreachi(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 end
 --needed to use etype instead of ucat for some functions(e.g. recruiting)
 CUtil.EnableEntityTypeAsUgradeCategory()

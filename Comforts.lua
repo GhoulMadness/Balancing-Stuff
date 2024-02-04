@@ -3627,30 +3627,17 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		return math.max(math.min(_XY + (20 * math.random(-60, 60)), size - 1), 1)
 	end
 	local steps = 0
-	if not _army then
-		if not ArmyHomespots[_player].recruited then
-			ArmyHomespots[_player].recruited = {}
+	local name = _army or "recruited"
+	if not ArmyHomespots[_player][name] then
+		ArmyHomespots[_player][name] = {}
+	end
+	while (table.getn(ArmyHomespots[_player][name]) < 20 and steps < 1000) do
+		local X, Y = calcP(_pos.X), calcP(_pos.Y)
+		local nsec = CUtil.GetSector(X/100, Y/100)
+		if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player][name], {X = X, Y = Y}) == 0 then
+			table.insert(ArmyHomespots[_player][name], {X = X, Y = Y})
 		end
-		while (table.getn(ArmyHomespots[_player].recruited) < 20 and steps < 1000) do
-			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			local nsec = CUtil.GetSector(X/100, Y/100)
-			if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then
-				table.insert(ArmyHomespots[_player].recruited, {X = X, Y = Y})
-			end
-			steps = steps + 1
-		end
-	else
-		if not ArmyHomespots[_player][_army] then
-			ArmyHomespots[_player][_army] = {}
-		end
-		while (table.getn(ArmyHomespots[_player][_army]) < 20 and steps < 1000) do
-			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			local nsec = CUtil.GetSector(X/100, Y/100)
-			if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then
-				table.insert(ArmyHomespots[_player][_army], {X = X, Y = Y})
-			end
-			steps = steps + 1
-		end
+		steps = steps + 1
 	end
 end
 
@@ -3716,7 +3703,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local damagerange = GetEntityTypeDamageRange(etype)
 	local calcT = {}
 	if IsMelee then
-		bonusRange = 800
+		bonusRange = bonusRange * 2
 	end
 	if gvAntiBuildingCannonsRange[etype] then
 		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])

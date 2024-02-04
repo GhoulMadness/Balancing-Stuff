@@ -44,8 +44,8 @@ ReinitChunkData = function(_playerId)
 	end
 	for i = 1, table.getn(AIEnemiesAC[_playerId]) do
 		AIEnemiesAC[_playerId][i] = {}
-		AIEnemiesAC[_playerId].total = 0
 	end
+	AIEnemiesAC[_playerId].total = 0
 	AI_AddEnemiesToChunkData(_playerId)
 end
 
@@ -794,7 +794,7 @@ RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger = function(_id, _barrackID
 		if Logic.IsEntityAlive(_barrackID) then
 			local attach = CEntity.GetAttachedEntities(_barrackID)[42]
 			if (attach and next(attach)) then
-				table.foreach(attach, function(_key, _value)
+				table.foreachi(attach, function(_key, _value)
 					if Logic.IsLeader(_value) == 0 then
 						if not CEntity.GetAttachedEntities(_value)[31] then
 							Logic.DestroyEntity(_value)
