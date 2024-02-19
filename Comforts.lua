@@ -1363,7 +1363,7 @@ IsDead = function(_name)
 				return true
 			end
 		else
-			return AI.Army_GetNumberOfTroops(_name.player, _name.id) == 0
+			return AI.Army_GetNumberOfTroops(_name.player, _name.id) <= 0
 		end
 	end
 
@@ -1987,7 +1987,7 @@ end
 ---@return boolean
 function IsPositionUnblocked(_x, _y)
 	local height, blockingtype, sector, terrType = CUtil.GetTerrainInfo(_x, _y)
-	return (sector ~= 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_x/100, _y/100)))
+	return (sector ~= 0 and math.mod(blockingtype, 2) == 0 and (height > CUtil.GetWaterHeight(round(_x/100), round(_y/100))))
 end
 
 -- sets the health of an entity to a given percentage
@@ -3603,7 +3603,7 @@ end
 -- creates randomly generated gathering spots for leaders of a certain army
 ---@param _player integer playerID
 ---@param _pos table positionTable
----@param _army integer? armyID (only needed for spawn armies; nil for recruiting armies)
+---@param _army integer? armyID + 1 (only needed for spawn armies; nil for recruiting armies)
 EvaluateArmyHomespots = function(_player, _pos, _army)
 	assert(type(_pos) == "table" and _pos.X and _pos.Y, "pos param needs to be a table filled with X and Y pos")
 	if not ArmyHomespots then
@@ -3622,22 +3622,47 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	if sec == 0 then
 		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 5000, 100)
 	end
+	local size = Logic.WorldGetSize()
+	local steps = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSteps) or 20
+	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 60
 	local calcP = function(_XY)
-		local size = Logic.WorldGetSize()
-		return math.max(math.min(_XY + (20 * math.random(-60, 60)), size - 1), 1)
+		return math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1)
 	end
-	local steps = 0
+	local stepcount = 0
+	local spots = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].MaxHomespots) or 20
 	local name = _army or "recruited"
 	if not ArmyHomespots[_player][name] then
 		ArmyHomespots[_player][name] = {}
 	end
-	while (table.getn(ArmyHomespots[_player][name]) < 20 and steps < 1000) do
+	while (table.getn(ArmyHomespots[_player][name]) < spots and stepcount < 1000) do
 		local X, Y = calcP(_pos.X), calcP(_pos.Y)
 		local nsec = CUtil.GetSector(X/100, Y/100)
 		if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player][name], {X = X, Y = Y}) == 0 then
 			table.insert(ArmyHomespots[_player][name], {X = X, Y = Y})
 		end
-		steps = steps + 1
+		stepcount = stepcount + 1
+	end
+end
+
+-- checks whether all army homespots of a given player are unblocked or not
+-- returns true when there are no blocked homespots and false, table when there are blocked spots
+---@param _player integer playerID
+---@return boolean
+---@return table table filled with army id and homespot index
+function CheckArmyHomespotsBlocked(_player)
+	assert(ArmyTable and ArmyTable[_player] and ArmyHomespots and ArmyHomespots[_player], "player has no active armies")
+	local t = {}
+	for k, v in pairs(ArmyHomespots[_player]) do
+		for i = 1, table.getn(v) do
+			if not IsPositionUnblocked(v[i].X, v[i].Y) then
+				table.insert(t, {army = (type(k) == "number" and k-1) or k, index = i})
+			end
+		end
+	end
+	if not next(t) then
+		return false
+	else
+		return true, t
 	end
 end
 
@@ -4085,8 +4110,7 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
 
 				local d = (x_ - _posX)^2 + (y_ - _posY)^2
-				local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)
-				if sector > 0 and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
+				if IsPositionUnblocked(x_, y_) then
 
 					if not dmin or dmin > d then
 						dmin = d
@@ -4584,9 +4608,7 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
                 offX, offY = ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].X, ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].Y
             end
             local _X, _Y = GetPosition(eID).X + offX, GetPosition(eID).Y + offY
-            local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
-
-            if sector > 0 and math.mod(blockingtype, 2) == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
+            if IsPositionUnblocked(_X, _Y) then
                 local distcheck = true
                 for _, v in pairs(postable) do
                     if GetDistance(v, {X = _X, Y = _Y}) < ChestRandomPositions.MinDistance then

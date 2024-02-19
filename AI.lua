@@ -143,7 +143,7 @@ end
 -- creates troop for spawn army
 ---@param _army table army table
 ---@param _troop table troop description (.leaderType: leader entity type, [.maxNumberOfSoldiers: leader number of soldiers, .experiencePoints: leader experience (points not level))
----@param _pos table? troop spawn position (optional, default: army random homespot)
+---@param _pos table? troop spawn position (optional, default: random army homespot)
 EnlargeArmy = function(_army, _troop, _pos)
 
 	if not ArmyTable[_army.player][_army.id + 1].IDs then
@@ -223,7 +223,7 @@ Advance = function(_army)
 	local range = Logic.WorldGetSize()
 	local pos = _army.position
 
-	if enemyId == 0 or not IsValid(enemyId) or Logic.GetSector(enemyId) ~= CUtil.GetSector(pos.X/100, pos.Y/100) then
+	if enemyId == 0 or not IsValid(enemyId) or Logic.GetSector(enemyId) ~= CUtil.GetSector(round(pos.X/100), round(pos.Y/100)) then
 		enemyId = GetNearestEnemyInRange(_army.player, pos, range)
 	end
 	if enemyId then
@@ -231,12 +231,12 @@ Advance = function(_army)
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if Logic.GetSector(id) == Logic.GetSector(enemyId) or GetNearestEnemyInRange(_army.player, GetPosition(id), range) then
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					ManualControl_AttackTarget(_army.player, _army.id + 1, id)
+					ManualControl_AttackTarget(_army.player, _army.id + 1, id, nil, enemyId)
 				end
 				if ArmyTable[_army.player][_army.id + 1][id] then
 					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
 					or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
-						ManualControl_AttackTarget(_army.player, _army.id + 1 , id)
+						ManualControl_AttackTarget(_army.player, _army.id + 1 , id, nil, enemyId)
 					end
 				end
 			end

@@ -490,8 +490,6 @@ StartSimpleJob("IngameTimeJob")
 StartSimpleJob("BloodRushCheck")
 --initializing lightning
 StartSimpleJob("Lightning_Job")
---Control Siversmith Grievance
-StartSimpleJob("ControlSiversmithGrievance")
 --Trigger to get building ids for beauti anims
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
 --Trigger for AI target redirection
