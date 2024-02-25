@@ -5,7 +5,8 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 		FireEffectCasted = {},
 		TriggerIDs = {},
 		CreateTraps = function(_player, _x, _y, _range, _amount, _spacing)
-			local t = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, _x - _range, _x + _range, _y - _range, _y + _range, _spacing, "TrapHole")
+			local size = Logic.WorldGetSize()
+			local t = CreateEntitiesInRectangle(Entities.XD_TrapHole1, _amount, _player, math.max(_x - _range, 0), math.min(_x + _range, size), math.max(_y - _range, 0), math.min(_y + _range, size), _spacing, "TrapHole")
 			for i in t do
 				table.insert(Siege.TrapPositions, t[i])
 			end
@@ -17,7 +18,8 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			for i = 1, table.getn(Siege.AttackerIDs) do
 				Logic.SetDiplomacyState(Siege.AttackerIDs[i], Siege.PitchFieldDefaultPlayer, Diplomacy.Hostile)
 			end
-			local t = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, _x - _range, _x + _range, _y - _range, _y + _range, _length, 200, 800, "PitchField")
+			local size = Logic.WorldGetSize()
+			local t = CreateEntityTrailsInRectangle(Entities.XD_Pitch, _amount, Siege.PitchFieldDefaultPlayer, math.max(_x - _range, 0), math.min(_x + _range, size), math.max(_y - _range, 0), math.min(_y + _range, size), _length, 200, 800, "PitchField")
 			for i in t do
 				table.insert(Siege.PitchFieldPositions, t[i])
 			end
