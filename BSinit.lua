@@ -108,7 +108,8 @@ BS.MapList = {
 				["(4) emsbs winterzauber"] = true,
 				["(4) emsbs sparrowdale"] = true,
 				["(4) emsbs osterfieber"] = true,
-				["(4) emsbs rmg gezeiten"] = true
+				["(4) emsbs rmg gezeiten"] = true,
+				["(4) emsbs easterville"] = true
 				},
 			[5] = 	{
 				["(5) bs koop der grosse aufstand"] = true,
