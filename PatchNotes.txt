@@ -980,6 +980,12 @@ Armeen können nun mit einer von der Armee-Position abweichenden Position konfig
 Gebäude, auf die Einheiten gestellt werden können, beeinflussen sich gegenseitig in der Höhe, wenn diese über verschiedene Höhen und eine gewisse Nähe verfügen. 
 Um dieser Problematik entgegenzuwirken, werden nun die Höhen auf entsprechenden Maps zu Spielbeginn neu berechnet und gesetzt.
 
+--- Version 0.755
+
+Es wurde ein Fehler behoben, durch den der Spieler beim Abriss von Uhren Steine anstatt Holz erhielt.
+
+Vorbereitungen für das kommende Osterturnier
+
 
 
 
