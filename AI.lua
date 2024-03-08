@@ -382,6 +382,89 @@ SetupAITroopSpawnGenerator = function(_Name, _army)
 					{_army.player, _army.id})
 end
 
+AITroopSpawnGenerator_Condition = function(_Name, _player, _id)
+
+	local army = ArmyTable[_player][_id + 1]
+	-- Not enough troops
+	if Counter.Tick2(_Name,10) then
+
+		-- First spawn done
+		if army.firstSpawnDone == nil or army.firstSpawnDone == false then
+			return true
+		else
+
+			if not army.IDs or (table.getn(army.IDs) < army.strength and (army.noEnemy == nil or army.noEnemy == false or GetClosestEntity(army, army.noEnemyDistance) == 0)) then
+				return Counter.Tick2(_Name.."_Respawn", army.respawnTime/10)
+			end
+		end
+	end
+end
+
+AITroopSpawnGenerator_Action = function(_player, _id)
+
+	local army = ArmyTable[_player][_id + 1]
+	-- Any current spawn index? No? Create one
+	if army.spawnIndex == nil then
+		army.spawnIndex = 1
+	end
+
+	-- Is any generator building there and dead...destroy this generator
+	if army.spawnGenerator ~= nil and IsDead(army.spawnGenerator) then
+		army.generatorID = nil
+		return true
+	end
+
+	-- Get missing army count
+	local missingTroops = army.strength
+	if army.IDs then
+		 missingTroops = army.strength - (table.getn(army.IDs) or 0)
+	end
+
+	-- Is max spawn amount set
+	if army.firstSpawnDone ~= nil and army.maxSpawnAmount ~= nil then
+		-- Set to max
+		missingTroops = math.min(missingTroops, army.maxSpawnAmount)
+	end
+
+	-- Spawn missing army
+	local i
+	for i=1,missingTroops do
+
+		-- Any data there
+		if army.spawnTypes[army.spawnIndex] == nil then
+
+			-- End of queue reached, destroy job or restart
+			if army.endless ~= nil and army.endless then
+				-- restart
+				army.spawnIndex = 1
+
+			else
+
+				-- stop job
+				army.generatorID = nil
+				return true
+			end
+		end
+
+		-- Min number...if should not refresh, number is zero
+		local minNumber = army.spawnTypes[army.spawnIndex][2]
+		if army.refresh ~= nil and not army.refresh then
+			minNumber = 0
+		end
+
+		-- Enlarge army
+		local troopDescription = {leaderType = army.spawnTypes[army.spawnIndex][1], maxNumberOfSoldiers = army.spawnTypes[army.spawnIndex][2], minNumberOfSoldiers = minNumber}
+		EnlargeArmy(army, troopDescription, army.spawnPos)
+		-- Next index
+		army.spawnIndex = army.spawnIndex + 1
+
+	end
+
+	-- First spawn done
+	army.firstSpawnDone = true
+	return false
+
+end
 -- checks whether army troop generator is active or not (either recruitment army or spawn troops army)
 ---@param _army table army table
 ---@return boolean

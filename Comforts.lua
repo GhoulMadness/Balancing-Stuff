@@ -3612,7 +3612,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	if not ArmyHomespots[_player] then
 		ArmyHomespots[_player] = {}
 	end
-	_pos.X, _pos.Y = dekaround(_pos.X), round(_pos.Y)
+	_pos.X, _pos.Y = dekaround(_pos.X), dekaround(_pos.Y)
 	local sec, id = 0, Logic.GetEntityAtPosition(_pos.X, _pos.Y)
 	if id > 0 then
 		sec = Logic.GetSector(id)
