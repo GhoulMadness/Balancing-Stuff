@@ -1252,7 +1252,7 @@ function GetNearestEnemyInRangeAndCone(_player, _position, _centerAngle, _spread
 	table.sort(t, function(p1, p2)
 		return p1.dist < p2.dist
 	end)
-	return t[1].id
+	return (t[1] and t[1].id)
 end
 
 -- override so the OSI of the entity is shown again after resuming (workaround for ubi bug)
