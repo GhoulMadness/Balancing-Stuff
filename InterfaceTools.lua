@@ -120,12 +120,7 @@ function InterfaceTool_HasPlayerEnoughResources_Feedback(_Costs)
 	if 	_Costs[ResourceType.Silver] ~= nil and Silver < _Costs[ResourceType.Silver] then
 		Message = _Costs[ResourceType.Silver] - Silver .. " " .. XGUIEng.GetStringTableText("InGameMessages/GUI_NotEnoughSilver")
 		GUI.AddNote(Message)
-		--überprüfen, ob die neuen Sounds im Sounds Table vorhanden sind
-		if Sounds.VoicesMentor_LEAVE_Silversmith == nil then
-			Stream.Start("Sounds\\VoicesMentor\\INFO_notenoughsilver_rnd_0"..XGUIEng.GetRandom(1)+1 ..".wav", 262)
-		else
-			GUI.SendNotEnoughResourcesFeedbackEvent(ResourceType.Silver, _Costs[ResourceType.Silver] - Silver)
-		end
+		GUI.SendNotEnoughResourcesFeedbackEvent(ResourceType.Silver, _Costs[ResourceType.Silver] - Silver)
 	end
 
 	if _Costs[ResourceType.Iron] ~= nil and Iron < _Costs[ResourceType.Iron] then

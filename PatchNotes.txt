@@ -945,3 +945,48 @@ Es wurden mehrere Fehler auf Prüfungskarten behoben.
 
 Die Changelog.txt wurde auf den neuesten Stand gebracht.
 
+--- Version 0.751
+
+Es wurden Vorschaubilder für die Orgelkanone und die schwere Haubitze hinzugefügt. 
+Der Dank geht hierbei an totalwarANGEL, der diese bereitgestellt hat.
+
+Verschossene Projektile von Fernkämpfern, die sich auf Gebäuden erhöhter Position (wie z.B. Brücken) befinden, werden nun um den entsprechenden Höhenversatz korrigiert.
+Gleichermaßen wird die Höhe des Ziels korrigiert, wenn ein Fernkämpfer Projektile auf eine Einheit, die sich auf einer erhöhten Position befindet, verschießt.
+
+Bogenschützen-Bandit Balancing:
+Sichtreichweite: 2900 -> 2700
+Angriffsreichweite: 2900 -> 2700
+Rüstungswert: 3 -> 2
+
+Leichter Scharfschütze Balancing:
+Schaden: 17 -> 21
+
+--- Version 0.752
+
+Sämtliche neue Sounds werden nun beim Map-Initialisieren dem Sound-Table hinzugefügt. 
+Neu hinzugefügte Feedback-Sounds können sich dadurch nicht mehr mit bestehenden überlagern.
+
+Kimichuras Fix des Höhenoffsets von Projektilen in Bezug auf Brücken überlagerte sich mit dem in der Version 0.751 hinzugefügten eigenen Fix, wodurch die Projektile doppelt in der Höhe korrigiert wurden.
+Daher wird Kimichuras Fix in BS vorerst deaktiviert. Langfristig ist jedoch geplant, den eigenen Fix wieder zu entfernen und Kimichuras Fix zu verwenden.
+
+--- Version 0.753
+
+Die Änderung aus Version 0.751 bezüglich der Projektile und alle mitbetroffenen Komponenten wurden wieder entfernt.
+
+--- Version 0.754
+
+Armeen können nun mit einer von der Armee-Position abweichenden Position konfiguriert werden, um die bevorzugt Gegner gesucht werden sollen.
+
+Gebäude, auf die Einheiten gestellt werden können, beeinflussen sich gegenseitig in der Höhe, wenn diese über verschiedene Höhen und eine gewisse Nähe verfügen. 
+Um dieser Problematik entgegenzuwirken, werden nun die Höhen auf entsprechenden Maps zu Spielbeginn neu berechnet und gesetzt.
+
+--- Version 0.755
+
+Es wurde ein Fehler behoben, durch den der Spieler beim Abriss von Uhren Steine anstatt Holz erhielt.
+
+Vorbereitungen für das kommende Osterturnier
+
+
+
+
+

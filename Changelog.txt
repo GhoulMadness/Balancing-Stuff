@@ -1800,7 +1800,7 @@ Neuerungen im Balancing Stuff:
 
 			benötigt:			Kulteraustausch (Nebelvolk)
 
-			Besonderheiten:		Es können beliebig viele dieser Statuen errichtet werden, jedoch sinkt die Wirkung pro Statue weiter ab.
+			Besonderheiten:		Es können maximal fünf dieser Statuen errichtet werden, jedoch sinkt die Wirkung pro Statue weiter ab.
 								Nur verfügbar, wenn ein Sieg auf der entsprechenden Koop-Karte auf Spielmodus 'Herausforderung' errungen wurde.
 								(weiter unten ausführlicher beschrieben)
 
@@ -1809,8 +1809,8 @@ Neuerungen im Balancing Stuff:
 			Erinnert den Feind an all seine Verluste.
 			Setzt die Motivation aller Feinde auf 275%.
 
-			Kosten:	Taler:		25000
-					Steine:		30000
+			Kosten:	Taler:		2500
+					Steine:		3500
 
 			benötigt:			Architektur
 
@@ -1855,7 +1855,7 @@ Neuerungen im Balancing Stuff:
 
 			benötigt:			Taktiken
 
-			Besonderheiten:		Es können beliebig viele dieser Statuen errichtet werden, jedoch sinkt die Wirkung pro Statue weiter ab.
+			Besonderheiten:		Es können maximal fünf dieser Statuen errichtet werden, jedoch sinkt die Wirkung pro Statue weiter ab.
 								Nur verfügbar, wenn ein Sieg auf der entsprechenden Koop-Karte auf Spielmodus 'Herausforderung' errungen wurde.
 								(weiter unten ausführlicher beschrieben)
 
@@ -1869,7 +1869,7 @@ Neuerungen im Balancing Stuff:
 
 			benötigt:			Alle Technologien in der Uni
 
-			Besonderheiten:		Es können beliebig viele dieser Statuen errichtet werden, jedoch sinkt die Wirkung pro Statue weiter ab.
+			Besonderheiten:		Es können maximal fünf dieser Statuen errichtet werden, jedoch sinkt die Wirkung pro Statue weiter ab.
 								Nur verfügbar, wenn ein Sieg auf der entsprechenden Koop-Karte auf Spielmodus 'Herausforderung' errungen wurde.
 								(weiter unten ausführlicher beschrieben)
 

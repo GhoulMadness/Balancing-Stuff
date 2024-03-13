@@ -162,8 +162,8 @@ function BS.LevyTax(_playerID)
 
 	local TaxBonus = 1
 
-	for i = 1, gvVictoryStatue3.Amount[_playerID] do
-		TaxBonus = TaxBonus + (math.max(gvVictoryStatue3.BaseValue - (i - 1) * gvVictoryStatue3.DecreaseValue, gvVictoryStatue3.MinimumValue))
+	for i = 1, gvVStatue3.Amount[_playerID] do
+		TaxBonus = TaxBonus + (math.max(gvVStatue3.BaseValue - (i - 1) * gvVStatue3.DecreaseValue, gvVStatue3.MinimumValue))
 	end
 
 	Logic.AddToPlayersGlobalResource(_playerID, ResourceType.GoldRaw, round(Logic.GetPlayerTaxIncome(_playerID) * TaxBonus))
@@ -263,7 +263,7 @@ function GUIAction_LighthouseHireTroops()
 			gvLighthouse.PrepareSpawn(pID,eID)
 		end
 	else
-		Stream.Start("Sounds\\VoicesMentor\\INFO_notenough.wav",110)
+		Sound.PlayFeedbackSound(Sounds.VoicesMentor_INFO_NotEnough,110)
 	end
 end
 function GUIAction_MercenaryTower(_ucat)
@@ -771,13 +771,13 @@ function GUIAction_UpgradeLeader(_LeaderID)
 		--currently upgrading
 		if Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) ~= Logic.GetTotalUpgradeTimeForBuilding(BarracksID) then
 			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfUpgrade"))
-			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_04.wav",130)
+			Sound.PlayFeedbackSound(Sounds.VoicesMentor_COMMENT_BadPlay_rnd_04, 130)
 			return
 		end
 		--currently researching
 		if Logic.GetTechnologyResearchedAtBuilding(BarracksID) ~= 0 then
 			Message(XGUIEng.GetStringTableText("ingamemessages/Note_TroopUpgradeNotPossibleBecauseOfResearch"))
-			Stream.Start("Sounds\\VoicesMentor\\comment_badplay_rnd_03.wav",110)
+			Sound.PlayFeedbackSound(Sounds.VoicesMentor_COMMENT_BadPlay_rnd_03, 130)
 			return
 		end
 		etype = Logic.GetEntityType(_LeaderID)

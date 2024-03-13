@@ -27,7 +27,7 @@ function DZTrade_PunishmentJob()
 				GUI.AddNote(" @color:"..r..","..g..","..b.." "..UserTool_GetPlayerName(player).." @color:"..BS.DefaultColorValues.White.r..","..BS.DefaultColorValues.White.g..","..BS.DefaultColorValues.White.b.." verfügt über zu wenig Platz für seine Siedler." )
 				GUI.AddNote( "Dies wird den Siedlern nicht gefallen und sie werden die Siedlung bald verlassen!")
 				if GUI.GetPlayerID() == player then
-					Stream.Start("Sounds\\voicesmentor\\comment_badplay_rnd_06.wav",138)
+					Sound.PlayFeedbackSound(Sounds.VoicesMentor_COMMENT_BadPlay_rnd_06, 138)
 				end
 			end
 			if gvDZTradeCheck.PlayerDelay[player] <= 0 then

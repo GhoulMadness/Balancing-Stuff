@@ -44,13 +44,39 @@ ReinitChunkData = function(_playerId)
 	end
 	for i = 1, table.getn(AIEnemiesAC[_playerId]) do
 		AIEnemiesAC[_playerId][i] = {}
-		AIEnemiesAC[_playerId].total = 0
 	end
+	AIEnemiesAC[_playerId].total = 0
 	AI_AddEnemiesToChunkData(_playerId)
 end
 
+RemoveCurrentTargetData = function(_playerID)
+	if ArmyTable and ArmyTable[_playerID] then
+		for k, v in pairs(ArmyTable[_playerID]) do
+			for k2, v2 in pairs(v) do
+				if type(k2) == "number" then
+					v2.currenttarget = nil
+				end
+			end
+		end
+	end
+	if MapEditor_Armies and MapEditor_Armies[_playerID] then
+		for k, v in pairs(MapEditor_Armies[_playerID].defensiveArmies) do
+			if type(k) == "number" then
+				v.currenttarget = nil
+			end
+		end
+		for k, v in pairs(MapEditor_Armies[_playerID].offensiveArmies) do
+			if type(k) == "number" then
+				v.currenttarget = nil
+			end
+		end
+	end
+end
+
 -- creates spawn army (just the initialization, no troops)
----@param _army table army table (.player: army player ID, .id: army ID (0 - n), .strength: army max number of troops, .position: army position, .rodeLength: army max attack range)
+-- (.player: army player ID, .id: army ID (0 - n), .strength: army max number of troops, .position: army position,
+-- .rodeLength: army max attack range .enemySearchPosition: search enemies near this position instead of army position (optional))
+---@param _army table army table
 SetupArmy = function(_army)
 
 	if not ArmyTable then
@@ -117,7 +143,7 @@ end
 -- creates troop for spawn army
 ---@param _army table army table
 ---@param _troop table troop description (.leaderType: leader entity type, [.maxNumberOfSoldiers: leader number of soldiers, .experiencePoints: leader experience (points not level))
----@param _pos table? troop spawn position (optional, default: army random homespot)
+---@param _pos table? troop spawn position (optional, default: random army homespot)
 EnlargeArmy = function(_army, _troop, _pos)
 
 	if not ArmyTable[_army.player][_army.id + 1].IDs then
@@ -197,7 +223,7 @@ Advance = function(_army)
 	local range = Logic.WorldGetSize()
 	local pos = _army.position
 
-	if enemyId == 0 or not IsValid(enemyId) or Logic.GetSector(enemyId) ~= CUtil.GetSector(pos.X/100, pos.Y/100) then
+	if enemyId == 0 or not IsValid(enemyId) or Logic.GetSector(enemyId) ~= CUtil.GetSector(round(pos.X/100), round(pos.Y/100)) then
 		enemyId = GetNearestEnemyInRange(_army.player, pos, range)
 	end
 	if enemyId then
@@ -205,12 +231,12 @@ Advance = function(_army)
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if Logic.GetSector(id) == Logic.GetSector(enemyId) or GetNearestEnemyInRange(_army.player, GetPosition(id), range) then
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					ManualControl_AttackTarget(_army.player, _army.id + 1, id)
+					ManualControl_AttackTarget(_army.player, _army.id + 1, id, nil, enemyId)
 				end
 				if ArmyTable[_army.player][_army.id + 1][id] then
 					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
 					or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
-						ManualControl_AttackTarget(_army.player, _army.id + 1 , id)
+						ManualControl_AttackTarget(_army.player, _army.id + 1 , id, nil, enemyId)
 					end
 				end
 			end
@@ -355,6 +381,7 @@ SetupAITroopSpawnGenerator = function(_Name, _army)
 					{_Name, _army.player, _army.id},
 					{_army.player, _army.id})
 end
+
 AITroopSpawnGenerator_Condition = function(_Name, _player, _id)
 
 	local army = ArmyTable[_player][_id + 1]
@@ -372,6 +399,7 @@ AITroopSpawnGenerator_Condition = function(_Name, _player, _id)
 		end
 	end
 end
+
 AITroopSpawnGenerator_Action = function(_player, _id)
 
 	local army = ArmyTable[_player][_id + 1]
@@ -437,7 +465,6 @@ AITroopSpawnGenerator_Action = function(_player, _id)
 	return false
 
 end
-
 -- checks whether army troop generator is active or not (either recruitment army or spawn troops army)
 ---@param _army table army table
 ---@return boolean
@@ -471,7 +498,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 	end
 	pos = GetPosition(_id)
 	newtarget = CheckForBetterTarget(_id, tabname[_id] and tabname[_id].currenttarget, nil)
-				or GetNearestEnemyInRange(_player, pos, range - GetDistance(pos, tabname.position))
+				or GetNearestEnemyInRange(_player, pos, range - GetDistance(pos, tabname.enemySearchPosition or tabname.position))
 				or GetNearestTarget(_player, _id)
 
 	tabname[_id] = tabname[_id] or {}
@@ -501,7 +528,8 @@ end
 ---@param _peaceTime integer time in seconds army will be more passive and has a smaller action range
 ---@param _multiTrain boolean? allows or forbids the player to recruit leader in multiple military buildings of the same type simultanously (optional, default: true)
 ---@param _defenseRange number? defines maximum attack range during army peace time and used for defense armies (optional, default: max range * 2/3)
-MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime, _multiTrain, _defenseRange)
+---@param _attackPosition table? army will start searching enemies near this position instead of army position (optional)
+MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime, _multiTrain, _defenseRange, _attackPosition)
 
 	-- Valid
 	if 	_strength == 0 or _strength > 3 or
@@ -605,6 +633,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 												},
 								offensiveArmies = {strength	= _strength * 15,
 													position = position,
+													enemySearchPosition = _attackPosition,
 													rodeLength = _range,
 													baseDefenseRange = _defenseRange or (_range*2)/3,
 													AttackAllowed =	false,
@@ -829,6 +858,7 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 
 			if MilitaryBuildingID ~= 0 then
 				if Logic.IsConstructionComplete(MilitaryBuildingID) == 1 then
+					--Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger", 1, {}, {_id, MilitaryBuildingID})
 					if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id)) then
 						Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
 						return true
@@ -836,6 +866,27 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 				end
 			end
 		end
+	end
+end
+
+RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger = function(_id, _barrackID)
+
+	local entityID = Event.GetEntityID()
+
+	if entityID == _id then
+		if Logic.IsEntityAlive(_barrackID) then
+			local attach = CEntity.GetAttachedEntities(_barrackID)[42]
+			if (attach and next(attach)) then
+				table.foreachi(attach, function(_key, _value)
+					if Logic.IsLeader(_value) == 0 then
+						if not CEntity.GetAttachedEntities(_value)[31] then
+							Logic.DestroyEntity(_value)
+						end
+					end
+				end)
+			end
+		end
+		return true
 	end
 end
 
@@ -911,4 +962,88 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_player)
 			end
 		end
 	end
+end
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------ Triggers for general AI data --------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500,
+								[Entities.PV_Cannon4] = 1800,
+								[Entities.PV_Cannon6] = 2500,
+								[Entities.PV_Catapult] = 2000}
+for k,v in pairs(gvAntiBuildingCannonsRange) do
+	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
+end
+
+function OnAIEnemyCreated(_playerID)
+
+	local entityID = Event.GetEntityID()
+	local playerID = Logic.EntityGetPlayer(entityID)
+	local etype = Logic.GetEntityType(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
+
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
+				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
+				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
+				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
+				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
+				break
+			end
+		end
+	end
+end
+function OnAIEnemyDestroyed(_playerID)
+
+	local entityID = Event.GetEntityID()
+	local playerID = Logic.EntityGetPlayer(entityID)
+	local etype = Logic.GetEntityType(entityID)
+	local enemies = BS.GetAllEnemyPlayerIDs(_playerID)
+
+	for i = 1, table.getn(enemies) do
+		if playerID == enemies[i] then
+			if IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
+				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
+				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
+				break
+			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
+				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
+				break
+			end
+		end
+	end
+end
+function OnAIDiplomacyChanged(_playerID)
+	local p = Event.GetSourcePlayerID()
+	local p2 = Event.GetTargetPlayerID()
+	local state = Event.GetDiplomacyState()
+
+	if p == _playerID or p2 == _playerID then
+		ReinitChunkData(_playerID)
+		RemoveCurrentTargetData(_playerID)
+	end
+end
+function AITower_RedirectTarget()
+
+	local attacker = Event.GetEntityID1()
+	local target = Event.GetEntityID2()
+	local playerID = Logic.EntityGetPlayer(attacker)
+
+	if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(playerID) == 0 and AIchunks[playerID] then
+
+		if Logic.IsEntityInCategory(attacker, EntityCategories.MilitaryBuilding) == 1 then
+			local newtarget = CheckForBetterTarget(attacker, target)
+			if newtarget and Logic.IsEntityAlive(newtarget) then
+				Logic.GroupAttack(attacker, newtarget)
+			end
+		end
+	end
+
 end

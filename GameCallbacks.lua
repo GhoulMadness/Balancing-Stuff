@@ -153,19 +153,43 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 		end
 
 	elseif eType == Entities.PB_VictoryStatue1 then
+		gvVStatue1.Amount[_PlayerID] = gvVStatue1.Amount[_PlayerID] + 1
 		if CUtil.GetPlayersMotivationSoftcap(_PlayerID) < (2.0) then
 			CUtil.AddToPlayersMotivationSoftcap(_PlayerID, 2.0 - CUtil.GetPlayersMotivationSoftcap(_PlayerID))
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_PlayerID), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
-				CEntity.SetMotivation(eID, 2.0 )
+				CEntity.SetMotivation(eID, 2.0)
 			end
 		end
 
 	elseif eType == Entities.PB_VictoryStatue3 then
-		gvVictoryStatue3.Amount[_PlayerID] = gvVictoryStatue3.Amount[_PlayerID] + 1
+		gvVStatue3.Amount[_PlayerID] = gvVStatue3.Amount[_PlayerID] + 1
 
 	elseif eType == Entities.PB_VictoryStatue4 then
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "VStatue4_CalculateDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
+
+	elseif eType == Entities.PB_VictoryStatue5 then
+		local players = BS.GetAllEnemyPlayerIDs(_PlayerID)
+		for i = 1, table.getn(players) do
+			if CUtil.GetPlayersMotivationSoftcap(players[i]) > (2.75) then
+				CUtil.AddToPlayersMotivationSoftcap(players[i], 2.75 - CUtil.GetPlayersMotivationSoftcap(players[i]))
+			end
+		end
+		for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(players)), CEntityIterator.OfCategoryFilter(EntityCategories.Worker)) do
+			CEntity.SetMotivation(eID, 2.75)
+		end
+
+	elseif eType == Entities.PB_VictoryStatue6 then
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "VStatue6_ApplyDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
+
+	elseif eType == Entities.PB_VictoryStatue7 then
+		gvVStatue7.Countdown[_PlayerID] = StartCountdown(10*60, gvVStatue7.VictoryTimer, true, "VStatue7_Victory_".. _PlayerID, _PlayerID)
+
+	elseif eType == Entities.PB_VictoryStatue8 then
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "VStatue8_CalculateDamageTrigger", 1, {}, {_BuildingID, _PlayerID})
+
+	elseif eType == Entities.PB_VictoryStatue9 then
+		gvVStatue9.Amount[_PlayerID] = gvVStatue9.Amount[_PlayerID] + 1
 	end
 end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -343,7 +367,7 @@ function GameCallback_GUI_SelectionChanged()
 		if EntityType == Entities.PV_Ram then
 			if not RamSelectionSoundActive and not RamMoveSoundActive and not RamAttackSoundActive then
 				RamSelectionSoundActive = true
-				Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Select .. ".wav", 152)
+				Sound.PlayFeedbackSound(Sounds["Stronghold_" .. Siege.RamSounds.Select], 152)
 				StartCountdown(3, function() RamSelectionSoundActive = nil end, false)
 			end
 		end
@@ -477,38 +501,6 @@ function GameCallback_GainedResourcesFromMine(_extractor, _e, _type, _amount)
 
 	local playerID = Logic.EntityGetPlayer(_extractor)
 	local work = Logic.GetSettlersWorkBuilding(_extractor)
-	local resremain = Logic.GetResourceAmountBelowMine(work)
-	--respective values "mine_running_low" sound is played
-	local criticaltresholdsilver = 400
-	local criticaltresholdgold = 2500
-
-	-- play sound only, when new sound isn't implemented in game already
-	if Sounds.VoicesMentor_JOIN_Silversmith == nil then
-		if _type == ResourceType.SilverRaw then
-			if resremain <= criticaltresholdsilver and resremain > criticaltresholdsilver - _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowsilver.wav", 292)
-				end
-			end
-			if resremain <= _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptysilver.wav", 292)
-				end
-			end
-
-		elseif _type == ResourceType.GoldRaw then
-			if resremain <= criticaltresholdgold and resremain > criticaltresholdgold - _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_minerunninglowgold.wav", 292)
-				end
-			end
-			if resremain <= _amount then
-				if GUI.GetPlayerID() == playerID then
-					Stream.Start("Sounds\\VoicesMentor\\mine_mineemptygold.wav", 292)
-				end
-			end
-		end
-	end
 
 	if Logic.GetTechnologyState(playerID, Technologies.T_PickAxe) == 4 then
 		if _e ~= nil then
@@ -586,13 +578,12 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
     end
 
-	if _eType == Entities.PB_VictoryStatue2 then
+	local player = GUI.GetPlayerID()
+	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
 
-		return allowed and (Logic.GetNumberOfEntitiesOfTypeOfPlayer(GUI.GetPlayerID(), _eType) < 1) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+	if _eType == Entities.PB_CoalMine1 then
 
-	elseif _eType == Entities.PB_CoalMine1 then
-
-		return gvCoal.Mine.PlacementCheck(_x, _y, _rotation) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		return gvCoal.Mine.PlacementCheck(_x, _y, _rotation) and IsExplored
 
 	elseif _eType == Entities.PB_Archers_Tower and not gvXmas2021ExpFlag and not gvXmasEventFlag then
 
@@ -604,7 +595,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			checkorientation = false
 		end
 
-		return allowed and checkorientation and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		return allowed and checkorientation and (gvArchers_Tower.AmountOfTowers[player] < gvArchers_Tower.TowerLimit) and IsExplored
 
 	elseif _eType == Entities.PB_ForestersHut1 then
 
@@ -616,7 +607,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			checkorientation = false
 		end
 
-		return allowed and checkorientation and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1) and (Logic.GetPlayerAttractionLimit(GUI.GetPlayerID()) > 0)
+		return allowed and checkorientation and IsExplored and (Logic.GetPlayerAttractionLimit(player) > 0)
 
 	elseif _eType == Entities.PB_WoodcuttersHut1 then
 
@@ -628,7 +619,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 			checkorientation = false
 		end
 
-		return allowed and checkorientation and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1) and (Logic.GetPlayerAttractionLimit(GUI.GetPlayerID()) > 0)
+		return allowed and checkorientation and IsExplored and (Logic.GetPlayerAttractionLimit(player) > 0)
 
 	elseif _eType == Entities.PB_Castle1 then
 
@@ -643,7 +634,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		end
 
-		return allowed and checkpos and (gvCastle.AmountOfCastles[GUI.GetPlayerID()] < gvCastle.CastleLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		return allowed and checkpos and (gvCastle.AmountOfCastles[player] < gvCastle.CastleLimit) and IsExplored
 
 	elseif _eType == Entities.PB_Tower1 and not gvXmas2021ExpFlag and not gvXmasEventFlag then
 
@@ -658,7 +649,15 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		end
 
-		return allowed and checkpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		return allowed and checkpos and (gvTower.AmountOfTowers[player] < gvTower.TowerLimit) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue1 then
+
+		return allowed and (gvVStatue1.Amount[player] < gvVStatue1.Limit) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue2 then
+
+		return allowed and (gvVStatue2.Amount[player] < gvVStatue2.Limit) and IsExplored
 
 	elseif _eType == Entities.PB_VictoryStatue4 then
 
@@ -672,13 +671,53 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 		end
 
-		return allowed and checkpos and (gvVStatue4.Amount[GUI.GetPlayerID()] < gvVStatue4.Limit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+		return allowed and checkpos and (gvVStatue4.Amount[player] < gvVStatue4.Limit) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue5 then
+
+		return allowed and (gvVStatue5.Amount[player] < gvVStatue5.Limit) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue6 then
+
+		local checkpos = true
+
+		for _,v in pairs(gvVStatue6.PositionTable) do
+
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvVStatue6.BlockRange then
+				checkpos = false
+			end
+
+		end
+
+		return allowed and checkpos and (gvVStatue6.Amount[player] < gvVStatue6.Limit) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue7 then
+
+		return allowed and (gvVStatue7.Amount[player] < gvVStatue7.Limit) and gvVStatue7.IsPlacementAllowed(player, _x, _y) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue8 then
+
+		local checkpos = true
+
+		for _,v in pairs(gvVStatue8.PositionTable) do
+
+			if math.sqrt((_x - v.X)^2+(_y - v.Y)^2) <= gvVStatue8.BlockRange then
+				checkpos = false
+			end
+
+		end
+
+		return allowed and checkpos and (gvVStatue8.Amount[player] < gvVStatue8.Limit) and IsExplored
+
+	elseif _eType == Entities.PB_VictoryStatue9 then
+
+		return allowed and (gvVStatue9.AmountConstructed[player] < gvVStatue9.Limit) and IsExplored
 
 	else
 
 		if not gvXmasEventFlag and not gvXmas2021ExpFlag then
 
-			return allowed and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+			return allowed and IsExplored
 
 		-- on winter maps with xmas-tree mechanic no building placements allowed near trees
 		elseif gvXmasEventFlag and gvPresent then
@@ -710,14 +749,14 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 				end
 
-				return allowed and checktowerpos and (checktree1 == checktree2) and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				return allowed and checktowerpos and (checktree1 == checktree2) and (gvTower.AmountOfTowers[player] < gvTower.TowerLimit)  and IsExplored
 
 			elseif _eType == Entities.PB_Archers_Tower then
 
-				return allowed and (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit) and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				return allowed and (gvArchers_Tower.AmountOfTowers[player] < gvArchers_Tower.TowerLimit) and (checktree1 == checktree2) and IsExplored
 
 			else
-				return allowed and (checktree1 == checktree2) and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+				return allowed and (checktree1 == checktree2) and IsExplored
 			end
 
 		-- on WT21 Map only Dario Statues allowed near the center
@@ -736,9 +775,9 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 				if _eType == Entities.PB_Archers_Tower then
 
-					local checktower = (gvArchers_Tower.AmountOfTowers[GUI.GetPlayerID()] < gvArchers_Tower.TowerLimit)
+					local checktower = (gvArchers_Tower.AmountOfTowers[player] < gvArchers_Tower.TowerLimit)
 
-					return allowed and checktower and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+					return allowed and checktower and checkpos and IsExplored
 
 				elseif _eType == Entities.PB_Tower1 then
 
@@ -757,9 +796,9 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 							checkpos = false
 						end
 					end
-					return allowed and checkpos and checktowerpos and (gvTower.AmountOfTowers[GUI.GetPlayerID()] < gvTower.TowerLimit)  and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+					return allowed and checkpos and checktowerpos and (gvTower.AmountOfTowers[player] < gvTower.TowerLimit)  and IsExplored
 				else
-					return allowed and checkpos and (Logic.IsMapPositionExplored(GUI.GetPlayerID(), _x, _y) == 1)
+					return allowed and checkpos and IsExplored
 				end
 			end
 		end
@@ -994,21 +1033,13 @@ GameCallback_UnknownTask = function(_id)
 				local posX, posY = Logic.GetEntityPosition(_id)
 				local target = GetEntityCurrentTarget(_id)
 				if not target or target == 0 then
-					if (AITable and AITable[player]) or (MapEditor_Armies and MapEditor_Armies[player]) then
-						target = GetEntityTargetByAIData(_id)
-						if not target then
-							return 0
-						end
-					else
-						return 0
-					end
+					return 0
 				end
 				local posX2, posY2 = Logic.GetEntityPosition(target)
 				local damage = CalculateTotalDamage(_id, target)
 				local offX, offY = RotateOffset(v.Offset.X, v.Offset.Y, Logic.GetEntityOrientation(_id))
-				CUtil.CreateProjectile(GGL_Effects[v.Effect], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
-				--Logic.SpawnParticleEffect(_id, v.EffectIndex, GGL_Effects.FXCannonFireShort)
-				--CEntity.DealDamageInArea(_id, posX2, posY2, GetEntityTypeDamageRange(etype), damage)
+				local effID = v.Effect
+				CUtil.CreateProjectile(GGL_Effects[effID], posX + offX, posY + offY, posX2, posY2, damage, GetEntityTypeDamageRange(etype), target, _id, player)
 				return 0
 			end
 		end
@@ -1018,13 +1049,13 @@ GameCallback_UnknownTask = function(_id)
 			local task = Logic.GetCurrentTaskList(_id)
 			if task == "TL_RAM_DRIVE" then
 				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
-					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Move .. ".wav", 152)
+					Sound.PlayFeedbackSound(Sounds["Stronghold_" .. Siege.RamSounds.Move], 152)
 					RamMoveSoundActive = true
 					StartCountdown(5, function() RamMoveSoundActive = false end, false)
 				end
 			elseif task == "TL_BATTLE_RAM" then
 				if not RamMoveSoundActive and not RamAttackSoundActive and not RamSelectionSoundActive then
-					Stream.Start("Voice\\stronghold\\" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)] .. ".wav", 152)
+					Sound.PlayFeedbackSound(Sounds["Stronghold_" .. Siege.RamSounds.Attack[1+XGUIEng.GetRandom(5)]], 152)
 					RamMoveSoundActive = true
 					StartCountdown(10, function() RamMoveSoundActive = false end, false)
 				end

@@ -223,6 +223,8 @@ function GUIUpdate_LightningRod()
 	end
 end
 
+--cooldown handling levy taxes
+gvLastTimeButtonPressed = gvLastTimeButtonPressed or -240000
 function GUIUpdate_LevyTaxes()
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()

@@ -79,10 +79,10 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 						end
 					elseif type == Entities.PU_Hero14 then
 						if IsNighttime() then
-							local range = gvHero14[_ability].Range * 1.5
+							local range = gvHero14[_ability].Range * 2
 							local numthreatened_ent = GetNumberOfEnemiesInRange(player, gvHeroTarget.EndangeredCats, GetPosition(_heroID), range)
 							if numthreatened_ent >= gvHeroTarget.Thresholds.CriticalNumEntitiesClump then
-								return 2
+								return 3
 							else
 								if dist < range then
 									return -1

@@ -843,6 +843,23 @@ function GetNearestEntityOfType(_x, _y, _entityType)
 	return id
 end
 
+-- function to get the nearest entity of bridge category
+---@param _x number	positionX
+---@param _y number positionY
+---@param _range number? search range (optional, default: map size)
+---@return integer
+function GetNearestBridge(_x, _y, _range)
+
+	local bt = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfCategoryFilter(EntityCategories.Bridge), CEntityIterator.InCircleFilter(_x, _y, _range or Logic.WorldGetSize())) do
+		table.insert(bt, {id = eID, dist = GetDistance(eID, {X = _x, Y = _y})})
+	end
+	table.sort(bt, function(p1, p2)
+		return p1.dist < p2.dist
+	end)
+	return (bt[1] and bt[1].id)
+end
+
 -- comfort to evaluate if number of entities of given playerID are in range of given Position
 ---@param _player integer playerID
 ---@param _entityType integer entityType
@@ -1184,18 +1201,58 @@ end
 ---@param _player integer playerID
 ---@param _position table positionTable
 ---@param _range number search range
+---@param _seccheck boolean? should sector be checked? (optional, true by default)
 ---@return integer entityID of nearest enemy
-function GetNearestEnemyInRange(_player, _position, _range)
+function GetNearestEnemyInRange(_player, _position, _range, _seccheck)
+	if _seccheck == nil then
+		_seccheck = true
+	end
 	ChunkWrapper.UpdatePositions(AIchunks[_player])
 	local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(AIchunks[_player], _position.X, _position.Y, _range)
 	if next(entities) then
+		local sector
+		if _seccheck then
+			sector = CUtil.GetSector(round(_position.X/100), round(_position.Y/100))
+			local eID = Logic.GetEntityAtPosition(_position.X, _position.Y)
+			if eID > 0 then
+				sector = Logic.GetSector(eID)
+			end
+		end
 		for i = 1, table.getn(entities) do
-			if Logic.IsEntityAlive(entities[i]) then
+			local id = entities[i]
+			if Logic.IsEntityAlive(id) and (not _seccheck or (_seccheck and Logic.GetSector(id) == sector)) then
 				return entities[i]
 			end
 		end
+		return false
 	end
 	return false
+end
+
+-- Comfort to get the entityID of the nearest enemy to a given player, position, range and cone
+---@param _player integer playerID
+---@param _position table positionTable of cone
+---@param _centerAngle number center angle cone is facing
+---@param _spreadAngle maximum spread angle of cone
+---@param _range number search range
+---@return integer entityID of nearest enemy
+function GetNearestEnemyInRangeAndCone(_player, _position, _centerAngle, _spreadAngle, _range)
+
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)),
+	CEntityIterator.IsSettlerOrBuildingFilter(),
+	CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+		if Logic.IsEntityAlive(eID) then
+			if IsInCone(GetPosition(eID), _position, _centerAngle, _spreadAngle) then
+				table.insert(t, {id = eID, dist = GetDistance(eID, _position)})
+			end
+		end
+	end
+	table.sort(t, function(p1, p2)
+		return p1.dist < p2.dist
+	end)
+	return (t[1] and t[1].id)
 end
 
 -- override so the OSI of the entity is shown again after resuming (workaround for ubi bug)
@@ -1306,7 +1363,7 @@ IsDead = function(_name)
 				return true
 			end
 		else
-			return AI.Army_GetNumberOfTroops(_name.player, _name.id) == 0
+			return AI.Army_GetNumberOfTroops(_name.player, _name.id) <= 0
 		end
 	end
 
@@ -1897,13 +1954,40 @@ GetDistance = function(_a, _b)
 
 end
 
+--- author:mcb
+-- checks if a position is in a cone originating from another position.
+-- imagine it as checking if an entity at the position center, looking at direction middleAlpha
+-- and a field of view of betaAvailable to either side can see pos.
+-- (assumes being able to look through any other object and having infinite vision range).
+-- (the angle of the entire cone is betaAvaiable * 2, its outer birders are at middleAlpha+betaAvaiable and middleAlpha-betaAvaiable).
+-- (depending on the circumstances, should be coupled by a distance check via GetDistance).
+---@param _pos table positionTable
+---@param _center table positionTable of center of cone
+---@param _middleAlpha number center angle cone should be facing
+---@param _betaAvaiable number max spread angle
+---@return boolean
+function IsInCone(_pos, _center, _middleAlpha, _betaAvaiable)
+	local a = GetAngleBetween(_center, _pos)
+	local lb = _middleAlpha - _betaAvaiable
+	local hb = _middleAlpha + _betaAvaiable
+	if a >= lb and a <= hb then
+		return true
+	end
+	a = math.mod((a + 180), 360)
+	lb = math.mod((lb + 180), 360)
+	hb = math.mod((hb + 180), 360)
+	if a >= lb and a <= hb then
+		return true
+	end
+end
+
 -- evaluates whether a position is unblocked or not
 ---@param _x table positionTable
 ---@param _y table positionTable
 ---@return boolean
 function IsPositionUnblocked(_x, _y)
 	local height, blockingtype, sector, terrType = CUtil.GetTerrainInfo(_x, _y)
-	return (sector ~= 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_x/100, _y/100)))
+	return (sector ~= 0 and math.mod(blockingtype, 2) == 0 and (height > CUtil.GetWaterHeight(round(_x/100), round(_y/100))))
 end
 
 -- sets the health of an entity to a given percentage
@@ -2516,9 +2600,18 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 	if BS.MemValues.BuildingTypeTerrainPosArea[_entityType] then
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 37
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 37
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 29
+		end
 		BS.MemValues.BuildingTypeTerrainPosArea[_entityType] = {}
 		for i = 1,4 do
-			table.insert(BS.MemValues.BuildingTypeTerrainPosArea[_entityType], GetEntityTypePointer(_entityType)[37 + i]:GetFloat())
+			table.insert(BS.MemValues.BuildingTypeTerrainPosArea[_entityType], pointer[behpos + i]:GetFloat())
 		end
 		return unpack(BS.MemValues.BuildingTypeTerrainPosArea[_entityType])
 	end
@@ -2537,6 +2630,41 @@ function GetEntityTypeNumBlockedPoints(_entityType)
 	else
 		BS.MemValues.EntityTypeNumBlockedPoints[_entityType] = GetEntityTypePointer(_entityType)[22]:GetInt()
 		return BS.MemValues.EntityTypeNumBlockedPoints[_entityType]
+	end
+end
+
+-- gets building type bridge area properties, returns Blocked1X, Blocked1Y, Blocked2X, Blocked2Y
+---@param _entityType integer entityType
+---@return table blocking area {X1, Y1, X2, Y2}
+function GetBuildingTypeBridgeArea(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeBridgeArea then
+		BS.MemValues.BuildingTypeBridgeArea = {}
+	end
+	if BS.MemValues.BuildingTypeBridgeArea[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeBridgeArea[_entityType])
+	else
+		BS.MemValues.BuildingTypeBridgeArea[_entityType] = {}
+		for i = 1,4 do
+			table.insert(BS.MemValues.BuildingTypeBridgeArea[_entityType], GetEntityTypePointer(_entityType)[126][i-1]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeBridgeArea[_entityType])
+	end
+end
+
+-- gets building type bridge height
+---@param _entityType integer entityType
+---@return integer height
+function GetBuildingTypeBridgeHeight(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeBridgeHeight then
+		BS.MemValues.BuildingTypeBridgeHeight = {}
+	end
+	if BS.MemValues.BuildingTypeBridgeHeight[_entityType] then
+		return BS.MemValues.BuildingTypeBridgeHeight[_entityType]
+	else
+		BS.MemValues.BuildingTypeBridgeHeight[_entityType] = GetEntityTypePointer(_entityType)[129]:GetInt()
+		return BS.MemValues.BuildingTypeBridgeHeight[_entityType]
 	end
 end
 
@@ -3475,7 +3603,7 @@ end
 -- creates randomly generated gathering spots for leaders of a certain army
 ---@param _player integer playerID
 ---@param _pos table positionTable
----@param _army integer? armyID (only needed for spawn armies; nil for recruiting armies)
+---@param _army integer? armyID + 1 (only needed for spawn armies; nil for recruiting armies)
 EvaluateArmyHomespots = function(_player, _pos, _army)
 	assert(type(_pos) == "table" and _pos.X and _pos.Y, "pos param needs to be a table filled with X and Y pos")
 	if not ArmyHomespots then
@@ -3484,6 +3612,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	if not ArmyHomespots[_player] then
 		ArmyHomespots[_player] = {}
 	end
+	_pos.X, _pos.Y = dekaround(_pos.X), dekaround(_pos.Y)
 	local sec, id = 0, Logic.GetEntityAtPosition(_pos.X, _pos.Y)
 	if id > 0 then
 		sec = Logic.GetSector(id)
@@ -3491,37 +3620,49 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		sec = CUtil.GetSector(_pos.X/100, _pos.Y/100)
 	end
 	if sec == 0 then
-		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 1000, 100)
+		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 5000, 100)
 	end
+	local size = Logic.WorldGetSize()
+	local steps = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSteps) or 20
+	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 60
 	local calcP = function(_XY)
-		local size = Logic.WorldGetSize()
-		return math.max(math.min(_XY + (20 * math.random(-60, 60)), size - 1), 1)
+		return math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1)
 	end
-	local steps = 0
-	if not _army then
-		if not ArmyHomespots[_player].recruited then
-			ArmyHomespots[_player].recruited = {}
+	local stepcount = 0
+	local spots = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].MaxHomespots) or 20
+	local name = _army or "recruited"
+	if not ArmyHomespots[_player][name] then
+		ArmyHomespots[_player][name] = {}
+	end
+	while (table.getn(ArmyHomespots[_player][name]) < spots and stepcount < 1000) do
+		local X, Y = calcP(_pos.X), calcP(_pos.Y)
+		local nsec = CUtil.GetSector(X/100, Y/100)
+		if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player][name], {X = X, Y = Y}) == 0 then
+			table.insert(ArmyHomespots[_player][name], {X = X, Y = Y})
 		end
-		while (table.getn(ArmyHomespots[_player].recruited) < 20 and steps < 1000) do
-			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			local nsec = CUtil.GetSector(X/100, Y/100)
-			if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player].recruited, {X = X, Y = Y}) == 0 then
-				table.insert(ArmyHomespots[_player].recruited, {X = X, Y = Y})
+		stepcount = stepcount + 1
+	end
+end
+
+-- checks whether all army homespots of a given player are unblocked or not
+-- returns true when there are no blocked homespots and false, table when there are blocked spots
+---@param _player integer playerID
+---@return boolean
+---@return table table filled with army id and homespot index
+function CheckArmyHomespotsBlocked(_player)
+	assert(ArmyTable and ArmyTable[_player] and ArmyHomespots and ArmyHomespots[_player], "player has no active armies")
+	local t = {}
+	for k, v in pairs(ArmyHomespots[_player]) do
+		for i = 1, table.getn(v) do
+			if not IsPositionUnblocked(v[i].X, v[i].Y) then
+				table.insert(t, {army = (type(k) == "number" and k-1) or k, index = i})
 			end
-			steps = steps + 1
 		end
+	end
+	if not next(t) then
+		return false
 	else
-		if not ArmyHomespots[_player][_army] then
-			ArmyHomespots[_player][_army] = {}
-		end
-		while (table.getn(ArmyHomespots[_player][_army]) < 20 and steps < 1000) do
-			local X, Y = calcP(_pos.X), calcP(_pos.Y)
-			local nsec = CUtil.GetSector(X/100, Y/100)
-			if nsec ~= 0 and nsec == sec and table_findvalue(ArmyHomespots[_player][_army], {X = X, Y = Y}) == 0 then
-				table.insert(ArmyHomespots[_player][_army], {X = X, Y = Y})
-			end
-			steps = steps + 1
-		end
+		return true, t
 	end
 end
 
@@ -3580,6 +3721,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local etype = Logic.GetEntityType(_eID)
 	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1 and Logic.GetFoundationTop(_eID) ~= 0)
 	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
+	local IsHero = (Logic.IsEntityInCategory(_eID, EntityCategories.Hero) == 1)
 	local posX, posY = Logic.GetEntityPosition(_eID)
 	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
 	local bonusRange = 500
@@ -3587,7 +3729,13 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local damagerange = GetEntityTypeDamageRange(etype)
 	local calcT = {}
 	if IsMelee then
-		bonusRange = 800
+		bonusRange = bonusRange * 2
+	end
+	if IsHero then
+		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
+		if flag then
+			return -1
+		end
 	end
 	if gvAntiBuildingCannonsRange[etype] then
 		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
@@ -3747,6 +3895,17 @@ function GetPositionClump(_postable, _infrange, _step)
 		end
 	end
 	return clumppos, highscore
+end
+
+function GetNodesInCircleAndRange(_pos, _range)
+	_range = dekaround(_range)
+	local t = {}
+	for x = _pos.X - _range, _pos.X + _range, 100 do
+		for y = _pos.Y - _range, _pos.Y + _range, 100 do
+			table.insert(t, {X = x, Y = y})
+		end
+	end
+	return t
 end
 
 function GetPercentageOfLeadersPerArmorClass(_table)
@@ -3919,6 +4078,28 @@ function GetSummonedEntityLifetimeLeft(_id)
 	return time or 0
 end
 
+-- returns blocking type of a given position
+-- 0 = unblocked, 1 = hard blocked by entity or terrain type(red, no placement or movement allowed), 2 = bridge area, 3 = bridge area + hard blocked (2+1),
+-- 4 = soft blocked/terrain pos area (green, no placement allowed), 5 = within blocking area (buildings, pits, etc., 1+4 overlapping), 6 = bridge + terrain pos (2+4),
+-- 8 = unblocked slope (only below water surface), 9 = hard blocked by slope (8+1)
+---@param _x number positionX
+---@param _y number positionY
+---@return integer blocking type
+function GetPositionBlockingType(_x, _y)
+	assert(type(_x) == "number" and type(_y) == "number", "invalid position input")
+	local max = Logic.WorldGetSize()
+	assert(_x <= max and _y <= max and _x >= 0 and _y >= 0, "invalid position; not within map size")
+	return CUtil.GetBlocking100(_x, _y)
+end
+
+-- checks whether given position is affected by bridge entity category height
+---@param _x number positionX
+---@param _y number positionY
+---@return boolean
+function IsPositionAffectedByBridgeHeight(_x, _y)
+	return (GetPositionBlockingType(_x, _y) == 2 or GetPositionBlockingType(_x, _y) == 6)
+end
+
 -- rotates a given offset
 ---@param _x number positionX
 ---@param _y number positionY
@@ -3947,8 +4128,7 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
 			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
 
 				local d = (x_ - _posX)^2 + (y_ - _posY)^2
-				local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(x_, y_)
-				if sector > 0 and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
+				if IsPositionUnblocked(x_, y_) then
 
 					if not dmin or dmin > d then
 						dmin = d
@@ -4446,9 +4626,7 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
                 offX, offY = ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].X, ChestRandomPositions.OffsetByType[Logic.GetEntityType(eID)].Y
             end
             local _X, _Y = GetPosition(eID).X + offX, GetPosition(eID).Y + offY
-            local height, blockingtype, sector, tempterrType = CUtil.GetTerrainInfo(_X, _Y)
-
-            if sector > 0 and blockingtype == 0 and (height > CUtil.GetWaterHeight(_X/100, _Y/100)) then
+            if IsPositionUnblocked(_X, _Y) then
                 local distcheck = true
                 for _, v in pairs(postable) do
                     if GetDistance(v, {X = _X, Y = _Y}) < ChestRandomPositions.MinDistance then
