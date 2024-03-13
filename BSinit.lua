@@ -303,7 +303,9 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 									"Novator12", "Novator12Slave"},
 							[8] = {},
 							[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
-									"Novator12", "Novator12Slave"}
+									"Novator12", "Novator12Slave",
+									"ThePhoenix_2000",
+									"Vqrys"}
 						}
 function BS.CheckForAchievements(_pID)
 
