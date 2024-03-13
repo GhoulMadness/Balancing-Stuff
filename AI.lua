@@ -759,7 +759,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 	local _army = MapEditor_Armies[_player]
 	-- Already enough troops?
 	local limitreached = AITroopGenerator_IsAtTroopLimit(_army)
-	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) then
+	if Counter.Tick2(_Name.."Generator", 6 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) then
 		return false
 	end
 	return not limitreached
