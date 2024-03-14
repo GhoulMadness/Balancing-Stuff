@@ -236,7 +236,7 @@ Advance = function(_army)
 				if ArmyTable[_army.player][_army.id + 1][id] then
 					if (ArmyTable[_army.player][_army.id + 1][id].lasttime and (ArmyTable[_army.player][_army.id + 1][id].lasttime + 3 < Logic.GetTime() ))
 					or (ArmyTable[_army.player][_army.id + 1][id].currenttarget and not Logic.IsEntityAlive(ArmyTable[_army.player][_army.id + 1][id].currenttarget)) then
-						ManualControl_AttackTarget(_army.player, _army.id + 1 , id, nil, enemyId)
+						ManualControl_AttackTarget(_army.player, _army.id + 1 , id)
 					end
 				end
 			end
@@ -502,17 +502,25 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 				or GetNearestTarget(_player, _id)
 
 	tabname[_id] = tabname[_id] or {}
-	if newtarget and newtarget > 0 and Logic.GetSector(newtarget) == Logic.GetSector(_id) then
-		if GetDistance(tabname.position, newtarget) > range then
-			if _target then
-				tabname[_id].currenttarget = _target
+	if newtarget and newtarget > 0 then
+		if Logic.GetSector(newtarget) == Logic.GetSector(_id) then
+			if GetDistance(_id, newtarget) > range then
+				if _target then
+					tabname[_id].currenttarget = _target
+					tabname[_id].lasttime = Logic.GetTime()
+					Logic.GroupAttack(_id, _target)
+				end
+			else
+				tabname[_id].currenttarget = newtarget
 				tabname[_id].lasttime = Logic.GetTime()
-				Logic.GroupAttack(_id, _target)
+				Logic.GroupAttack(_id, newtarget)
 			end
-		else
-			tabname[_id].currenttarget = newtarget
+		end
+	else
+		if _target then
+			tabname[_id].currenttarget = _target
 			tabname[_id].lasttime = Logic.GetTime()
-			Logic.GroupAttack(_id, newtarget)
+			Logic.GroupAttack(_id, _target)
 		end
 	end
 end
@@ -759,7 +767,7 @@ AITroopGenerator_Condition = function(_Name, _player)
 	local _army = MapEditor_Armies[_player]
 	-- Already enough troops?
 	local limitreached = AITroopGenerator_IsAtTroopLimit(_army)
-	if Counter.Tick2(_Name.."Generator", 6 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) then
+	if Counter.Tick2(_Name.."Generator", 5 - _army.aggressiveLVL) == false or ((_army.ignoreAttack == nil or not _army.ignoreAttack) and _army.Attack) then
 		return false
 	end
 	return not limitreached
