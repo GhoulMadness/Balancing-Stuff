@@ -3624,9 +3624,9 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	end
 	local size = Logic.WorldGetSize()
 	local steps = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSteps) or 20
-	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 60
+	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 100
 	local calcP = function(_XY)
-		return math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1)
+		return dekaround(math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1))
 	end
 	local stepcount = 0
 	local spots = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].MaxHomespots) or 20
