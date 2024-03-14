@@ -996,6 +996,8 @@ Das Zeitintervall zwischen Rekrutierungen von Armeen wurde auf allen Stufen um 1
 
 Es wurde ein Fehler behoben, durch den gespawnte Anti-Gebäude-Kanonen in seltenen Fällen an ihrem Spawnpunkt stehenbleiben konnten und keine Befehle bekamen.
 
+Der Mindestabstand, den Türme beim Bau auf Koop-Karten einhalten müssen, wurde leicht erhöht.
+
 
 
 
