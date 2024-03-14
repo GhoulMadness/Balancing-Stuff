@@ -986,6 +986,16 @@ Es wurde ein Fehler behoben, durch den der Spieler beim Abriss von Uhren Steine 
 
 Vorbereitungen für das kommende Osterturnier
 
+--- Version 0.756
+
+Helden der KI können nun ihre Fähigkeiten verwenden.
+
+Das Verhalten von Spawn-Armeen mit "Advance"-Befehl wurde verbessert.
+
+Das Zeitintervall zwischen Rekrutierungen von Armeen wurde auf allen Stufen um 1 Sekunde erhöht.
+
+Es wurde ein Fehler behoben, durch den gespawnte Anti-Gebäude-Kanonen in seltenen Fällen an ihrem Spawnpunkt stehenbleiben konnten und keine Befehle bekamen.
+
 
 
 
