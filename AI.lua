@@ -974,13 +974,13 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------ Triggers for general AI data --------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
-gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1500,
-								[Entities.PV_Cannon4] = 1800,
-								[Entities.PV_Cannon6] = 2500,
-								[Entities.PV_Catapult] = 2000}
-for k,v in pairs(gvAntiBuildingCannonsRange) do
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 0,
+								[Entities.PV_Cannon4] = 0,
+								[Entities.PV_Cannon6] = 0,
+								[Entities.PV_Catapult] = 0}
+--[[for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
-end
+end]]
 
 function OnAIEnemyCreated(_playerID)
 
