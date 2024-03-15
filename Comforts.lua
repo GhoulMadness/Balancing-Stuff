@@ -3624,9 +3624,9 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 	end
 	local size = Logic.WorldGetSize()
 	local steps = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSteps) or 20
-	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 60
+	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 100
 	local calcP = function(_XY)
-		return math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1)
+		return dekaround(math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1))
 	end
 	local stepcount = 0
 	local spots = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].MaxHomespots) or 20
@@ -3721,6 +3721,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local etype = Logic.GetEntityType(_eID)
 	local IsTower = (Logic.IsEntityInCategory(_eID, EntityCategories.MilitaryBuilding) == 1 and Logic.GetFoundationTop(_eID) ~= 0)
 	local IsMelee = (Logic.IsEntityInCategory(_eID, EntityCategories.Melee) == 1)
+	local IsHero = (Logic.IsEntityInCategory(_eID, EntityCategories.Hero) == 1)
 	local posX, posY = Logic.GetEntityPosition(_eID)
 	local maxrange = GetEntityTypeMaxAttackRange(_eID, player)
 	local bonusRange = 500
@@ -3729,6 +3730,12 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local calcT = {}
 	if IsMelee then
 		bonusRange = bonusRange * 2
+	end
+	if IsHero then
+		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
+		if flag then
+			return -1
+		end
 	end
 	if gvAntiBuildingCannonsRange[etype] then
 		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
@@ -3888,6 +3895,17 @@ function GetPositionClump(_postable, _infrange, _step)
 		end
 	end
 	return clumppos, highscore
+end
+
+function GetNodesInCircleAndRange(_pos, _range)
+	_range = dekaround(_range)
+	local t = {}
+	for x = _pos.X - _range, _pos.X + _range, 100 do
+		for y = _pos.Y - _range, _pos.Y + _range, 100 do
+			table.insert(t, {X = x, Y = y})
+		end
+	end
+	return t
 end
 
 function GetPercentageOfLeadersPerArmorClass(_table)

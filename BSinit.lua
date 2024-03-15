@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.755
+BS.Version = 0.756
 
 BS.SpectatorPID = 17
 
@@ -300,12 +300,11 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 							[7] = {"Izzo",
 									"a8wh4t",
 									"ThePhoenix_2000",
-									"Novator12", "Novator12Slave"},
+									"Novator12", "Novator12Slave",
+									"Vqrys"},
 							[8] = {},
 							[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
-									"Novator12", "Novator12Slave",
-									"ThePhoenix_2000",
-									"Vqrys"}
+									"Novator12", "Novator12Slave"}
 						}
 function BS.CheckForAchievements(_pID)
 
@@ -396,6 +395,7 @@ do
 		"Hero13",
 		"Hero14",
 		"HeroTarget",
+		"AI_heroAbilities",
 		"VictoryStatues",
 		"WCutter",
 		"Forester",
