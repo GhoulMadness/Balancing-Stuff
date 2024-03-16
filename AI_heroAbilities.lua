@@ -75,8 +75,8 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																gvHero13.TriggerIDs.DivineJudgment.DMGBonus[_player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero13_DMGBonus_Trigger", 1, nil, {_heroID, starttime})
 																Logic.CreateEffect(GGL_Effects.FXKerberosFear, posX, posY)
 															end
-															if not gvHero13.TriggerIDs.DivineJudgment.Judgment[_playerID] then
-																gvHero13.TriggerIDs.DivineJudgment.Judgment[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger", 1, nil, {_heroID,basedmg,posX,posY,starttime})
+															if not gvHero13.TriggerIDs.DivineJudgment.Judgment[_player] then
+																gvHero13.TriggerIDs.DivineJudgment.Judgment[_player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger", 1, nil, {_heroID,basedmg,posX,posY,starttime})
 															end
 														end,
 									["CallOfDarkness"] = function(_heroID, _player)
@@ -87,7 +87,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 															local starttime = Logic.GetTime()
 															gvHeroAbilities.InternalAbilities.Hero14.LifestealAura.LastTimeUsed[_player] = starttime;
 															(SendEvent or CSendEvent).HeroActivateAura(_heroID)
-															gvHero14.LifestealAura.TriggerIDs[player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {_heroID, starttime})
+															gvHero14.LifestealAura.TriggerIDs[_player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {_heroID, starttime})
 														end,
 									["RisingEvil"] = function(_heroID, _player)
 														Logic.GroupStand(_heroID)
