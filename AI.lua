@@ -853,6 +853,7 @@ AITroopGenerator_CheckLeaderAttachedToBarracks = function(_player, _id)
 	return true
 end
 AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
+
 	if not IsValid(_id) then
 		return true
 	end
@@ -869,10 +870,17 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 					--Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger", 1, {}, {_id, MilitaryBuildingID})
 					if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id)) then
 						Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
-						return true
+						tab.RecruitmentComplete = true
 					end
 				end
+			else
+				-- first attempt to reach homespot was failing (e.g. due to enemies on the way)
+				if tab.RecruitmentComplete and Counter.Tick2("AITroopGenerator_CheckForIdle_" .. _id, 5) then
+					Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
+				end
 			end
+		else
+			return true
 		end
 	end
 end
