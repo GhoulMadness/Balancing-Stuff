@@ -1090,6 +1090,47 @@ function ArePlayerBuildingsInArea(_player, _x, _y, _range)
 	return count > 0
 end
 
+-- Comfort to evaluate if wounded settler are near a given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@param _treshold number percentage health below units count as wounded
+---@param _diplstate string? optional, default: check for allied units
+---@return table entity IDs
+function AreWoundedEntitiesNearby(_player, _ecats, _position, _range, _treshold, _diplstate)
+	local PIDs = {}
+	if not _diplstate or _diplstate == "Allies" then
+		PIDs = BS.GetAllAlliedPlayerIDs(_player)
+	end
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(PIDs)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		if GetEntityHealth(eID) < _treshold then
+			return true
+		end
+	end
+	return false
+end
+
+-- Comfort to get all entities friendly to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return table entity IDs
+function GetAlliesInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local allies = BS.GetAllAlliedPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(allies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, eID)
+	end
+	return t
+end
+
 -- Comfort to get the amount of entities friendly to given playerID based off entityCategories and range to given position
 ---@param _player integer playerID
 ---@param _ecats table entityCategories
@@ -1097,16 +1138,49 @@ end
 ---@param _range number search range
 ---@return integer
 function GetNumberOfAlliesInRange(_player, _ecats, _position, _range)
+	local t = GetAlliesInRange(_player, _ecats, _position, _range)
+	if t and next(t) then
+		return table.getn(t)
+	end
+	return 0
+end
+
+-- Comfort to get all entities hostile to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return table entity IDs
+function GetEnemiesInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
 	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
 	assert(type(_range) == "number" and _range > 0, "invalid range")
-	local allies = BS.GetAllAlliedPlayerIDs(_player)
-	local count = 0
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(allies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
-		count = count + 1
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, eID)
 	end
-	return count
+	return t
+end
+
+-- Comfort to get all positions of entities hostile to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return table entity IDs
+function GetEnemiesPositionTableInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, GetPosition(eID))
+	end
+	return t
 end
 
 -- Comfort to get the amount of entities hostile to given playerID based off entityCategories and range to given position
@@ -1116,16 +1190,11 @@ end
 ---@param _range number search range
 ---@return integer
 function GetNumberOfEnemiesInRange(_player, _ecats, _position, _range)
-	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
-	assert(type(_ecats) == "table", "entity categories param must be a table")
-	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
-	assert(type(_range) == "number" and _range > 0, "invalid range")
-	local enemies = BS.GetAllEnemyPlayerIDs(_player)
-	local count = 0
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
-		count = count + 1
+	local t = GetEnemiesInRange(_player, _ecats, _position, _range)
+	if t and next(t) then
+		return table.getn(t)
 	end
-	return count
+	return 0
 end
 
 -- Comfort to get the amount of entities of playerID based off entityCategories and range to given position
