@@ -135,7 +135,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																			end
 																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
 																			if num >= gvHeroAbilities.UnitsTreshold then
-																				local posX, posY = EvaluateNearestUnblockedPosition(_posX, _posY, 1000, 100)
+																				local posX, posY = EvaluateNearestUnblockedPosition(_posX, _posY, 1000, 100, false)
 																				return true, (posX or _posX), (posY or _posY)
 																			end
 																			return false

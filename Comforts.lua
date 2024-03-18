@@ -4186,26 +4186,36 @@ end
 ---@param _posY number positionY
 ---@param _offset integer maximum search range near position
 ---@param _step integer limits max loop counts, thus higher value increases performance but lowers result quality
+---@param _noterrpos boolean? optional; should build block be ignored as blocked position? default: true
 ---@return number positionX
 ---@return number positionY
-EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
+EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step, _noterrpos)
+	if _noterrpos == nil then
+		_noterrpos = true
+	end
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
+	local f = IsPositionUnblocked
+	local res = true
+	if not _noterrpos then
+		f = GetBlocking100
+		res = 0
+	end
 
 	for y_ = _posY - _offset, _posY + _offset, _step do
 		for x_ = _posX - _offset, _posX + _offset, _step do
 			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
 
 				local d = (x_ - _posX)^2 + (y_ - _posY)^2
-				if IsPositionUnblocked(x_, y_) then
 
+				if f(x_, y_) == res then
 					if not dmin or dmin > d then
 						dmin = d
 						xspawn = x_
 						yspawn = y_
 					end
-
 				end
+
 			end
 		end
 	end
