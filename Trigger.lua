@@ -1011,3 +1011,27 @@ function OnErebos_Created()
 	end
 
 end
+
+gvCommandCheck = {FunctionNameByCommand = {[0] = Logic.GroupAttack,
+											[3] = Logic.GroupDefend,
+											[4] = Logic.GroupPatrol,
+											[5] = Logic.GroupAttackMove,
+											[6] = Logic.GroupGuard,
+											[7] = Logic.GroupStand,
+											[8] = Logic.MoveSettler}}
+function CheckForCommandAbortedJob(_id, _command, ...)
+	if not IsValid(_id) or GetArmyByLeaderID(_id) ~= nil then
+		gvCommandCheck[_id] = nil
+		return true
+	end
+	if Logic.LeaderGetCurrentCommand(_id) ~= _command then
+		if _command == 4 and gvCommandCheck[_id].PatrolPoints and next(gvCommandCheck[_id].PatrolPoints) then
+			for i = 1,table.getn(gvCommandCheck[_id].PatrolPoints) do
+				Logic.GroupAddPatrolPoint(_id, unpack(gvCommandCheck[_id].PatrolPoints[i]))
+			end
+		end
+		gvCommandCheck[_id] = nil
+		gvCommandCheck.FunctionNameByCommand[_command](_id, unpack(arg))
+		return true
+	end
+end

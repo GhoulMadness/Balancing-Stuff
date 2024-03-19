@@ -1363,6 +1363,36 @@ Logic.GroupAttack = function(_id, _target)
 	return GroupAttackOrig(_id, _target)
 end
 
+-- added some assertion so we don't get a crash; additionaly start to trigger to check if units' stand command was aborted
+GroupStandOrig = Logic.GroupStand
+Logic.GroupStand = function(_id)
+	assert(IsValid(_id), "invalid entityID")
+	if not GetArmyByLeaderID(_id) and not gvCommandCheck[_id] then
+		gvCommandCheck[_id] = {TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 7})}
+	end
+	return GroupStandOrig(_id)
+end
+
+GroupAddPatrolPointOrig = Logic.GroupAddPatrolPoint
+Logic.GroupAddPatrolPoint = function(_id, _posX, _posY)
+	assert(IsValid(_id), "invalid entityID")
+	gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+	gvCommandCheck[_id].PatrolPoints = gvCommandCheck[_id].PatrolPoints or {}
+	table.insert(gvCommandCheck[_id].PatrolPoints, {X = _posX, Y = _posY})
+	return GroupAddPatrolPointOrig(_id, _posX, _posY)
+end
+
+-- added some assertion so we don't get a crash; additionaly start to trigger to check if units' patrol command was aborted
+GroupPatrolOrig = Logic.GroupPatrol
+Logic.GroupPatrol = function(_id, _posX, _posY)
+	assert(IsValid(_id), "invalid entityID")
+	if not GetArmyByLeaderID(_id) and (not gvCommandCheck[_id] or gvCommandCheck[_id] and not gvCommandCheck[_id].TriggerID) then
+		gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+		gvCommandCheck.TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 4, _posX, _posY})
+	end
+	return GroupPatrolOrig(_id, _posX, _posY)
+end
+
 -- function allows only armyIDs between -1 and 8
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
 AI.Army_GetEntityIdOfEnemy = function(_player, _id)
@@ -1397,7 +1427,7 @@ GetArmyByLeaderID = function(_id)
 	assert(IsValid(_id), "invalid entityID")
 	assert(Logic.IsLeader(_id) == 1, "entityID must be a leader")
 	local player = Logic.EntityGetPlayer(_id)
-	assert((ArmyTable and ArmyTable[player]) or (MapEditor_Armies and MapEditor_Armies[player]), "player ID ".. player .." has no armies")
+	--assert((ArmyTable and ArmyTable[player]) or (MapEditor_Armies and MapEditor_Armies[player]), "player ID ".. player .." has no armies")
 	if ArmyTable and ArmyTable[player] then
 		for k, v in pairs(ArmyTable[player]) do
 			if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
@@ -1408,10 +1438,17 @@ GetArmyByLeaderID = function(_id)
 		end
 	end
 	if MapEditor_Armies and MapEditor_Armies[player] then
-		for k, v in pairs(MapEditor_Armies[player]) do
-			if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
-				if table_findvalue(v.IDs, _id) ~= 0 then
-					return k
+		for k, v in pairs(MapEditor_Armies[player].defensiveArmies) do
+			if k == "IDs" and table.getn(v) and table.getn(v) > 0 then
+				if table_findvalue(v, _id) ~= 0 then
+					return "defensiveArmies"
+				end
+			end
+		end
+		for k, v in pairs(MapEditor_Armies[player].offensiveArmies) do
+			if k == "IDs" and table.getn(v) and table.getn(v) > 0 then
+				if table_findvalue(v, _id) ~= 0 then
+					return "offensiveArmies"
 				end
 			end
 		end

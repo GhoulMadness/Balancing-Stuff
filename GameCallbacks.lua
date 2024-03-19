@@ -85,6 +85,34 @@ function Mission_OnSaveGameLoaded()
 		return GroupAttackOrig(_id, _target)
 	end
 
+	GroupStandOrig = Logic.GroupStand
+	Logic.GroupStand = function(_id)
+		assert(IsValid(_id), "invalid entityID")
+		if not GetArmyByLeaderID(_id) and not gvCommandCheck[_id] then
+			gvCommandCheck[_id] = {TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 7})}
+		end
+		return GroupStandOrig(_id)
+	end
+
+	GroupAddPatrolPointOrig = Logic.GroupAddPatrolPoint
+	Logic.GroupAddPatrolPoint = function(_id, _posX, _posY)
+		assert(IsValid(_id), "invalid entityID")
+		gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+		gvCommandCheck[_id].PatrolPoints = gvCommandCheck[_id].PatrolPoints or {}
+		table.insert(gvCommandCheck[_id].PatrolPoints, {X = _posX, Y = _posY})
+		return GroupAddPatrolPointOrig(_id, _posX, _posY)
+	end
+
+	GroupPatrolOrig = Logic.GroupPatrol
+	Logic.GroupPatrol = function(_id, _posX, _posY)
+		assert(IsValid(_id), "invalid entityID")
+		if not GetArmyByLeaderID(_id) and (not gvCommandCheck[_id] or gvCommandCheck[_id] and not gvCommandCheck[_id].TriggerID) then
+			gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+			gvCommandCheck.TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 4, _posX, _posY})
+		end
+		return GroupPatrolOrig(_id, _posX, _posY)
+	end
+
 	Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
 	AI.Army_GetEntityIdOfEnemy = function(_player, _id)
 		if _id >= 0 and _id <= 8 then

@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.756
+BS.Version = 0.757
 
 BS.SpectatorPID = 17
 
@@ -122,6 +122,7 @@ BS.MapList = {
 				},
 			[6] =	{
 				["(6) bs koop vargs raubzug"] = true,
+				["(6) bs koop pfad der flammen"] = true,
 				["(6) emsbs die zwei burgherrn"] = true,
 				["(6) emsbs heldenschlacht"] = true,
 				["(6) emsbs hochland"] = true,
