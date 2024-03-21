@@ -556,45 +556,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 		return
 	end
 
-	--	set up default information
-	local description = {
-
-		serfLimit				=	(_strength^2)+2,
-		--------------------------------------------------
-		extracting				=	false,
-		--------------------------------------------------
-		resources = {
-			gold				=	_strength*15000,
-			clay				=	_strength*12500,
-			iron				=	_strength*12500,
-			sulfur				=	_strength*12500,
-			stone				=	_strength*12500,
-			wood				=	_strength*12500
-		},
-		--------------------------------------------------
-		refresh = {
-			gold				=	_strength*1300,
-			clay				=	_strength*400,
-			iron				=	_strength*1100,
-			sulfur				=	_strength*550,
-			stone				=	_strength*400,
-			wood				=	_strength*750,
-			updateTime			=	math.floor(30/_strength)
-		},
-		--------------------------------------------------
-		constructing			=	true,
-		--------------------------------------------------
-		rebuild = {
-			delay				=	30*(5-_strength),
-			randomTime			=	15*(5-_strength)
-		},
-	}
-
-	SetupPlayerAi(_playerId, description)
-	EvaluateArmyHomespots(_playerId, position, nil)
-
-	local CannonEntityType1
-	local CannonEntityType2
+	local CannonEntityType1, CannonEntityType2
 	-- Tech level
 	if _techlevel <= 2 then
 		CannonEntityType1 = Entities.PV_Cannon1
@@ -622,37 +584,74 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	if MapEditor_Armies.controlerId == nil then
 		MapEditor_Armies.controlerId = {offensiveArmies = {}, defensiveArmies = {}}
 	end
+	if not MapEditor_Armies[_playerId] then
+		MapEditor_Armies[_playerId] = {
+			description = {
 
-	MapEditor_Armies[_playerId] = {prioritylist = {},
-								prioritylist_lastUpdate = 0,
-								multiTraining = _multiTrain or true,
-								player = _playerId,
-								id = 0,
-								techLVL = _techlevel,
-								aggressiveLVL =	_aggressiveLevel,
-								AllowedTypes = {UpgradeCategories.LeaderBow,
-												UpgradeCategories.LeaderSword,
-												UpgradeCategories.LeaderPoleArm,
-												UpgradeCategories.LeaderCavalry,
-												UpgradeCategories.LeaderHeavyCavalry,
-												UpgradeCategories.LeaderRifle,
-												CannonEntityType1,
-												CannonEntityType2
-												},
-								offensiveArmies = {strength	= _strength * 15,
-													position = position,
-													enemySearchPosition = _attackPosition,
-													rodeLength = _range,
-													baseDefenseRange = _defenseRange or (_range*2)/3,
-													AttackAllowed =	false,
-													IDs	= {}
-													},
-								defensiveArmies = {strength	= _strength * 3,
-													position = position,
-													baseDefenseRange = math.min(_range, _defenseRange or 5000),
-													IDs	= {}
-													}
+				serfLimit				=	(_strength^2)+2,
+				--------------------------------------------------
+				extracting				=	false,
+				--------------------------------------------------
+				resources = {
+					gold				=	_strength*15000,
+					clay				=	_strength*12500,
+					iron				=	_strength*12500,
+					sulfur				=	_strength*12500,
+					stone				=	_strength*12500,
+					wood				=	_strength*12500
+				},
+				--------------------------------------------------
+				refresh = {
+					gold				=	_strength*1300,
+					clay				=	_strength*400,
+					iron				=	_strength*1100,
+					sulfur				=	_strength*550,
+					stone				=	_strength*400,
+					wood				=	_strength*750,
+					updateTime			=	math.floor(30/_strength)
+				},
+				--------------------------------------------------
+				constructing			=	true,
+				--------------------------------------------------
+				rebuild = {
+					delay				=	30*(5-_strength),
+					randomTime			=	15*(5-_strength)
+				},
+			},
+			prioritylist = {},
+			prioritylist_lastUpdate = 0,
+			multiTraining = _multiTrain or true,
+			player = _playerId,
+			id = 0,
+			techLVL = _techlevel,
+			aggressiveLVL =	_aggressiveLevel,
+			AllowedTypes = {UpgradeCategories.LeaderBow,
+							UpgradeCategories.LeaderSword,
+							UpgradeCategories.LeaderPoleArm,
+							UpgradeCategories.LeaderCavalry,
+							UpgradeCategories.LeaderHeavyCavalry,
+							UpgradeCategories.LeaderRifle,
+							CannonEntityType1,
+							CannonEntityType2
+							},
+			offensiveArmies = {strength	= _strength * 15,
+								position = position,
+								enemySearchPosition = _attackPosition,
+								rodeLength = _range,
+								baseDefenseRange = _defenseRange or (_range*2)/3,
+								AttackAllowed =	false,
+								IDs	= {}
+								},
+			defensiveArmies = {strength	= _strength * 3,
+								position = position,
+								baseDefenseRange = math.min(_range, _defenseRange or 5000),
+								IDs	= {}
 								}
+		}
+	end
+
+	SetupPlayerAi(_playerId, MapEditor_Armies[_playerId].description)
+	EvaluateArmyHomespots(_playerId, position, nil)
 
 	-- troop recruitment generator
 	SetupAITroopGenerator("MapEditor_Armies_".._playerId, _playerId)
