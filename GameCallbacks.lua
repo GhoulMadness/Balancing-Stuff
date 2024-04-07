@@ -377,9 +377,30 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the Coalmaker?
 			elseif UpgradeCategory == UpgradeCategories.Coalmaker then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Coalmaker"),1)
+			--Is EntityType the tavern?
+			elseif 	UpgradeCategory == UpgradeCategories.Tavern then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Tavern"),1)
+				ButtonStem =  "Upgrade_Tavern"
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.BuildingTabs,1)
+				XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
+				XGUIEng.HighLightButton(gvGUI_WidgetID.ToBuildingSettlersMenu,1)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes,0)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes,0)
+			--Is EntityType the plantation?
+			elseif 	UpgradeCategory == UpgradeCategories.Grange then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Grange"),1)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.BuildingTabs,1)
+				XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
+				XGUIEng.HighLightButton(gvGUI_WidgetID.ToBuildingSettlersMenu,1)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes,0)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes,0)
 			end
 			--Update Upgrade Buttons
-			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)
+			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory, ButtonStem)
 		end
 
 	elseif EntityType == Entities.PU_BattleSerf then

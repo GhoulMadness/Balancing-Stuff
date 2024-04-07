@@ -1005,6 +1005,14 @@ Der Mindestabstand, den Türme beim Bau auf Koop-Karten einhalten müssen, wurde
 Werden Befehle wie Patrouillieren und Position halten aus diversen Gründen ungewollt abgebrochen, erhalten die Truppen nun erneut den gewünschten Befehl.
 Zuvor gesetzte Patrouillenpunkte werden dabei beibehalten.
 
+--- Version 0.758
+
+Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Übersetzungen wurden korrigiert.
+
+Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
+
+Ihr könnt nun dunklen Schwertkämpfern visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
+
 
 
 

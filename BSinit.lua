@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.757
+BS.Version = 0.758
 
 BS.SpectatorPID = 17
 
@@ -507,7 +507,7 @@ StartSimpleJob("BloodRushCheck")
 StartSimpleJob("Lightning_Job")
 --Trigger to get building ids for beauti anims
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
---Trigger for AI target redirection
+--Trigger for AI tower target redirection
 AIchunks = {}
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 ----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------
