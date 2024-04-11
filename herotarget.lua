@@ -28,7 +28,7 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 									[Entities.PU_Hero11] = 0.9,
 									[Entities.CU_Evil_Queen] = 1.0,
 									[Entities.PU_Hero13] = 0.8,
-									[Entities.PU_Hero14] = 0.7
+									[Entities.PU_Hero14] = 0.8
 								},
 				MainThreat = {	[Entities.PU_Hero1] = {"CloseRange", Abilities.AbilityInflictFear},
 								[Entities.PU_Hero1a] = {"CloseRange", Abilities.AbilityInflictFear},
@@ -87,7 +87,7 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 								if dist < range then
 									return -1
 								else
-									return numthreatened_ent / gvHeroTarget.Thresholds.CriticalNumEntitiesClump
+									return math.max(numthreatened_ent / gvHeroTarget.Thresholds.CriticalNumEntitiesClump, 2)
 								end
 							end
 						else

@@ -3814,7 +3814,7 @@ end
 -- player of leader needs to have active armies
 ---@param _eID integer entityID of leader
 ---@param _target integer? entityID of preferred target (optional)
----@param _range number base value of search range for a better target
+---@param _range number? base value of search range for a better target (optional)
 ---@return integer entityID of better target
 function CheckForBetterTarget(_eID, _target, _range)
 
@@ -3835,7 +3835,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local damagerange = GetEntityTypeDamageRange(etype)
 	local calcT = {}
 	if IsMelee then
-		bonusRange = bonusRange * 2
+		bonusRange = bonusRange * 3
 	end
 	if IsHero then
 		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
