@@ -1011,7 +1011,7 @@ Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Ü
 
 Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
 
-Ihr könnt nun dunklen Schwertkämpfern visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
+Ihr könnt nun dunklen Schwertkämpfern und Dovbar visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
 
 
 
