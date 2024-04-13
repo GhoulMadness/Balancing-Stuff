@@ -208,9 +208,8 @@ function OnHeliasCreated()
 end
 function HeliasDamageReduction(_id)
 
-	local target = Event.GetEntityID2()
-
 	if Logic.IsEntityAlive(_id) then
+		local target = Event.GetEntityID2()
 		local cooldown = Logic.HeroGetAbiltityChargeSeconds(_id, Abilities.AbilityRangedEffect)
 		local player = Logic.EntityGetPlayer(_id)
 		local dmg = CEntity.TriggerGetDamage()

@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.758
+BS.Version = 0.759
 
 BS.SpectatorPID = 17
 
