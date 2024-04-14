@@ -41,36 +41,45 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 					CastAbility = {	[Abilities.AbilityInflictFear] = function(_heroID)
 																		Logic.GroupStand(_heroID);
 																		(SendEvent or CSendEvent).HeroInflictFear(_heroID)
+																		CLogger.Log("AIHeroInflictFear", _heroID)
 																	end,
 									[Abilities.AbilityPlaceBomb] = 	function(_heroID, _posX, _posY)
 																		gvHeroAbilities.CurrentlyMovingToReachCastDestination[_heroID] = true;
 																		(SendEvent or CSendEvent).HeroPlaceBomb(_heroID, _posX, _posY)
+																		CLogger.Log("AIHeroPlaceBomb", _heroID, _posX, _posY)
 																	end,
 									[Abilities.AbilityBuildCannon] = function(_heroID, _posX, _posY)
 																		gvHeroAbilities.CurrentlyMovingToReachCastDestination[_heroID] = true;
 																		(SendEvent or CSendEvent).HeroPlaceCannon(_heroID, _posX, _posY)
+																		CLogger.Log("AIHeroPlaceCannon", _heroID, _posX, _posY)
 																	end,
 									[Abilities.AbilityRangedEffect] = 	function(_heroID)
 																			(SendEvent or CSendEvent).HeroActivateAura(_heroID)
+																			CLogger.Log("AIHeroActivateAura", _heroID)
 																		end,
 									[Abilities.AbilityCircularAttack] = function(_heroID)
 																			Logic.GroupStand(_heroID);
 																			(SendEvent or CSendEvent).HeroCircularAttack(_heroID)
+																			CLogger.Log("AIHeroCircularAttack", _heroID)
 																		end,
 									[Abilities.AbilitySummon] = function(_heroID)
 																	(SendEvent or CSendEvent).HeroSummon(_heroID)
+																	CLogger.Log("AIHeroSummon", _heroID)
 																end,
 									[Abilities.AbilityConvertSettlers] = function(_heroID, _targetID)
 																			Logic.GroupStand(_heroID);
 																			(SendEvent or CSendEvent).HeroConvertSettler(_heroID, _targetID)
+																			CLogger.Log("AIHeroConvertSettler", _heroID, _targetID)
 																		end,
 									[Abilities.AbilityShuriken] = 	function(_heroID, _targetID)
 																		Logic.GroupStand(_heroID);
 																		(SendEvent or CSendEvent).HeroShuriken(_heroID, _targetID)
+																		CLogger.Log("AIHeroShuriken", _heroID, _targetID)
 																	end,
 									[Abilities.AbilitySniper] = function(_heroID, _targetID)
 																	Logic.GroupStand(_heroID);
 																	(SendEvent or CSendEvent).HeroSnipeSettler(_heroID, _targetID)
+																	CLogger.Log("AIHeroSnipeSettler", _heroID, _targetID)
 																end,
 									["StoneArmor"] = function(_heroID, _player)
 														local starttime = Logic.GetTimeMs()
@@ -81,6 +90,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 														if not gvHero13.TriggerIDs.StoneArmor.DamageApply[_player] then
 															gvHero13.TriggerIDs.StoneArmor.DamageApply[_player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_StoneArmor_ApplyDamage", 1, nil, {_heroID, starttime})
 														end
+														CLogger.Log("AIHeroStoneArmor", _heroID)
 													end,
 									["DivineJudgment"] = function(_heroID, _player)
 															local starttime = Logic.GetTimeMs()
@@ -94,21 +104,25 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 															if not gvHero13.TriggerIDs.DivineJudgment.Judgment[_player] then
 																gvHero13.TriggerIDs.DivineJudgment.Judgment[_player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, nil, "Hero13_DivineJudgment_Trigger", 1, nil, {_heroID,basedmg,posX,posY,starttime})
 															end
+															CLogger.Log("AIHeroDivineJudgment", _heroID)
 														end,
 									["CallOfDarkness"] = function(_heroID, _player)
 															gvHero14.CallOfDarkness.SpawnTroops(_heroID)
 															gvHeroAbilities.InternalAbilities.Hero14.CallOfDarkness.LastTimeUsed[_player] = Logic.GetTime()
+															CLogger.Log("AIHeroCallOfDarkness", _heroID)
 														end,
 									["LifestealAura"] = function(_heroID, _player)
 															local starttime = Logic.GetTime()
 															gvHeroAbilities.InternalAbilities.Hero14.LifestealAura.LastTimeUsed[_player] = starttime;
 															(SendEvent or CSendEvent).HeroActivateAura(_heroID)
 															gvHero14.LifestealAura.TriggerIDs[_player] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero14_Lifesteal_Trigger", 1, nil, {_heroID, starttime})
+															CLogger.Log("AIHeroLifestealAura", _heroID)
 														end,
 									["RisingEvil"] = function(_heroID, _player)
 														Logic.GroupStand(_heroID)
 														gvHero14.RisingEvil.SpawnEvilTower(_heroID)
 														gvHeroAbilities.InternalAbilities.Hero14.RisingEvil.LastTimeUsed[_player] = Logic.GetTime()
+														CLogger.Log("AIHeroRisingEvil", _heroID)
 													end
 								},
 					CheckByAbility = {	[Abilities.AbilityInflictFear] = function(_heroID, _posX, _posY, _player)

@@ -217,19 +217,22 @@ function HeliasDamageReduction(_id)
 		local tab = gvHero6.AbilityProperties.Bless
 		if cooldown > tab.Duration and cooldown < Logic.HeroGetAbilityRechargeTime(_id, Abilities.AbilityRangedEffect) then
 			if target == _id and Logic.GetPlayersGlobalResource(player, ResourceType.Faith) >= Logic.GetMaximumFaith(player) then
-				CEntity.TriggerSetDamage(math.max(math.ceil(dmg * tab.DamageReductionFactor), 1))
+				local newdmg = math.max(math.ceil(dmg * tab.DamageReductionFactor), 1)
+				CEntity.TriggerSetDamage(newdmg)
 				Logic.CreateEffect(GGL_Effects.FXNephilimFlowerDestroy, posX, posY)
+				CLogger.Log("HeliasDamageReductionSelf", _id, newdmg)
 			end
 		elseif cooldown < tab.Duration then
 			local p2 = Logic.EntityGetPlayer(target)
 			if player == p2 or Logic.GetDiplomacyState(player, p2) == Diplomacy.Friendly then
-				if GetDistance(_id, target) <= tab.MaxRange then
+				if GetDistance(_id, target) <= tab.MaxRange and target ~= _id then
 					local newdmg = math.max(math.ceil(dmg * tab.DamageReductionFactor), 1)
 					local diff = dmg - newdmg
 					if Logic.GetPlayersGlobalResource(player, ResourceType.Faith) >= diff then
 						Logic.SubFromPlayersGlobalResource(player, ResourceType.Faith, diff)
 						CEntity.TriggerSetDamage(newdmg)
 						Logic.CreateEffect(GGL_Effects.FXNephilimFlowerDestroy, posX, posY)
+						CLogger.Log("HeliasDamageReductionAlly", _id, newdmg)
 					end
 				end
 			end
