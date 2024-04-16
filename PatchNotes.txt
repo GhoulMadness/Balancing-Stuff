@@ -1019,5 +1019,9 @@ Es wurde ein Fehler behoben, durch den Gebäude auf Festungsmauern platziert wer
 
 Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
 
+Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
+
+Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 
+
 
 
