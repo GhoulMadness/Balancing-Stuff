@@ -118,15 +118,17 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 					end
 				end,
 				EvaluateThreatFactor = function(_id, _heroID)
-				assert(IsValid(_id) and IsValid(_heroID), "invalid entity ID")
-				local type = Logic.GetEntityType(_heroID)
-				local factor = gvHeroTarget.BaseThreatVal[type]
-				if type == Entities.PU_Hero6 then
-					if gvHeroTarget.AreEntitiesThreatenedByConvertSettler(_heroID) then
-						factor = factor * 3
+					assert(IsValid(_id) and IsValid(_heroID), "invalid entity ID")
+					local type = Logic.GetEntityType(_heroID)
+					local base = gvHeroTarget.BaseThreatVal[type]
+					if type == Entities.PU_Hero6 then
+						if gvHeroTarget.AreEntitiesThreatenedByConvertSettler(_heroID) then
+							base = base * 3
+						end
 					end
-				end
-				local threat, ability = unpack(gvHeroTarget.MainThreat[type])
-					return factor * gvHeroTarget.FactorByThreatType[threat](_id, _heroID, ability)
+					local threat, ability = unpack(gvHeroTarget.MainThreat[type])
+					local factor = gvHeroTarget.FactorByThreatType[threat](_id, _heroID, ability)
+					CLogger.Log("HeroTargetFactorResult", _heroID, factor)
+					return base * factor
 				end
 }
