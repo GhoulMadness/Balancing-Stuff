@@ -225,7 +225,7 @@ BS.DateRestrictions = 	{MapName = {	["(4) emsbs hasenjagd"] =  	{
 												}
 						}
 for _, map in pairs(BS.DateRestrictions.MapName) do
-	for i = 0, 9 do
+	for i = 1, 9 do
 		table.insert(map, "2022-05-0" .. i)
 	end
 	for i = 10, 14 do
@@ -234,7 +234,7 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 	for i = 29, 30 do
 		table.insert(map, "2024-04-" .. i)
 	end
-	for i = 0, 9 do
+	for i = 1, 9 do
 		table.insert(map, "2024-05-0" .. i)
 	end
 	for i = 10, 12 do
