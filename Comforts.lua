@@ -2794,7 +2794,6 @@ function GetAbilityDuration(_entityType, _ability)
 		for i = 2, 10, 2 do
 			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][0]:GetInt() == BS.MemValues.VTableByAbility[_ability] then
 				BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][8]:GetInt()
-				CLogger.Log("AbilityDuration", _entityType, _ability, BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability])
 				return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
 			end
 		end
@@ -2824,7 +2823,6 @@ function GetAbilityRange(_entityType, _ability)
 		for i = 2, 10, 2 do
 			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][0]:GetInt() == BS.MemValues.VTableByAbility[_ability] then
 				BS.MemValues.EntityTypeAbilityRange[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][index]:GetFloat()
-				CLogger.Log("AbilityRange", _entityType, _ability, BS.MemValues.EntityTypeAbilityRange[_entityType][_ability])
 				return BS.MemValues.EntityTypeAbilityRange[_entityType][_ability]
 			end
 		end
@@ -3063,7 +3061,6 @@ end
 ---@return integer target entityID
 function GetConvertSettlersTarget(_heroID)
 	local t = CEntity.GetReversedAttachedEntities(_heroID)
-	CLogger.Log("ConvertSettlerTarget", _heroID, next(t) and t[62] and t[62][1])
 	return (next(t) and t[62] and t[62][1])
 end
 

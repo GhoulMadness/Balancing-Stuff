@@ -128,7 +128,6 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 					end
 					local threat, ability = unpack(gvHeroTarget.MainThreat[type])
 					local factor = gvHeroTarget.FactorByThreatType[threat](_id, _heroID, ability)
-					CLogger.Log("HeroTargetFactorResult", _heroID, factor)
 					return base * factor
 				end
 }

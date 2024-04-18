@@ -204,19 +204,42 @@ end
 BS.DateRestrictions = 	{MapName = {	["(4) emsbs hasenjagd"] =  	{
 																	},
 										["(4) emsbs imperium"] = 	{
+																	},
+										["(4) emsbs osterfieber"] = {
+																	},
+										["(4) emsbs easterville"] =	{
 																	}
 									},
 						TechnologyForbidden = {	[1] = Technologies.B_VictoryStatue1,
-												[2] = Technologies.B_VictoryStatue2
+												[2] = Technologies.B_VictoryStatue2,
+												[3] = Technologies.B_VictoryStatue3,
+												[4] = Technologies.B_VictoryStatue4,
+												[5] = Technologies.B_VictoryStatue5,
+												[6] = Technologies.B_VictoryStatue6,
+												[7] = Technologies.B_VictoryStatue7,
+												[8] = Technologies.B_VictoryStatue8,
+												[9] = Technologies.B_VictoryStatue9,
+												[10] = Technologies.MU_Cannon5,
+												[11] = Technologies.MU_Cannon6,
+												[12] = Technologies.MU_Catapult
 												}
 						}
-for i = 1,8 do
-	BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-0"..i+1
-	BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-0"..i+1
-end
-for i = 9,14 do
-	BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-"..i+1
-	BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-"..i+1
+for _, map in pairs(BS.DateRestrictions.MapName) do
+	for i = 0, 9 do
+		table.insert(map, "2022-05-0" .. i)
+	end
+	for i = 10, 14 do
+		table.insert(map, "2022-05-" .. i)
+	end
+	for i = 29, 30 do
+		table.insert(map, "2024-04-" .. i)
+	end
+	for i = 0, 9 do
+		table.insert(map, "2024-05-0" .. i)
+	end
+	for i = 10, 12 do
+		table.insert(map, "2024-05-" .. i)
+	end
 end
 
 function BS.CheckForDateRestrictions(_datestring)
@@ -228,10 +251,12 @@ function BS.CheckForDateRestrictions(_datestring)
 						ForbidTechnology(BS.DateRestrictions.TechnologyForbidden[x],i)
 					end
 				end
+				XGUIEng.ShowWidget("BuyHeroWindowBuyHero14", 0)
 			end
 		end
 	end
 end
+
 BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 						["Build_VictoryStatue2"] = "challenge_map2_won",
 						["Build_VictoryStatue3"] = "challenge_map3_won",

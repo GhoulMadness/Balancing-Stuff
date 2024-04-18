@@ -220,7 +220,6 @@ function HeliasDamageReduction(_id)
 				local newdmg = math.max(math.ceil(dmg * tab.DamageReductionFactor), 1)
 				CEntity.TriggerSetDamage(newdmg)
 				Logic.CreateEffect(GGL_Effects.FXNephilimFlowerDestroy, posX, posY)
-				CLogger.Log("HeliasDamageReductionSelf", _id, newdmg)
 			end
 		elseif cooldown < tab.Duration then
 			local p2 = Logic.EntityGetPlayer(target)
@@ -232,7 +231,6 @@ function HeliasDamageReduction(_id)
 						Logic.SubFromPlayersGlobalResource(player, ResourceType.Faith, diff)
 						CEntity.TriggerSetDamage(newdmg)
 						Logic.CreateEffect(GGL_Effects.FXNephilimFlowerDestroy, posX, posY)
-						CLogger.Log("HeliasDamageReductionAlly", _id, newdmg)
 					end
 				end
 			end
