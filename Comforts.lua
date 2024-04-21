@@ -983,14 +983,11 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 	else
 		i = 8
 	end
-	local amount, bool
+	local bool
 	for i = 1,i do
 		if Logic.GetDiplomacyState( _player, i) == _state then
-			amount, bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
-
-			if bool then
-				return true
-			end
+			bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
+			return bool
 
 		end
 	end
@@ -999,79 +996,104 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 
 end
 
--- Comfort to evaluate if entities of given player, entity categories and diplomacy state are in range of given position
+-- Comfort to evaluate if entities of given player, entity categories or entity types and diplomacy state are in range of given position
 ---@param _player integer playerID
 ---@param _entityTypes table|integer entityType(s)
----@param _entityCategories table entityCategories
+---@param _entityCategories table|integer entityCategories
 ---@param _position table positionTable
 ---@param _range number search range
 ---@param _amount integer needed amount of entities
 ---@return boolean
 function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCategories, _position, _range, _amount)
 
-	local Data = {}
-	local Counter = 0
-	assert(type(_entityCategories) == "table", "entityCategories param must be a table")
+	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
+	if sector == 0 then
+		sector = EvaluateNearestUnblockedSector(_position.X, _position.Y, 1000, 100)
+	end
+	local Count = 0
+	if type(_entityTypes) == "number" and _entityTypes > 0 then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfTypeFilter(_entityTypes), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
-	if type(_entityTypes) == "table" then
-		for i = 1,table.getn(_entityTypes) do
-			Data[i] = {Logic.GetPlayerEntitiesInArea(_player,
-													_entityType[i],
-													_position.X,
-													_position.Y,
-													_range,
-													_amount)}
-
-			for j=2, Data[i][1]+1 do
-				for k = 1,table.getn(_entityCategories) do
-					if Logic.IsBuilding(Data[i][j]) == 1 then
-						if Logic.IsConstructionComplete(Data[i][j]) == 1 then
-							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
-								Counter = Counter + 1
-							end
-						end
-					else
-						if Logic.IsEntityAlive(Data[i][j]) then
-							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
-								Counter = Counter + 1
-							end
-						end
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
 					end
 				end
 			end
-
+			if Count >= _amount then
+				break
+			end
 		end
+	elseif type(_entityTypes) == "table" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(unpack(_entityTypes)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
-	else
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
+					end
+				end
+			end
+			if Count >= _amount then
+				break
+			end
+		end
+	elseif type(_entityCategories) == "number" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfCategoryFilter(_entityCategories), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
-		Data = {Logic.GetPlayerEntitiesInArea(_player,
-												_entityType,
-												_position.X,
-												_position.Y,
-												_range,
-												_amount)}
-
-		for j=2, Data[1]+1 do
-			for k = 1,table.getn(_entityCategories) do
-				if Logic.IsBuilding(Data[j]) == 1 then
-					if Logic.IsConstructionComplete(Data[j]) == 1 then
-						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
-							Counter = Counter + 1
-						end
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
 					end
 				else
-					if Logic.IsEntityAlive(Data[j]) then
-						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
-							Counter = Counter + 1
-						end
+					if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
+						Count = Count + 1
 					end
 				end
 			end
+			if Count >= _amount then
+				break
+			end
 		end
+	elseif type(_entityCategories) == "table" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyCategoryFilter(unpack(_entityCategories)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
+					end
+				else
+					if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
+						Count = Count + 1
+					end
+				end
+			end
+			if Count >= _amount then
+				break
+			end
+		end
 	end
 
-	return Counter,(Counter >= _amount)
+	return Count >= _amount
 
 end
 
