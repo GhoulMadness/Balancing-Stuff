@@ -630,6 +630,10 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	local player = GUI.GetPlayerID()
 	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
 
+	if AreEntitiesOfDiplomacyStateInArea(player, {X = _x, Y = _y}, 1500, 3) then
+		allowed = false
+	end
+
 	if _eType == Entities.PB_CoalMine1 then
 
 		return gvCoal.Mine.PlacementCheck(_x, _y, _rotation) and IsExplored
