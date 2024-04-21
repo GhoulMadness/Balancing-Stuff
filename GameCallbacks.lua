@@ -630,7 +630,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	local player = GUI.GetPlayerID()
 	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
 
-	if AreEntitiesOfDiplomacyStateInArea(player, {X = _x, Y = _y}, 1500, 3) then
+	if AreEntitiesOfDiplomacyStateInArea(player, {X = _x, Y = _y}, 1500, 3) and _eType ~= Entities.PU_Hero3_Trap then
 		allowed = false
 	end
 
