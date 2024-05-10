@@ -1117,6 +1117,17 @@ GameCallback_UnknownTask = function(_id)
 			end
 		end
 		return 0
+	elseif etype == Entities.PU_Serf then
+		local task = Logic.GetCurrentTaskList(_id)
+		if task == "TL_LEAVE_KEEP" then
+			if not (CEntity.GetReversedAttachedEntities(_id) and CEntity.GetReversedAttachedEntities(_id)[53]) then
+				local posX, posY = Logic.GetEntityPosition(_id)
+				for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(player), CEntityIterator.OfTypeFilter(etype), CEntityIterator.InCircleFilter(posX, posY, 100)) do
+					Logic.DestroyEntity(eID)
+				end
+				Logic.DestroyEntity(_id)
+			end
+		end
 	end
 end
 -- adjusted, so feedback message is only received by player clicking the button, not all players

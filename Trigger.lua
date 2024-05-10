@@ -90,28 +90,30 @@ PoisonDoT_Job = function(_entity, _player, _type, _posX, _posY)
 	gvPoisonDoT.CurrentTick[_player] = gvPoisonDoT.CurrentTick[_player] + 1
 
 	for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, gvPoisonDoT.Range)) do
-		if Logic.GetDiplomacyState(_player,Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile then
-			-- if leader then...
-			if Logic.IsLeader(eID) == 1 then
-				local soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
-				-- leader only gets hurt when no more soldiers attached
-				if soldiers[1] == 0 then
-					if GetEntityHealth(eID) <= gvPoisonDoT.MaxHPDamagePerTick and Logic.IsHero(eID) ~= 1 then
-						BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
-						Logic.DestroyGroupByLeader(eID)
-					else
-						Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
+		-- need to check whether the id is alive or not, because the spells base dmg is applied b4 this trigger
+		if IsAlive(eID) then
+			if Logic.GetDiplomacyState(_player,Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile then
+				-- if leader then...
+				if Logic.IsLeader(eID) == 1 then
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
+					-- leader only gets hurt when no more soldiers attached
+					if soldiers[1] == 0 then
+						if GetEntityHealth(eID)/100 <= gvPoisonDoT.MaxHPDamagePerTick and Logic.IsHero(eID) ~= 1 then
+							BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
+							Logic.DestroyGroupByLeader(eID)
+						else
+							Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
+						end
 					end
+
+				-- when soldier, worker, etc., then...
+				else
+					if GetEntityHealth(eID)/100 <= gvPoisonDoT.MaxHPDamagePerTick then
+						BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
+					end
+
+					Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
 				end
-
-			-- when soldier, worker, etc., then...
-			else
-
-				if GetEntityHealth(eID) <= gvPoisonDoT.MaxHPDamagePerTick then
-					BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
-				end
-
-				Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
 			end
 		end
 	end

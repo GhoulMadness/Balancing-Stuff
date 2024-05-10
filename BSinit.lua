@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.760
+BS.Version = 0.761
 
 BS.SpectatorPID = 17
 
@@ -330,7 +330,9 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 									"CAS-G_Mathias", "Mathias", "G4F_Mathias"},
 							[5] = {"Novator12", "Novator12Slave",
 									"ThePhoenix_2000",
-									"Vqrys"},
+									"Vqrys",
+									"Roma_Invicta", "CAS_G Roma",
+									"CAS-G_Mathias", "Mathias", "G4F_Mathias"},
 							[6] = {},
 							[7] = {"Izzo",
 									"a8wh4t",
