@@ -1,5 +1,9 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.762
+
+Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
+
 --- Version 0.761
 
 Mit dieser Version wurden eine Vielzahl visueller Verbesserungen vorgenommen sowie einige Fehler behoben:
@@ -66,8 +70,3 @@ Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Ü
 Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
 
 Ihr könnt nun dunklen Schwertkämpfern und Dovbar visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
-
---- Version 0.757
-
-Werden Befehle wie Patrouillieren und Position halten aus diversen Gründen ungewollt abgebrochen, erhalten die Truppen nun erneut den gewünschten Befehl.
-Zuvor gesetzte Patrouillenpunkte werden dabei beibehalten.

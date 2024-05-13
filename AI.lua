@@ -983,10 +983,10 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------ Triggers for general AI data --------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
-gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 0,
-								[Entities.PV_Cannon4] = 0,
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1000,
+								[Entities.PV_Cannon4] = 1000,
 								[Entities.PV_Cannon6] = 0,
-								[Entities.PV_Catapult] = 0}
+								[Entities.PV_Catapult] = 500}
 --[[for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
 end]]

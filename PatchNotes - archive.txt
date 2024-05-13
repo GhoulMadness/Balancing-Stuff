@@ -1000,4 +1000,9 @@ Es wurde ein Fehler behoben, durch den berechnete Armeenpunkte in seltenen Fäll
 
 Der Mindestabstand, den Türme beim Bau auf Koop-Karten einhalten müssen, wurde leicht erhöht.
 
+--- Version 0.757
+
+Werden Befehle wie Patrouillieren und Position halten aus diversen Gründen ungewollt abgebrochen, erhalten die Truppen nun erneut den gewünschten Befehl.
+Zuvor gesetzte Patrouillenpunkte werden dabei beibehalten.
+
 

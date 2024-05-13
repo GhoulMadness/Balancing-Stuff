@@ -3877,7 +3877,9 @@ function CheckForBetterTarget(_eID, _target, _range)
 			return target
 		end
 	end
-	if _target and Logic.IsEntityAlive(_target) and sector == Logic.GetSector(_target) then
+	if _target and Logic.IsEntityAlive(_target)
+	and (IsMelee and sector == Logic.GetSector(_target)
+	or not IsMelee) then
 		calcT[1] = {id = _target, factor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(_target))], dist = GetDistance(_eID, _target)}
 	end
 
@@ -3956,10 +3958,14 @@ function CheckForBetterTarget(_eID, _target, _range)
 		end
 	end)
 	if next(calcT) then
-		for i = 1, table.getn(calcT) do
-			if sector == Logic.GetSector(calcT[i].id) then
-				return calcT[i].id
+		if IsMelee then
+			for i = 1, table.getn(calcT) do
+				if sector == Logic.GetSector(calcT[i].id) then
+					return calcT[i].id
+				end
 			end
+		else
+			return calcT[1].id
 		end
 	end
 end
