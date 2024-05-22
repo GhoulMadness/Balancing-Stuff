@@ -237,7 +237,7 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 	for i = 1, 9 do
 		table.insert(map, "2024-05-0" .. i)
 	end
-	for i = 10, 12 do
+	for i = 10, 31 do
 		table.insert(map, "2024-05-" .. i)
 	end
 end
