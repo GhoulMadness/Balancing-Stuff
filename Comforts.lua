@@ -983,14 +983,11 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 	else
 		i = 8
 	end
-	local amount, bool
+	local bool
 	for i = 1,i do
 		if Logic.GetDiplomacyState( _player, i) == _state then
-			amount, bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
-
-			if bool then
-				return true
-			end
+			bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
+			return bool
 
 		end
 	end
@@ -999,79 +996,104 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 
 end
 
--- Comfort to evaluate if entities of given player, entity categories and diplomacy state are in range of given position
+-- Comfort to evaluate if entities of given player, entity categories or entity types and diplomacy state are in range of given position
 ---@param _player integer playerID
 ---@param _entityTypes table|integer entityType(s)
----@param _entityCategories table entityCategories
+---@param _entityCategories table|integer entityCategories
 ---@param _position table positionTable
 ---@param _range number search range
 ---@param _amount integer needed amount of entities
 ---@return boolean
 function AreEntitiesOfTypeAndCategoryInArea(_player, _entityTypes, _entityCategories, _position, _range, _amount)
 
-	local Data = {}
-	local Counter = 0
-	assert(type(_entityCategories) == "table", "entityCategories param must be a table")
+	local sector = CUtil.GetSector(_position.X /100, _position.Y /100)
+	if sector == 0 then
+		sector = EvaluateNearestUnblockedSector(_position.X, _position.Y, 1000, 100)
+	end
+	local Count = 0
+	if type(_entityTypes) == "number" and _entityTypes > 0 then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfTypeFilter(_entityTypes), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
-	if type(_entityTypes) == "table" then
-		for i = 1,table.getn(_entityTypes) do
-			Data[i] = {Logic.GetPlayerEntitiesInArea(_player,
-													_entityType[i],
-													_position.X,
-													_position.Y,
-													_range,
-													_amount)}
-
-			for j=2, Data[i][1]+1 do
-				for k = 1,table.getn(_entityCategories) do
-					if Logic.IsBuilding(Data[i][j]) == 1 then
-						if Logic.IsConstructionComplete(Data[i][j]) == 1 then
-							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
-								Counter = Counter + 1
-							end
-						end
-					else
-						if Logic.IsEntityAlive(Data[i][j]) then
-							if Logic.IsEntityInCategory(Data[i][j], _entityCategories[k]) == 1 then
-								Counter = Counter + 1
-							end
-						end
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
 					end
 				end
 			end
-
+			if Count >= _amount then
+				break
+			end
 		end
+	elseif type(_entityTypes) == "table" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(unpack(_entityTypes)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
-	else
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
+					end
+				end
+			end
+			if Count >= _amount then
+				break
+			end
+		end
+	elseif type(_entityCategories) == "number" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfCategoryFilter(_entityCategories), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
-		Data = {Logic.GetPlayerEntitiesInArea(_player,
-												_entityType,
-												_position.X,
-												_position.Y,
-												_range,
-												_amount)}
-
-		for j=2, Data[1]+1 do
-			for k = 1,table.getn(_entityCategories) do
-				if Logic.IsBuilding(Data[j]) == 1 then
-					if Logic.IsConstructionComplete(Data[j]) == 1 then
-						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
-							Counter = Counter + 1
-						end
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
 					end
 				else
-					if Logic.IsEntityAlive(Data[j]) then
-						if Logic.IsEntityInCategory(Data[j], _entityCategories[k]) == 1 then
-							Counter = Counter + 1
-						end
+					if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
+						Count = Count + 1
 					end
 				end
 			end
+			if Count >= _amount then
+				break
+			end
 		end
+	elseif type(_entityCategories) == "table" then
+		for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyCategoryFilter(unpack(_entityCategories)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range)) do
+			if Logic.GetSector(id) == sector then
+				if Logic.IsBuilding(id) == 1 then
+					if Logic.IsConstructionComplete(id) == 1 and not IsInappropiateBuilding(id) and Logic.IsEntityInCategory(id, EntityCategories.Wall) == 0 then
+						Count = Count + 1
+					end
 
+				elseif Logic.IsHero(id) == 1 then
+					if Logic.IsEntityAlive(id) then
+						Count = Count + 1
+					end
+				else
+					if not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xd") and not string.find(string.lower(Logic.GetEntityTypeName(Logic.GetEntityType(id))), "xs") then
+						Count = Count + 1
+					end
+				end
+			end
+			if Count >= _amount then
+				break
+			end
+		end
 	end
 
-	return Counter,(Counter >= _amount)
+	return Count >= _amount
 
 end
 
@@ -1090,6 +1112,47 @@ function ArePlayerBuildingsInArea(_player, _x, _y, _range)
 	return count > 0
 end
 
+-- Comfort to evaluate if wounded settler are near a given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@param _treshold number percentage health below units count as wounded
+---@param _diplstate string? optional, default: check for allied units
+---@return table entity IDs
+function AreWoundedEntitiesNearby(_player, _ecats, _position, _range, _treshold, _diplstate)
+	local PIDs = {}
+	if not _diplstate or _diplstate == "Allies" then
+		PIDs = BS.GetAllAlliedPlayerIDs(_player)
+	end
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(PIDs)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		if GetEntityHealth(eID) < _treshold then
+			return true
+		end
+	end
+	return false
+end
+
+-- Comfort to get all entities friendly to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return table entity IDs
+function GetAlliesInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local allies = BS.GetAllAlliedPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(allies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, eID)
+	end
+	return t
+end
+
 -- Comfort to get the amount of entities friendly to given playerID based off entityCategories and range to given position
 ---@param _player integer playerID
 ---@param _ecats table entityCategories
@@ -1097,16 +1160,49 @@ end
 ---@param _range number search range
 ---@return integer
 function GetNumberOfAlliesInRange(_player, _ecats, _position, _range)
+	local t = GetAlliesInRange(_player, _ecats, _position, _range)
+	if t and next(t) then
+		return table.getn(t)
+	end
+	return 0
+end
+
+-- Comfort to get all entities hostile to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return table entity IDs
+function GetEnemiesInRange(_player, _ecats, _position, _range)
 	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
 	assert(type(_ecats) == "table", "entity categories param must be a table")
 	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
 	assert(type(_range) == "number" and _range > 0, "invalid range")
-	local allies = BS.GetAllAlliedPlayerIDs(_player)
-	local count = 0
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(_player, unpack(allies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
-		count = count + 1
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, eID)
 	end
-	return count
+	return t
+end
+
+-- Comfort to get all positions of entities hostile to given playerID based off entityCategories and range to given position
+---@param _player integer playerID
+---@param _ecats table entityCategories
+---@param _position table positionTable
+---@param _range number search range
+---@return table entity IDs
+function GetEnemiesPositionTableInRange(_player, _ecats, _position, _range)
+	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
+	assert(type(_ecats) == "table", "entity categories param must be a table")
+	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
+	assert(type(_range) == "number" and _range > 0, "invalid range")
+	local enemies = BS.GetAllEnemyPlayerIDs(_player)
+	local t = {}
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
+		table.insert(t, GetPosition(eID))
+	end
+	return t
 end
 
 -- Comfort to get the amount of entities hostile to given playerID based off entityCategories and range to given position
@@ -1116,16 +1212,11 @@ end
 ---@param _range number search range
 ---@return integer
 function GetNumberOfEnemiesInRange(_player, _ecats, _position, _range)
-	assert(type(_player) == "number" and _player > 0 and _player < 17, "invalid player ID")
-	assert(type(_ecats) == "table", "entity categories param must be a table")
-	assert(type(_position) == "table" and _position.X and _position.Y, "position param must be a table")
-	assert(type(_range) == "number" and _range > 0, "invalid range")
-	local enemies = BS.GetAllEnemyPlayerIDs(_player)
-	local count = 0
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(enemies)), CEntityIterator.InCircleFilter(_position.X, _position.Y, _range), CEntityIterator.OfAnyCategoryFilter(unpack(_ecats))) do
-		count = count + 1
+	local t = GetEnemiesInRange(_player, _ecats, _position, _range)
+	if t and next(t) then
+		return table.getn(t)
 	end
-	return count
+	return 0
 end
 
 -- Comfort to get the amount of entities of playerID based off entityCategories and range to given position
@@ -1294,6 +1385,36 @@ Logic.GroupAttack = function(_id, _target)
 	return GroupAttackOrig(_id, _target)
 end
 
+-- added some assertion so we don't get a crash; additionaly start to trigger to check if units' stand command was aborted
+GroupStandOrig = Logic.GroupStand
+Logic.GroupStand = function(_id)
+	assert(IsValid(_id), "invalid entityID")
+	if not GetArmyByLeaderID(_id) and not gvCommandCheck[_id] then
+		gvCommandCheck[_id] = {TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 7})}
+	end
+	return GroupStandOrig(_id)
+end
+
+GroupAddPatrolPointOrig = Logic.GroupAddPatrolPoint
+Logic.GroupAddPatrolPoint = function(_id, _posX, _posY)
+	assert(IsValid(_id), "invalid entityID")
+	gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+	gvCommandCheck[_id].PatrolPoints = gvCommandCheck[_id].PatrolPoints or {}
+	table.insert(gvCommandCheck[_id].PatrolPoints, {X = _posX, Y = _posY})
+	return GroupAddPatrolPointOrig(_id, _posX, _posY)
+end
+
+-- added some assertion so we don't get a crash; additionaly start to trigger to check if units' patrol command was aborted
+GroupPatrolOrig = Logic.GroupPatrol
+Logic.GroupPatrol = function(_id, _posX, _posY)
+	assert(IsValid(_id), "invalid entityID")
+	if not GetArmyByLeaderID(_id) and (not gvCommandCheck[_id] or gvCommandCheck[_id] and not gvCommandCheck[_id].TriggerID) then
+		gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+		gvCommandCheck.TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 4, _posX, _posY})
+	end
+	return GroupPatrolOrig(_id, _posX, _posY)
+end
+
 -- function allows only armyIDs between -1 and 8
 Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
 AI.Army_GetEntityIdOfEnemy = function(_player, _id)
@@ -1328,7 +1449,7 @@ GetArmyByLeaderID = function(_id)
 	assert(IsValid(_id), "invalid entityID")
 	assert(Logic.IsLeader(_id) == 1, "entityID must be a leader")
 	local player = Logic.EntityGetPlayer(_id)
-	assert((ArmyTable and ArmyTable[player]) or (MapEditor_Armies and MapEditor_Armies[player]), "player ID ".. player .." has no armies")
+	--assert((ArmyTable and ArmyTable[player]) or (MapEditor_Armies and MapEditor_Armies[player]), "player ID ".. player .." has no armies")
 	if ArmyTable and ArmyTable[player] then
 		for k, v in pairs(ArmyTable[player]) do
 			if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
@@ -1339,10 +1460,17 @@ GetArmyByLeaderID = function(_id)
 		end
 	end
 	if MapEditor_Armies and MapEditor_Armies[player] then
-		for k, v in pairs(MapEditor_Armies[player]) do
-			if v.IDs and table.getn(v.IDs) and table.getn(v.IDs) > 0 then
-				if table_findvalue(v.IDs, _id) ~= 0 then
-					return k
+		for k, v in pairs(MapEditor_Armies[player].defensiveArmies) do
+			if k == "IDs" and table.getn(v) and table.getn(v) > 0 then
+				if table_findvalue(v, _id) ~= 0 then
+					return "defensiveArmies"
+				end
+			end
+		end
+		for k, v in pairs(MapEditor_Armies[player].offensiveArmies) do
+			if k == "IDs" and table.getn(v) and table.getn(v) > 0 then
+				if table_findvalue(v, _id) ~= 0 then
+					return "offensiveArmies"
 				end
 			end
 		end
@@ -2685,8 +2813,12 @@ function GetAbilityDuration(_entityType, _ability)
 	if BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability] then
 		return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
 	else
-		BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][16][8]:GetInt()
-		return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
+		for i = 2, 10, 2 do
+			if CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][0]:GetInt() == BS.MemValues.VTableByAbility[_ability] then
+				BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][8+i][8]:GetInt()
+				return BS.MemValues.EntityTypeAbilityDuration[_entityType][_ability]
+			end
+		end
 	end
 end
 
@@ -3623,7 +3755,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		sec = EvaluateNearestUnblockedSector(_pos.X, _pos.Y, 5000, 100)
 	end
 	local size = Logic.WorldGetSize()
-	local steps = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSteps) or 20
+	local steps = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSteps) or 10
 	local scatter = (ArmyTable and ArmyTable[_player] and ArmyTable[_player][_army] and ArmyTable[_player][_army].ScatterSize) or 100
 	local calcP = function(_XY)
 		return dekaround(math.max(math.min(_XY + (steps * math.random(-scatter, scatter)), size - 1), 1))
@@ -3708,7 +3840,7 @@ end
 -- player of leader needs to have active armies
 ---@param _eID integer entityID of leader
 ---@param _target integer? entityID of preferred target (optional)
----@param _range number base value of search range for a better target
+---@param _range number? base value of search range for a better target (optional)
 ---@return integer entityID of better target
 function CheckForBetterTarget(_eID, _target, _range)
 
@@ -3729,7 +3861,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local damagerange = GetEntityTypeDamageRange(etype)
 	local calcT = {}
 	if IsMelee then
-		bonusRange = bonusRange * 2
+		bonusRange = bonusRange * 3
 	end
 	if IsHero then
 		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
@@ -3738,14 +3870,40 @@ function CheckForBetterTarget(_eID, _target, _range)
 		end
 	end
 	if gvAntiBuildingCannonsRange[etype] then
+		local res
+		local f = function(_target1, _target2)
+			if _target1 and Logic.IsBuilding(_target1) == 0 and _target2 then
+				return _target2
+			elseif not _target1 and _target2 then
+				return _target2
+			end
+		end
 		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
-		if _target and Logic.IsBuilding(_target) == 0 and target then
-			return target
-		elseif not _target and target then
-			return target
+		local army = GetArmyByLeaderID(_eID)
+		if army then
+			local tab
+			if type(army) == "string" then
+				tab = MapEditor_Armies[player][army]
+			else
+				tab = ArmyTable[player][army+1]
+			end
+			if target 
+			and target == tab[_eID].currenttarget
+			and GetDistance(_eID, target) > maxrange
+			and Logic.GetTime() < tab[_eID].lasttime + 30 then
+			else
+				res = f(_target, target)
+			end
+		else
+			res = f(_target, target)
+		end
+		if res then
+			return res
 		end
 	end
-	if _target and Logic.IsEntityAlive(_target) and sector == Logic.GetSector(_target) then
+	if _target and Logic.IsEntityAlive(_target)
+	and (IsMelee and sector == Logic.GetSector(_target)
+	or not IsMelee) then
 		calcT[1] = {id = _target, factor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(Logic.GetEntityType(_target))], dist = GetDistance(_eID, _target)}
 	end
 
@@ -3824,10 +3982,14 @@ function CheckForBetterTarget(_eID, _target, _range)
 		end
 	end)
 	if next(calcT) then
-		for i = 1, table.getn(calcT) do
-			if sector == Logic.GetSector(calcT[i].id) then
-				return calcT[i].id
+		if IsMelee then
+			for i = 1, table.getn(calcT) do
+				if sector == Logic.GetSector(calcT[i].id) then
+					return calcT[i].id
+				end
 			end
+		else
+			return calcT[1].id
 		end
 	end
 end
@@ -4117,26 +4279,36 @@ end
 ---@param _posY number positionY
 ---@param _offset integer maximum search range near position
 ---@param _step integer limits max loop counts, thus higher value increases performance but lowers result quality
+---@param _noterrpos boolean? optional; should build block be ignored as blocked position? default: true
 ---@return number positionX
 ---@return number positionY
-EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step)
+EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step, _noterrpos)
+	if _noterrpos == nil then
+		_noterrpos = true
+	end
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
+	local f = IsPositionUnblocked
+	local res = true
+	if not _noterrpos then
+		f = GetBlocking100
+		res = 0
+	end
 
 	for y_ = _posY - _offset, _posY + _offset, _step do
 		for x_ = _posX - _offset, _posX + _offset, _step do
 			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
 
 				local d = (x_ - _posX)^2 + (y_ - _posY)^2
-				if IsPositionUnblocked(x_, y_) then
 
+				if f(x_, y_) == res then
 					if not dmin or dmin > d then
 						dmin = d
 						xspawn = x_
 						yspawn = y_
 					end
-
 				end
+
 			end
 		end
 	end

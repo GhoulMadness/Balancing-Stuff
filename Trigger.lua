@@ -90,28 +90,30 @@ PoisonDoT_Job = function(_entity, _player, _type, _posX, _posY)
 	gvPoisonDoT.CurrentTick[_player] = gvPoisonDoT.CurrentTick[_player] + 1
 
 	for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, gvPoisonDoT.Range)) do
-		if Logic.GetDiplomacyState(_player,Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile then
-			-- if leader then...
-			if Logic.IsLeader(eID) == 1 then
-				local soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
-				-- leader only gets hurt when no more soldiers attached
-				if soldiers[1] == 0 then
-					if GetEntityHealth(eID) <= gvPoisonDoT.MaxHPDamagePerTick and Logic.IsHero(eID) ~= 1 then
-						BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
-						Logic.DestroyGroupByLeader(eID)
-					else
-						Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
+		-- need to check whether the id is alive or not, because the spells base dmg is applied b4 this trigger
+		if IsAlive(eID) then
+			if Logic.GetDiplomacyState(_player,Logic.EntityGetPlayer(eID)) == Diplomacy.Hostile then
+				-- if leader then...
+				if Logic.IsLeader(eID) == 1 then
+					local soldiers = {Logic.GetSoldiersAttachedToLeader(eID)}
+					-- leader only gets hurt when no more soldiers attached
+					if soldiers[1] == 0 then
+						if GetEntityHealth(eID)/100 <= gvPoisonDoT.MaxHPDamagePerTick and Logic.IsHero(eID) ~= 1 then
+							BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
+							Logic.DestroyGroupByLeader(eID)
+						else
+							Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
+						end
 					end
+
+				-- when soldier, worker, etc., then...
+				else
+					if GetEntityHealth(eID)/100 <= gvPoisonDoT.MaxHPDamagePerTick then
+						BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
+					end
+
+					Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
 				end
-
-			-- when soldier, worker, etc., then...
-			else
-
-				if GetEntityHealth(eID) <= gvPoisonDoT.MaxHPDamagePerTick then
-					BS.ManualUpdate_KillScore(_player, Logic.EntityGetPlayer(eID), "Settler")
-				end
-
-				Logic.HurtEntity(eID, math.ceil(Logic.GetEntityMaxHealth(eID)*gvPoisonDoT.MaxHPDamagePerTick))
 			end
 		end
 	end
@@ -208,9 +210,8 @@ function OnHeliasCreated()
 end
 function HeliasDamageReduction(_id)
 
-	local target = Event.GetEntityID2()
-
 	if Logic.IsEntityAlive(_id) then
+		local target = Event.GetEntityID2()
 		local cooldown = Logic.HeroGetAbiltityChargeSeconds(_id, Abilities.AbilityRangedEffect)
 		local player = Logic.EntityGetPlayer(_id)
 		local dmg = CEntity.TriggerGetDamage()
@@ -218,13 +219,14 @@ function HeliasDamageReduction(_id)
 		local tab = gvHero6.AbilityProperties.Bless
 		if cooldown > tab.Duration and cooldown < Logic.HeroGetAbilityRechargeTime(_id, Abilities.AbilityRangedEffect) then
 			if target == _id and Logic.GetPlayersGlobalResource(player, ResourceType.Faith) >= Logic.GetMaximumFaith(player) then
-				CEntity.TriggerSetDamage(math.max(math.ceil(dmg * tab.DamageReductionFactor), 1))
+				local newdmg = math.max(math.ceil(dmg * tab.DamageReductionFactor), 1)
+				CEntity.TriggerSetDamage(newdmg)
 				Logic.CreateEffect(GGL_Effects.FXNephilimFlowerDestroy, posX, posY)
 			end
 		elseif cooldown < tab.Duration then
 			local p2 = Logic.EntityGetPlayer(target)
 			if player == p2 or Logic.GetDiplomacyState(player, p2) == Diplomacy.Friendly then
-				if GetDistance(_id, target) <= tab.MaxRange then
+				if GetDistance(_id, target) <= tab.MaxRange and target ~= _id then
 					local newdmg = math.max(math.ceil(dmg * tab.DamageReductionFactor), 1)
 					local diff = dmg - newdmg
 					if Logic.GetPlayersGlobalResource(player, ResourceType.Faith) >= diff then
@@ -1010,4 +1012,28 @@ function OnErebos_Created()
 		gvHero14.NighttimeAura.TriggerIDs.Start[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Hero14_MovementEffects_Player",1,{},{entityID})
 	end
 
+end
+
+gvCommandCheck = {FunctionNameByCommand = {[0] = Logic.GroupAttack,
+											[3] = Logic.GroupDefend,
+											[4] = Logic.GroupPatrol,
+											[5] = Logic.GroupAttackMove,
+											[6] = Logic.GroupGuard,
+											[7] = Logic.GroupStand,
+											[8] = Logic.MoveSettler}}
+function CheckForCommandAbortedJob(_id, _command, ...)
+	if not IsValid(_id) or GetArmyByLeaderID(_id) ~= nil then
+		gvCommandCheck[_id] = nil
+		return true
+	end
+	if Logic.LeaderGetCurrentCommand(_id) ~= _command then
+		if _command == 4 and gvCommandCheck[_id].PatrolPoints and next(gvCommandCheck[_id].PatrolPoints) then
+			for i = 1,table.getn(gvCommandCheck[_id].PatrolPoints) do
+				Logic.GroupAddPatrolPoint(_id, unpack(gvCommandCheck[_id].PatrolPoints[i]))
+			end
+		end
+		gvCommandCheck[_id] = nil
+		gvCommandCheck.FunctionNameByCommand[_command](_id, unpack(arg))
+		return true
+	end
 end

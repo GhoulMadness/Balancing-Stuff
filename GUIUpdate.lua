@@ -296,7 +296,7 @@ function GUIUpdate_LighthouseTroops()
 	local eType = Logic.GetEntityType(eID)
 	local TimePassed = 0
 	local RechargeTime = gvLighthouse.cooldown
-	TimePassed = math.floor(Logic.GetTime()- gvLighthouse.starttime[PID])
+	TimePassed = math.floor(Logic.GetTime() - (gvLighthouse.starttime[PID] or 0))
 
 	if eType ~= Entities.CB_LighthouseActivated then
 		XGUIEng.DisableButton(CurrentWidgetID,1)

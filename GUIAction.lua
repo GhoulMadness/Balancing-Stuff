@@ -375,6 +375,9 @@ end
 -----------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Hero9CallWolfs()
 	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(), Entities.CU_Barbarian_Hero,1)})[2]
+	if not Logic.IsEntityAlive(heroID) then
+		return
+	end
 	local player = Logic.EntityGetPlayer(heroID)
 	GUI.SettlerSummon(heroID)
 	if CNetwork then

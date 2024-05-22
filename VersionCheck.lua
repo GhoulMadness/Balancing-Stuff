@@ -76,7 +76,7 @@ function BS.VersionCheck.Setup()
 		local BSVersion = BS.VersionCheck.MyBSVersion
 
 		if GUI.GetPlayerID() == BS.SpectatorPID then
-			-- spectators will only set their own version for them else - no one else cares about their version
+			-- spectators will only set their own version for themself - no one else cares about their version
 			BS.VersionCheck.SetVersionForPlayer(playerIndex, BSVersion)
 			return;
 		end

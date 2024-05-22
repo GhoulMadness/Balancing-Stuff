@@ -286,13 +286,15 @@ Retreat = function(_army, _rodeLength)
 		_army.rodeLength = _rodeLength
 	end
 	local pos = _army.position
+	local groupAttackRange = 2000
 	for i = 1, table.getn(ArmyTable[_army.player][_army.id + 1].IDs) do
 		local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
-		if GetDistance(GetPosition(id), pos) > 1500 then
+		local dist = GetDistance(GetPosition(id), pos)
+		if dist > 1500 then
 			local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 			if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE"
-			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" or Logic.GetCurrentTaskList(id) == "TL_LEADER_WALK"
-			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_DRIVE" then
+			or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE"
+			and dist < _army.rodeLength - groupAttackRange then
 				Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
 			else
 				Logic.MoveSettler(id, anchor.X, anchor.Y)
@@ -488,6 +490,17 @@ end
 ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 
 	local tabname, range, pos, newtarget
+	local f = function(_tab, _target)
+		if not _tab.currenttarget then
+			_tab.currenttarget = _target
+			_tab.lasttime = Logic.GetTime()
+		else
+			if _tab.currenttarget and _tab.currenttarget ~= _target then
+				_tab.currenttarget = _target
+				_tab.lasttime = Logic.GetTime()
+			end
+		end
+	end
 
 	if not _armyId then
 		tabname = MapEditor_Armies[_player][_type]
@@ -506,20 +519,17 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 		if Logic.GetSector(newtarget) == Logic.GetSector(_id) then
 			if GetDistance(_id, newtarget) > range then
 				if _target then
-					tabname[_id].currenttarget = _target
-					tabname[_id].lasttime = Logic.GetTime()
+					f(tabname[_id], _target)
 					Logic.GroupAttack(_id, _target)
 				end
 			else
-				tabname[_id].currenttarget = newtarget
-				tabname[_id].lasttime = Logic.GetTime()
+				f(tabname[_id], newtarget)
 				Logic.GroupAttack(_id, newtarget)
 			end
 		end
 	else
 		if _target then
-			tabname[_id].currenttarget = _target
-			tabname[_id].lasttime = Logic.GetTime()
+			f(tabname[_id], _target)
 			Logic.GroupAttack(_id, _target)
 		end
 	end
@@ -556,45 +566,7 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 		return
 	end
 
-	--	set up default information
-	local description = {
-
-		serfLimit				=	(_strength^2)+2,
-		--------------------------------------------------
-		extracting				=	false,
-		--------------------------------------------------
-		resources = {
-			gold				=	_strength*15000,
-			clay				=	_strength*12500,
-			iron				=	_strength*12500,
-			sulfur				=	_strength*12500,
-			stone				=	_strength*12500,
-			wood				=	_strength*12500
-		},
-		--------------------------------------------------
-		refresh = {
-			gold				=	_strength*1300,
-			clay				=	_strength*400,
-			iron				=	_strength*1100,
-			sulfur				=	_strength*550,
-			stone				=	_strength*400,
-			wood				=	_strength*750,
-			updateTime			=	math.floor(30/_strength)
-		},
-		--------------------------------------------------
-		constructing			=	true,
-		--------------------------------------------------
-		rebuild = {
-			delay				=	30*(5-_strength),
-			randomTime			=	15*(5-_strength)
-		},
-	}
-
-	SetupPlayerAi(_playerId, description)
-	EvaluateArmyHomespots(_playerId, position, nil)
-
-	local CannonEntityType1
-	local CannonEntityType2
+	local CannonEntityType1, CannonEntityType2
 	-- Tech level
 	if _techlevel <= 2 then
 		CannonEntityType1 = Entities.PV_Cannon1
@@ -622,37 +594,74 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	if MapEditor_Armies.controlerId == nil then
 		MapEditor_Armies.controlerId = {offensiveArmies = {}, defensiveArmies = {}}
 	end
+	if not MapEditor_Armies[_playerId] then
+		MapEditor_Armies[_playerId] = {
+			description = {
 
-	MapEditor_Armies[_playerId] = {prioritylist = {},
-								prioritylist_lastUpdate = 0,
-								multiTraining = _multiTrain or true,
-								player = _playerId,
-								id = 0,
-								techLVL = _techlevel,
-								aggressiveLVL =	_aggressiveLevel,
-								AllowedTypes = {UpgradeCategories.LeaderBow,
-												UpgradeCategories.LeaderSword,
-												UpgradeCategories.LeaderPoleArm,
-												UpgradeCategories.LeaderCavalry,
-												UpgradeCategories.LeaderHeavyCavalry,
-												UpgradeCategories.LeaderRifle,
-												CannonEntityType1,
-												CannonEntityType2
-												},
-								offensiveArmies = {strength	= _strength * 15,
-													position = position,
-													enemySearchPosition = _attackPosition,
-													rodeLength = _range,
-													baseDefenseRange = _defenseRange or (_range*2)/3,
-													AttackAllowed =	false,
-													IDs	= {}
-													},
-								defensiveArmies = {strength	= _strength * 3,
-													position = position,
-													baseDefenseRange = math.min(_range, _defenseRange or 5000),
-													IDs	= {}
-													}
+				serfLimit				=	(_strength^2)+2,
+				--------------------------------------------------
+				extracting				=	false,
+				--------------------------------------------------
+				resources = {
+					gold				=	_strength*15000,
+					clay				=	_strength*12500,
+					iron				=	_strength*12500,
+					sulfur				=	_strength*12500,
+					stone				=	_strength*12500,
+					wood				=	_strength*12500
+				},
+				--------------------------------------------------
+				refresh = {
+					gold				=	_strength*1300,
+					clay				=	_strength*400,
+					iron				=	_strength*1100,
+					sulfur				=	_strength*550,
+					stone				=	_strength*400,
+					wood				=	_strength*750,
+					updateTime			=	math.floor(30/_strength)
+				},
+				--------------------------------------------------
+				constructing			=	true,
+				--------------------------------------------------
+				rebuild = {
+					delay				=	30*(5-_strength),
+					randomTime			=	15*(5-_strength)
+				},
+			},
+			prioritylist = {},
+			prioritylist_lastUpdate = 0,
+			multiTraining = _multiTrain or true,
+			player = _playerId,
+			id = 0,
+			techLVL = _techlevel,
+			aggressiveLVL =	_aggressiveLevel,
+			AllowedTypes = {UpgradeCategories.LeaderBow,
+							UpgradeCategories.LeaderSword,
+							UpgradeCategories.LeaderPoleArm,
+							UpgradeCategories.LeaderCavalry,
+							UpgradeCategories.LeaderHeavyCavalry,
+							UpgradeCategories.LeaderRifle,
+							CannonEntityType1,
+							CannonEntityType2
+							},
+			offensiveArmies = {strength	= _strength * 15,
+								position = position,
+								enemySearchPosition = _attackPosition,
+								rodeLength = _range,
+								baseDefenseRange = _defenseRange or (_range*2)/3,
+								AttackAllowed =	false,
+								IDs	= {}
+								},
+			defensiveArmies = {strength	= _strength * 3,
+								position = position,
+								baseDefenseRange = math.min(_range, _defenseRange or 5000),
+								IDs	= {}
 								}
+		}
+	end
+
+	SetupPlayerAi(_playerId, MapEditor_Armies[_playerId].description)
+	EvaluateArmyHomespots(_playerId, position, nil)
 
 	-- troop recruitment generator
 	SetupAITroopGenerator("MapEditor_Armies_".._playerId, _playerId)
@@ -853,6 +862,7 @@ AITroopGenerator_CheckLeaderAttachedToBarracks = function(_player, _id)
 	return true
 end
 AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
+
 	if not IsValid(_id) then
 		return true
 	end
@@ -869,10 +879,17 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 					--Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "RemoveRemainingRecruitedSoldiersOnLeaderDeath_Trigger", 1, {}, {_id, MilitaryBuildingID})
 					if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1 or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id)) then
 						Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
-						return true
+						tab.RecruitmentComplete = true
 					end
 				end
+			else
+				-- first attempt to reach homespot failed (e.g. due to enemies on the way)
+				if tab.RecruitmentComplete and Counter.Tick2("AITroopGenerator_CheckForIdle_" .. _id, 5) then
+					Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
+				end
 			end
+		else
+			return true
 		end
 	end
 end
@@ -976,11 +993,11 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 0,
 								[Entities.PV_Cannon4] = 0,
-								[Entities.PV_Cannon6] = 0,
-								[Entities.PV_Catapult] = 0}
---[[for k,v in pairs(gvAntiBuildingCannonsRange) do
-	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
-end]]
+								[Entities.PV_Cannon6] = -3000,
+								[Entities.PV_Catapult] = -1500}
+for k,v in pairs(gvAntiBuildingCannonsRange) do
+	gvAntiBuildingCannonsRange[k] = v + (GetEntityTypeBaseAttackRange(k)/2)
+end
 
 function OnAIEnemyCreated(_playerID)
 

@@ -48,6 +48,14 @@ end
 MultiplayerTools.EntityTableHeadquarters = {Entities.PB_Headquarters1, Entities.PB_Headquarters2, Entities.PB_Headquarters3,
 											Entities.PB_Castle1,Entities.PB_Castle2,Entities.PB_Castle3,Entities.PB_Castle4,Entities.PB_Castle5,
 											Entities.PB_Outpost1, Entities.PB_Outpost2, Entities.PB_Outpost3}
+-- needed for GameCallback_PlaceBuildingAdditionalCheck
+HostileTroopBuildBlockWhitelist = {	[Entities.PU_Hero3_Trap] = true,
+									[Entities.PB_GenericBridge] = true,
+									[Entities.PB_Bridge1] = true,
+									[Entities.PB_Bridge2] = true,
+									[Entities.PB_Bridge3] = true,
+									[Entities.PB_Bridge4] = true,
+									[Entities.PB_WoodenBridge1] = true}
 -- needed for outpost taxes update
 gvGUI_WidgetID.TaxesButtonsOP = {}
 gvGUI_WidgetID.TaxesButtonsOP[0] = 	"SetVeryLowTaxes_OP"

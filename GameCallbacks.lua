@@ -85,6 +85,34 @@ function Mission_OnSaveGameLoaded()
 		return GroupAttackOrig(_id, _target)
 	end
 
+	GroupStandOrig = Logic.GroupStand
+	Logic.GroupStand = function(_id)
+		assert(IsValid(_id), "invalid entityID")
+		if not GetArmyByLeaderID(_id) and not gvCommandCheck[_id] then
+			gvCommandCheck[_id] = {TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 7})}
+		end
+		return GroupStandOrig(_id)
+	end
+
+	GroupAddPatrolPointOrig = Logic.GroupAddPatrolPoint
+	Logic.GroupAddPatrolPoint = function(_id, _posX, _posY)
+		assert(IsValid(_id), "invalid entityID")
+		gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+		gvCommandCheck[_id].PatrolPoints = gvCommandCheck[_id].PatrolPoints or {}
+		table.insert(gvCommandCheck[_id].PatrolPoints, {X = _posX, Y = _posY})
+		return GroupAddPatrolPointOrig(_id, _posX, _posY)
+	end
+
+	GroupPatrolOrig = Logic.GroupPatrol
+	Logic.GroupPatrol = function(_id, _posX, _posY)
+		assert(IsValid(_id), "invalid entityID")
+		if not GetArmyByLeaderID(_id) and (not gvCommandCheck[_id] or gvCommandCheck[_id] and not gvCommandCheck[_id].TriggerID) then
+			gvCommandCheck[_id] = gvCommandCheck[_id] or {}
+			gvCommandCheck.TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "CheckForCommandAbortedJob", 1, {}, {_id, 4, _posX, _posY})
+		end
+		return GroupPatrolOrig(_id, _posX, _posY)
+	end
+
 	Army_GetEntityIdOfEnemyOrig = AI.Army_GetEntityIdOfEnemy
 	AI.Army_GetEntityIdOfEnemy = function(_player, _id)
 		if _id >= 0 and _id <= 8 then
@@ -349,9 +377,30 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the Coalmaker?
 			elseif UpgradeCategory == UpgradeCategories.Coalmaker then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Coalmaker"),1)
+			--Is EntityType the tavern?
+			elseif 	UpgradeCategory == UpgradeCategories.Tavern then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Tavern"),1)
+				ButtonStem =  "Upgrade_Tavern"
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.BuildingTabs,1)
+				XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
+				XGUIEng.HighLightButton(gvGUI_WidgetID.ToBuildingSettlersMenu,1)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes,0)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes,0)
+			--Is EntityType the plantation?
+			elseif 	UpgradeCategory == UpgradeCategories.Grange then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Grange"),1)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.BuildingTabs,1)
+				XGUIEng.UnHighLightGroup(gvGUI_WidgetID.InGame, "BuildingMenuGroup")
+				XGUIEng.HighLightButton(gvGUI_WidgetID.ToBuildingSettlersMenu,1)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes,0)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes,0)
 			end
 			--Update Upgrade Buttons
-			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory,ButtonStem)
+			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory, ButtonStem)
 		end
 
 	elseif EntityType == Entities.PU_BattleSerf then
@@ -560,6 +609,7 @@ function GameCallback_ConstructBuilding(_csite, _nserfs, _amount)
         return _amount
     end
 end
+
 function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _isBuildOn)
 
     local allowed = true
@@ -580,6 +630,11 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 
 	local player = GUI.GetPlayerID()
 	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
+
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _x, Y = _y}, 1500, 3)
+	and not HostileTroopBuildBlockWhitelist[_eType] then
+		allowed = false
+	end
 
 	if _eType == Entities.PB_CoalMine1 then
 
@@ -1062,6 +1117,17 @@ GameCallback_UnknownTask = function(_id)
 			end
 		end
 		return 0
+	elseif etype == Entities.PU_Serf then
+		local task = Logic.GetCurrentTaskList(_id)
+		if task == "TL_LEAVE_KEEP" then
+			if not (CEntity.GetReversedAttachedEntities(_id) and CEntity.GetReversedAttachedEntities(_id)[53]) then
+				local posX, posY = Logic.GetEntityPosition(_id)
+				for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(player), CEntityIterator.OfTypeFilter(etype), CEntityIterator.InCircleFilter(posX, posY, 100)) do
+					Logic.DestroyEntity(eID)
+				end
+				Logic.DestroyEntity(_id)
+			end
+		end
 	end
 end
 -- adjusted, so feedback message is only received by player clicking the button, not all players

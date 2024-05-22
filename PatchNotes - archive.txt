@@ -1,0 +1,1008 @@
+PatchNotizen - Archiv Balancing Stuff
+
+Für Versionen älter als 0.62 schaut bitte in die Changelog.txt-Datei.
+
+--- Version 0.62 ---
+
+Pilgrims Bombe wurde leicht abgeschwächt, die Kanone leicht verstärkt.
+
+Salims Falle verursacht nun mehr Schaden.
+
+Yukis Shuriken verursachen nun mehr Schaden.
+
+Marys Gift verursacht etwas mehr Schaden, die Reichweite wurde reduziert. Außerdem wurde die Abklingzeit erhöht.
+
+Kalas Gift und Kalas Shuriken verursachen etwas mehr Schaden.
+
+Münzstätten erhöhen nun zusätzlichen zur "normalen" Taler-Veredlung den Zahltag um je 1% (max. 20%).
+
+Handelsposten haben ein passenderes, neues Aussehen bekommen. Außerdem wurden Startpreise und Inflation/Deflation geringfügig verändert.
+
+Außenposten wurden entfernt und durch Schlösser ersetzt. Die Grundmechanik bleibt bestehen, jedoch können Schlösser nur in gewisser Entfernung zu
+anderen Schlössern und Burgen (unabhängig von der Spieler ID) errichtet werden. Sie können insgesamt viermal ausgebaut werden. Dabei steigen 
+Ausbaukosten, DZ-Plätze, Lebenspunkte und Rüstungswerte pro Stufe weiter an. Es gibt ein Limit von 2 Schlössern pro Spieler.
+
+--- Version 0.63 ---
+
+höhere Ausbaustufen von Schlössern geben nun mehr DZ-Platz.
+
+Leibeigene verfügen nun über eine (relativ niedrige) HP-Regenerationsrate.
+
+Drake verursacht nun mehr Schaden, seine Rüstungswerte wurden jedoch im Gegenzug reduziert. Die Reichweite seines Kopfschusses wurde leicht reduziert.
+
+Helias verursacht nun mehr Schaden.
+
+Kerberos besitzt nun ein wenig mehr HP und HP Reg. Gleichermaßen wurde sein verursachter Schaden und seine Angriffsreichweite leicht erhöht. Außerdem klingt sein Höllenschrei jetzt ein wenig schneller ab.
+
+Ari verursacht nun mehr Schaden. Die Abklingzeiten ihrer beiden Fähigkeiten wurden reduziert. Im Gegenzug wurde ihr Rüstungswert reduziert.
+
+Yukis Schadenswert wurde erhöht. Außerdem wirft sie nun weitere Shuriken. Die Abklingzeit wurde leicht erhöht.
+
+Kala verursacht nun deutlich mehr Schaden, jedoch wurden ihre Lebenspunkte und Rüstungswerte stark gesenkt. Ihre Giftpfeile verursachen mehr Schaden. Ihr Giftnebel verursacht mehr Schaden und die Abklingzeit wurde stark gesenkt. Der Wirkungsradius wurde ebenfalls stark abgesenkt.
+
+Weitere Entitäten sind nun (im Mapeditor und einigen Maps) verfügbar.
+
+Speerwerfer und Bärenmenschen verursachen nun weniger Schaden und ihre Rüstungs- und Lebenswerte wurden reduziert. Die Kosten wurden leicht erhöht.
+
+Bugfixes und Verbesserungen:
+
+Es wurde ein Fehler behoben, durch den Leibeigene manchmal den Befehl des Spielers ignorierten und zurück zu ihrem letzten Befehl liefen.
+
+Es wurde ein Fehler behoben, durch den in manchen Fällen mehr als zwei Schlösser errichtet werden konnten.
+
+Es wurde ein Fehler behoben, durch den der "Verfallene Leuchtturm" und der "Leuchtturm" nicht im Nahkampf angegriffen werden konnten.
+
+Die Bau- und Reparierpositionen der Leibeigenen am Leuchtturm wurden angepasst und stimmen nun mehr mit dem Aussehen des Gebäudes überein.
+
+Leibeigene sind nun nicht mehr furchtlos.
+
+Die Silber-Kosten für Schreckstatuen wurden halbiert. Gleichermaßen wurden die Kosten an anderen Ressourcen leicht erhöht.
+
+--- Version 0.64 ---
+
+Drakes Meisterschuss tötet nun schwächere Einheiten wie Leibeigene, Diebe, Kanonen, etc. mit einem Schuss. Der Schaden gegen Helden hat sich nur geringfügig geändert. Der Schaden ist nun außerdem abhängig von Drakes Angriffsschaden und kann so mit Buffs gesteigert bzw. mit Debuffs (Marys Gift) gesenkt werden.
+
+Hellebardiere sind nun ein wenig schwächer und die Kosten gegenüber Schwertkämpfern wurden angeglichen.
+
+--- Version 0.65
+
+Es wurde ein Fehler behoben, durch den die angeheuerten Truppen aus dem Leuchtturm an falscher Position erstellt wurden.
+
+Es wurde ein Fehler behoben, durch den ein Spieler nach Überschreiten des DZ-Platz-Limits (durch die eingebaute Gegenmaßnahme) auf knapp über 25% Motivation fallen konnte, wodurch nicht wie vorgesehen alle Arbeiter die Siedlung verließen.
+
+Armeen von Computerspielern (meist auf Kooperations-Karten) sollten sich nun etwas klüger verhalten. Außerdem wird dies im späteren Spielverlauf zu einer generell verbesserten Performance führen.
+
+Die Angriffs-Reichweite von Ballista- und Kanonentürmen wurde leicht reduziert. Außerdem kosten Kanonentürme nun mehr Ressourcen und verursachen etwas weniger Flächenschaden (direkter Schaden unverändert).
+
+Die HP von Dario sowie sein Rüstwert wurden leicht reduziert. Im Gegenzug wurde sein Schadenswert sowie der zufällige Bonusschaden erhöht. Die Reichweite der "Beschützen"-Fähigkeit wurde leicht reduziert und die Dauer fliehender Truppen wurde ebenfalls leicht verringert.
+
+Die Lebenspunkte-Regeneration von Helias, Kala und Mary de Morfichet wurden erhöht. Außerdem wurde deren Schadenswert leicht erhöht. Die Abklingzeit von Yukis "Feuerwerk der Freude" wurde reduziert.
+
+--- Version 0.66
+
+Es wurden diverse Fehler behoben sowie das grundsätzliche Spielerlebnis verbessert.
+
+Die Lebenspunkte-Regeneration von Helias wurde reduziert.
+
+--- Version 0.67
+
+Der Hook wurde weitesgehend entfernt. Die wenigen übriggebliebenen Funktionen, die den Hook noch benötigen, werden demnächst ebenfalls entfernt. Auf das Spielerlebnis hat dies KEINEN Einfluss.
+
+Beschworene Einheiten wie die Banditen von Ari sowie die Wölfe von Varg haben nun eine kürzere Lebensdauer sowie leicht reduzierte Rüstung.
+
+Salims Falle verursacht nun etwas mehr Schaden und löst erst später aus (die kritische Reichweite wurde reduziert). Seine Heilung stellt nun etwas mehr HP wieder her und seine Lebenspunkteregeneration wurde an die anderer Helden mit ähnlichen HP angepasst.
+
+Drakes Meisterschuss verursacht nun geringfügig weniger Schaden.
+
+Dovbar ist nun als weiterer Held verfügbar. Um ihn spielen zu können, muss der Host die Errungenschaft >>Das war doch ein Klacks...<< erhalten haben (aus der kommenden extra3-Kampagne)
+
+Es wurde ein Fehler behoben, durch den der Modus nicht in polnischer Sprache gespielt werden konnte. Aktuell mögliche Sprachen: De, En, Ru, Pl
+
+Pilgrims Bombe verursacht nun etwas weniger Schaden und Reichweite. Die Abklingzeit wurde leicht erhöht.
+
+Pilgrims Rüstwert wurde geringfügig verringert.
+
+Pilgrims Kanone verursacht nun mehr Schaden, jedoch wurde die Schadensreichweite reduziert.
+
+Salims Falle verursacht nun etwas mehr Schaden. Außerdem ist sie für Nicht-Verbündete schwerer sichtbar.
+
+Die Tarnfähigkeit von Dieben ist nun für den Spieler des Diebes leichter zu erkennen (analog zu Ari wird ein getarnter Dieb nun leicht transparent dargestellt)
+
+--- Version 0.674
+
+Der Zahltag-Bonus der Münzstätten wirkt nun ausschließlich für fertig errichtete Münzstätten, in der min. die Hälfte der maximalen Arbeiter beschäftigt werden.
+
+--- Version 0.676
+
+Erecs Basiswerte wurden leicht erhöht. Die Wirkdauer seiner Aura wurde leicht erhöht.
+
+Die Schadensreichweite von Salims Falle wurde reduziert. Im Gegenzug wurde der Schaden leicht erhöht.
+
+Drakes Meisterschuss verursacht nun nur noch einen Bruchteil des Schadens, wenn das Ziel sich in direkter Nähe von Drake befindet. Der Schaden gegen Ziele außerhalb dieser kritischen Reichweite wurde leicht erhöht.
+
+--- Version 0.678
+
+Die Silbernitratgeschosse kosten nun weniger Silber. Im gleichen Maße wurde auch der Schadensbonus reduziert.
+
+Die Basisressourcen, die sich im Lehm- und Silberschacht befinden, wurden leicht reduziert.
+
+Die Menge an Ressourcen, die aus Eisen- und Schwefelhaufen gefördert werden kann, wurde reduziert.
+
+--- Version 0.679
+
+Münzstätten erhöhen nun den Zahltag um 1.5% anstatt der vorherigen 1%. Der Zahltag ist nun um maximal 15% (10 Münzstätten) erhöhbar anstatt der vorherigen 20% (20 Münzstätten).
+
+Beim Unwetter kommt es nun zu zusätzlichen Blitzeinschlägen.
+
+--- Version 0.680
+
+Die Lebenspunkte von Ziergebäuden wurden erhöht (sodass Blitzeinschläge eben diese nicht direkt zum Brennen bringen)
+
+Ein Fehler im Zusammenhang mit geklauten Geschenken (Turnierkarte) wurde behoben.
+
+Ein Fehler, durch den KI-Spieler nicht den korrekten Zahltag erhalten haben, wurde behoben.
+
+--- Version 0.683
+
+Da das Release der Extra3-Kampagne auf unbestimmt verschoben werden muss, kann die Errungenschaft fürs Freischalten von Dovbar nicht in absehbarer Zeit erhalten werden. Ab sofort ist er frei verfügbar und bedarf keiner erreichten Errungenschaft mehr.
+
+--- Version 0.684
+
+Es wurde ein Fehler behoben, durch den Soldaten der Elitekrieger nicht am Söldnerturm nachrekrutiert werden konnten.
+
+Die für Zuschauer angezeigten Teamnamen des vergangenen Winterturniers wurden entfernt, da diese nun irreführend und unzutreffend sind.
+
+Es wurde ein Fehler im Zusammenhang mit der GUI von Dovbar behoben.
+
+Die GUI in PvP Karten wurde an die neueste EMS-Version angepasst (0.68).
+
+--- Version 0.685
+
+Es wurde ein Fehler behoben, durch den in manchen Fällen Drakes Kopfschuss mehr Schaden als beabsichtigt verursacht hat.
+
+Es wurde ein Fehler behoben, durch den ein unsichtbarer Button der GUI im normalen Spiel gedrückt werden konnte.
+
+--- Version 0.686
+
+Schreckensgebäude können die Motivation von Gegnern nur noch auf ein Minimum von 40% reduzieren (Maximallimit Segnungen/neue Gebäude gleichermaßen).
+
+--- Version 0.687
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbar im exakten Moment seines Todes eine bestimmte Fähigkeit zündete.
+
+--- Version 0.688
+
+Die Schadens-Reichweite von Dovbars Götterdämmerung wurde leicht reduziert. Außerdem wurde das Zeitfenster verkleinert sowie die Dauer der Unverwundbarkeit (Göttlicher Segen) reduziert.
+
+--- Version 0.689
+
+Es wurden einige Anpassungen an Dovbars Götterdämmerung vorgenommen. So können nun keine Soldaten mehr am Leben bleiben, wenn der Leader in der Reichweite stirbt, die Soldaten jedoch außerhalb der Reichweite waren. 
+Außerdem stimmt der visuelle Effekt nun besser mit der tatsächlichen Reichweite überein.
+
+Helden, Gebäude und Kanonen erleiden nun mehr Schaden durch die Götterdämmerung.
+
+--- Version 0.690
+
+Die vorherige Änderung an Dovbars Fähigkeit Götterdämmerung (Zeitfenster des Auslösens) wurde rückgängig gemacht. Das Zeitfenster beträgt nun wieder 3 Sekunden.
+
+Es wurde ein Fehler behoben, durch den Dovbars Fähigkeiten Götterdämmerung und Göttlicher Segen abgeklungen sind, während Dovbar tot war. 
+Die Fähigkeiten müssen nun (wie andere Fähigkeiten auch) von vorne aufgeladen werden, wenn Dovbar wiederbelebt wird.
+
+Das EMS-Regelfenster wurde um BS-spezifische Regeln erweitert. Ihr könnt nun folgendes ein - und ausstellen (standardmäßig alles erlaubt).
+		
+		Dovbar
+		Unwetter (im Wetterturm)
+		Schlösser (und alle Ausbaustufen)
+		Leuchttürme (und alle Ausbaustufen)
+		Dome
+		Söldnertürme
+		Silberschmelzen (und alle Ausbaustufen)
+		Schreckensgebäude
+
+--- Version 0.691
+
+Es wurde ein Fehler behoben, der auf BS Koop Karten aufgetreten ist.
+
+--- Version 0.692
+
+Die generelle Performance von Blitzen wurde verbessert. Dies betrifft sowohl die Blitze während regnerischem Wetters sowie die Blitze, die durch Dovbars Götterdämmerung entstehen.
+
+Es wurden kleinere Verbesserungen an der GUI vorgenommen.
+
+--- Version 0.693
+
+Es wurden einige Anpassungen an der KI vorgenommen. 
+
+Es wurde ein Fehler behoben, durch den ausgebildete Truppen in einem um bestimmte Winkel gedrehten Stall nach der Rekrutierung gestorben sind.
+
+--- Version 0.694
+
+Die KI bildet nun zum korrekt (geplanten) Oberlimit Truppen aus. Einige Koop-Karten wurden dementsprechend aktualisiert, damit ein vernünftiges Spielerlebnis weiterhin bestehen kann.
+Anpassungen an weiteren Koop-Maps sind für die nahe Zukunft geplant.
+
+--- Version 0.695
+
+Es wurde ein Fehler auf EMSBS-Karten behoben, durch den die Wetterwechselsperre schneller als geplant abklingen konnte. 
+
+Die Wetterwechselsperre gilt nun auch für das Unwetter im Wetterturm. Außerdem löst das Aktivieren von Unwetter im Wetterturm die Wetterwechselsperre aus, sodass das Unwetter nicht mehr vorzeitig beendet werden kann.
+
+--- Version 0.696
+
+Der Hook wurde gänzlich aus BS entfernt und wird nun nur noch in Zusammenhang mit Mad's EMS geladen.
+Auf das Spielerlebnis hat dies keine negativen Auswirkungen.
+
+Es wurden einige kleinere Fehler behoben.
+
+--- Version 0.697
+
+Es wird nun im Spiel angezeigt, wenn Spieler verschiedene bzw. veraltete Versionen von BS haben. 
+
+--- Version 0.698
+
+Es wurden einige kleinere Fehler behoben.
+
+Es können nun maximal 15 Türme pro Spieler (auf allen Karten) errichtet werden. Außerdem müssen Türme (ähnlich wie die Schlösser) einen gewissen Mindestabstand zu anderen Türmen einhalten.
+Der Mindestabstand ist dabei abhängig von der Mapgröße. Dadurch soll das Verschanzen an Engpässen durch Bauen sehr vieler Türme eingedämmt werden.
+
+Damit Türme trotz der obigen Änderungen weiterhin attraktiv bleiben, wurden die Ausbaukosten zu Kanonentürmen reduziert (um etwa ein Drittel).
+
+--- Version 0.699
+
+Der Lauftempo-Bonus von Siedlern im Regen wurde von 10% auf 5% reduziert.
+
+Das Lauftempo-Malus von Siedlern im Schnee wurde von 25% auf 20% reduziert.
+
+Der Zeitintervall zwischen zwei Siedlern, die die Siedlung betreten, wurde von 2 Sekunden auf 1 Sekunde reduziert. Das heißt, dass Siedler nun doppelt so schnell die Siedlung betreten können.
+
+Es wurde ein Fehler behoben, durch den Türme unter bestimmten Umständen näher als geplant aneinander gebaut werden konnten.
+
+--- Version 0.700
+
+Auf Kooperations-Karten können nun 30 Türme maximal gebaut werden (auf PvP-Karten nach wie vor 15).
+
+Auf Kooperations-Karten ist nun der Mindestabstand, der zwischen zwei Türmen eingehalten werden muss, um etwa 70% kleiner (auf PvP-Karten unverändert).	
+
+Das Design von Schlössern wurde überarbeitet.	
+
+--- Version 0.701
+
+Es ist nun ein weiteres Gebäude verfügbar: Der Schützenturm.
+
+In diesen könnt ihr Eure Bogenschützen und Scharfschützen stationieren. Solange sich diese auf den Turm befinden, können sie nicht von Nahkämpfern angegriffen werden und verfügen über erhöhte Angriffs- und Rüstungswerte sowie eine erhöhte Angriffsreichweite.
+
+Der Schützenturm benötigt die Technologien Architektur und Taktiken.
+
+Truppen können in den Turm stationiert werden, indem ihr Eure zu stationierenden Truppen vor die Tür des Gebäudes postiert, das Gebäude auswählt und das Plus klickt. Truppen benötigen eine gewisse Zeit, um die Treppenstufen im Inneren des Turmes hochlaufen zu können.
+
+Truppen können aus dem Turm wieder entfernt werden, indem ihr den Schützenturm auswählt und entweder direkt auf das Icon des Truppenslots (Hier kann erkannt werden, ob ihr Bogenschützen oder Scharfschützen auf diesen Slot gesetzt habt) oder auf das Minus klickt. 
+Durch das Minus wird präferiert zuerst der zweite Slot und dann der erste Slot geleert. Wie auch beim Stationieren wird auch beim Entleeren eine gewisse Zeit benötigt, bis die Truppen wieder unten angekommen sind.
+
+Wird der Schützenturm zerstört, sterben alle im Turm stationierten Truppen sowie auch alle Truppen, die aktuell den Turm verlassen bzw. betreten wollten.
+
+Aus technischen Gründen kann der Schützenturm neben der Standardrotation nur um ein Vielfaches von 90° gedreht werden.
+
+Jeder Spieler kann maximal 10 Schützentürme errichten. In jeden Turm können zur gleichen Zeit maximal 2 Truppen stationiert werden.
+
+Es wurde ein Fehler behoben, durch den auf Karten mit Weihnachtsbäumen Türme in der Nähe der Bäume platziert werden konnten.
+
+--- Version 0.702
+
+Es wurde ein Fehler behoben, durch den Gold- und Silberminen auf Stufe 2 und 3 nicht repariert werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit den Schützentürmen behoben.
+
+Es können neben Bogen- und Scharfschützen nun auch Bombarden, Eisenkanonen, Speerwerfer und Bogenschützen-Banditen den Schützenturm betreten.
+
+Die Changelog-Textdatei wurde auf den neuesten Stand gebracht.
+
+--- Version 0.703
+
+Der Schaden sowie die Schadensreichweite von Kanonentürmen wurde erhöht.
+
+Marys und Kalas Gift verursacht nun kontinuierlichen zusätzlichen Schaden an alle Gegner, die sich nach dem Zünden der Fähigkeiten weiterhin im visuellen Gift-Effekt aufhalten.
+
+Es wurden einige Anpassungen am Schützenturm vorgenommen.
+
+--- Version 0.704
+
+Es wird nun (ingame) angezeigt, wenn ein Spieler die Texturqualität nicht auf hoch gestellt hat und diese dadurch in BS nicht angezeigt werden können.
+
+Es wurde ein Fehler behoben, durch den Eisenkanonen durch Abbrechen der Kampfanimation nach einem Schuss schneller als geplant schießen konnten.
+
+Es wurden diverse Fehler behoben.
+
+--- Version 0.705
+
+QoL für den Schützenturm: Die Sterne der Truppen werden beim hochklettern übernommen. Es ist nun besser sichtbar, dass nur 1 Trupp gleichzeitig den Turm hochklettern kann.
+
+Die Bauplätze für die Leibeigenen für den Dom wurden angepasst. Sie passen nun visuell besser. Die maximalen Leibeigenen, die einen Dom bauen können, wurden von 63 auf 100 erhöht.
+
+--- Version 0.706
+
+Die Mindestanzahl von Truppen, die als Verstärkung vom Leuchtturm eintreffen, wurde von 2 auf 3 erhöht.
+
+Einige Texturen in der Silbergießerei wurden verbessert und passen nun visuell besser zum jeweiligen Effekt. Ein großer Dank geht hierbei an den Ersteller der Texturen - MSTVD
+
+Goldminen auf höheren Stufen produzieren nun mehr Taler. 
+
+Die Sprachkompatibilität für englische Spielversionen wurde verbessert. US-amerikanisch, Polnisch und Russisch werden an die englischen Lokalizationen weitergeleitet.
+
+--- Version 0.707
+
+Die Baumenüs der Leibeigenen wurden angepasst, sodass das "normale" Baumenü nicht mehr so überladen ist. Sämtliche Militärgebäude haben nun eine eigene Seite erhalten. 
+Auf jeder Seite könnt ihr nun Leibeigene zu den Waffen rufen, sie entlassen oder die Massenentlassung verwenden.
+
+Hat eine Bronze- oder Belagerungskanone einen Schützenturm angegriffen, erhielten auf dem Turm stationierte Truppen denselben Schaden, den der Turm erlitten hat 
+(dadurch waren sie i.d.R. direkt alle tot). Sie erhalten nun den Schaden, den sie bei einem direkten Treffer erhalten hätten.
+
+Der Schützenturm kann nun korrekt gedreht werden.
+
+Spielt ihr im SP, wird nun Eure präferierte Farbe aus dem MP verwendet (falls vorhanden).
+
+Vorbereitungen für's kommende Osterturnier.
+
+--- Version 0.708
+
+Bei Dovbar wird nun unten rechts das korrekte Vorschauvideo angezeigt.
+
+Es wurden einige GUI-Texturen angepasst, sodass diese nun grafisch besser zu den übrigen passen.
+
+Das Design der Drachenstatue wurde überarbeitet.
+
+Überstunden wurden angepasst. Ihr benötigt nun die Technologie >>Gesetzbücher<<, um Überstunden anordnen zu können. 
+Außerdem senkt jedes Mal Anordnen von Überstunden die Motivation aller Arbeiter um 8% sowie Euer Gesamtlimit permanent um 2%.
+
+Sämtliche neuen Gebäude verfügen nun über Shortcuts im entsprechenden Baumenü. Auch Gebäude die vorher keine Shortcuts hatten (wie Ziergebäude), verfügen nun über Shortcuts.
+
+Es wurde ein Fehler im Zusammenhang mit den Schützenturmen behoben.
+
+--- Version 0.709
+
+Weitere Vorbereitungen für die kommende Osterkarte.
+
+Die erste Version der Osterkarte wird voraussichtlich am 01.03.2022 erscheinen.
+
+Erste Vorbereitungen für geplante Herausforderungs-Karten.
+
+--- Version 0.710
+
+Ab sofort sind die ersten zwei Herausforderungs-Karten verfügbar.
+Auf diesen könnt Ihr Euer Können beweisen. Es winken fantastische Belohnungen für alle, die die Prüfungen dieser Karten bestehen!
+
+	(2) BS Koop Erste Prüfung - Kampfgeschick
+
+	Auf dieser Karte gilt es, sich mit limitierendem Bauplatz, Ressourcen und Technologien allen einfallenden Feinden zu erwehren.
+	Schafft Ihr es, Eure Burgen 60 Minuten lang erfolgreich zu verteidigen?
+	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Siegessäule" frei. 
+	Diese setzt Eure aktuelle Motivation auf 200%, benötigt die Technologie Taktiken sowie Taler und Steine als Baumaterialien.
+	
+	Besonderheiten:
+		Einige Technologien sind bereits zu Beginn verfügbar. Andere sind im gesamten Spielverlauf verboten.
+		Weitere Technologien werden durch das Besiegen von Feinden freigeschaltet. Dabei zählen besiegte Feinde von Euch sowie Eurem Verbündeten.
+		Feindliche Truppen sind nahe ihrer Sammelpunkte unverwundbar. Es wird Euch also nicht viel nützen, Euch an diesen Punkten aufzustellen.
+		Nach dem Ablauf der 60 Minuten müsst ihr alle verbliebenen Feinde besiegen, um die Siegmeldung zu erhalten.
+		Fällt die Burg eines Spielers, hat der andere automatisch auch verloren.
+		Eure Soldaten verlangen auf dieser Karte keinen Sold.
+	
+	(2) BS Koop Zweite Prüfung - Taktische Finesse
+	
+	Auf dieser Karte gilt es, mit einer begrenzten Anzahl von Starttruppen die gegnerische Burg zu vernichten.
+	Die Anzahl und der Typ der Starttruppen muss der Spieler selbst entscheiden. 
+	So hat jeder Spieler eine gewisse Anzahl von Kommandopunkten zum Spielstart (abhängig vom Schwierigkeitsgrad) und kann damit seine Armee selbst aufbauen.
+	Schafft Ihr es, die Burg Eures Feindes innerhalb eines Zeitlimits zu zerstören?
+	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Bestienstatue" frei.
+	Diese reduziert die aktuelle Motivation sowie das Gesamtlimit aller Feinde um 20%. 
+	Die "Bestienstatue" benötigt die Technologie "Kulturaustausch (Barbaren)" sowie Taler, Steine und Holz als Baumaterialien. Jeder Spieler kann nur eine Bestienstatue errichten.
+	
+Um auf diesen Karten die Belohnungen zu erhalten, ist in der Multiplayer-Lobby lediglich das Anschalten des CC (Chain Construction) erlaubt.
+Jegliche andere Änderung macht einen Erhalt der Belohnungen unmöglich. Auch solltet ihr ohne LuaDebugger spielen. Verschiebt hierzu vor dem Spielen
+die entsprechende .dll in ein anderes Spielverzeichnis.
+Der Erhalt der Belohnungen ist nur im Multiplayer möglich. 
+Sollte es berechtigten Zweifel daran geben, ob ein Spieler die Belohnungen regulär oder doch unter unlauteren Bedingungen erhalten hat, so sollte dieser bereitstehen zu einer Prüfung durch ein Replay der Partie.
+Jeglicher Versuch, sich diese Belohnungen zu erschummeln, führt zu einem Ausschluss aus dem Spielmodus. 
+Im Turnier sind beide Gebäude in den Qualifiern zulässig, in der KO-Runde hingegen nicht verfügbar.
+
+--- Version 0.711
+
+Es wurde ein Fehler behoben, durch den das Spiel gecrasht ist, wenn auf mittlerer oder niedriger Texturqualität gespielt wurde.
+
+Ihr könnt den Modus auf niedrigerer Texturqualität spielen, jedoch ist es empfehlenswert, die Texturqualität auf hoch zu stellen.
+
+--- Version 0.712
+
+Die Fähigkeit der Kundschafter "Ressourcen finden" wird nun nicht mehr angezeigt, da deren Benutzung Spielabstürze zur Folge hatte.
+
+Der Fehler wird weiter untersucht und wird wenn möglich im Laufe einer späteren Version gefixt.
+
+--- Version 0.713
+
+Einige Tooltips wurden überarbeitet.
+
+Es wurden neue Entitäten hinzugefügt.
+
+--- Version 0.714
+
+Es wurde ein Fehler behoben, durch den die Silbergießerei nicht repariert werden konnte.
+
+Ihr könnt nun unabhängig von Eurer Motivation Soldaten/Kanonen/Leibeigene ausbilden. Dies betrifft insbesondere die Bestrafung, wenn ihr mehr Siedler als DZ-Plätze besitzt. 
+Eure Siedler werden Eure Siedlung jedoch weiterhin verlassen, wenn Eure Motivation unter 26% sinkt.
+
+Silbertechnologien wirkten bei Schwertkämpfern und Lanzenträgern nur auf ihre jeweiligen Stufe 4 Hauptmänner und Soldaten. 
+Sie bewirken nun Bonis bei allen Stufen gleichermaßen.
+
+In der Königsfeste sind nun drei neue Technologien verfügbar.
+
+--- Version 0.715
+
+Der Rüstungswert von Mary wurde von 2 auf 0 gesenkt. Die Reduzierung des Schadens durch Marys Demoralisierung wurde von 70% auf 60% gesenkt.
+
+Der Rüstungswert von Kala wurde von 1 auf 0 gesenkt. Der Schaden von Kalas Giftpfeilen wurde von 72 auf 80 erhöht.
+
+Der Schadenswert von Drake wurde von 25 auf 27 erhöht.
+
+Der Schaden von Yukis Shuriken wurde von 88 auf 100 erhöht.
+
+Weitere Entitäten wurden hinzugefügt.
+
+Die GUI der Selektions-Namensanzeige wurde überarbeitet und passt nun besser.
+
+--- Version 0.716
+
+Auf Karten mit dem System der selbsterstellbaren Armeen erscheinen die Truppen nun erst, wenn alle Spieler ihre Auswahl getroffen haben. Dadurch können Spieler mit schnellerer Auswahl nun
+nicht mehr im Voraus ihre Truppen besser aufstellen.
+
+Ähnlich wie bereits Dovbar, Drake, Mary und Kala haben nun auch Yuki und Kerberos einige Können-basierte Anpassungen erhalten.
+
+Skillupdate Yuki:
+Yukis Shuriken haben einige Anpassungen erfahren: Sie verursachen nun 50% mehr Schaden, wenn sie in den letzten 10 Sekunden das >>Feuerwerk der Furcht<< eingesetzt hat.
+Dieser Schadensbonus erhöht sich auf 200%, wenn die vorherige Bedingung erfüllt ist und die Shuriken das Ziel von hinten treffen.
+
+Die Abklingzeit von Yukis Shuriken wurde von 100 auf 180 Sekunden erhöht. 
+Jeden Gegner, den sie mit den Shuriken tötet, während einer der beiden oben genannten Schadensbonis aktiv ist, verringert diese Abklingzeit um 10 Sekunden.
+
+Der Grundschaden der Shuriken wurde von 100 auf 120 erhöht. Die maximale Reichweite, in der die Shuriken eingesetzt werden können, wurde von 3000 auf 1500 reduziert.
+
+Die Anzahl der Shuriken wurde von 6 auf 16 erhöht.
+
+Der Rüstungswert von Yuki wurde von 6 auf 4 reduziert.
+
+Skillupdate Kerberos:
+Wann immer Kerberos einen Gegner angreift, der weniger Rüstung als er selbst besitzt, reduzieren sich die Abklingzeiten seiner Fähigkeiten Höllenschrei um die Rüstungs-Differenz sowie 
+der Aura der Furcht um das dreifache der Rüstungs-Differenz. Außerdem erhöht sich der Schaden an Gegnern mit niedrigerer Rüstung um 20% pro Rüstungsdifferenz von 1.
+Kerberos heilt sich um die Menge des verursachten Bonus-Schadens.
+
+Die Lebensregeneration von Kerberos wurde von 12 alle 2 Sekunden auf 4 alle 2 Sekunden reduziert.
+
+Die Rüstungssenkung der Aura der Furcht wurde von 40% auf 50% erhöht.
+
+Der Schadenswert von Kerberos wurde von 27 auf 24 reduziert.
+
+Die maximalen Lebenspunkte von Kerberos wurden von 850 auf 700 reduziert.
+
+--- Version 0.717
+
+Kanonen erhalten nun durch das Sammeln von Erfahrungspunkten Bonus-Werte.
+Die betrifft erhöhte Werte auf dem zufälligen Bonusschaden, dem Grundschaden, sowie der Sichtweite und der Angriffsreichweite.
+
+Die Anzahl von Yuki verschossenen Shuriken wurde von 16 auf 12 gesenkt.
+Der Schaden pro Shuriken wurde von 120 auf 100 gesenkt.
+Gesamtschaden: 1920 -> 1200
+
+Der Schadensbonus der Shuriken, wenn das Feuerwerk der Furcht kürzlich gezündet wurde, wurde von 50% auf 100% erhöht. 
+Der Schadensbonus, wenn der Gegner zudem von hinten getroffen wird, wurde von 200% auf 400% erhöht.
+Gesamtschaden Feuerwerk-DMG-Bonus: 2880 -> 2400
+Gesamtschaden Treffer von hinten: 5760 -> 6000
+
+Die Abklingzeitreduktion pro tödlichem Treffer, während der Feuerwerk-DMG-Bonus aktiv ist, wurde von 10 Sekunden auf 15 Sekunden erhöht.
+Maximale Abklingzeit-Reduktion, wenn jeder Treffer tödlich ist: 160 Sekunden -> 180 Sekunden
+
+Die Schadens-Reichweite von Dovbars Götterdämmerung wurde von 800 auf 1000 erhöht.
+
+Auf Karten mit dem Armee-Erstellungs-Tool sind nun zusätzlich auch Kundschafter und Katapulte verfügbar.
+
+Truppen und Technologien im Söldnerturm verfügen nun über Shortcuts. Die Tooltips wurden ebenfalls angepasst.
+
+Die Siegerstatue des Osterturniers 2022 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Zork/Manu und Mikeastro!
+
+--- Version 0.718
+
+Die Formations-Änderungs-Buttons werden nun auch bei Kavallerie angezeigt.
+
+Es wurden einige Änderungen am Schadenssystem vorgenommen. Am stärksten betroffen: Speerträger. 
+Sie sind nun stark gegen Kavallerie (noch etwas stärker als vorher) und Schwertkämpfer und schwach gegen Schützen und Nebelvolk.
+Leichte Kavallerie ist nun nicht mehr stark gegen Speerträger und Schützen, dafür stark gegen Kavallerie, Schwertkämpfer und Scharfschützen.
+
+--- Version 0.719
+
+Infolge der vorherigen Version unterschieden sich leichte und schwere Kavallerie nur noch in Basiswerten wie Reichweite, Schaden und Rüstung sowie den Kostentypen.
+Damit beide Truppentypen unterschiedliche Rollen einnehmen können, verursacht leichte Kavallerie nun einen anderen Schadenstypen als schwere Kavallerie.
+Die grundsätzlichen Stärken und Schwächen bleiben gleich, jedoch verursacht leichte Kavallerie nun etwas weniger Schaden an Schwertkämpfern, Scharfschützen und Gebäuden,
+dafür mehr Schaden an Kavallerie und etwas mehr Schaden an Helden und Nebelvolk.
+
+An den Verstärkungstruppen des Leuchtturms wurden Verbesserungen vorgenommen. So erscheinen nun bei längerer Spieldauer mehr Truppen mit mehr Soldaten.
+Außerdem steigt die Wahrscheinlichkeit auf höher aufgewertete Truppen stetig, wenn Verstärkungen angefordert werden.
+
+Der Schaden von Blitzeinschlägen wurde überarbeitet.
+
+Es gab auf Karten mit dem Armee-Erstellungs-Tool Fehler bei der Truppenerstellung. Dies wurde nun behoben.
+
+Die Abklingzeiten im Söldnerturm wurden überarbeitet.
+
+--- Version 0.720
+
+Ein Fehler im Zusammenhang mit den Schützentürmen wurde behoben.
+
+Es wurden zahlreiche GUI-Anpassungen vorgenommen.
+
+Es ist nun ein weiterer Held verfügbar. Ihr könnt diesen spielen, wenn ihr die ersten drei Prüfungs-Maps jeweils auf dem Herausforderungs-Modus absolviert habt.
+Die dritte Prüfungsmap wird voraussichtlich innerhalb der nächsten Wochen verfügbar sein.
+
+Ihr könnt nun auf der BS Testmap alle Gebäude und/oder Einheiten auswählen, die normalerweise an Siegen auf Prüfungs-Maps gebunden sind.
+
+--- Version 0.721
+
+Die erweiterte Stats-Anzeige zeigt nun auch die aktuellen Erfahrungspunkte sowie die Erfahrungsstufe an.
+
+Die Kosten sowie die Forschungsdauer einiger Technologien wurden angepasst.
+
+Sonderabgaben können nun nicht mehr verlangt werden, wenn keine Arbeiter in der Siedlung vorhanden sind.
+
+Die dritte Prüfungsmap ist nun verfügbar:
+
+	(2) BS Koop Dritte Prüfung - Gesandter des Himmels
+
+	Auf dieser Karte gilt es, trotz aller Hürden einen Dom zu errichten.
+	Schafft Ihr es, innerhalb eines Zeitlimits (abhängig vom Schwierigkeitsgrad) diese Aufgabe zu erfüllen?
+	Ein Sieg auf der "Herausforderungs-Schwierigkeit" schaltet das Gebäude "Statue des edlen Kaisers" frei (Model bereitgestellt von Roma).
+	Diese erhöht die durch "Sonderabgaben" erhaltene Talermenge um 50% (jede weitere Statue gewährt 10% weniger, bis zu einem Minimum von 10%),
+	benötigt die Technologie Gesetzbücher sowie Taler und Steine als Baumaterialien.
+	
+	Besonderheiten:
+		Große Teile der Karte entsprechen der Umgebung der Kampagnenkarten "Barmecia" und "Cleycourt".
+		Es gibt auf dieser Karte eine Vielzahl an Wegen, an Silber zu gelangen.
+		Es gibt auf der Karte eine Vielzahl versteckter Schatztruhen. 
+		Die umliegenden Ufer des Doms sind Barmecia heilig. Hier dürft ihr keine Gebäude platzieren!
+		Ihr könnt mit einigen NPCs auf dieser Karte mit Euren Helden reden. Löst Aufgaben der NPCs, um die ein oder andere nützliche Belohnung zu erhalten.
+		Einige Dörfer und Siedlungen sind Euch anfangs neutral gesinnt, können im Laufe des Spiels jedoch zu Feinden oder aber auch Verbündeten werden. Entscheidungen im
+		Spielverlauf, Lösen von Aufgaben und gewisse Gegebenheiten sind hierbei ausschlaggebend.
+		Nachdem ihr dem Dom errichtet habt, müsst ihr diesen die üblichen zehn Minuten verteidigen, um das Spiel zu gewinnen. Die ein oder andere Partei wird erbitert versuchen,
+		den Dom niederzubrennen. Seid also besser auf hartnäckige Angreifer vorbereitet.
+
+--- Version 0.722
+
+Es wurden einige Anpassungen an der GUI vorgenommen.
+
+Das Kampfverhalten der KI wurde leicht verändert.
+
+--- Version 0.723
+
+Es wurde ein Fehler behoben, durch den Kanonen der KI nicht die korrekten Befehle erhalten haben.
+
+Es wurde ein Fehler behoben, durch den der Blutrausch sich nicht auf die Banditen-Nahkämpfer auswirkte.
+
+BS-spezifische Gebäude schneien nun im Winter ein.
+
+--- Version 0.724
+
+Verfügt ihr über mehr Siedler als ihr Siedlungsplatz habt, laufen Euch nun nicht mehr alle Arbeiter davon. 
+Die Anzahl betroffener Arbeiter ist abhängig von der Höhe des Siedlungsüberschusses.
+
+Ein neues Gebäude ist nun verfügbar: Das Forsthaus. In dieses wird sich ein Förster begeben, um die Umgebung aufzuforsten.
+Das Forsthaus benötigt die Technologie Konstruktion.
+Der Förster kann nur fruchtbares, nicht jedoch karges Land aufforsten.
+
+--- Version 0.725
+
+Es wurde ein Fehler behoben, durch den der Förster im Winter auch Gebiete auf dem Eis aufforsten konnte.
+
+Es wurde ein Fehler in Zusammenhang mit den Schützentürmen behoben.
+
+Einige GUI-Texturen wurden überarbeitet. Vielen Dank dabei an MSTVD, der die Texturen zur Verfügung gestellt hat.
+
+--- Version 0.726
+
+Durch Dovbars Götterdämmerung, Erebos Aura sowie Marys und Kalas Gift-DoT getötete Feinde zählen nun in die Kampfstatistik hinein.
+
+Freischaltungen durch Herausforderungs-Maps sind nun nur noch im Zusammenspiel mit einer Whitelist wirkbar.
+Falls ihr eine dieser Karten auf der Herausforderungsstufe schafft, so gebt mir bitte Bescheid. Frühere Siege sind bereits berücksichtigt.
+
+--- Version 0.727
+
+Es wurde ein Fehler im Zusammenhang mit Erebos Höllenfeuer-Aura behoben.
+
+Es wurden einige Änderungen an Dovbars Götterdämmerung vorgenommen. Der Schaden wird nun direkt nach Dovbars Tod verteilt anstatt nach Beendigung des Zeitfensters.
+Das Zeitfenster der Fähigkeit wurde auf 4 Sekunden erhöht. Reichweite und Schaden skalieren nun mit der Differenz Fähigkeitenaktivierung -> Todeszeitpunkt
+Der Schaden der Fähigkeit an Gebäuden wurde erhöht.
+
+Es wurde ein Fehler im Zusammenhang mit den Soldaten der Anführer der Banditen behoben.
+
+Nachtrag: Bronzekanonen, Belagerungskanonen und Katapulte der KI fokussieren nun Gebäude etwas mehr.
+
+Es wurde ein Fehler im Zusammenhang mit der Interaktion von Förstern und Schlössern behoben.
+
+Es wurde ein Fehler im Zusammenhang mit der GUI von Uhren behoben.
+
+Helden erscheinen nun in der/m jeweiligen Burg/Festung/Zitadelle/Schloss, in der/m sie ausgewählt wurden. Ist währenddessen kein Gebäude selektiert, wird weiterhin die "Standard-Burg" verwendet
+
+Die Schadensberechnung für Truppen, die auf dem Schützenturm stehen, während dieser von Bronze-/Belagerungskanonen/Katapulte angegriffen wird, wurde angepasst und berücksichtigt nun die Rüstungsklasse der angegriffenen Truppen 
+
+--- Version 0.728
+
+Zusätzliche Statistiken zu Blitzeinschlägen sind nun nach dem Spiel verfügbar.
+
+Durch Dovbars Götterdämmerung, Erebos Aura sowie Marys und Kalas Gift-DoT getötete Feinde zählen nun auch in die "erledigte Feinde"- bzw. "verlorene Einheiten"- Statistik hinein.
+
+Dovbars Götterdämmerung verursacht nun einen Mindestschaden vom vierfachen seines Angriffswerts.
+
+Die Schadensberechnung für Truppen, die auf dem Schützenturm stehen, während dieser von Bronze-/Belagerungskanonen/Katapulte angegriffen wird, berücksichtigt nun ebenfalls die Schadensabnahmeformel von Flächenschäden. 
+
+--- Version 0.729
+
+Allen Kooperationskarten wurden Schatztruhen hinzugefügt. Damit sich der Schwierigkeitsgrad nicht zu sehr verändert, wurden die Prüfungskarten entsprechend angepasst.
+
+--- Version 0.730
+
+Das KI-Verhalten wurde überarbeitet.
+
+Zusätzliche Statistiken für abgebautes Silber sind nun verfügbar.
+
+Es wurde ein Fehler im Zusammenhang mit Erebos dritter Fähigkeit behoben.
+
+Es wurde ein Fehler behoben, der auf Karten mit Schwierigkeitsauswahl auftreten konnte, durch den der Lebensbalke und der Name von Einheiten nicht mehr korrekt angezeigt wurde.
+
+--- Version 0.731
+
+Es wurden mehrere Fehler im Zusammenhang mit der KI-Überarbeitung behoben.
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbars Göttlicher Segen benutzt wurde und Dovbar nach Ablauf der Zeit keinerlei Schaden erlitten hatte.
+
+--- Version 0.732
+
+Es wurden Fehler im Zusammenhang mit den erweiterten Statistiken behoben.
+
+Der Maximalwert von Truppen rekrutierender KIs wurde reduziert.
+
+Es wurde ein Fehler behoben, durch den die Modelle der alten Dorfhalle sowie der Leuchtturm-Fundamente nicht korrekt dargestellt wurden.
+
+Die Kompatibilität vom Laden von Spielständen wurde erhöht.
+
+Die Performance von Spawn-Armeen wurde verbessert.
+
+Die erfassten Daten der AI werden nun aktualisiert, wenn sich Diplomatien ändern.
+
+--- Version 0.733
+
+Einige GUI-Elemente wurden ausgelagert. Dies sollte keine Auswirkungen auf das Spielerlebnis haben und ist eine rein strukturelle Änderung.
+
+Vorbereitungen für das kommende Osterturnier.
+
+Eine erste Version der Osterturnier-Map ist ab sofort verfügbar. 
+Bedenkt jedoch, dass es hier infolge von künftigen Abstimmungen noch zu diversen Änderungen kommen kann.
+
+--- Version 0.734
+
+Limitierungen der Anzahl von Türmen und deren Mindestabstand zueinander gelten nun auch für von Erebos erzeugte Wohnstätten.
+
+Es wurde ein Fehler im Zusammenhang mit Dovbar behoben.
+
+Es wurde eine 2-Spieler-Version der BS-Testmap hinzugefügt.
+
+--- Version 0.735
+
+Für die angepasste KI kann nun ein Spawn-Generator verwendet werden.
+
+Es wurde ein Fehler behoben, durch den der Außenposten (Festung) nicht für die Voraussetzungen der Technologie Steuereintreibung galt.
+
+Das Rekrutierungsverhalten von Truppen wurde überarbeitet.
+
+Die erfassten Daten der KI werden nun korrekt aktualisiert, wenn deren Truppen aufgewertet werden.
+
+Es wurde ein Fehler behoben, durch den das Modell der Burgruine nicht korrekt dargestellt wurde.
+
+Es werden nun keine Komma-Zahlen mehr angezeigt, wenn Euch Ressourcen fehlen und ihr unter bestimmten Umständen Gebäude abgerissen hattet.
+
+Die Anzeige und Funktionalität der Truppen-Finden-Buttons wurde angepasst.
+
+--- Version 0.736
+
+Truppen können nun auch in der Gruppenselektion geupgradet werden.
+
+Fehlende Tooltips für englischsprachige Spielversionen wurden eingefügt. 
+Dies betrifft auch US-amerikanische, polnische und russische Versionen, da diese auf die englische Version weitergeleitet werden.
+
+Der Schwierigkeitsgrad der Prüfungskarten 1 und 3 wurde leicht verringert.
+
+--- Version 0.737
+
+Es wurde ein Fehler mit der Aggressivitäts-Reichweite von KIs behoben.
+
+Es wurde ein Fehler im Zusammenhang mit dem Arbeit pausieren - Button von Förstern behoben.
+
+Es erscheint nun eine Meldung, wenn ihr ein Trupp upgraden wollt und die notwendigen Bedingungen nicht erfüllt sind.
+
+--- Version 0.738
+
+Weitere Vorbereitungen für das kommende Osterturnier.
+
+Die Abklingzeit der Sonderabgaben wird nun auch korrekt in Schlössern und Außenposten angezeigt.
+
+--- Version 0.739
+
+Es wurde ein Fehler im Zusammenhang mit der KI behoben, der auftreten konnte, wenn sich Diplomatien geändert hatten.
+
+Die Auswirkungen der Kanonen-Technologien im Laboratorium wurden angepasst. 
+Beide erhöhten den Schaden von Kanonen um je 4, jetzt erhöhen die Techs den Schaden von Kanonen um 6% bzw. 9%.
+(Dies resultiert in nahezu keiner Änderung für Bombarden und einer Erhöhung des Schadensbonus für die anderen Kanonentypen)
+
+--- Version 0.740
+
+Es wurden mehrere Fehler im Zusammenhang mit der KI behoben.
+
+Es wurde ein Fehler behoben, durch den die Kosten beim Soldatenkauf falsch angezeigt werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit dem Erscheinen der Förster behoben.
+
+--- Version 0.741
+
+Es wurde ein Fehler behoben, durch den das Aufwerten von Truppen im MP manchmal keine Ressourcen kostete.
+
+Es wurde ein Fehler im Zusammenhang mit den Wachstum der von Förstern platzierten Bäume behoben.
+
+Es wurden Fehler im Zusammenhang mit zwei Technologien in der Wettermaschine behoben, die zu Desyncs führen konnten.
+
+--- Version 0.742
+
+QoL für den Förster: Hat ein Setzling seine maximale Größe erreicht und es befand sich ein Förster in unmittelbarer Nähe, so konnte sich dieser nicht mehr bewegen, weil er durch den entstandenen Baum blockiert wurde. Der Setzling wird nun erst zum fällbaren Baum, wenn sich keine Siedler in direkter Nähe befindet.
+Wurde der Bereich, in dem der Förster aufforsten wollte, blockiert (z.B. durch das Platzieren eines Gebäudes), hat der Förster gewartet, bis der Bereich wieder erreichbar ist. Er wird sich nun stattdessen einen neuen Ort zum Aufforsten suchen.
+
+Es wurde ein Fehler behoben, durch den die Erfahrungsstufen von Truppen in der erweiterten Stats-Anzeige nicht korrekt angezeigt wurden.
+
+Spieler konnten bisher eine unbegrenzte Menge an Glauben und Wetterenergie ansammeln. Sie können nun nur noch das angedachte Maximum ansammeln. 
+Hinweis: Für Glauben hat dies für den Spieler keine spürbaren Auswirkungen, da nach einer Segnung der Wert auf 0 gesetzt wird.
+Bei der Wetterenergie wird allen anderen Spielern beim Wetterwechsel Energie abgezogen. Dies war davor oft nicht spürbar, da die Spieler das eigentliche Limit weit überschritten hatten und nach dem Abzug immer noch über dem Limit waren.
+
+Die Ressourcen-Finden Fähigkeit der Kundschafter ist zurück. 
+Die Meldung, ob der Kundschafter hierbei erfolgreich war, ging an alle Spieler. Dies wurde behoben und nur noch der Spieler, der die Fähigkeit auslöst, erhält die Nachricht.
+Bedenkt aber bitte, dass mit der Fähigkeit keine Silber-/Goldminen und/oder mediterrane Steinbrüche gefunden werden können.
+
+Sägewerker arbeiten nun effektiver.
+Hinweis: Je nach Rahmenbedingungen (Motivation, Versorgung, etc.) arbeiten sie nun bis zu 50% effektiver.
+
+Es wurde ein Fehler behoben, durch den die Positionen von Armeen nicht aktualisiert wurden, wenn die Armee-ID erneut verwendet wurde.
+
+Ihr erhaltet nun kein Signal und keinen Ton mehr, wenn ein ohnmächtiger Held vom Blitz getroffen wird.
+
+Die KI fokussiert Helden nun ein wenig mehr (sie wurden bisher fast gänzlich von ihr ignoriert).
+
+Es wurde ein Fehler im Zusammenhang mit der Wetterwechselsperre beim Wechsel auf Unwetter behoben.
+
+--- Version 0.743
+
+Anpassung Erebos: Wird ein Ballistaturm in eine Wohnstätte verdorben, erscheint diese nun nicht mit 100% Lebenspunkten, sondern erhält denselben %-Wert HP, den der Ballistaturm hatte.
+Lauftempo Erebos: 360 -> 350
+Verdorbene Wohnstätte Rüstung: 2 -> 0
+Verdorbene Wohnstätte Reichweite: 2800 -> 2700
+Verdorbene Wohnstätte Schaden: 75 -> 80
+
+Durch die verbesserten Sägewerke wurden einige Balancing-Änderungen notwendig. Daher wurden folgende Anpassungen vorgenommen:
+Schadensfaktor Speer/Schwert 1,3 -> 1,25
+Schadensfaktor SKav/Schwert 1,5 -> 1,6
+Schadensfaktor NV/Speer 1,5 -> 1,6
+Schadensfaktor NV/Kav 1,1 -> 1,0
+Schadensfaktor Scharfi/Speer 1,0 -> 1,05
+
+Es wurden Fehler beim Laden von Spielständen im SP behoben.
+
+Es wurde ein Fehler im Zusammenhang mit Spawn-Armeen und Rekrutierungsarmeen desselben Spielers behoben.
+
+--- Version 0.744
+
+Das Defensivverhalten von Rekrutierungsarmeen wurde überarbeitet.
+
+Rekrutierungsarmeen können nun ihre Truppen an mehreren Militärgebäuden desselben Typs gleichzeitig ausbilden.
+
+--- Version 0.745
+
+Die Siegerstatue des Osterturniers 2023 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Roma und Mathias!
+
+Neue Gebäude und ein neuer Ressourcentyp sind nun verfügbar.
+
+Es wurde ein Fehler behoben, durch den Truppen in Rekrutierungsgebäuden beim Auslösen von Briefings und Cutscenes stehen bleiben konnten.
+
+Es wurde ein Fehler behoben, durch den keine Truppen auf den Schützenturm klettern konnten, wenn dieser gegen den Uhrzeigersinn gedreht wurde.
+
+Anti-Gebäude-Kanonen der KI fokussieren nun Schützentürme ein wenig mehr.
+
+Bärenmenschen haben selbst im späteren Spielverlauf noch sehr viel Schaden ausgehalten, obwohl sie eine offensiv ausgerichtete Einheit sein sollen. Daher wurde folgende Änderung vorgenommen:
+Rüstungswert Bärenmenschen 3 -> 2
+
+Ingenieure produzieren nun nur noch 5 Wetterenergie pro Zyklus anstatt 10.
+
+Brücken bieten nun mehr Platz zur Überquerung.
+
+Die Siegessäule kann nun nicht mehr abgerissen werden.
+
+Einige Modelle und Texturen wurden überarbeitet.
+
+Die Münzstätte erhöht nun den Zahltag um 2% anstatt 1,5%. Das Maximum wurde von 15% auf 20% angehoben.
+
+Heldenbalancing:
+Kala Giftpfeile Abklingzeit [s] 38 -> 30
+Kala Giftpfeile Schaden 80 -> 90
+Kala Giftnebel Abklingzeit [s] 27 -> 22
+Kala Giftnebel Schaden 50 -> 60
+
+Die durch Ari gerufenen Banditen sind nun vollständige Trupps mit je 6 Soldaten.
+Anzahl gerufene Banditen 6 -> 4
+
+Helias Segnung hat nun einen passiven Effekt: Solange der Spieler vollen Glauben hat und die Fähigkeit nicht aktiv ist, erleidet Helias halben Schaden.
+Solange die Fähigkeit aktiv ist, erleiden alle nahen verbündeten Einheiten weniger Schaden abhängig vom Glauben, jeder reduzierte Schaden kostet aber auch Glauben.
+Helias hat nun eine weitere Fähigkeit: Sakrileg: Während der Wirkdauer geht sämtlicher Glauben, den Gegner generieren, stattdessen an Helias' Spieler.
+
+Jede erfolgreiche Götterdämmerung von Dovbar reduziert die Reichweite der Fähigkeit (bis auf ein Minimum, welches nicht unterschritten werden kann).
+
+Dovbars Götterdämmerung und Erebos Höllenfeuer-Aura verursachen nun keinen Schaden mehr an Einheiten und Gebäude neutral gesinnter Spieler.
+
+--- Version 0.746
+
+Es wurde ein Fehler behoben, durch den Köhler nicht von der Segnung 'Heiligsprechnung' betroffen waren.
+
+Es wurde ein Fehler im Zusammenhang mit der Anzeige der Kohleverwendung für Zuschauer behoben.
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn die Holzfällerhütte abgerissen wurde während sich der Holzfäller innerhalb dieser befunden hat.
+
+In der Holzfällerhütte, der Kohlemine und der Köhlerei könnt ihr nun einsehen, wie viele Rohstoffe erhalten wurden. 
+In der Köhlerei wird zusätzlich die Menge verbrannter Baumstämme angezeigt.
+
+Die Menge geförderter Kohle aus der Kohlemine ist nun abhängig von der Ausbaustufe und kann durch die Spitzhacke weiter erhöht werden.
+
+Fehlende Übersetzungen von Tooltips in polnischer, russischer und us-amerikanischer Sprache wurden hinzugefügt.
+
+Es konnte passieren, dass mehrere Holzfäller denselben Baum hacken wollten. Dadurch kam es zu Fehlern. Jeder Baum kann nur noch durch einen Holzfäller gehackt werden.
+
+Holzfäller können nun keine unerreichbaren Bäume mehr anvisieren.
+
+--- Version 0.747
+
+Es wurde ein Fehler behoben, durch den die Anzahl erforschte Technologien in den Endstatistiken stets mit einer 0 angezeigt wurde.
+
+Es wurde einige Übersetzungsfehler behoben.
+
+Es wurde ein Fehler behoben, durch den das Laden von Spielständen durch die Verwendung von Holzfällern nicht mehr möglich war.
+
+--- Version 0.748
+
+Hauptmänner von Rekrutierungsarmeen suchen sich nun einen fixen Sammelpunkt anstatt diesen regelmäßig zu wechseln.
+
+BS-spezifischen Gebäuden wurden Raucheffekte (beim Gebäudebau), Flammeneffekte (wenn das Gebäude unter 50% HP fällt) sowie Flaggen hinzugefügt.
+
+BS-spezifische Statuen schneien nun im Winter ein.
+
+Es wurde ein Fehler im Zusammenhang mit Ari's gerufenen Banditen behoben.
+
+--- Version 0.749
+
+Ari Anzahl beschworener Trupps: 4 -> 3
+Ari Anzahl Soldaten pro Trupp: 6 -> 7
+
+Varg beschwört nun zusätzliche Wölfe während seine Berserkerwut aktiv ist. Die Anzahl zusätzlicher Wölfe wird weiter erhöht, wenn Varg über wenig Lebenspunkte verfügt.
+Basisanzahl beschworene Wölfe 5 -> 4 (steigt bei idealen Bedingungen auf 10 an)
+
+Für die verstärkte Veredlung mittels Kohle wird nun weniger Kohle benötigt.
+
+Helden werden von der KI nun nicht mehr pauschal stärker fokussiert. Der Fokus wird nun den Rahmenbedingungen entsprechend berechnet.
+
+Es wurde ein Fehler behoben, durch den KI-Spawntruppen in seltenen Fällen keiner KI zugeordnet wurden und dadurch keine Befehle erhielten.
+
+Es wurde ein Fehler behoben, durch den eine sehr hohe Anzahl verschiedener Spawnarmeen das Spiel zum Absturz bringen konnte.
+
+Fehlermeldungen sind nun aussagekräftiger.
+
+Es wurden weitere Einheiten und Objekte hinzugefügt.
+
+Weitere Kooperations-Karten (unter Anderem auch Prüfungskarten) sind nun verfügbar.
+
+Die Stärke von Nebelvolk-Rüstungsupgrades (oft im späteren Spielverlauf von Koop-Maps) wurde reduziert.
+
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Kohleminen und/oder Köhler bereits zu Spielbeginn platziert sind.
+
+Jeder Trupp der KI konnte den nächsten Gegner angreifen, wenn Feinde die Reichweite der KI unterschritten hatten. Dadurch konnte es vorkommen, dass einige Truppen Gegner angriffen, die nicht in Reichweite der KI waren. Die Logik wurde umgeschrieben, sodass nur noch Feinde in Reichweite getargetted werden.
+
+Belagerungskanone Bewegungstempo: 100 -> 120
+
+Hellebardier Schaden: 21 -> 22
+
+Die verwendete Version der EMS-GUI wurde aktualisiert. Vielen Dank an RobbiTheFox.
+
+Übersetzungen in das Englische wurden verbessert. Fehlende Übersetzungen wurden hinzugefügt.
+
+Leibeigene konnten nach Leerhacken eines Steinhaufens zu einem nahen Grabstein laufen und versuchten, diesen abzubauen. Da es aber nicht möglich ist, Grabsteine abzubauen, standen die Leibeigenen nur untätig um diesen herum. Leibeigene können nun nicht mehr automatisch an Grabsteine laufen.
+
+Es wurde ein Fehler behoben, durch den die KI kaum Reiter ausbildete, auch wenn die Rahmenbedingungen hierfür ideal waren.
+
+Es wurde ein Fehler behoben, durch den es möglich war, dass die KI mehr Truppen ausbilden konnte, als sie kontrollieren konnte (die Truppen blieben vor dem Militärgebäude stehen, bis wieder Truppenslots frei wurden).
+
+Die zusätzlichen Sprüche/Taunts per Tastenkombi für den MP haben im SP das Spiel zum crashen gebracht. Sie sind nun im SP nicht mehr verfügbar.
+
+NPCs sind nun immun gegen Blitzeinschläge.
+
+--- Version 0.750
+
+Schaden Schwere Haubitze: 992 -> 500
+
+Schaden Sturmbock: 70 -> 90
+Lebenspunkte Sturmbock: 500 -> 800
+Rüstung Sturmbock 5 -> 8
+
+Statue des Bündnis Kosten:
+Silber: 350 -> 250
+Steine: 1000 -> 1500
+
+Ausgewählte Truppen auf Karten mit dem Armee-Erstellungs-Tool erschienen pro Spieler alle auf derselben Stelle. 
+Sie erscheinen nun mit ein wenig Abstand zueinander.
+
+Es wurden mehrere Fehler auf Prüfungskarten behoben.
+
+Die Changelog.txt wurde auf den neuesten Stand gebracht.
+
+--- Version 0.751
+
+Es wurden Vorschaubilder für die Orgelkanone und die schwere Haubitze hinzugefügt. 
+Der Dank geht hierbei an totalwarANGEL, der diese bereitgestellt hat.
+
+Verschossene Projektile von Fernkämpfern, die sich auf Gebäuden erhöhter Position (wie z.B. Brücken) befinden, werden nun um den entsprechenden Höhenversatz korrigiert.
+Gleichermaßen wird die Höhe des Ziels korrigiert, wenn ein Fernkämpfer Projektile auf eine Einheit, die sich auf einer erhöhten Position befindet, verschießt.
+
+Bogenschützen-Bandit Balancing:
+Sichtreichweite: 2900 -> 2700
+Angriffsreichweite: 2900 -> 2700
+Rüstungswert: 3 -> 2
+
+Leichter Scharfschütze Balancing:
+Schaden: 17 -> 21
+
+--- Version 0.752
+
+Sämtliche neue Sounds werden nun beim Map-Initialisieren dem Sound-Table hinzugefügt. 
+Neu hinzugefügte Feedback-Sounds können sich dadurch nicht mehr mit bestehenden überlagern.
+
+Kimichuras Fix des Höhenoffsets von Projektilen in Bezug auf Brücken überlagerte sich mit dem in der Version 0.751 hinzugefügten eigenen Fix, wodurch die Projektile doppelt in der Höhe korrigiert wurden.
+Daher wird Kimichuras Fix in BS vorerst deaktiviert. Langfristig ist jedoch geplant, den eigenen Fix wieder zu entfernen und Kimichuras Fix zu verwenden.
+
+--- Version 0.753
+
+Die Änderung aus Version 0.751 bezüglich der Projektile und alle mitbetroffenen Komponenten wurden wieder entfernt.
+
+--- Version 0.754
+
+Armeen können nun mit einer von der Armee-Position abweichenden Position konfiguriert werden, um die bevorzugt Gegner gesucht werden sollen.
+
+Gebäude, auf die Einheiten gestellt werden können, beeinflussen sich gegenseitig in der Höhe, wenn diese über verschiedene Höhen und eine gewisse Nähe verfügen. 
+Um dieser Problematik entgegenzuwirken, werden nun die Höhen auf entsprechenden Maps zu Spielbeginn neu berechnet und gesetzt.
+
+--- Version 0.755
+
+Es wurde ein Fehler behoben, durch den der Spieler beim Abriss von Uhren Steine anstatt Holz erhielt.
+
+Vorbereitungen für das kommende Osterturnier
+
+--- Version 0.756
+
+Helden der KI können nun ihre Fähigkeiten verwenden.
+
+Das Verhalten von Spawn-Armeen mit "Advance"-Befehl wurde verbessert.
+
+Das Zeitintervall zwischen Rekrutierungen von Armeen wurde auf allen Stufen um 1 Sekunde erhöht.
+
+Es wurde ein Fehler behoben, durch den gespawnte Anti-Gebäude-Kanonen in seltenen Fällen an ihrem Spawnpunkt stehenbleiben konnten und keine Befehle bekamen.
+
+Es wurde ein Fehler behoben, durch den berechnete Armeenpunkte in seltenen Fällen in geblocktem Gebiet liegen konnten.
+
+Der Mindestabstand, den Türme beim Bau auf Koop-Karten einhalten müssen, wurde leicht erhöht.
+
+--- Version 0.757
+
+Werden Befehle wie Patrouillieren und Position halten aus diversen Gründen ungewollt abgebrochen, erhalten die Truppen nun erneut den gewünschten Befehl.
+Zuvor gesetzte Patrouillenpunkte werden dabei beibehalten.
+
+

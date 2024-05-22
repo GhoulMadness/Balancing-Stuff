@@ -28,7 +28,7 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 									[Entities.PU_Hero11] = 0.9,
 									[Entities.CU_Evil_Queen] = 1.0,
 									[Entities.PU_Hero13] = 0.8,
-									[Entities.PU_Hero14] = 0.7
+									[Entities.PU_Hero14] = 0.8
 								},
 				MainThreat = {	[Entities.PU_Hero1] = {"CloseRange", Abilities.AbilityInflictFear},
 								[Entities.PU_Hero1a] = {"CloseRange", Abilities.AbilityInflictFear},
@@ -67,7 +67,7 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 					if type == Entities.PU_Hero13 then
 						if gvHero13.TriggerIDs[_ability].Judgment[player] then
 							if dist < gvHero13.AbilityProperties[_ability].Judgment.BaseRange then
-								if GetHealth(_heroID) < 30 then
+								if GetEntityHealth(_heroID) < 30 then
 									return -1
 								else
 									return 0
@@ -87,7 +87,7 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 								if dist < range then
 									return -1
 								else
-									return numthreatened_ent / gvHeroTarget.Thresholds.CriticalNumEntitiesClump
+									return math.max(numthreatened_ent / gvHeroTarget.Thresholds.CriticalNumEntitiesClump, 2)
 								end
 							end
 						else
@@ -118,15 +118,16 @@ gvHeroTarget = {Thresholds = {CriticalCharge = 0.9,
 					end
 				end,
 				EvaluateThreatFactor = function(_id, _heroID)
-				assert(IsValid(_id) and IsValid(_heroID), "invalid entity ID")
-				local type = Logic.GetEntityType(_heroID)
-				local factor = gvHeroTarget.BaseThreatVal[type]
-				if type == Entities.PU_Hero6 then
-					if gvHeroTarget.AreEntitiesThreatenedByConvertSettler(_heroID) then
-						factor = factor * 3
+					assert(IsValid(_id) and IsValid(_heroID), "invalid entity ID")
+					local type = Logic.GetEntityType(_heroID)
+					local base = gvHeroTarget.BaseThreatVal[type]
+					if type == Entities.PU_Hero6 then
+						if gvHeroTarget.AreEntitiesThreatenedByConvertSettler(_heroID) then
+							base = base * 3
+						end
 					end
-				end
-				local threat, ability = unpack(gvHeroTarget.MainThreat[type])
-					return factor * gvHeroTarget.FactorByThreatType[threat](_id, _heroID, ability)
+					local threat, ability = unpack(gvHeroTarget.MainThreat[type])
+					local factor = gvHeroTarget.FactorByThreatType[threat](_id, _heroID, ability)
+					return base * factor
 				end
 }

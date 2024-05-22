@@ -187,6 +187,8 @@ Forester.DoorOffsetByEntityType = {	[Entities.PB_VillageCenter1] = 	{X = -500,
 																	Y = -600},
 									[Entities.PB_VillageCenter3] = 	{X = -500,
 																	Y = -600},
+									[Entities.PB_VillageHall1] = 	{X = -500,
+																	Y = -600},
 									[Entities.CB_Grange] = 			{X = -400,
 																	Y = 200},
 									[Entities.PB_Castle1] = 		{X = -1000,
@@ -351,7 +353,9 @@ OnForester_Created = function(_id)
 			local playerID = Logic.EntityGetPlayer(_id)
 			local distancetable = {}
 
-			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2, Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5)) do
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
+			Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5,
+			Entities.PB_VillageHall1)) do
 
 				local posX, posY = Logic.GetEntityPosition(eID)
 				local distance = GetDistance({X = buildingposX, Y = buildingposY}, {X = posX, Y = posY})

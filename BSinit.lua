@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.756
+BS.Version = 0.762
 
 BS.SpectatorPID = 17
 
@@ -41,6 +41,9 @@ BS.MapList = {
 				["(2) bs koop farben des glaubens"] = true,
 				["(2) bs koop sturm auf etaqa"] = true,
 				["(2) bs koop schatten und licht"] = true,
+				["(2) bs koop heldenjagd"] = true,
+				["(2) bs koop unter feindlicher kontrolle"] = true,
+				["(2) bs koop verloren in evelance"] = true,
 				["(2) emsbs dunkelforst"] = true,
 				["(2) emsbs kampf am kap"] = true,
 				["(2) emsbs leichenfledderer"] = true,
@@ -122,6 +125,8 @@ BS.MapList = {
 				},
 			[6] =	{
 				["(6) bs koop vargs raubzug"] = true,
+				["(6) bs koop pfad der flammen"] = true,
+				["(6) bs koop trockenzeit"] = true,
 				["(6) emsbs die zwei burgherrn"] = true,
 				["(6) emsbs heldenschlacht"] = true,
 				["(6) emsbs hochland"] = true,
@@ -199,19 +204,42 @@ end
 BS.DateRestrictions = 	{MapName = {	["(4) emsbs hasenjagd"] =  	{
 																	},
 										["(4) emsbs imperium"] = 	{
+																	},
+										["(4) emsbs osterfieber"] = {
+																	},
+										["(4) emsbs easterville"] =	{
 																	}
 									},
 						TechnologyForbidden = {	[1] = Technologies.B_VictoryStatue1,
-												[2] = Technologies.B_VictoryStatue2
+												[2] = Technologies.B_VictoryStatue2,
+												[3] = Technologies.B_VictoryStatue3,
+												[4] = Technologies.B_VictoryStatue4,
+												[5] = Technologies.B_VictoryStatue5,
+												[6] = Technologies.B_VictoryStatue6,
+												[7] = Technologies.B_VictoryStatue7,
+												[8] = Technologies.B_VictoryStatue8,
+												[9] = Technologies.B_VictoryStatue9,
+												[10] = Technologies.MU_Cannon5,
+												[11] = Technologies.MU_Cannon6,
+												[12] = Technologies.MU_Catapult
 												}
 						}
-for i = 1,8 do
-	BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-0"..i+1
-	BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-0"..i+1
-end
-for i = 9,14 do
-	BS.DateRestrictions.MapName["(4) emsbs hasenjagd"][i] = "2022-05-"..i+1
-	BS.DateRestrictions.MapName["(4) emsbs imperium"][i] = "2022-05-"..i+1
+for _, map in pairs(BS.DateRestrictions.MapName) do
+	for i = 1, 9 do
+		table.insert(map, "2022-05-0" .. i)
+	end
+	for i = 10, 14 do
+		table.insert(map, "2022-05-" .. i)
+	end
+	for i = 29, 30 do
+		table.insert(map, "2024-04-" .. i)
+	end
+	for i = 1, 9 do
+		table.insert(map, "2024-05-0" .. i)
+	end
+	for i = 10, 31 do
+		table.insert(map, "2024-05-" .. i)
+	end
 end
 
 function BS.CheckForDateRestrictions(_datestring)
@@ -223,10 +251,12 @@ function BS.CheckForDateRestrictions(_datestring)
 						ForbidTechnology(BS.DateRestrictions.TechnologyForbidden[x],i)
 					end
 				end
+				XGUIEng.ShowWidget("BuyHeroWindowBuyHero14", 0)
 			end
 		end
 	end
 end
+
 BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 						["Build_VictoryStatue2"] = "challenge_map2_won",
 						["Build_VictoryStatue3"] = "challenge_map3_won",
@@ -255,7 +285,7 @@ BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 						["Buy_Cannon6"] = {	[1] = "challenge_map1_won",
 											[2] = "challenge_map2_won",
 											[3] = "challenge_map3_won",
-											[4] = "challenge_map6_won",
+											[4] = "challenge_map4_won",
 											[5] = "challenge_map5_won",
 											[6] = "challenge_map6_won",
 											[7] = "challenge_map7_won",
@@ -292,10 +322,17 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 									"Vqrys",
 									"Izzo",
 									"a8wh4t",
-									"ThePhoenix_2000"},
+									"ThePhoenix_2000",
+									"DerEisenfresser"},
 							[4] = {"Novator12", "Novator12Slave",
-									"Vqrys"},
-							[5] = {},
+									"Vqrys",
+									"Roma_Invicta", "CAS_G Roma",
+									"CAS-G_Mathias", "Mathias", "G4F_Mathias"},
+							[5] = {"Novator12", "Novator12Slave",
+									"ThePhoenix_2000",
+									"Vqrys",
+									"Roma_Invicta", "CAS_G Roma",
+									"CAS-G_Mathias", "Mathias", "G4F_Mathias"},
 							[6] = {},
 							[7] = {"Izzo",
 									"a8wh4t",
@@ -304,7 +341,9 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 									"Vqrys"},
 							[8] = {},
 							[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
-									"Novator12", "Novator12Slave"}
+									"Novator12", "Novator12Slave",
+									"ThePhoenix_2000",
+									"Vqrys"}
 						}
 function BS.CheckForAchievements(_pID)
 
@@ -497,7 +536,7 @@ StartSimpleJob("BloodRushCheck")
 StartSimpleJob("Lightning_Job")
 --Trigger to get building ids for beauti anims
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnSpecBeautiCreated", 1)
---Trigger for AI target redirection
+--Trigger for AI tower target redirection
 AIchunks = {}
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
 ----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------

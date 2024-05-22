@@ -31,6 +31,23 @@ Scaremonger.MotiDebuff = function(_PlayerID, _eType)
 			else
 				CUtil.AddToPlayersMotivationSoftcap(j, - (CUtil.GetPlayersMotivationSoftcap(j) - 0.4))
 			end
+			-- AI resource debuff
+			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(j) == 0 and MapEditor_Armies and MapEditor_Armies[j] then
+				local mot = Logic.GetAverageMotivation(j)
+				if mot < 1 then
+					local t = MapEditor_Armies[j].description.refresh
+					AI.Player_SetResourceRefreshRates(
+						j,
+						round(t.gold * (mot ^ 2)),
+						round(t.clay * (mot ^ 2)),
+						round(t.iron * (mot ^ 2)),
+						round(t.sulfur * (mot ^ 2)),
+						round(t.stone * (mot ^ 2)),
+						round(t.wood * (mot ^ 2)),
+						t.updateTime
+					)
+				end
+			end
 		end
 	end
 end
@@ -46,6 +63,34 @@ Scaremonger.MotiReset = function(_PlayerID, _eType)
 			end
 			CUtil.AddToPlayersMotivationHardcap(j, amount)
 			CUtil.AddToPlayersMotivationSoftcap(j, amount)
+			-- AI resource debuff reset
+			if XNetwork.GameInformation_IsHumanPlayerAttachedToPlayerID(j) == 0 and MapEditor_Armies and MapEditor_Armies[j] then
+				local mot = Logic.GetAverageMotivation(j)
+				local t = MapEditor_Armies[j].description.refresh
+				if mot < 1 then
+					AI.Player_SetResourceRefreshRates(
+						j,
+						round(t.gold * (mot ^ 2)),
+						round(t.clay * (mot ^ 2)),
+						round(t.iron * (mot ^ 2)),
+						round(t.sulfur * (mot ^ 2)),
+						round(t.stone * (mot ^ 2)),
+						round(t.wood * (mot ^ 2)),
+						t.updateTime
+					)
+				else
+					AI.Player_SetResourceRefreshRates(
+						j,
+						t.gold,
+						t.clay,
+						t.iron,
+						t.sulfur,
+						t.stone,
+						t.wood,
+						t.updateTime
+					)
+				end
+			end
 		end
 	end
 end
