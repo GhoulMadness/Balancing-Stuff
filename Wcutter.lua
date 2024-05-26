@@ -3,11 +3,11 @@ WCutter = WCutter or {}
 -- max range woodcutter can find trees (s-cm)
 WCutter.MaxRange = 2500
 -- min time woodcutter needs to chop tree (sec)
-WCutter.BaseTimeNeeded = 5
+WCutter.BaseTimeNeeded = 2
 -- bonus time needed for chopping tree per ressource of respective tree (sec)
-WCutter.TimeNeededPerRess = 0.5
+WCutter.TimeNeededPerRess = 0.2
 -- maximum duration woodcutter needs to chop tree (sec)
-WCutter.MaxTimeNeeded = 30
+WCutter.MaxTimeNeeded = 25
 -- chop anim duration in ticks (sec/10)
 WCutter.ChopSubAnimDuration = 50
 -- delay forester needs to wait between work cycles
@@ -214,7 +214,7 @@ WCutter.FindNearestTree = function(_id)
 		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
 			local x_, y_ = Logic.GetEntityPosition(eID)
 			local x__, y__ = EvaluateNearestUnblockedPosition(x_, y_, GetEntityTypeNumBlockedPoints(Logic.GetEntityType(eID)) * 100 + WCutter.ApproachRangeBonus, 100)
-			local sector2 = CUtil.GetSector(x__/100, y__/100)
+			local sector2 = CUtil.GetSector(dekaround(x__/100), dekaround(y__/100))
 			if sector == sector2 then
 				table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
 			end
