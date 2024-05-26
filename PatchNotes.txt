@@ -1,5 +1,23 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.763
+
+Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.
+
+Die Zeiten, die der Holzfäller zum Fällen von Bäumen benötigt, wurde reduziert:
+	Basisdauer: 		5 Sekunden -> 2 Sekunden
+	Dauer/Ressource:	0,5 Sekunden -> 0,2 Sekunden (Hinweis: die meisten Bäume enthalten 75 Holz)
+	maximale Dauer:		30 Sekunden -> 25 Sekunden (erreicht bei 50 Ressourcen -> 115 Ressourcen)
+	Vorbereitungsdauer:	6 Sekunden -> 3 Sekunden
+	"Erschöpft"-Dauer:	3 Sekunden -> 2 Sekunden
+
+Der Pause-Screen (bisher nur im SP) wird nun auch im MP verwendet, wenn ihr das Spiel pausiert.
+
+Lebenspunkte-Regeneration Schwere Haubitze:
+	4 HP / 4 Sekunden -> 0
+
+Es wurde ein Fehler behoben, durch den der Anzeigename der Statue der Verbotenen nicht korrekt dargestellt wurde.
+
 --- Version 0.762
 
 Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
@@ -62,11 +80,3 @@ Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
 Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
 
 Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 
-
---- Version 0.758
-
-Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Übersetzungen wurden korrigiert.
-
-Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
-
-Ihr könnt nun dunklen Schwertkämpfern und Dovbar visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
