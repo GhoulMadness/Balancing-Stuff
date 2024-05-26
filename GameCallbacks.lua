@@ -430,10 +430,8 @@ function GameCallback_GameSpeedChanged( _Speed )
 	local Speed = _Speed * 1000
     if Speed == 0 then
 		gvGameSpeed = 0
-		if not CNetwork then
-			local PauseScreenType = math.random(5)
-			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
-		end
+		local PauseScreenType = XGUIEng.GetRandom(4)+1
+		XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 
     else
 

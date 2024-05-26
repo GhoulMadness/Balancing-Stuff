@@ -3004,9 +3004,10 @@ function GetMilitaryBuildingMaxTrainSlots(_entityID)
 end
 
 gvVisibilityStates = {	[0] = 257,
-						[1] = 65793
+						[1] = 65793,
+						[2] = 65792
 					}
--- get visibility of entity (0=invisible, 1=visible)
+-- get visibility of entity (0=invisible, 1=visible, 2=visible and suspended?)
 ---@param _entityID integer entityID
 ---@return integer visibility state
 function GetEntityVisibility(_entityID)

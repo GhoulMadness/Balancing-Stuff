@@ -141,7 +141,7 @@ OnWCutter_Created = function(_id)
 			local playerID = Logic.EntityGetPlayer(_id)
 			local distancetable = {}
 
-			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2, 
+			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
 			Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5,
 			Entities.PB_VillageHall1)) do
 
@@ -203,6 +203,10 @@ function OnWCutter_Died(_id, _buildingID)
 	end
 end
 WCutter.FindNearestTree = function(_id)
+
+	if not IsExisting(_id) then
+		return true
+	end
 	local distancetable = {}
 	local x,y = Logic.GetEntityPosition(_id)
 	local sector = Logic.GetSector(_id)
@@ -306,12 +310,20 @@ OnTargettedTree_Destroyed = function(_id, _treeid)
 end
 WCutter.StartCutting = function(_id, _treeid, _buildingID)
 
+	if not IsExisting(_id) then
+		return true
+	end
+
 	if not WCutter.TriggerIDs.WorkControl.Cut[_id] then
 		Logic.MoveSettler(_id, Logic.GetEntityPosition(_treeid))
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_ArrivedAtTreeCheck", 1, {}, {_id, _treeid, _buildingID})
 	end
 end
 WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
+
+	if not IsExisting(_id) then
+		return true
+	end
 
 	if not IsValid(_treeid) then
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
@@ -335,6 +347,10 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 	end
 end
 WCutter.CutTree = function(_id, _treeid, _buildingID)
+
+	if not IsExisting(_id) then
+		return true
+	end
 
 	local posX, posY = Logic.GetEntityPosition(_treeid)
 	local num, restree = Logic.GetEntitiesInArea(Entities.XD_ResourceTree, posX, posY, 10, 1)
@@ -365,6 +381,11 @@ WCutter.BlockTree = function(_treeid, _flag)
 	return newID, etype
 end
 WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
+
+	if not IsExisting(_id) then
+		return true
+	end
+
 	if Counter.Tick2("WCutter_CutTreeDelay_".._id.."_".._treeid, math.min(WCutter.BaseTimeNeeded + WCutter.TimeNeededPerRess * _res_amount, WCutter.MaxTimeNeeded)) then
 		local tempID, newID
 		if IsValid(_treeid) then
@@ -387,6 +408,11 @@ WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
 	end
 end
 WCutter_RemoveTree = function(_id, _treeid, _res_amount)
+
+	if not IsExisting(_id) then
+		return true
+	end
+
 	if Counter.Tick2("WCutter_RemoveTree_".._id.."_".._treeid, WCutter.ChopSubAnimDuration) then
 		Logic.CreateEffect(GGL_Effects.FXDestroyTree, Logic.GetEntityPosition(_treeid))
 		ReplaceEntity(_treeid, Entities.XD_TreeStump1)
@@ -401,6 +427,10 @@ WCutter_RemoveTree = function(_id, _treeid, _res_amount)
 	end
 end
 WCutter.EndWorkCycle = function(_id)
+
+	if not IsExisting(_id) then
+		return true
+	end
 
 	local _buildingID = WCutter.GetBuildingIDByWorkerID(_id)
 	if IsExisting(_id) then
