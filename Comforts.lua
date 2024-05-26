@@ -4292,7 +4292,7 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step, _noter
 	local f = IsPositionUnblocked
 	local res = true
 	if not _noterrpos then
-		f = GetBlocking100
+		f = CUtil.GetBlocking100
 		res = 0
 	end
 
