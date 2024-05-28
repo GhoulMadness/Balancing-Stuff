@@ -18,6 +18,8 @@ Lebenspunkte-Regeneration Schwere Haubitze:
 
 Es wurde ein Fehler behoben, durch den der Anzeigename der Statue der Verbotenen nicht korrekt dargestellt wurde.
 
+Es wurde ein Fehler im Zusammenhang mit der Statue der Täuschung behoben.
+
 --- Version 0.762
 
 Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
