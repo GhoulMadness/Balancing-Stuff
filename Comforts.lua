@@ -1629,7 +1629,8 @@ gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,T
 			TroopUpgrades = {	Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery,
 								Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_WoodAging, Technologies.T_Turnery, Technologies.T_MasterOfSmithery,
 								Technologies.T_IronCasting, Technologies.T_Fletching, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder, Technologies.T_BlisteringCannonballs,
-								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor},
+								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor,
+								Technologies.T_FleeceArmor, Technologies.T_FleeceLinedLeatherArmor, Technologies.T_LeadShot, Technologies.T_Sights},
 			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
 								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
 				}
