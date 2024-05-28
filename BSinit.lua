@@ -550,6 +550,8 @@ if not gvEMSFlag then
 		end
 	end
 	Sync.Init()
+	--
+	BS.EnemyBuildBlockRange = 2500
 	-- register AI in statistics
 	local PIDs = GetAllAIs()
 	for i = 1,table.getn(PIDs) do
@@ -563,6 +565,7 @@ if not gvEMSFlag then
 	end
 else
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")
+	BS.EnemyBuildBlockRange = 1500
 end
 CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 -- check for valid texture quality settings

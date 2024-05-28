@@ -629,7 +629,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	local player = GUI.GetPlayerID()
 	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
 
-	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _x, Y = _y}, 1500, 3)
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _x, Y = _y}, BS.EnemyBuildBlockRange, 3)
 	and not HostileTroopBuildBlockWhitelist[_eType] then
 		allowed = false
 	end
