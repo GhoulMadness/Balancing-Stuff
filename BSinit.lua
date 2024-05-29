@@ -240,6 +240,9 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 	for i = 10, 31 do
 		table.insert(map, "2024-05-" .. i)
 	end
+	for i = 1, 9 do
+		table.insert(map, "2024-06-0" .. i)
+	end
 end
 
 function BS.CheckForDateRestrictions(_datestring)
@@ -343,7 +346,8 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 							[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 									"Novator12", "Novator12Slave",
 									"ThePhoenix_2000",
-									"Vqrys"}
+									"Vqrys",
+									"DerEisenfresser"}
 						}
 function BS.CheckForAchievements(_pID)
 
