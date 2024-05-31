@@ -84,7 +84,8 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									},
 				PlayerTroops = { },
 				SpawnPos = { },
-				Finished = { }
+				Finished = { },
+				SpawnDone = false
 }
 for i = 1,16 do
 	ArmyCreator.SpawnPos[i] = {X = 1000, Y = 1000}
@@ -179,7 +180,7 @@ ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 			local count = 0
 
 			for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-				if ArmyCreator.Finished[i] then
+				if ArmyCreator.Finished[i] and not ArmyCreator.SpawnDone then
 					count = count + 1
 				end
 			end
@@ -199,6 +200,7 @@ ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 
 					if playersleft == 0 then
 
+						ArmyCreator.SpawnDone = true
 						break
 
 					end
