@@ -23,6 +23,8 @@ Es wurde ein Fehler im Zusammenhang mit der Statue der Täuschung behoben.
 Build-Block-Reichweite von Gebäuden durch nahe Gegner auf Koop-Karten: 
 	1500 -> 2500 (unverändert auf PvP Maps)
 
+Es wurde ein Fehler behoben, durch den auf Karten mit Armee-Erstellungs-Tool dieses erneut auftauchte, wenn ein Spieler das Spiel verlassen hatte und erneut reingeladen hatte.
+
 --- Version 0.762
 
 Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
