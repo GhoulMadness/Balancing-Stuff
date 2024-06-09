@@ -3372,6 +3372,9 @@ function GetNearestBarracks(_playerId, _id)
 			end
 		end
 	end
+	if not btype then
+		return 0
+	end
 	local bt = {}
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerId), CEntityIterator.OfAnyTypeFilter(Entities["PB_".. btype .."1"], Entities["PB_".. btype .."2"])) do
 		table.insert(bt, {id = eID, dist = GetDistance(_id, eID)})
@@ -4111,7 +4114,8 @@ BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Ent
 BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm, UpgradeCategories.LeaderElite, UpgradeCategories.BlackKnightLeaderSword3, UpgradeCategories.BlackKnightLeaderMace1, UpgradeCategories.LeaderBandit, UpgradeCategories.LeaderBarbarian},
 									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle, UpgradeCategories.LeaderBanditBow},
 									["Stable"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry},
-									["Foundry"] = {Entities.PV_Cannon1, Entities.PV_Cannon2, Entities.PV_Cannon3, Entities.PV_Cannon4}
+									["Foundry"] = {Entities.PV_Cannon1, Entities.PV_Cannon2, Entities.PV_Cannon3, Entities.PV_Cannon4},
+									["MercenaryTower"] = {Entities.CU_VeteranLieutenant, Entities.CU_VeteranMajor}
 									}
 GetUpgradeCategoryInDamageClass = function(_dclass)
 	if type(BS.GetUpgradeCategoryByDamageClass[_dclass]) == "table" then
