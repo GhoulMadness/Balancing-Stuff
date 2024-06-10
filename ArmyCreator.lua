@@ -180,11 +180,7 @@ ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 			local count = 0
 
 			for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-<<<<<<< HEAD
-				if ArmyCreator.Finished[i] then
-=======
 				if ArmyCreator.Finished[i] and not ArmyCreator.SpawnDone then
->>>>>>> dev
 					count = count + 1
 				end
 			end

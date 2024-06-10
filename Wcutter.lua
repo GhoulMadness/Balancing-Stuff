@@ -141,11 +141,7 @@ OnWCutter_Created = function(_id)
 			local playerID = Logic.EntityGetPlayer(_id)
 			local distancetable = {}
 
-<<<<<<< HEAD
-			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2, 
-=======
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
->>>>>>> dev
 			Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5,
 			Entities.PB_VillageHall1)) do
 

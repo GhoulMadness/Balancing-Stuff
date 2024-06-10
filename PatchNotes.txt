@@ -1,77 +1,5 @@
 PatchNotizen Balancing Stuff
 
-<<<<<<< HEAD
---- Version 0.762
-
-Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
-
---- Version 0.761
-
-Mit dieser Version wurden eine Vielzahl visueller Verbesserungen vorgenommen sowie einige Fehler behoben:
-
-Erebos: Glanzeffekte verbessert und fehlende mipmaps hinzugefügt (dies verbessert das Verhalten beim Rauszoomen)
-
-Folgenden Gebäuden wurden fehlende binäre meshes hinzugefügt (dies verbessert die Performance beim ersten Laden des Modells)
-	Statue der Täuschung
-	Statue der Verbotenen
-	Statue des Kriegsherrn
-	Statue der Weisheit
-
-Die Texturen folgender Gebäude wurden überarbeitet:
-	Statue der Verbotenen
-	Siegerstatue Osterturnier 2024
-
-Vertexfarben werden nun auch im Winter angezeigt.
-
-Das 3D-Modell folgender Gebäude wurde überarbeitet:
-	Golderzgrube
-	Golderzstollen
-	Golderzbergwerk
-	Silbergrube
-	Silberstollen
-	Silberbergwerk
-
-Für die folgenden Gebäude wurden Animationen erstellt:
-	Kohlemine
-	Kohlebergwerk
-	Golderzgrube
-	Golderzstollen
-	Golderzbergwerk
-	Silbergrube
-	Silberstollen
-	Silberbergwerk
-
-Die Arbeitszyklen der Arbeiter dieser Gebäude wurden entsprechend aktualisiert.
-
-Es wurde ein Fehler behoben, durch den der Spieler zu viele Kampfpunkte erhielt, wenn Einheiten von Kalas oder Marys Schaden-über-Zeit-Effekt betroffen waren.
-
-Waren noch Leibeigene zur Rekrutierung in einer Burg/ einem Außenposten/Landsitz eingereiht, als dieser zerstört wurde, erschienen die Leibeigenen mit üblicher Verzögerung unsichtbar vor dem Gebäude.
-Es wurde ein weiterer Check eingebaut und sollte die Burg/ der Außenposten/Landsitz bereits zerstört sein, werden die Leibeigenen entfernt.
-
---- Version 0.760
-
-Förster und Holzfäller können nun auch aus alten Dorfhallen erscheinen.
-
-Gebäude können nun nicht mehr in direkter Nähe feindlicher Militäreinheiten gebaut werden.
-
---- Version 0.759
-
-Es wurde ein Fehler behoben, durch den Gebäude auf Festungsmauern platziert werden konnten.
-
-Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
-
-Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
-
-Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 
-
---- Version 0.758
-
-Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Übersetzungen wurden korrigiert.
-
-Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
-
-Ihr könnt nun dunklen Schwertkämpfern und Dovbar visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
-=======
 --- Version 0.763
 
 Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.
@@ -160,4 +88,3 @@ Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
 Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
 
 Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 
->>>>>>> dev

@@ -101,11 +101,7 @@ function VStatue6_ApplyDamageTrigger(_EntityID, _PlayerID)
 
 	if Counter.Tick2("VStatue6_ApplyDamageTrigger_" .. _EntityID .. "_Counter", gvVStatue6.TickDelayInSec) then
 		local pos = GetPosition(_EntityID)
-<<<<<<< HEAD
-		local enemy = GetNearestEnemyInRangeAndCone(_PlayerID, pos, Logic.GetEntityOrientation(_EntityID), gvVStatue6.ConeAngleMax, gvVStatue6.MaxRange)
-=======
 		local enemy = GetNearestEnemyInRangeAndCone(_PlayerID, pos, math.mod(Logic.GetEntityOrientation(_EntityID) + 180, 360), gvVStatue6.ConeAngleMax, gvVStatue6.MaxRange)
->>>>>>> dev
 
 		if enemy then
 			local eposX, eposY = Logic.GetEntityPosition(enemy)

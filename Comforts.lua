@@ -1629,12 +1629,8 @@ gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,T
 			TroopUpgrades = {	Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery,
 								Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_WoodAging, Technologies.T_Turnery, Technologies.T_MasterOfSmithery,
 								Technologies.T_IronCasting, Technologies.T_Fletching, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder, Technologies.T_BlisteringCannonballs,
-<<<<<<< HEAD
-								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor},
-=======
 								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor,
 								Technologies.T_FleeceArmor, Technologies.T_FleeceLinedLeatherArmor, Technologies.T_LeadShot, Technologies.T_Sights},
->>>>>>> dev
 			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
 								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
 				}
@@ -3012,11 +3008,7 @@ gvVisibilityStates = {	[0] = 257,
 						[1] = 65793,
 						[2] = 65792
 					}
-<<<<<<< HEAD
--- get visibility of entity (0=invisible, 1=visible)
-=======
 -- get visibility of entity (0=invisible, 1=visible, 2=visible and suspended?)
->>>>>>> dev
 ---@param _entityID integer entityID
 ---@return integer visibility state
 function GetEntityVisibility(_entityID)
@@ -3875,15 +3867,6 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local calcT = {}
 	if IsMelee then
 		bonusRange = bonusRange * 3
-<<<<<<< HEAD
-	end
-	if IsHero then
-		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
-		if flag then
-			return -1
-		end
-=======
->>>>>>> dev
 	end
 	if IsHero then
 		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
@@ -3891,8 +3874,6 @@ function CheckForBetterTarget(_eID, _target, _range)
 			return -1
 		end
 	end
-<<<<<<< HEAD
-=======
 	if gvAntiBuildingCannonsRange[etype] then
 		local res
 		local f = function(_target1, _target2)
@@ -3925,7 +3906,6 @@ function CheckForBetterTarget(_eID, _target, _range)
 			return res
 		end
 	end
->>>>>>> dev
 	if _target and Logic.IsEntityAlive(_target)
 	and (IsMelee and sector == Logic.GetSector(_target)
 	or not IsMelee) then
