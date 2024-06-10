@@ -12,6 +12,7 @@ Die Zeiten, die der Holzfäller zum Fällen von Bäumen benötigt, wurde reduzie
 	"Erschöpft"-Dauer:	3 Sekunden -> 2 Sekunden
 
 Der Pause-Screen (bisher nur im SP) wird nun auch im MP verwendet, wenn ihr das Spiel pausiert.
+Hinweis: Der Screen erscheint nicht, wenn ihr Zuschauer auf einer EMS-Map seid.
 
 Lebenspunkte-Regeneration Schwere Haubitze:
 	4 HP / 4 Sekunden -> 0
