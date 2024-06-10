@@ -431,7 +431,8 @@ function GameCallback_GameSpeedChanged( _Speed )
     if Speed == 0 then
 		gvGameSpeed = 0
 		-- for spectators screen only on non-ems maps
-		if GUI.GetPlayerID() ~= 17 or (GUI.GetPlayerID() == 17 and not gvEMSFlag) then
+		--if GUI.GetPlayerID() ~= 17 or (GUI.GetPlayerID() == 17 and not gvEMSFlag) then
+		if not CNetwork then
 			local PauseScreenType = XGUIEng.GetRandom(4)+1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		end
