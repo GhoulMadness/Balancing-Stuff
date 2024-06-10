@@ -1,6 +1,10 @@
 BS = BS or {}
 
+<<<<<<< HEAD
 BS.Version = 0.762
+=======
+BS.Version = 0.763
+>>>>>>> dev
 
 BS.SpectatorPID = 17
 
@@ -554,6 +558,11 @@ if not gvEMSFlag then
 		end
 	end
 	Sync.Init()
+<<<<<<< HEAD
+=======
+	--
+	BS.EnemyBuildBlockRange = 2500
+>>>>>>> dev
 	-- register AI in statistics
 	local PIDs = GetAllAIs()
 	for i = 1,table.getn(PIDs) do
@@ -567,6 +576,10 @@ if not gvEMSFlag then
 	end
 else
 	Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\EMSAdditions.lua")
+<<<<<<< HEAD
+=======
+	BS.EnemyBuildBlockRange = 1500
+>>>>>>> dev
 end
 CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
 -- check for valid texture quality settings

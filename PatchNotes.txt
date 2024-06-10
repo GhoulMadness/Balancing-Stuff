@@ -1,5 +1,6 @@
 PatchNotizen Balancing Stuff
 
+<<<<<<< HEAD
 --- Version 0.762
 
 Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
@@ -70,3 +71,93 @@ Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Ü
 Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
 
 Ihr könnt nun dunklen Schwertkämpfern und Dovbar visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
+=======
+--- Version 0.763
+
+Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.
+
+Die Zeiten, die der Holzfäller zum Fällen von Bäumen benötigt, wurde reduziert:
+	Basisdauer: 		5 Sekunden -> 2 Sekunden
+	Dauer/Ressource:	0,5 Sekunden -> 0,2 Sekunden (Hinweis: die meisten Bäume enthalten 75 Holz)
+	maximale Dauer:		30 Sekunden -> 25 Sekunden (erreicht bei 50 Ressourcen -> 115 Ressourcen)
+	Vorbereitungsdauer:	6 Sekunden -> 3 Sekunden
+	"Erschöpft"-Dauer:	3 Sekunden -> 2 Sekunden
+
+Der Pause-Screen (bisher nur im SP) wird nun auch im MP verwendet, wenn ihr das Spiel pausiert.
+Hinweis: Der Screen erscheint nicht, wenn ihr Zuschauer auf einer EMS-Map seid.
+
+Lebenspunkte-Regeneration Schwere Haubitze:
+	4 HP / 4 Sekunden -> 0
+
+Es wurde ein Fehler behoben, durch den der Anzeigename der Statue der Verbotenen nicht korrekt dargestellt wurde.
+
+Es wurde ein Fehler im Zusammenhang mit der Statue der Täuschung behoben.
+
+Build-Block-Reichweite von Gebäuden durch nahe Gegner auf Koop-Karten: 
+	1500 -> 2500 (unverändert auf PvP Maps)
+
+Es wurde ein Fehler behoben, durch den auf Karten mit Armee-Erstellungs-Tool dieses erneut auftauchte, wenn ein Spieler das Spiel verlassen hatte und erneut reingeladen hatte.
+
+--- Version 0.762
+
+Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.
+
+--- Version 0.761
+
+Mit dieser Version wurden eine Vielzahl visueller Verbesserungen vorgenommen sowie einige Fehler behoben:
+
+Erebos: Glanzeffekte verbessert und fehlende mipmaps hinzugefügt (dies verbessert das Verhalten beim Rauszoomen)
+
+Folgenden Gebäuden wurden fehlende binäre meshes hinzugefügt (dies verbessert die Performance beim ersten Laden des Modells)
+	Statue der Täuschung
+	Statue der Verbotenen
+	Statue des Kriegsherrn
+	Statue der Weisheit
+
+Die Texturen folgender Gebäude wurden überarbeitet:
+	Statue der Verbotenen
+	Siegerstatue Osterturnier 2024
+
+Vertexfarben werden nun auch im Winter angezeigt.
+
+Das 3D-Modell folgender Gebäude wurde überarbeitet:
+	Golderzgrube
+	Golderzstollen
+	Golderzbergwerk
+	Silbergrube
+	Silberstollen
+	Silberbergwerk
+
+Für die folgenden Gebäude wurden Animationen erstellt:
+	Kohlemine
+	Kohlebergwerk
+	Golderzgrube
+	Golderzstollen
+	Golderzbergwerk
+	Silbergrube
+	Silberstollen
+	Silberbergwerk
+
+Die Arbeitszyklen der Arbeiter dieser Gebäude wurden entsprechend aktualisiert.
+
+Es wurde ein Fehler behoben, durch den der Spieler zu viele Kampfpunkte erhielt, wenn Einheiten von Kalas oder Marys Schaden-über-Zeit-Effekt betroffen waren.
+
+Waren noch Leibeigene zur Rekrutierung in einer Burg/ einem Außenposten/Landsitz eingereiht, als dieser zerstört wurde, erschienen die Leibeigenen mit üblicher Verzögerung unsichtbar vor dem Gebäude.
+Es wurde ein weiterer Check eingebaut und sollte die Burg/ der Außenposten/Landsitz bereits zerstört sein, werden die Leibeigenen entfernt.
+
+--- Version 0.760
+
+Förster und Holzfäller können nun auch aus alten Dorfhallen erscheinen.
+
+Gebäude können nun nicht mehr in direkter Nähe feindlicher Militäreinheiten gebaut werden.
+
+--- Version 0.759
+
+Es wurde ein Fehler behoben, durch den Gebäude auf Festungsmauern platziert werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
+
+Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
+
+Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 
+>>>>>>> dev

@@ -490,6 +490,20 @@ end
 ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 
 	local tabname, range, pos, newtarget
+<<<<<<< HEAD
+=======
+	local f = function(_tab, _target)
+		if not _tab.currenttarget then
+			_tab.currenttarget = _target
+			_tab.lasttime = Logic.GetTime()
+		else
+			if _tab.currenttarget and _tab.currenttarget ~= _target then
+				_tab.currenttarget = _target
+				_tab.lasttime = Logic.GetTime()
+			end
+		end
+	end
+>>>>>>> dev
 
 	if not _armyId then
 		tabname = MapEditor_Armies[_player][_type]
@@ -508,6 +522,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 		if Logic.GetSector(newtarget) == Logic.GetSector(_id) then
 			if GetDistance(_id, newtarget) > range then
 				if _target then
+<<<<<<< HEAD
 					tabname[_id].currenttarget = _target
 					tabname[_id].lasttime = Logic.GetTime()
 					Logic.GroupAttack(_id, _target)
@@ -515,13 +530,24 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 			else
 				tabname[_id].currenttarget = newtarget
 				tabname[_id].lasttime = Logic.GetTime()
+=======
+					f(tabname[_id], _target)
+					Logic.GroupAttack(_id, _target)
+				end
+			else
+				f(tabname[_id], newtarget)
+>>>>>>> dev
 				Logic.GroupAttack(_id, newtarget)
 			end
 		end
 	else
 		if _target then
+<<<<<<< HEAD
 			tabname[_id].currenttarget = _target
 			tabname[_id].lasttime = Logic.GetTime()
+=======
+			f(tabname[_id], _target)
+>>>>>>> dev
 			Logic.GroupAttack(_id, _target)
 		end
 	end
@@ -983,6 +1009,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------ Triggers for general AI data --------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
 gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1000,
 								[Entities.PV_Cannon4] = 1000,
 								[Entities.PV_Cannon6] = 0,
@@ -990,6 +1017,15 @@ gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 1000,
 --[[for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = v + GetEntityTypeBaseAttackRange(k)
 end]]
+=======
+gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 0,
+								[Entities.PV_Cannon4] = 0,
+								[Entities.PV_Cannon6] = -3000,
+								[Entities.PV_Catapult] = -1500}
+for k,v in pairs(gvAntiBuildingCannonsRange) do
+	gvAntiBuildingCannonsRange[k] = v + (GetEntityTypeBaseAttackRange(k)/2)
+end
+>>>>>>> dev
 
 function OnAIEnemyCreated(_playerID)
 

@@ -1629,7 +1629,12 @@ gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,T
 			TroopUpgrades = {	Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery,
 								Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_WoodAging, Technologies.T_Turnery, Technologies.T_MasterOfSmithery,
 								Technologies.T_IronCasting, Technologies.T_Fletching, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder, Technologies.T_BlisteringCannonballs,
+<<<<<<< HEAD
 								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor},
+=======
+								Technologies.T_PaddedArcherArmor, Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_PlateMailArmor,
+								Technologies.T_FleeceArmor, Technologies.T_FleeceLinedLeatherArmor, Technologies.T_LeadShot, Technologies.T_Sights},
+>>>>>>> dev
 			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
 								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
 				}
@@ -3004,9 +3009,14 @@ function GetMilitaryBuildingMaxTrainSlots(_entityID)
 end
 
 gvVisibilityStates = {	[0] = 257,
-						[1] = 65793
+						[1] = 65793,
+						[2] = 65792
 					}
+<<<<<<< HEAD
 -- get visibility of entity (0=invisible, 1=visible)
+=======
+-- get visibility of entity (0=invisible, 1=visible, 2=visible and suspended?)
+>>>>>>> dev
 ---@param _entityID integer entityID
 ---@return integer visibility state
 function GetEntityVisibility(_entityID)
@@ -3865,6 +3875,15 @@ function CheckForBetterTarget(_eID, _target, _range)
 	local calcT = {}
 	if IsMelee then
 		bonusRange = bonusRange * 3
+<<<<<<< HEAD
+	end
+	if IsHero then
+		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
+		if flag then
+			return -1
+		end
+=======
+>>>>>>> dev
 	end
 	if IsHero then
 		local flag = gvHeroAbilities.HeroAbilityControl(_eID)
@@ -3872,14 +3891,41 @@ function CheckForBetterTarget(_eID, _target, _range)
 			return -1
 		end
 	end
+<<<<<<< HEAD
+=======
 	if gvAntiBuildingCannonsRange[etype] then
+		local res
+		local f = function(_target1, _target2)
+			if _target1 and Logic.IsBuilding(_target1) == 0 and _target2 then
+				return _target2
+			elseif not _target1 and _target2 then
+				return _target2
+			end
+		end
 		local target = BS.CheckForNearestHostileBuildingInAttackRange(_eID, (_range or maxrange) + gvAntiBuildingCannonsRange[etype])
-		if _target and Logic.IsBuilding(_target) == 0 and target then
-			return target
-		elseif not _target and target then
-			return target
+		local army = GetArmyByLeaderID(_eID)
+		if army then
+			local tab
+			if type(army) == "string" then
+				tab = MapEditor_Armies[player][army]
+			else
+				tab = ArmyTable[player][army+1]
+			end
+			if target
+			and target == tab[_eID].currenttarget
+			and GetDistance(_eID, target) > maxrange
+			and Logic.GetTime() < tab[_eID].lasttime + 30 then
+			else
+				res = f(_target, target)
+			end
+		else
+			res = f(_target, target)
+		end
+		if res then
+			return res
 		end
 	end
+>>>>>>> dev
 	if _target and Logic.IsEntityAlive(_target)
 	and (IsMelee and sector == Logic.GetSector(_target)
 	or not IsMelee) then

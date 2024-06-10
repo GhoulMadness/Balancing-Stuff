@@ -430,8 +430,9 @@ function GameCallback_GameSpeedChanged( _Speed )
 	local Speed = _Speed * 1000
     if Speed == 0 then
 		gvGameSpeed = 0
-		if not CNetwork then
-			local PauseScreenType = math.random(5)
+		-- for spectators screen only on non-ems maps
+		if GUI.GetPlayerID() ~= 17 or (GUI.GetPlayerID() == 17 and not gvEMSFlag) then
+			local PauseScreenType = XGUIEng.GetRandom(4)+1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
 		end
 
@@ -631,7 +632,11 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	local player = GUI.GetPlayerID()
 	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
 
+<<<<<<< HEAD
 	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _x, Y = _y}, 1500, 3)
+=======
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _x, Y = _y}, BS.EnemyBuildBlockRange, 3)
+>>>>>>> dev
 	and not HostileTroopBuildBlockWhitelist[_eType] then
 		allowed = false
 	end
