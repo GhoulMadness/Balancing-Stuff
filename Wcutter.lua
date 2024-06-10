@@ -214,7 +214,7 @@ WCutter.FindNearestTree = function(_id)
 		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
 			local x_, y_ = Logic.GetEntityPosition(eID)
 			local x__, y__ = EvaluateNearestUnblockedPosition(x_, y_, GetEntityTypeNumBlockedPoints(Logic.GetEntityType(eID)) * 100 + WCutter.ApproachRangeBonus, 100)
-			local sector2 = CUtil.GetSector(dekaround(x__/100), dekaround(y__/100))
+			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 1000, 100)
 			if sector == sector2 then
 				table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
 			end
