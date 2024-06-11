@@ -1407,6 +1407,9 @@ end
 -- added some assertion so we don't get a crash; additionaly start to trigger to check if units' patrol command was aborted
 GroupPatrolOrig = Logic.GroupPatrol
 Logic.GroupPatrol = function(_id, _posX, _posY)
+	if type(_id) == "string" then
+		_id = GetID(_id)
+	end
 	assert(IsValid(_id), "invalid entityID")
 	if not GetArmyByLeaderID(_id) and (not gvCommandCheck[_id] or gvCommandCheck[_id] and not gvCommandCheck[_id].TriggerID) then
 		gvCommandCheck[_id] = gvCommandCheck[_id] or {}
@@ -3005,10 +3008,11 @@ function GetMilitaryBuildingMaxTrainSlots(_entityID)
 end
 
 gvVisibilityStates = {	[0] = 257,
-						[1] = 65793,
-						[2] = 65792
+						[1] = 513,
+						[2] = 65793,
+						[3] = 65792
 					}
--- get visibility of entity (0=invisible, 1=visible, 2=visible and suspended?)
+-- get visibility of entity (0=invisible, 1=invisible and suspended, 2=visible, 3 = visible and suspended?)
 ---@param _entityID integer entityID
 ---@return integer visibility state
 function GetEntityVisibility(_entityID)
@@ -3025,7 +3029,7 @@ end
 ---@param _flag integer visibility state
 function SetEntityVisibility(_entityID, _flag)
 	assert(IsValid(_entityID) , "invalid entityID")
-	assert(type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
+	assert(type(_flag) == "number" and _flag >= -1 and _flag <= 3, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))
 end
 

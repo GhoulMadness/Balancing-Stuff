@@ -194,7 +194,7 @@ function OnWCutter_Died(_id, _buildingID)
 	end
 	if entityID == _buildingID then
 		if IsExisting(_id) then
-			SetEntityVisibility(_id, 1)
+			SetEntityVisibility(_id, 3)
 			Logic.SetEntityScriptingValue(_id, 72, 0)
 			Logic.HurtEntity(_id, 100)
 		else
@@ -260,11 +260,11 @@ WCutter_WorkControl_Inside = function(_id, _buildingID)
 		local buildingpos = GetPosition(_buildingID)
 		local targetpos = {	X = buildingpos.X + WCutter.HomeSpotOffset.X,
 							Y = buildingpos.Y + WCutter.HomeSpotOffset.Y}
-		if GetEntityVisibility(_id) == 0 then
+		if GetEntityVisibility(_id) == 0 or GetEntityVisibility(_id) == 1 then
 			if Counter.Tick2("WCutter_WorkControl_Inside_Delay_".. _id, WCutter.WorkCycleDelay[_id]) then
 				SetEntityModel(_id, Models.U_Woodcutter)
 				Logic.MoveEntity(_id, math.floor(targetpos.X), math.floor(targetpos.Y))
-				SetEntityVisibility(_id, 1)
+				SetEntityVisibility(_id, 3)
 				Logic.SetEntityScriptingValue(_id, 72, 1)
 				Logic.SetEntitySelectableFlag(_id, 0)
 				WCutter.TriggerIDs.WorkControl.Outside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Outside",1,{},{_id, _buildingID})
@@ -314,9 +314,16 @@ WCutter.StartCutting = function(_id, _treeid, _buildingID)
 		return true
 	end
 
-	if not WCutter.TriggerIDs.WorkControl.Cut[_id] then
+	if not WCutter.TriggerIDs.WorkControl.Cut[_id] and IsExisting(_treeid) then
 		Logic.MoveSettler(_id, Logic.GetEntityPosition(_treeid))
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_ArrivedAtTreeCheck", 1, {}, {_id, _treeid, _buildingID})
+	else
+		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
+		WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
+		WCutter.TargettedTrees[_treeid] = nil
+		WCutter.EndWorkCycle(_id)
+		return true
 	end
 end
 WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
