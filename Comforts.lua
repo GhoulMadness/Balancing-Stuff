@@ -2989,6 +2989,14 @@ function SetEntitySize(_entityID, _size)
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
 end
 
+-- gets entity current used model
+---@param _entityID integer entityID
+---@return integer model id
+function GetEntityModel(_entityID)
+	assert(IsValid(_entityID) , "invalid entityID")
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:GetInt()
+end
+
 -- set entity model (gets resetted when task changes)
 ---@param _entityID integer entityID
 ---@param _id model id

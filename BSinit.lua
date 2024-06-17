@@ -44,6 +44,7 @@ BS.MapList = {
 				["(2) bs koop heldenjagd"] = true,
 				["(2) bs koop unter feindlicher kontrolle"] = true,
 				["(2) bs koop verloren in evelance"] = true,
+				["(2) bs koop erbe der koenige"] = true,
 				["(2) emsbs dunkelforst"] = true,
 				["(2) emsbs kampf am kap"] = true,
 				["(2) emsbs leichenfledderer"] = true,

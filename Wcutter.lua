@@ -17,6 +17,9 @@ WCutter.WorkCycleDelay = {}
 WCutter.ApproachRangeBonus = 200
 -- default amount of wood per tree
 WCutter.DefaultResourceAmount = 75
+-- default tree model (in case it's already XD_ResourceTree)
+WCutter.DefaultTreeModel = Models.XD_DarkTree1
+-- DoorOffset defining where wcutter will go to to start work cycle
 WCutter.HomeSpotOffset = {	X = -200,
 							Y = -500}
 WCutter.BuildingBelongingWorker = {}
@@ -381,10 +384,10 @@ WCutter.BlockTree = function(_treeid, _flag)
 					2: hard block - tree can neither be approached nor cut
 					]]
 	local etype = Logic.GetEntityType(_treeid)
-	local model = Models[Logic.GetEntityTypeName(etype)]
+	local model = Models[Logic.GetEntityTypeName(etype)] or WCutter.DefaultTreeModel
 	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])
 
-	Logic.SetModelAndAnimSet(newID, model)
+	SetEntityModel(newID, model)
 	return newID, etype
 end
 WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
@@ -455,6 +458,10 @@ WCutter_SetCarrierModel = function(_id)
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.Start[_id])
 		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
 		WCutter.TriggerIDs.WorkControl.Start[_id] = nil
+		return true
+	end
+	if GetEntityModel(_id) == Models.U_Woodcutter_Backpack then
+		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
 		return true
 	end
 	SetEntityModel(_id, Models.U_Woodcutter_Backpack)
