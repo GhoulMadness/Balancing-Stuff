@@ -245,6 +245,9 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 	for i = 1, 9 do
 		table.insert(map, "2024-06-0" .. i)
 	end
+	for i = 10, 30 do
+		table.insert(map, "2024-06-" .. i)
+	end
 end
 
 function BS.CheckForDateRestrictions(_datestring)
