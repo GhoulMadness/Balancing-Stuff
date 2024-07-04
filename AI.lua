@@ -548,7 +548,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 				if IsAntiBuildingCannon then
 					local maxrange = GetEntityTypeBaseAttackRange(etype)
 					if dist > maxrange and dist < maxrange * 2 then
-						RetreatToMaxRange(_id, newtarget, maxrange - 200)
+						RetreatToMaxRange(_id, newtarget, maxrange * 9/10)
 					else
 						Logic.GroupAttack(_id, newtarget)
 					end

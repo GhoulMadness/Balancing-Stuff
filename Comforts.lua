@@ -4032,7 +4032,7 @@ RetreatToMaxRange = function(_id, _target, _dist)
 
 	local yoff = math.abs(dist_12 - _dist) * math.sin(math.rad(angle))
 	local xoff = math.abs(dist_12 - _dist) * math.cos(math.rad(angle))
-	local posX, posY = pos1.X + xoff, pos1.Y + yoff
+	local posX, posY = dekaround(pos1.X + xoff), dekaround(pos1.Y + yoff)
 	local sector = CUtil.GetSector(posX/100, posY/100)
 	if sector == 0 or sector ~= Logic.GetSector(_id) then
 		posX, posY = EvaluateNearestUnblockedPositionWithinDistanceOfNode(posX, posY, 2000, 100, pos2.X, pos2.Y, _dist)
