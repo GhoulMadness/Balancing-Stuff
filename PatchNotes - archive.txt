@@ -1012,3 +1012,13 @@ Einige fehlende Übersetzungen ins Englische wurden nachgereicht. Fehlerhafte Ü
 Ihr könnt nun bei Taverne/Wirtshaus/Gemüseplantage wie beim Bauernhof das Menü der versorgten Arbeiter öffnen.
 
 Ihr könnt nun dunklen Schwertkämpfern und Dovbar visuell ansehen, zu welchem Spieler sie gehören. Der Dank geht hierbei an MSTVD, der die Textur überarbeitet hat.
+
+--- Version 0.759
+
+Es wurde ein Fehler behoben, durch den Gebäude auf Festungsmauern platziert werden konnten.
+
+Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
+
+Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
+
+Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 

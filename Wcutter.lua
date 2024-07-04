@@ -5,7 +5,7 @@ WCutter.MaxRange = 2500
 -- min time woodcutter needs to chop tree (sec)
 WCutter.BaseTimeNeeded = 2
 -- bonus time needed for chopping tree per ressource of respective tree (sec)
-WCutter.TimeNeededPerRess = 0.2
+WCutter.TimeNeededPerRess = 0.3
 -- maximum duration woodcutter needs to chop tree (sec)
 WCutter.MaxTimeNeeded = 25
 -- chop anim duration in ticks (sec/10)
@@ -17,6 +17,9 @@ WCutter.WorkCycleDelay = {}
 WCutter.ApproachRangeBonus = 200
 -- default amount of wood per tree
 WCutter.DefaultResourceAmount = 75
+-- default tree model (in case it's already XD_ResourceTree)
+WCutter.DefaultTreeModel = Models.XD_DarkTree1
+-- DoorOffset defining where wcutter will go to to start work cycle
 WCutter.HomeSpotOffset = {	X = -200,
 							Y = -500}
 WCutter.BuildingBelongingWorker = {}
@@ -194,7 +197,7 @@ function OnWCutter_Died(_id, _buildingID)
 	end
 	if entityID == _buildingID then
 		if IsExisting(_id) then
-			SetEntityVisibility(_id, 1)
+			SetEntityVisibility(_id, 3)
 			Logic.SetEntityScriptingValue(_id, 72, 0)
 			Logic.HurtEntity(_id, 100)
 		else
@@ -213,10 +216,11 @@ WCutter.FindNearestTree = function(_id)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(WCutter.TreeTypes)), CEntityIterator.InCircleFilter(x, y, WCutter.MaxRange)) do
 		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
 			local x_, y_ = Logic.GetEntityPosition(eID)
-			local x__, y__ = EvaluateNearestUnblockedPosition(x_, y_, GetEntityTypeNumBlockedPoints(Logic.GetEntityType(eID)) * 100 + WCutter.ApproachRangeBonus, 100)
-			local sector2 = CUtil.GetSector(dekaround(x__/100), dekaround(y__/100))
+			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 1000, 100)
 			if sector == sector2 then
-				table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
+				if CUtil.GetTerrainNodeHeight(x_/100, y_/100) > CUtil.GetWaterHeight(x_/100, y_/100) then
+					table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
+				end
 			end
 		end
 	end
@@ -260,11 +264,11 @@ WCutter_WorkControl_Inside = function(_id, _buildingID)
 		local buildingpos = GetPosition(_buildingID)
 		local targetpos = {	X = buildingpos.X + WCutter.HomeSpotOffset.X,
 							Y = buildingpos.Y + WCutter.HomeSpotOffset.Y}
-		if GetEntityVisibility(_id) == 0 then
+		if GetEntityVisibility(_id) == 0 or GetEntityVisibility(_id) == 1 then
 			if Counter.Tick2("WCutter_WorkControl_Inside_Delay_".. _id, WCutter.WorkCycleDelay[_id]) then
 				SetEntityModel(_id, Models.U_Woodcutter)
 				Logic.MoveEntity(_id, math.floor(targetpos.X), math.floor(targetpos.Y))
-				SetEntityVisibility(_id, 1)
+				SetEntityVisibility(_id, 3)
 				Logic.SetEntityScriptingValue(_id, 72, 1)
 				Logic.SetEntitySelectableFlag(_id, 0)
 				WCutter.TriggerIDs.WorkControl.Outside[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Outside",1,{},{_id, _buildingID})
@@ -314,9 +318,16 @@ WCutter.StartCutting = function(_id, _treeid, _buildingID)
 		return true
 	end
 
-	if not WCutter.TriggerIDs.WorkControl.Cut[_id] then
+	if not WCutter.TriggerIDs.WorkControl.Cut[_id] and IsExisting(_treeid) then
 		Logic.MoveSettler(_id, Logic.GetEntityPosition(_treeid))
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_ArrivedAtTreeCheck", 1, {}, {_id, _treeid, _buildingID})
+	else
+		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
+		WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
+		WCutter.TargettedTrees[_treeid] = nil
+		WCutter.EndWorkCycle(_id)
+		return true
 	end
 end
 WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
@@ -333,7 +344,7 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 		return true
 	end
 	local range = GetEntityTypeNumBlockedPoints(Logic.GetEntityType(_treeid)) * 100
-	if IsNear(_id, _treeid, range + WCutter.ApproachRangeBonus) then
+	if IsNear(_id, _treeid, math.max(range + WCutter.ApproachRangeBonus, 350)) then
 		Logic.SetTaskList(_id, TaskLists.TL_NPC_IDLE)
 		Logic.EntityLookAt(_id, _treeid)
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
@@ -342,13 +353,20 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 		return true
 	else
 		if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then
-			Logic.MoveSettler(_id, _treeid)
+			Logic.MoveSettler(_id, Logic.GetEntityPosition(_treeid))
 		end
 	end
 end
 WCutter.CutTree = function(_id, _treeid, _buildingID)
 
 	if not IsExisting(_id) then
+		return true
+	end
+	if not IsExisting(_treeid) then
+		WCutter.TargettedTrees[_treeid] = nil
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
+		WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
+		WCutter.EndWorkCycle(_id)
 		return true
 	end
 
@@ -374,10 +392,10 @@ WCutter.BlockTree = function(_treeid, _flag)
 					2: hard block - tree can neither be approached nor cut
 					]]
 	local etype = Logic.GetEntityType(_treeid)
-	local model = Models[Logic.GetEntityTypeName(etype)]
+	local model = Models[Logic.GetEntityTypeName(etype)] or WCutter.DefaultTreeModel
 	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])
 
-	Logic.SetModelAndAnimSet(newID, model)
+	SetEntityModel(newID, model)
 	return newID, etype
 end
 WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
@@ -448,6 +466,10 @@ WCutter_SetCarrierModel = function(_id)
 		Trigger.UnrequestTrigger(WCutter.TriggerIDs.WorkControl.Start[_id])
 		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
 		WCutter.TriggerIDs.WorkControl.Start[_id] = nil
+		return true
+	end
+	if GetEntityModel(_id) == Models.U_Woodcutter_Backpack then
+		WCutter.TriggerIDs.WorkControl.CarrierModel[_id] = nil
 		return true
 	end
 	SetEntityModel(_id, Models.U_Woodcutter_Backpack)

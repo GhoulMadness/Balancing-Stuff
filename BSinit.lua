@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.763
+BS.Version = 0.764
 
 BS.SpectatorPID = 17
 
@@ -44,6 +44,7 @@ BS.MapList = {
 				["(2) bs koop heldenjagd"] = true,
 				["(2) bs koop unter feindlicher kontrolle"] = true,
 				["(2) bs koop verloren in evelance"] = true,
+				["(2) bs koop erbe der koenige"] = true,
 				["(2) emsbs dunkelforst"] = true,
 				["(2) emsbs kampf am kap"] = true,
 				["(2) emsbs leichenfledderer"] = true,
@@ -72,6 +73,7 @@ BS.MapList = {
 				["(3) bs koop das grosse oedland"] = true,
 				["(3) bs koop nachbarschaft"] = true,
 				["(3) bs koop die erstuermung der wartburg"] = true,
+				["(3) bs koop zu dunkler stunde"] = true,
 				["(3) emsbs der lachende dritte"] = true,
 				["(3) emsbs eingekesselt"] = true,
 				["(3) emsbs hochland"] = true,
@@ -242,6 +244,9 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 	end
 	for i = 1, 9 do
 		table.insert(map, "2024-06-0" .. i)
+	end
+	for i = 10, 30 do
+		table.insert(map, "2024-06-" .. i)
 	end
 end
 

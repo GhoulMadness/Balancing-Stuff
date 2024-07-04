@@ -1,5 +1,22 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.764
+
+Truppen der KI warten nun nach der Rekrutierung, bis alle Soldaten erschienen sind. 
+Dies soll verhindern, dass im späteren Spielverlauf nur noch Hauptmänner erscheinen, wenn die KI viel am kämpfen ist.
+
+Holzfäller und Förster werden nun von der KI nicht mehr gezielt angegriffen.
+
+Die KI greift nun auf Schützentürmen stationierte Truppen gezielter an.
+
+Es wurde ein Fehler behoben, durch den Anti-Gebäude-Kanonen der KI manchmal ihre Ziele nicht angreifen konnten.
+
+Der Chat-Output ist nun auch während des Pause-Screens zu sehen.
+
+Das vorherige Update katapultierte Holzfäller in unerwartete Höhen.
+Daher wurde die benötigte Dauer zum Fällen von Bäumen wieder leicht erhöht:
+	Dauer/Ressource:	0,2 Sekunden -> 0,3 Sekunden
+
 --- Version 0.763
 
 Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.
@@ -78,13 +95,3 @@ Es wurde ein weiterer Check eingebaut und sollte die Burg/ der Außenposten/Land
 Förster und Holzfäller können nun auch aus alten Dorfhallen erscheinen.
 
 Gebäude können nun nicht mehr in direkter Nähe feindlicher Militäreinheiten gebaut werden.
-
---- Version 0.759
-
-Es wurde ein Fehler behoben, durch den Gebäude auf Festungsmauern platziert werden konnten.
-
-Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
-
-Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
-
-Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 

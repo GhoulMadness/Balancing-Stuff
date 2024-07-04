@@ -1407,6 +1407,9 @@ end
 -- added some assertion so we don't get a crash; additionaly start to trigger to check if units' patrol command was aborted
 GroupPatrolOrig = Logic.GroupPatrol
 Logic.GroupPatrol = function(_id, _posX, _posY)
+	if type(_id) == "string" then
+		_id = GetID(_id)
+	end
 	assert(IsValid(_id), "invalid entityID")
 	if not GetArmyByLeaderID(_id) and (not gvCommandCheck[_id] or gvCommandCheck[_id] and not gvCommandCheck[_id].TriggerID) then
 		gvCommandCheck[_id] = gvCommandCheck[_id] or {}
@@ -2986,6 +2989,14 @@ function SetEntitySize(_entityID, _size)
 	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[25]:SetFloat(_size)
 end
 
+-- gets entity current used model
+---@param _entityID integer entityID
+---@return integer model id
+function GetEntityModel(_entityID)
+	assert(IsValid(_entityID) , "invalid entityID")
+	return CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_entityID))[5]:GetInt()
+end
+
 -- set entity model (gets resetted when task changes)
 ---@param _entityID integer entityID
 ---@param _id model id
@@ -3005,10 +3016,11 @@ function GetMilitaryBuildingMaxTrainSlots(_entityID)
 end
 
 gvVisibilityStates = {	[0] = 257,
-						[1] = 65793,
-						[2] = 65792
+						[1] = 513,
+						[2] = 65793,
+						[3] = 65792
 					}
--- get visibility of entity (0=invisible, 1=visible, 2=visible and suspended?)
+-- get visibility of entity (0=invisible, 1=invisible and suspended, 2=visible, 3 = visible and suspended?)
 ---@param _entityID integer entityID
 ---@return integer visibility state
 function GetEntityVisibility(_entityID)
@@ -3025,7 +3037,7 @@ end
 ---@param _flag integer visibility state
 function SetEntityVisibility(_entityID, _flag)
 	assert(IsValid(_entityID) , "invalid entityID")
-	assert(type(_flag) == "number" and _flag >= -1 and _flag <= 1, "visibility flag needs to be a number (either 0, 1 or -1")
+	assert(type(_flag) == "number" and _flag >= -1 and _flag <= 3, "visibility flag needs to be a number (either 0, 1 or -1")
 	Logic.SetEntityScriptingValue(_entityID, -30, gvVisibilityStates[_flag] or math.abs(gvVisibilityStates[GetEntityVisibility(_entityID)]-1))
 end
 
@@ -3876,10 +3888,18 @@ function CheckForBetterTarget(_eID, _target, _range)
 	end
 	if gvAntiBuildingCannonsRange[etype] then
 		local res
-		local f = function(_target1, _target2)
-			if _target1 and Logic.IsBuilding(_target1) == 0 and _target2 then
+		local target_eval = function(_target1, _target2)
+			if _target1 and Logic.IsBuilding(_target1) == 0 and IsValid(_target2) then
 				return _target2
-			elseif not _target1 and _target2 then
+			elseif _target1 and Logic.IsBuilding(_target1) == 1 then
+				if _target2 and Logic.IsBuilding(_target2) == 1 then
+					return _target2
+				else
+					if IsValid(_target1) then
+						return _target1
+					end
+				end
+			elseif not _target1 and IsValid(_target2) then
 				return _target2
 			end
 		end
@@ -3895,12 +3915,12 @@ function CheckForBetterTarget(_eID, _target, _range)
 			if target
 			and target == tab[_eID].currenttarget
 			and GetDistance(_eID, target) > maxrange
-			and Logic.GetTime() < tab[_eID].lasttime + 30 then
+			and Logic.GetTime() < tab[_eID].lasttime + 10 then
 			else
-				res = f(_target, target)
+				res = target_eval(_target, target)
 			end
 		else
-			res = f(_target, target)
+			res = target_eval(_target, target)
 		end
 		if res then
 			return res
@@ -3941,7 +3961,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 			end
 			attach = CEntity.GetAttachedEntities(entities[i])[37]
 			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]
-			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
+			if damagerange > 0 and (not gvAntiBuildingCannonsRange[etype] or etype == Entities.PV_Cannon6) then
 				local mul = 1
 				if Logic.IsLeader(entities[i]) == 1 then
 					mul = 1 + Logic.LeaderGetNumberOfSoldiers(entities[i])
@@ -3952,7 +3972,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 		end
 	end
 	local attachN = attach and table.getn(attach) or 0
-	if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
+	if damagerange > 0 and (not gvAntiBuildingCannonsRange[etype] or etype == Entities.PV_Cannon6) then
 		if next(postable) then
 			clumppos, score = GetPositionClump(postable, damagerange, 100)
 			for i = 1, table.getn(calcT) do
@@ -4010,12 +4030,12 @@ RetreatToMaxRange = function(_id, _target, _dist)
 	local dist_12 = GetDistance(pos1, pos2)
 	local angle = GetAngleBetween(pos1, pos2)
 
-	local yoff = _dist * math.sin(math.rad(angle))
-	local xoff = _dist * math.cos(math.rad(angle))
+	local yoff = math.abs(dist_12 - _dist) * math.sin(math.rad(angle))
+	local xoff = math.abs(dist_12 - _dist) * math.cos(math.rad(angle))
 	local posX, posY = pos1.X + xoff, pos1.Y + yoff
 	local sector = CUtil.GetSector(posX/100, posY/100)
 	if sector == 0 or sector ~= Logic.GetSector(_id) then
-		posX, posY = EvaluateNearestUnblockedPosition(posX, posY, 1000, 100)
+		posX, posY = EvaluateNearestUnblockedPositionWithinDistanceOfNode(posX, posY, 2000, 100, pos2.X, pos2.Y, _dist)
 	end
 	Logic.MoveSettler(_id, posX, posY)
 	return -1
@@ -4170,9 +4190,21 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 					count = count + 1
 				end
 			end
+		else
+			return true
 		end
-		return count < 3
+		return (count < 3 and table.getn(attach) < 14)
 	end
+end
+
+AreAllSoldiersOfLeaderDetachedFromMilitaryBuilding = function(_id)
+	local sol = {Logic.GetSoldiersAttachedToLeader(_id)}
+	for i = 2, sol[1] + 1 do
+		if CEntity.GetReversedAttachedEntities(sol[i])[42] then
+			return false
+		end
+	end
+	return true
 end
 
 -- returns number of currently training leader IDs in military building
@@ -4319,6 +4351,37 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step, _noter
 		end
 	end
 	return xspawn, yspawn
+end
+
+EvaluateNearestUnblockedPositionWithinDistanceOfNode = function(_posX, _posY, _offset, _step, _nodeX, _nodeY, _distance)
+
+	local xmax, ymax = Logic.WorldGetSize()
+	local dmin, xspawn, yspawn
+	local f = IsPositionUnblocked
+	local res = true
+
+	for y_ = _posY - _offset, _posY + _offset, _step do
+		for x_ = _posX - _offset, _posX + _offset, _step do
+			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
+
+				local d = (x_ - _posX)^2 + (y_ - _posY)^2
+
+				if f(x_, y_) == res and GetDistance({X = x_, Y = y_}, {X = _nodeX, Y = _nodeY}) <= _distance then
+					if not dmin or dmin > d then
+						dmin = d
+						xspawn = x_
+						yspawn = y_
+					end
+				end
+
+			end
+		end
+	end
+	if xspawn and yspawn then
+		return xspawn, yspawn
+	else
+		return _nodeX, _nodeY
+	end
 end
 
 -- gets nearest unblocked sector near a given position
