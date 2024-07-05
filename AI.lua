@@ -497,13 +497,12 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 	local f = function(_tab, _ntarget)
 		if not _tab.currenttarget and _ntarget then
 			_tab.currenttarget = _ntarget
-			_tab.lasttime = Logic.GetTime()
 		else
 			if _tab.currenttarget and _tab.currenttarget ~= _ntarget and _ntarget then
 				_tab.currenttarget = _ntarget
-				_tab.lasttime = Logic.GetTime()
 			end
 		end
+		_tab.lasttime = Logic.GetTime()
 	end
 
 	if not _armyId then
