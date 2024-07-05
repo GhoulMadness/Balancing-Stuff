@@ -910,12 +910,12 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 						tab.RecruitmentComplete = true
 					end
 				end
-			else
-				-- first attempt to reach homespot failed (e.g. due to enemies on the way)
-				if tab.RecruitmentComplete and Counter.Tick2("AITroopGenerator_CheckForIdle_" .. _id, 5) then
-					Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
-				end
 			end
+			-- first attempt to reach homespot failed (e.g. due to enemies on the way)
+			if tab.RecruitmentComplete and Counter.Tick2("AITroopGenerator_CheckForIdle_" .. _id, 5) then
+				Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
+			end
+
 		else
 			return true
 		end
