@@ -547,8 +547,10 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 			else
 				if IsAntiBuildingCannon then
 					local maxrange = GetEntityTypeBaseAttackRange(etype)
-					if dist > maxrange and dist < maxrange * 2 then
-						RetreatToMaxRange(_id, newtarget, maxrange * 9/10)
+					if dist > maxrange + 200 and dist < maxrange * 2 then
+						if not Logic.IsEntityMoving(_id) then
+							RetreatToMaxRange(_id, newtarget, maxrange * 9/10)
+						end
 					else
 						Logic.GroupAttack(_id, newtarget)
 					end
@@ -697,9 +699,6 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	end
 	if not AIchunks[_playerId] then
 		AI_InitChunks(_playerId)
-	end
-	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerId), CEntityIterator.OfAnyTypeFilter(Entities.PB_Barracks1, Entities.PB_Barracks2)) do
-		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "ControlMapEditor_Armies_Barracks", 1, {}, {eID})
 	end
 end
 StartMapEditor_ArmyAttack = function(_playerId, _delay)

@@ -4033,9 +4033,10 @@ RetreatToMaxRange = function(_id, _target, _dist)
 	local yoff = math.abs(dist_12 - _dist) * math.sin(math.rad(angle))
 	local xoff = math.abs(dist_12 - _dist) * math.cos(math.rad(angle))
 	local posX, posY = dekaround(pos1.X + xoff), dekaround(pos1.Y + yoff)
-	local sector = CUtil.GetSector(posX/100, posY/100)
-	if sector == 0 or sector ~= Logic.GetSector(_id) then
-		posX, posY = EvaluateNearestUnblockedPositionWithinDistanceOfNode(posX, posY, 2000, 100, pos2.X, pos2.Y, _dist)
+	local sec1 = Logic.GetSector(_id)
+	local sec2 = CUtil.GetSector(posX/100, posY/100)
+	if sec2 == 0 or sec2 ~= sec1 then
+		posX, posY = EvaluateNearestUnblockedPositionWithinDistanceOfNode(posX, posY, 2000, 100, pos2.X, pos2.Y, _dist, sec1)
 	end
 	Logic.MoveSettler(_id, posX, posY)
 	return -1
@@ -4353,12 +4354,12 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step, _noter
 	return xspawn, yspawn
 end
 
-EvaluateNearestUnblockedPositionWithinDistanceOfNode = function(_posX, _posY, _offset, _step, _nodeX, _nodeY, _distance)
+EvaluateNearestUnblockedPositionWithinDistanceOfNode = function(_posX, _posY, _offset, _step, _nodeX, _nodeY, _distance, _sector)
 
 	local xmax, ymax = Logic.WorldGetSize()
 	local dmin, xspawn, yspawn
-	local f = IsPositionUnblocked
-	local res = true
+	local f = CUtil.GetBlocking100
+	local res = 0
 
 	for y_ = _posY - _offset, _posY + _offset, _step do
 		for x_ = _posX - _offset, _posX + _offset, _step do
@@ -4366,7 +4367,8 @@ EvaluateNearestUnblockedPositionWithinDistanceOfNode = function(_posX, _posY, _o
 
 				local d = (x_ - _posX)^2 + (y_ - _posY)^2
 
-				if f(x_, y_) == res and GetDistance({X = x_, Y = y_}, {X = _nodeX, Y = _nodeY}) <= _distance then
+				if f(x_, y_) == res and GetDistance({X = x_, Y = y_}, {X = _nodeX, Y = _nodeY}) <= _distance 
+				and CUtil.GetSector(x_/100, y_/100) == _sector then
 					if not dmin or dmin > d then
 						dmin = d
 						xspawn = x_
