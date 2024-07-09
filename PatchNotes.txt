@@ -17,6 +17,8 @@ Das vorherige Update katapultierte Holzfäller in unerwartete Höhen.
 Daher wurde die benötigte Dauer zum Fällen von Bäumen wieder leicht erhöht:
 	Dauer/Ressource:	0,2 Sekunden -> 0,3 Sekunden
 
+Es wurde ein Fehler behoben, durch den das Spiel auf bestimmten Karten einfrieren konnte.
+
 --- Version 0.763
 
 Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.
