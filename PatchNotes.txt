@@ -19,6 +19,13 @@ Daher wurde die benötigte Dauer zum Fällen von Bäumen wieder leicht erhöht:
 
 Es wurde ein Fehler behoben, durch den das Spiel auf bestimmten Karten einfrieren konnte.
 
+Der Schützenturm wurde verstärkt, um dessen Nutzung für den Spieler attraktiver zu machen:
+	benötigte Zeit zum Hinaufgelangen von Truppen:	10 Sekunden -> 6 Sekunden
+	Schadens-Bonus für Truppen auf dem Turm:	30% -> 50%
+	Rüstungs-Bonus für Truppen auf dem Turm:	30% -> 50%
+	Reichweite-Bonus für Truppen auf dem Turm:	20% -> 30%	
+
+
 --- Version 0.763
 
 Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.

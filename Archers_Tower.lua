@@ -8,13 +8,13 @@ gvArchers_Tower.TowerLimit = 10
 -- max. Anzahl Truppen pro Turm
 gvArchers_Tower.MaxSlots = 2
 -- Zeitdauer in Sek. die benötigt wird, um in den Turm zu gelangen
-gvArchers_Tower.ClimbUpTime = 10
+gvArchers_Tower.ClimbUpTime = 6
 -- Schadens-Multiplikator für Truppen auf Türmen
-gvArchers_Tower.DamageFactor = 1.3
+gvArchers_Tower.DamageFactor = 1.5
 -- Rüstungs-Multiplikator für Truppen auf Türmen
-gvArchers_Tower.ArmorFactor = 1.3
+gvArchers_Tower.ArmorFactor = 1.5
 -- Reichweiten-Multiplikator für Truppen auf Türmen
-gvArchers_Tower.MaxRangeFactor = 1.2
+gvArchers_Tower.MaxRangeFactor = 1.3
 -- In dieser Reichweite werden Truppen zum stationieren gesucht
 gvArchers_Tower.Troop_SearchRadius = 500
 -- Kategorien von feindlichen Fernkampf-Truppen, die nicht nahe des Turms stehen dürfen, wenn er befüllt werden soll
@@ -44,6 +44,7 @@ gvArchers_Tower.AllowedTypes = {Entities.PU_LeaderBow1,
 								Entities.PU_LeaderRifle2,
 								Entities.PV_Cannon1,
 								Entities.PV_Cannon3,
+								Entities.PV_Cannon5,
 								Entities.CU_Evil_LeaderSkirmisher1,
 								Entities.CU_BanditLeaderBow1}
 								-- value that defines the damage treshold needed to trigger the damage recalculation
