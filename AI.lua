@@ -26,15 +26,16 @@ AI_AddEnemiesToChunkData = function(_playerId)
 
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(BS.GetAllEnemyPlayerIDs(_playerId))), CEntityIterator.IsSettlerOrBuildingFilter()) do
 		local etype = Logic.GetEntityType(eID)
-		if (IsMilitaryLeader(eID) or Logic.IsHero(eID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
-		or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower)
-		and not AIEnemies_ExcludedTypes[etype] then
-			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
-			table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
-			AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
-		elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0)
-		or Logic.IsSerf(eID) == 1 or etype == Entities.PU_Travelling_Salesman then
-			ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
+		if not AIEnemies_ExcludedTypes[etype] then
+			if (IsMilitaryLeader(eID) or Logic.IsHero(eID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower) then
+				ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
+				table.insert(AIEnemiesAC[_playerId][GetEntityTypeArmorClass(etype)], eID)
+				AIEnemiesAC[_playerId].total = AIEnemiesAC[_playerId].total + 1
+			elseif (Logic.IsBuilding(eID) == 1 and Logic.IsEntityInCategory(eID, EntityCategories.Wall) == 0)
+			or Logic.IsSerf(eID) == 1 or etype == Entities.PU_Travelling_Salesman then
+				ChunkWrapper.AddEntity(AIchunks[_playerId], eID)
+			end
 		end
 	end
 end
@@ -1057,17 +1058,18 @@ function OnAIEnemyCreated(_playerID)
 
 	for i = 1, table.getn(enemies) do
 		if playerID == enemies[i] then
-			if (IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
-			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower)
-			and not AIEnemies_ExcludedTypes[etype] then
-				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
-				table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
-				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
-				break
-			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
-			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
-				ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
-				break
+			if not AIEnemies_ExcludedTypes[etype] then
+				if (IsMilitaryLeader(entityID) or Logic.IsHero(entityID) == 1 or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+				or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower) then
+					ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
+					table.insert(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
+					AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total + 1
+					break
+				elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+				or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
+					ChunkWrapper.AddEntity(AIchunks[_playerID], entityID)
+					break
+				end
 			end
 		end
 	end
@@ -1081,17 +1083,18 @@ function OnAIEnemyDestroyed(_playerID)
 
 	for i = 1, table.getn(enemies) do
 		if playerID == enemies[i] then
-			if (IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
-			or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower)
-			and not AIEnemies_ExcludedTypes[etype] then
-				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
-				removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
-				AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
-				break
-			elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
-			or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
-				ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
-				break
+			if not AIEnemies_ExcludedTypes[etype] then
+				if (IsMilitaryLeader(entityID) or etype == Entities.PB_Tower2 or etype == Entities.PB_Tower3
+				or etype == Entities.PB_DarkTower2 or etype == Entities.PB_DarkTower3 or etype == Entities.PU_Hero14_EvilTower) then
+					ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
+					removetablekeyvalue(AIEnemiesAC[_playerID][GetEntityTypeArmorClass(etype)], entityID)
+					AIEnemiesAC[_playerID].total = AIEnemiesAC[_playerID].total - 1
+					break
+				elseif (Logic.IsBuilding(entityID) == 1 and Logic.IsEntityInCategory(entityID, EntityCategories.Wall) == 0 and not IsInappropiateBuilding(entityID))
+				or Logic.IsSerf(entityID) == 1 or etype == Entities.PU_Travelling_Salesman then
+					ChunkWrapper.RemoveEntity(AIchunks[_playerID], entityID)
+					break
+				end
 			end
 		end
 	end
