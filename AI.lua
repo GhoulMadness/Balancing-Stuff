@@ -723,15 +723,16 @@ ControlMapEditor_Armies = function(_playerId, _type)
 		if dist and dist <= range then
 			for i = 1, table.getn(MapEditor_Armies[_playerId][_type].IDs) do
 				local id = MapEditor_Armies[_playerId][_type].IDs[i]
-				if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) and Logic.LeaderGetNearbyBarracks(id) ~= 0 then
+				local tab = MapEditor_Armies[_playerId][_type][id]
+				local barracks = Logic.LeaderGetNearbyBarracks(id)
+				if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) and barracks ~= 0 and MilitaryBuildingIsTrainingSlotFree(barracks) then
 					(SendEvent or CSendEvent).BuySoldier(id)
 				end
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					if GetDistance(GetPosition(id), pos) < 1200 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
+					if GetDistance(GetPosition(id), pos) < 1000 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) and tab.RecruitmentComplete then
 						ManualControl_AttackTarget(_playerId, nil, id, _type, eID)
 					end
 				end
-				local tab = MapEditor_Armies[_playerId][_type][id]
 				if tab then
 					if (tab.lasttime and (tab.lasttime + 3 < Logic.GetTime() ) and not Logic.IsEntityMoving(id))
 					or (tab.lasttime and (tab.lasttime + 10 < Logic.GetTime() ))
@@ -745,7 +746,7 @@ ControlMapEditor_Armies = function(_playerId, _type)
 				local id = MapEditor_Armies[_playerId][_type].IDs[i]
 				local tab = MapEditor_Armies[_playerId][_type][id]
 				if tab and tab.lasttime then
-					if GetDistance(GetPosition(id), pos) > 1200 + (300 * MapEditor_Armies[_playerId].aggressiveLVL) then
+					if GetDistance(GetPosition(id), pos) > 1000 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) then
 						local anchor = ArmyHomespots[_playerId].recruited[tab.HomespotIndex]
 						Logic.MoveSettler(id, anchor.X, anchor.Y)
 					end
@@ -761,7 +762,7 @@ ControlMapEditor_Armies = function(_playerId, _type)
 							(SendEvent or CSendEvent).BuySoldier(id)
 						end
 					else
-						if GetDistance(GetPosition(id), pos) > 1500 + (300 * MapEditor_Armies[_playerId].aggressiveLVL)
+						if GetDistance(GetPosition(id), pos) > 1000 + (100 * MapEditor_Armies[_playerId].aggressiveLVL)
 						and tab.RecruitmentComplete then
 							local anchor = ArmyHomespots[_playerId].recruited[tab.HomespotIndex]
 							Logic.MoveSettler(id, anchor.X, anchor.Y)
