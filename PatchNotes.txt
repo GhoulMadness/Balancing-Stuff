@@ -25,6 +25,12 @@ Der Schützenturm wurde verstärkt, um dessen Nutzung für den Spieler attraktiv
 	Rüstungs-Bonus für Truppen auf dem Turm:	30% -> 50%
 	Reichweite-Bonus für Truppen auf dem Turm:	20% -> 30%	
 
+Dovbar-Balancing:
+Götterdämmerung:
+	minimale Reichweite:	400 scm -> 600 scm
+	Der Schaden nimmt nun bei steigender Verzögerung langsamer ab.
+	Anzahl Blitze bei erfolgreicher Anwendung: 10 -> 1 - 10 (abhängig vom verursachten Schaden)
+
 
 --- Version 0.763
 
