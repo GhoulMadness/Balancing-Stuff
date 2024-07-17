@@ -729,7 +729,7 @@ ControlMapEditor_Armies = function(_playerId, _type)
 					(SendEvent or CSendEvent).BuySoldier(id)
 				end
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					if GetDistance(GetPosition(id), pos) < 1000 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) and tab.RecruitmentComplete then
+					if GetDistance(GetPosition(id), pos) < 1400 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) and tab.RecruitmentComplete then
 						ManualControl_AttackTarget(_playerId, nil, id, _type, eID)
 					end
 				end
