@@ -216,7 +216,7 @@ WCutter.FindNearestTree = function(_id)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(WCutter.TreeTypes)), CEntityIterator.InCircleFilter(x, y, WCutter.MaxRange)) do
 		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
 			local x_, y_ = Logic.GetEntityPosition(eID)
-			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 1000, 100)
+			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 300, 100)
 			if sector == sector2 then
 				if CUtil.GetTerrainNodeHeight(x_/100, y_/100) > CUtil.GetWaterHeight(x_/100, y_/100) then
 					table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
