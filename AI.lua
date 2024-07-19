@@ -729,8 +729,11 @@ ControlMapEditor_Armies = function(_playerId, _type)
 					(SendEvent or CSendEvent).BuySoldier(id)
 				end
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
-					if GetDistance(GetPosition(id), pos) < 1400 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) and tab.RecruitmentComplete then
+					if GetDistance(GetPosition(id), pos) < 1500 + (100 * MapEditor_Armies[_playerId].aggressiveLVL)
+					and (tab.RecruitmentComplete or Logic.IsHero(id) == 1 or Logic.IsEntityInCategory(id, EntityCategories.Cannon) == 1
+					or IsVeteranLeader(id)) then
 						ManualControl_AttackTarget(_playerId, nil, id, _type, eID)
+						tab.HomespotReached = tab.HomespotReached or true
 					end
 				end
 				if tab then
@@ -738,6 +741,7 @@ ControlMapEditor_Armies = function(_playerId, _type)
 					or (tab.lasttime and (tab.lasttime + 10 < Logic.GetTime() ))
 					or (tab.currenttarget and not Logic.IsEntityAlive(tab.currenttarget)) then
 						ManualControl_AttackTarget(_playerId, nil, id, _type, eID)
+						tab.HomespotReached = tab.HomespotReached or true
 					end
 				end
 			end
@@ -746,9 +750,10 @@ ControlMapEditor_Armies = function(_playerId, _type)
 				local id = MapEditor_Armies[_playerId][_type].IDs[i]
 				local tab = MapEditor_Armies[_playerId][_type][id]
 				if tab and tab.lasttime then
-					if GetDistance(GetPosition(id), pos) > 1000 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) then
+					if GetDistance(GetPosition(id), pos) > 1500 + (100 * MapEditor_Armies[_playerId].aggressiveLVL) then
 						local anchor = ArmyHomespots[_playerId].recruited[tab.HomespotIndex]
 						Logic.MoveSettler(id, anchor.X, anchor.Y)
+						tab.HomespotReached = tab.HomespotReached or true
 					end
 				else
 					if Logic.LeaderGetNumberOfSoldiers(id) < Logic.LeaderGetMaxNumberOfSoldiers(id) then
@@ -762,10 +767,11 @@ ControlMapEditor_Armies = function(_playerId, _type)
 							(SendEvent or CSendEvent).BuySoldier(id)
 						end
 					else
-						if GetDistance(GetPosition(id), pos) > 1000 + (100 * MapEditor_Armies[_playerId].aggressiveLVL)
+						if GetDistance(GetPosition(id), pos) > 1500 + (100 * MapEditor_Armies[_playerId].aggressiveLVL)
 						and tab.RecruitmentComplete then
 							local anchor = ArmyHomespots[_playerId].recruited[tab.HomespotIndex]
 							Logic.MoveSettler(id, anchor.X, anchor.Y)
+							tab.HomespotReached = tab.HomespotReached or true
 						end
 					end
 				end
@@ -894,32 +900,32 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 	if not IsValid(_id) then
 		return true
 	end
+	local tab = MapEditor_Armies[_player][_spec][_id]
+	if tab.HomespotReached == true then
+		return true
+	end
 	if Logic.GetCurrentTaskList(_id) == "TL_MILITARY_IDLE"
 	or (Logic.GetCurrentTaskList(_id) == "TL_VEHICLE_IDLE" and not next(CEntity.GetReversedAttachedEntities(_id))) then
-		local tab = MapEditor_Armies[_player][_spec][_id]
+
 		local index = (tab and tab.HomespotIndex) or math.random(1, table.getn(ArmyHomespots[_player].recruited))
 		local anchor = ArmyHomespots[_player].recruited[index]
 		local pos = GetPosition(_id)
-		if GetDistance(pos, anchor) > 500 then
-			local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(_id)
+		local MilitaryBuildingID = Logic.LeaderGetNearbyBarracks(_id)
 
-			if MilitaryBuildingID ~= 0 then
-				if Logic.IsConstructionComplete(MilitaryBuildingID) == 1 then
-					if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1
-					or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id) and AreAllSoldiersOfLeaderDetachedFromMilitaryBuilding(_id)) then
-						Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
-						tab.RecruitmentComplete = true
-					end
+		if MilitaryBuildingID ~= 0 then
+			if Logic.IsConstructionComplete(MilitaryBuildingID) == 1 then
+				if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1
+				or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id) and AreAllSoldiersOfLeaderDetachedFromMilitaryBuilding(_id)) then
+					Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
+					tab.RecruitmentComplete = true
 				end
 			end
-			-- first attempt to reach homespot failed (e.g. due to enemies on the way)
-			if tab.RecruitmentComplete and Counter.Tick2("AITroopGenerator_CheckForIdle_" .. _id, 5) then
-				Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
-			end
-
-		else
-			return true
 		end
+		-- first attempt to reach homespot failed (e.g. due to enemies on the way)
+		if tab.RecruitmentComplete and Counter.Tick2("AITroopGenerator_CheckForIdle_" .. _id, 5) then
+			Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
+		end
+
 	end
 end
 

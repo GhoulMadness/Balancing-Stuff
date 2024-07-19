@@ -1612,6 +1612,12 @@ function LeaderTypeGetMaximumNumberOfSoldiers(_type)
 	return MaxSoldiersByLeaderType[_type] or 0
 end
 
+function IsVeteranLeader(_id)
+	assert(IsValid(_id), "invalid entity id")
+	local type = Logic.GetEntityType(_id)
+	return (type == Entities.CU_VeteranCaptain or type == Entities.CU_VeteranLieutenant or type == Entities.CU_VeteranMajor)
+end
+
 -- comfort to unmute game feedback and the mentor
 function Unmuting()
 
@@ -4367,7 +4373,7 @@ EvaluateNearestUnblockedPositionWithinDistanceOfNode = function(_posX, _posY, _o
 
 				local d = (x_ - _posX)^2 + (y_ - _posY)^2
 
-				if f(x_, y_) == res and GetDistance({X = x_, Y = y_}, {X = _nodeX, Y = _nodeY}) <= _distance 
+				if f(x_, y_) == res and GetDistance({X = x_, Y = y_}, {X = _nodeX, Y = _nodeY}) <= _distance
 				and CUtil.GetSector(x_/100, y_/100) == _sector then
 					if not dmin or dmin > d then
 						dmin = d
