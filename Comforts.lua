@@ -380,6 +380,12 @@ function SetPlayerName(_playerId, _name)
 
 end
 
+SetPlayerColorMappingOrig = Display.SetPlayerColorMapping
+function Display.SetPlayerColorMapping(_player, _colorID)
+	SetPlayerColorMappingOrig(_player, _colorID)
+	Logic.PlayerSetPlayerColor(_player, GUI.GetPlayerColor(_player))
+end
+
 -- returns if a value is found inside an array or not
 ---@param _wert any value to search
 ---@param _table array to search within

@@ -135,6 +135,12 @@ function Mission_OnSaveGameLoaded()
 			Army_SetSizeOrig(_player, _id, _val)
 		end
 	end
+
+	SetPlayerColorMappingOrig = Display.SetPlayerColorMapping
+	Display.SetPlayerColorMapping = function(_player, _colorID)
+		SetPlayerColorMappingOrig(_player, _colorID)
+		Logic.PlayerSetPlayerColor(_player, GUI.GetPlayerColor(_player))
+	end
 end
 -- 3 thiefs max. on xmas-tree related maps
 if gvXmasEventFlag == 1 then
