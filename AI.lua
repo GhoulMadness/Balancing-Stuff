@@ -915,7 +915,8 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 			if Logic.IsConstructionComplete(MilitaryBuildingID) == 1 then
 				if Logic.IsEntityInCategory(_id, EntityCategories.Cannon) == 1
 				or (Logic.LeaderGetNumberOfSoldiers(_id) == Logic.LeaderGetMaxNumberOfSoldiers(_id) and AreAllSoldiersOfLeaderDetachedFromMilitaryBuilding(_id)) then
-					Logic.LeaderChangeFormationType(_id, math.random(1, 7))
+					tab.FormationType = math.random(1, 7)
+					Logic.LeaderChangeFormationType(_id, tab.FormationType)
 					Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
 					tab.RecruitmentComplete = true
 				end
