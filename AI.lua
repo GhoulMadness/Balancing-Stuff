@@ -1050,7 +1050,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 gvAntiBuildingCannonsRange = {	[Entities.PV_Cannon2] = 0,
 								[Entities.PV_Cannon4] = 0,
-								[Entities.PV_Cannon6] = -1500,
+								[Entities.PV_Cannon6] = -2000,
 								[Entities.PV_Catapult] = -1000}
 for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = math.ceil(v + (GetEntityTypeBaseAttackRange(k)/3))
