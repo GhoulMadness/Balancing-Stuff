@@ -344,7 +344,7 @@ Fuse = function(_army0, _army1)
 	assert(_army0.player == _army1.player, "both armies must belong to the same player!")
 	_army1.rodeLength = _army0.rodeLength
 	_army1.position = _army0.position
-	_army1.strength = _army1.strength + _army0.strength
+	_army1.strength = _army1.strength + math.min(_army0.strength, table.getn(ArmyTable[_army0.player][_army0.id + 1].IDs))
 	if _army0.id ~= _army1.id and ArmyTable[_army0.player][_army0.id] then
 		ArmyTable[_army1.player][_army1.id + 1].rodeLength = ArmyTable[_army0.player][_army0.id + 1].rodeLength
 		ArmyTable[_army1.player][_army1.id + 1].position = ArmyTable[_army0.player][_army0.id + 1].position
