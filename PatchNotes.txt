@@ -23,7 +23,7 @@ Der Schützenturm wurde verstärkt, um dessen Nutzung für den Spieler attraktiv
 	benötigte Zeit zum Hinaufgelangen von Truppen:	10 Sekunden -> 6 Sekunden
 	Schadens-Bonus für Truppen auf dem Turm:	30% -> 50%
 	Rüstungs-Bonus für Truppen auf dem Turm:	30% -> 50%
-	Reichweite-Bonus für Truppen auf dem Turm:	20% -> 30%	
+	Reichweite-Bonus für Truppen auf dem Turm:	20% -> 600
 
 Dovbar-Balancing:
 Götterdämmerung:

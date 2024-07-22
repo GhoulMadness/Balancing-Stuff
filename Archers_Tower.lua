@@ -13,8 +13,8 @@ gvArchers_Tower.ClimbUpTime = 6
 gvArchers_Tower.DamageFactor = 1.5
 -- Rüstungs-Multiplikator für Truppen auf Türmen
 gvArchers_Tower.ArmorFactor = 1.5
--- Reichweiten-Multiplikator für Truppen auf Türmen
-gvArchers_Tower.MaxRangeFactor = 1.3
+-- Reichweiten-Bonus für Truppen auf Türmen
+gvArchers_Tower.MaxRangeBonus = 600
 -- In dieser Reichweite werden Truppen zum stationieren gesucht
 gvArchers_Tower.Troop_SearchRadius = 500
 -- Kategorien von feindlichen Fernkampf-Truppen, die nicht nahe des Turms stehen dürfen, wenn er befüllt werden soll
@@ -263,15 +263,15 @@ Archers_Tower_AddTroop = function(_slot,_soldiers,_player,_towerID)
 				table.insert(TroopIDs,newLeaderID)
 
 				for i = 1,table.getn(TroopIDs) do
-					CEntity.SetDamage(TroopIDs[i],Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
-					CEntity.SetArmor(TroopIDs[i],Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
-					CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]),_player)*gvArchers_Tower.MaxRangeFactor)
+					CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i]) * gvArchers_Tower.DamageFactor)
+					CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i]) * gvArchers_Tower.ArmorFactor)
+					CEntity.SetAttackRange(TroopIDs[i], GetEntityTypeMaxAttackRange((TroopIDs[i]), _player) + gvArchers_Tower.MaxRangeBonus)
 				end
 
 			else
-				CEntity.SetDamage(newLeaderID,Logic.GetEntityDamage(newLeaderID)*gvArchers_Tower.DamageFactor)
-				CEntity.SetArmor(newLeaderID,Logic.GetEntityArmor(newLeaderID)*gvArchers_Tower.ArmorFactor)
-				CEntity.SetAttackRange(newLeaderID,GetEntityTypeMaxAttackRange(newLeaderID,_player)*gvArchers_Tower.MaxRangeFactor)
+				CEntity.SetDamage(newLeaderID, Logic.GetEntityDamage(newLeaderID) * gvArchers_Tower.DamageFactor)
+				CEntity.SetArmor(newLeaderID, Logic.GetEntityArmor(newLeaderID) * gvArchers_Tower.ArmorFactor)
+				CEntity.SetAttackRange(newLeaderID, GetEntityTypeMaxAttackRange(newLeaderID, _player) + gvArchers_Tower.MaxRangeBonus)
 
 			end
 

@@ -962,9 +962,9 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 			table.insert(TroopIDs,gvArchers_Tower.SlotData[k][slot])
 
 			for i = 1,table.getn(TroopIDs) do
-				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
-				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
-				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player)*gvArchers_Tower.MaxRangeFactor)
+				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i]) * gvArchers_Tower.DamageFactor)
+				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i]) * gvArchers_Tower.ArmorFactor)
+				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player) + gvArchers_Tower.MaxRangeBonus)
 			end
 
 		end

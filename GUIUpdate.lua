@@ -14,13 +14,14 @@ function GUIUpdate_AttackRange()
 	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))
 	local pos = GetPosition(EntityID)
 	local num,towerID = Logic.GetPlayerEntitiesInArea(PID, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)
-	local factor
+	local bonus
 
-	if gvArchers_Tower.SlotData[towerID] then
-		factor = gvArchers_Tower.MaxRangeFactor
+	if gvArchers_Tower.SlotData[towerID]
+	and (gvArchers_Tower.SlotData[towerID][1] == EntityID or gvArchers_Tower.SlotData[towerID][2] == EntityID) then
+		bonus = gvArchers_Tower.MaxRangeBonus
 	end
 
-	XGUIEng.SetText( CurrentWidgetID," @ra "..Range * (factor or 1))
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range + (bonus or 0))
 
 end
 
