@@ -919,6 +919,11 @@ AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
 					Logic.LeaderChangeFormationType(_id, tab.FormationType)
 					Logic.GroupAttackMove(_id, anchor.X, anchor.Y, math.random(360))
 					tab.RecruitmentComplete = true
+				else
+					if CEntity.GetReversedAttachedEntities(_id)[42] then
+						Logic.DestroyEntity(_id)
+						return true
+					end
 				end
 			end
 		end

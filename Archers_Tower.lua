@@ -10,9 +10,9 @@ gvArchers_Tower.MaxSlots = 2
 -- Zeitdauer in Sek. die benötigt wird, um in den Turm zu gelangen
 gvArchers_Tower.ClimbUpTime = 6
 -- Schadens-Multiplikator für Truppen auf Türmen
-gvArchers_Tower.DamageFactor = 1.5
+gvArchers_Tower.DamageFactor = 1.4
 -- Rüstungs-Multiplikator für Truppen auf Türmen
-gvArchers_Tower.ArmorFactor = 1.5
+gvArchers_Tower.ArmorFactor = 1.4
 -- Reichweiten-Bonus für Truppen auf Türmen
 gvArchers_Tower.MaxRangeBonus = 600
 -- In dieser Reichweite werden Truppen zum stationieren gesucht

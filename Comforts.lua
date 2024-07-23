@@ -1587,6 +1587,7 @@ MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 							[Entities.PU_LeaderCavalry2] = 6,
 							[Entities.PU_LeaderHeavyCavalry1] = 3,
 							[Entities.PU_LeaderHeavyCavalry2] = 3,
+							[Entities.PU_LeaderUlan] = 4,
 							[Entities.PU_Scout] = 0,
 							[Entities.PU_Thief] = 0,
 							[Entities.PV_Cannon1] = 0,
@@ -4167,12 +4168,12 @@ BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Ent
 										[6] = {UpgradeCategories.Evil_LeaderBearman, UpgradeCategories.Evil_LeaderSkirmisher},
 										[7] = UpgradeCategories.LeaderRifle,
 										[8] = UpgradeCategories.LeaderPoleArm,
-										[9] = UpgradeCategories.LeaderCavalry
+										[9] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderUlan}
 										}
 -- table filled with upgrade categories by barrack building type string key
 BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm, UpgradeCategories.LeaderElite, UpgradeCategories.BlackKnightLeaderSword3, UpgradeCategories.BlackKnightLeaderMace1, UpgradeCategories.LeaderBandit, UpgradeCategories.LeaderBarbarian},
 									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle, UpgradeCategories.LeaderBanditBow},
-									["Stable"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry},
+									["Stable"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry, UpgradeCategories.LeaderUlan},
 									["Foundry"] = {Entities.PV_Cannon1, Entities.PV_Cannon2, Entities.PV_Cannon3, Entities.PV_Cannon4},
 									["MercenaryTower"] = {Entities.CU_VeteranLieutenant, Entities.CU_VeteranMajor}
 									}
