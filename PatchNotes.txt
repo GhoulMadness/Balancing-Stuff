@@ -60,6 +60,8 @@ Gebäudekosten:
 	Ausbau zum Münztresor:		600 Taler, 800 Steine -> 400 Taler, 600 Steine
 	Münzstätte:			200 Lehm, 400 Holz, 750 Steine -> 150 Lehm, 300 Holz, 500 Steine
 
+Es wurden kleinere GUI-Verbesserungen vorgenommen.
+
 --- Version 0.763
 
 Es wurde ein Fehler behoben, durch den der Holzfäller unter bestimmten Bedingungen keine Bäume mehr finden konnte.
