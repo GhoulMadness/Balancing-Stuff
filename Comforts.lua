@@ -1562,10 +1562,120 @@ end
 IsVeryWeak = function(_army)
 
 	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
-		return table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / 3)
+		return (table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / 3)
+		or GetNumberOfSoldiersAttachedToArmy(_army.player, _army.id) < (GetMaxNumberOfSoldiersAttachedToArmy(_army.player, _army.id) / 5))
 	else
 		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / 3)
 	end
+end
+
+-- Comfort to evaluate if given army is below a third of full strength
+---@param _army table armyTable
+---@param _leaderratio number if army strength is below max army strength divided by this value, it is considered as weak
+---@param _soldierratio number if army soldier amount is below max army soldier amount divided by this value, it is considered as weak
+---@return boolean
+IsBelowTreshold = function(_army, _leaderratio, _soldierratio)
+	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
+		return (table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / _leaderratio)
+		or GetNumberOfSoldiersAttachedToArmy(_army.player, _army.id) < (GetMaxNumberOfSoldiersAttachedToArmy(_army.player, _army.id) / _soldierratio))
+	else
+		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / _leaderratio)
+	end
+end
+
+-- Comfort to get the number of soldiers attached to given army
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetNumberOfSoldiersAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	for i = 1, table.getn(army.IDs) do
+		count = count + Logic.LeaderGetNumberOfSoldiers(army.IDs[i])
+	end
+	return count
+end
+
+--- Comfort to get the total number of entities currently attached to given army (leaders+soldiers)
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetNumberOfEntitiesAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	for i = 1, table.getn(army.IDs) do
+		count = count + Logic.LeaderGetNumberOfSoldiers(army.IDs[i]) + 1
+	end
+	return count
+end
+
+--- Comfort to get the number of soldiers that can be attached (maximum possible) to given army
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetMaxNumberOfSoldiersAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	local numLeader = table.getn(army.IDs)
+	for i = 1, numLeader do
+		local id = army.IDs[i]
+		if Logic.IsHero(id) == 0 then
+			count = count + Logic.LeaderGetMaxNumberOfSoldiers(army.IDs[i])
+		end
+	end
+	if numLeader < army.strength then
+		count = count * army.strength / numLeader
+	end
+	return count
+end
+
+--- Comfort to get the number of entities that can be attached (maximum possible) to given army (leaders+soldiers)
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetMaxNumberOfEntitiesAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	local numLeader = table.getn(army.IDs)
+	for i = 1, numLeader do
+		count = count + 1
+		local id = army.IDs[i]
+		if Logic.IsHero(id) == 0 then
+			count = count + Logic.LeaderGetMaxNumberOfSoldiers(army.IDs[i])
+		end
+	end
+	if numLeader < army.strength then
+		count = count * army.strength / numLeader
+	end
+	return count
 end
 
 -- table with maximum soldiers based off leader type
