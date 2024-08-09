@@ -47,6 +47,7 @@ berittener Streitaxtkämpfer:
 	benötigter DZ-Platz:		       2 -> 1
 	Lebenspunkte:			     400 -> 350
 	Rüstungswert:			       9 -> 7
+	max. Soldaten:			       3 -> 4
 
 Ihr könnt nun eine weitere berittene Militäreinheit im Stall rekrutieren, den Ulan.
 
