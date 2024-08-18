@@ -498,12 +498,13 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 	local f = function(_tab, _ntarget)
 		if not _tab.currenttarget and _ntarget then
 			_tab.currenttarget = _ntarget
+			_tab.lasttime = Logic.GetTime()
 		else
 			if _tab.currenttarget and _tab.currenttarget ~= _ntarget and _ntarget then
 				_tab.currenttarget = _ntarget
+				_tab.lasttime = Logic.GetTime()
 			end
 		end
-		_tab.lasttime = Logic.GetTime()
 	end
 
 	if not _armyId then
@@ -545,7 +546,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 					Logic.GroupAttack(_id, _target)
 				end
 			else
-				if IsAntiBuildingCannon then
+				--[[if IsAntiBuildingCannon then
 					local maxrange = GetEntityTypeBaseAttackRange(etype)
 					if dist > maxrange + 200 and dist < maxrange * 2 then
 						if not Logic.IsEntityMoving(_id) then
@@ -554,9 +555,9 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 					else
 						Logic.GroupAttack(_id, newtarget)
 					end
-				else
+				else]]
 					Logic.GroupAttack(_id, newtarget)
-				end
+				--end
 				f(tabname[_id], newtarget)
 			end
 		end

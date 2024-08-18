@@ -1173,7 +1173,7 @@ GUIUpdate_FindView = function()
 	else
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindHeavyCavalryLeader, 0)
 	end
-	-- cannons
+	-- cannon
 	local CannonAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
@@ -1236,6 +1236,13 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget("FindBearman", 1)
 	else
 		XGUIEng.ShowWidget("FindBearman", 0)
+	end
+	-- Ulan
+	local PlayerUlanAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderUlan)
+	if PlayerUlanAmount > 0 then
+		XGUIEng.ShowWidget("FindUlan", 1)
+	else
+		XGUIEng.ShowWidget("FindUlan", 0)
 	end
 
 end
