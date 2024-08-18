@@ -895,12 +895,12 @@ AITroopGenerator_CheckLeaderAttachedToBarracks = function(_player, _id)
 	end
 	return true
 end
-AITroopGenerator_CheckForIdle = function(_player, _id, _spec)
+AITroopGenerator_CheckForIdle = function(_player, _id, _type)
 
 	if not IsValid(_id) then
 		return true
 	end
-	local tab = MapEditor_Armies[_player][_spec][_id]
+	local tab = MapEditor_Armies[_player][_type][_id]
 	if tab.HomespotReached == true then
 		return true
 	end
@@ -963,17 +963,17 @@ ControlMapEditor_Armies_Barracks = function(_barrackID)
 end
 
 -- entity destroyed trigger to update respective army tables
-AITroopGenerator_RemoveLeader = function(_player, _id, _spec)
+AITroopGenerator_RemoveLeader = function(_player, _id, _type)
 
 	local entityID = Event.GetEntityID()
 
 	if entityID == _id then
-		if type(_spec) == "number" then
-			removetablekeyvalue(ArmyTable[_player][_spec + 1].IDs, entityID)
-			ArmyTable[_player][_spec + 1][_id] = nil
+		if type(_type) == "number" then
+			removetablekeyvalue(ArmyTable[_player][_type + 1].IDs, entityID)
+			ArmyTable[_player][_type + 1][_id] = nil
 		else
-			removetablekeyvalue(MapEditor_Armies[_player][_spec].IDs, entityID)
-			MapEditor_Armies[_player][_spec][_id] = nil
+			removetablekeyvalue(MapEditor_Armies[_player][_type].IDs, entityID)
+			MapEditor_Armies[_player][_type][_id] = nil
 		end
 		return true
 	end
@@ -1063,7 +1063,7 @@ for k,v in pairs(gvAntiBuildingCannonsRange) do
 	gvAntiBuildingCannonsRange[k] = math.ceil(v + (GetEntityTypeBaseAttackRange(k)/3))
 end
 
-function OnAIEnemyCreated(_playerID)
+OnAIEnemyCreated = function(_playerID)
 
 	local entityID = Event.GetEntityID()
 	local playerID = Logic.EntityGetPlayer(entityID)
@@ -1088,7 +1088,7 @@ function OnAIEnemyCreated(_playerID)
 		end
 	end
 end
-function OnAIEnemyDestroyed(_playerID)
+OnAIEnemyDestroyed = function(_playerID)
 
 	local entityID = Event.GetEntityID()
 	local playerID = Logic.EntityGetPlayer(entityID)
@@ -1113,7 +1113,7 @@ function OnAIEnemyDestroyed(_playerID)
 		end
 	end
 end
-function OnAIDiplomacyChanged(_playerID)
+OnAIDiplomacyChanged = function(_playerID)
 	local p = Event.GetSourcePlayerID()
 	local p2 = Event.GetTargetPlayerID()
 	local state = Event.GetDiplomacyState()
@@ -1123,7 +1123,7 @@ function OnAIDiplomacyChanged(_playerID)
 		RemoveCurrentTargetData(_playerID)
 	end
 end
-function AITower_RedirectTarget()
+AITower_RedirectTarget = function()
 
 	local attacker = Event.GetEntityID1()
 	local target = Event.GetEntityID2()
