@@ -380,6 +380,12 @@ function SetPlayerName(_playerId, _name)
 
 end
 
+SetPlayerColorMappingOrig = Display.SetPlayerColorMapping
+function Display.SetPlayerColorMapping(_player, _colorID)
+	SetPlayerColorMappingOrig(_player, _colorID)
+	Logic.PlayerSetPlayerColor(_player, GUI.GetPlayerColor(_player))
+end
+
 -- returns if a value is found inside an array or not
 ---@param _wert any value to search
 ---@param _table array to search within
@@ -1556,10 +1562,120 @@ end
 IsVeryWeak = function(_army)
 
 	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
-		return table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / 3)
+		return (table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / 3)
+		or GetNumberOfSoldiersAttachedToArmy(_army.player, _army.id) < (GetMaxNumberOfSoldiersAttachedToArmy(_army.player, _army.id) / 5))
 	else
 		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / 3)
 	end
+end
+
+-- Comfort to evaluate if given army is below a third of full strength
+---@param _army table armyTable
+---@param _leaderratio number if army strength is below max army strength divided by this value, it is considered as weak
+---@param _soldierratio number if army soldier amount is below max army soldier amount divided by this value, it is considered as weak
+---@return boolean
+IsBelowTreshold = function(_army, _leaderratio, _soldierratio)
+	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
+		return (table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / _leaderratio)
+		or GetNumberOfSoldiersAttachedToArmy(_army.player, _army.id) < (GetMaxNumberOfSoldiersAttachedToArmy(_army.player, _army.id) / _soldierratio))
+	else
+		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / _leaderratio)
+	end
+end
+
+-- Comfort to get the number of soldiers attached to given army
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetNumberOfSoldiersAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	for i = 1, table.getn(army.IDs) do
+		count = count + Logic.LeaderGetNumberOfSoldiers(army.IDs[i])
+	end
+	return count
+end
+
+--- Comfort to get the total number of entities currently attached to given army (leaders+soldiers)
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetNumberOfEntitiesAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	for i = 1, table.getn(army.IDs) do
+		count = count + Logic.LeaderGetNumberOfSoldiers(army.IDs[i]) + 1
+	end
+	return count
+end
+
+--- Comfort to get the number of soldiers that can be attached (maximum possible) to given army
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetMaxNumberOfSoldiersAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	local numLeader = table.getn(army.IDs)
+	for i = 1, numLeader do
+		local id = army.IDs[i]
+		if Logic.IsHero(id) == 0 then
+			count = count + Logic.LeaderGetMaxNumberOfSoldiers(army.IDs[i])
+		end
+	end
+	if numLeader < army.strength then
+		count = count * army.strength / numLeader
+	end
+	return count
+end
+
+--- Comfort to get the number of entities that can be attached (maximum possible) to given army (leaders+soldiers)
+---@param _player integer playerID
+---@param _id integer armyID
+---@param _spec string recruitedArmy type
+---@return integer
+GetMaxNumberOfEntitiesAttachedToArmy = function(_player, _id, _spec)
+
+	local army
+	if _id then
+		army = ArmyTable[_player][_id + 1]
+	elseif _spec then
+		army = MapEditor_Armies[_player][_spec]
+	end
+	local count = 0
+	local numLeader = table.getn(army.IDs)
+	for i = 1, numLeader do
+		count = count + 1
+		local id = army.IDs[i]
+		if Logic.IsHero(id) == 0 then
+			count = count + Logic.LeaderGetMaxNumberOfSoldiers(army.IDs[i])
+		end
+	end
+	if numLeader < army.strength then
+		count = count * army.strength / numLeader
+	end
+	return count
 end
 
 -- table with maximum soldiers based off leader type
@@ -1581,6 +1697,7 @@ MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 							[Entities.PU_LeaderCavalry2] = 6,
 							[Entities.PU_LeaderHeavyCavalry1] = 3,
 							[Entities.PU_LeaderHeavyCavalry2] = 3,
+							[Entities.PU_LeaderUlan] = 4,
 							[Entities.PU_Scout] = 0,
 							[Entities.PU_Thief] = 0,
 							[Entities.PV_Cannon1] = 0,
@@ -1610,6 +1727,12 @@ MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 ---@return integer maximum number of soldiers
 function LeaderTypeGetMaximumNumberOfSoldiers(_type)
 	return MaxSoldiersByLeaderType[_type] or 0
+end
+
+function IsVeteranLeader(_id)
+	assert(IsValid(_id), "invalid entity id")
+	local type = Logic.GetEntityType(_id)
+	return (type == Entities.CU_VeteranCaptain or type == Entities.CU_VeteranLieutenant or type == Entities.CU_VeteranMajor)
 end
 
 -- comfort to unmute game feedback and the mentor
@@ -3888,10 +4011,18 @@ function CheckForBetterTarget(_eID, _target, _range)
 	end
 	if gvAntiBuildingCannonsRange[etype] then
 		local res
-		local f = function(_target1, _target2)
-			if _target1 and Logic.IsBuilding(_target1) == 0 and _target2 then
+		local target_eval = function(_target1, _target2)
+			if _target1 and Logic.IsBuilding(_target1) == 0 and IsValid(_target2) then
 				return _target2
-			elseif not _target1 and _target2 then
+			elseif _target1 and Logic.IsBuilding(_target1) == 1 then
+				if _target2 and Logic.IsBuilding(_target2) == 1 then
+					return _target2
+				else
+					if IsValid(_target1) then
+						return _target1
+					end
+				end
+			elseif not _target1 and IsValid(_target2) then
 				return _target2
 			end
 		end
@@ -3907,12 +4038,12 @@ function CheckForBetterTarget(_eID, _target, _range)
 			if target
 			and target == tab[_eID].currenttarget
 			and GetDistance(_eID, target) > maxrange
-			and Logic.GetTime() < tab[_eID].lasttime + 30 then
+			and Logic.GetTime() < tab[_eID].lasttime + 10 then
 			else
-				res = f(_target, target)
+				res = target_eval(_target, target)
 			end
 		else
-			res = f(_target, target)
+			res = target_eval(_target, target)
 		end
 		if res then
 			return res
@@ -3953,7 +4084,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 			end
 			attach = CEntity.GetAttachedEntities(entities[i])[37]
 			local damagefactor = DamageFactorToArmorClass[damageclass][GetEntityTypeArmorClass(ety)]
-			if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
+			if damagerange > 0 and (not gvAntiBuildingCannonsRange[etype] or etype == Entities.PV_Cannon6) then
 				local mul = 1
 				if Logic.IsLeader(entities[i]) == 1 then
 					mul = 1 + Logic.LeaderGetNumberOfSoldiers(entities[i])
@@ -3964,7 +4095,7 @@ function CheckForBetterTarget(_eID, _target, _range)
 		end
 	end
 	local attachN = attach and table.getn(attach) or 0
-	if damagerange > 0 and not gvAntiBuildingCannonsRange[etype] then
+	if damagerange > 0 and (not gvAntiBuildingCannonsRange[etype] or etype == Entities.PV_Cannon6) then
 		if next(postable) then
 			clumppos, score = GetPositionClump(postable, damagerange, 100)
 			for i = 1, table.getn(calcT) do
@@ -4022,12 +4153,13 @@ RetreatToMaxRange = function(_id, _target, _dist)
 	local dist_12 = GetDistance(pos1, pos2)
 	local angle = GetAngleBetween(pos1, pos2)
 
-	local yoff = _dist * math.sin(math.rad(angle))
-	local xoff = _dist * math.cos(math.rad(angle))
-	local posX, posY = pos1.X + xoff, pos1.Y + yoff
-	local sector = CUtil.GetSector(posX/100, posY/100)
-	if sector == 0 or sector ~= Logic.GetSector(_id) then
-		posX, posY = EvaluateNearestUnblockedPosition(posX, posY, 1000, 100)
+	local yoff = math.abs(dist_12 - _dist) * math.sin(math.rad(angle))
+	local xoff = math.abs(dist_12 - _dist) * math.cos(math.rad(angle))
+	local posX, posY = dekaround(pos1.X + xoff), dekaround(pos1.Y + yoff)
+	local sec1 = Logic.GetSector(_id)
+	local sec2 = CUtil.GetSector(posX/100, posY/100)
+	if sec2 == 0 or sec2 ~= sec1 then
+		posX, posY = EvaluateNearestUnblockedPositionWithinDistanceOfNode(posX, posY, 2000, 100, pos2.X, pos2.Y, _dist, sec1)
 	end
 	Logic.MoveSettler(_id, posX, posY)
 	return -1
@@ -4146,12 +4278,12 @@ BS.GetUpgradeCategoryByDamageClass = {	[1] = {UpgradeCategories.LeaderSword, Ent
 										[6] = {UpgradeCategories.Evil_LeaderBearman, UpgradeCategories.Evil_LeaderSkirmisher},
 										[7] = UpgradeCategories.LeaderRifle,
 										[8] = UpgradeCategories.LeaderPoleArm,
-										[9] = UpgradeCategories.LeaderCavalry
+										[9] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderUlan}
 										}
 -- table filled with upgrade categories by barrack building type string key
 BS.CategoriesInMilitaryBuilding = {	["Barracks"] = {UpgradeCategories.LeaderSword, UpgradeCategories.LeaderPoleArm, UpgradeCategories.LeaderElite, UpgradeCategories.BlackKnightLeaderSword3, UpgradeCategories.BlackKnightLeaderMace1, UpgradeCategories.LeaderBandit, UpgradeCategories.LeaderBarbarian},
 									["Archery"] = {UpgradeCategories.LeaderBow, UpgradeCategories.LeaderRifle, UpgradeCategories.LeaderBanditBow},
-									["Stable"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry},
+									["Stable"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.LeaderHeavyCavalry, UpgradeCategories.LeaderUlan},
 									["Foundry"] = {Entities.PV_Cannon1, Entities.PV_Cannon2, Entities.PV_Cannon3, Entities.PV_Cannon4},
 									["MercenaryTower"] = {Entities.CU_VeteranLieutenant, Entities.CU_VeteranMajor}
 									}
@@ -4182,9 +4314,21 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 					count = count + 1
 				end
 			end
+		else
+			return true
 		end
-		return count < 3
+		return (count < 3 and table.getn(attach) < 14)
 	end
+end
+
+AreAllSoldiersOfLeaderDetachedFromMilitaryBuilding = function(_id)
+	local sol = {Logic.GetSoldiersAttachedToLeader(_id)}
+	for i = 2, sol[1] + 1 do
+		if CEntity.GetReversedAttachedEntities(sol[i])[42] then
+			return false
+		end
+	end
+	return true
 end
 
 -- returns number of currently training leader IDs in military building
@@ -4331,6 +4475,38 @@ EvaluateNearestUnblockedPosition = function(_posX, _posY, _offset, _step, _noter
 		end
 	end
 	return xspawn, yspawn
+end
+
+EvaluateNearestUnblockedPositionWithinDistanceOfNode = function(_posX, _posY, _offset, _step, _nodeX, _nodeY, _distance, _sector)
+
+	local xmax, ymax = Logic.WorldGetSize()
+	local dmin, xspawn, yspawn
+	local f = CUtil.GetBlocking100
+	local res = 0
+
+	for y_ = _posY - _offset, _posY + _offset, _step do
+		for x_ = _posX - _offset, _posX + _offset, _step do
+			if y_ > 0 and x_ > 0 and x_ < xmax and y_ < ymax then
+
+				local d = (x_ - _posX)^2 + (y_ - _posY)^2
+
+				if f(x_, y_) == res and GetDistance({X = x_, Y = y_}, {X = _nodeX, Y = _nodeY}) <= _distance
+				and CUtil.GetSector(x_/100, y_/100) == _sector then
+					if not dmin or dmin > d then
+						dmin = d
+						xspawn = x_
+						yspawn = y_
+					end
+				end
+
+			end
+		end
+	end
+	if xspawn and yspawn then
+		return xspawn, yspawn
+	else
+		return _nodeX, _nodeY
+	end
 end
 
 -- gets nearest unblocked sector near a given position

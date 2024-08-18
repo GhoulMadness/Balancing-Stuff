@@ -135,6 +135,12 @@ function Mission_OnSaveGameLoaded()
 			Army_SetSizeOrig(_player, _id, _val)
 		end
 	end
+
+	SetPlayerColorMappingOrig = Display.SetPlayerColorMapping
+	Display.SetPlayerColorMapping = function(_player, _colorID)
+		SetPlayerColorMappingOrig(_player, _colorID)
+		Logic.PlayerSetPlayerColor(_player, GUI.GetPlayerColor(_player))
+	end
 end
 -- 3 thiefs max. on xmas-tree related maps
 if gvXmasEventFlag == 1 then
@@ -434,7 +440,7 @@ function GameCallback_GameSpeedChanged( _Speed )
 		if not CNetwork
 		or (CNetwork
 		and CNetwork.Game_IsPaused()
-		and	GUI.GetPlayerID() ~= 17 or (GUI.GetPlayerID() == 17 and not gvEMSFlag))
+		and	(GUI.GetPlayerID() ~= 17 or (GUI.GetPlayerID() == 17 and not gvEMSFlag)))
 		then
 			local PauseScreenType = XGUIEng.GetRandom(4)+1
 			XGUIEng.ShowWidget("PauseScreen"..PauseScreenType,1)
@@ -956,9 +962,9 @@ function GameCallback_GUI_EntityIDChanged(_OldID, _NewID)
 			table.insert(TroopIDs,gvArchers_Tower.SlotData[k][slot])
 
 			for i = 1,table.getn(TroopIDs) do
-				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i])*gvArchers_Tower.DamageFactor)
-				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i])*gvArchers_Tower.ArmorFactor)
-				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player)*gvArchers_Tower.MaxRangeFactor)
+				CEntity.SetDamage(TroopIDs[i], Logic.GetEntityDamage(TroopIDs[i]) * gvArchers_Tower.DamageFactor)
+				CEntity.SetArmor(TroopIDs[i], Logic.GetEntityArmor(TroopIDs[i]) * gvArchers_Tower.ArmorFactor)
+				CEntity.SetAttackRange(TroopIDs[i],GetEntityTypeMaxAttackRange((TroopIDs[i]), player) + gvArchers_Tower.MaxRangeBonus)
 			end
 
 		end

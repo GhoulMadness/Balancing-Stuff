@@ -814,9 +814,9 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 			-- Reichweite der Fähigkeit (in S-cm)
 
 			local range = math.min(tab.BaseRange - (delay/tab.RangeDelayFalloff) - (tab.TimesUsed[player] * tab.RangeFalloffPerCast), tab.MinRange)
-			local damage = math.max(_origdmg ^ (tab.BaseExponent - (delay/tab.ExponentDelayFalloff)), _origdmg * tab.MinAttackDamageFactor)
+			local damage = math.max(_origdmg ^ (tab.BaseExponent - (math.sqrt(delay)/tab.ExponentDelayFalloff)), _origdmg * tab.MinAttackDamageFactor)
 
-			for i = 1, tab.NumberOfLightningStrikes do
+			for i = 1, math.min(tab.NumberOfLightningStrikes, round(damage/80)) do
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (range/tab.NumberOfLightningStrikes * i), _posY - (range/tab.NumberOfLightningStrikes * i))
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (range/tab.NumberOfLightningStrikes * i), _posY)
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY - (range/tab.NumberOfLightningStrikes * i))

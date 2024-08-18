@@ -14,13 +14,14 @@ function GUIUpdate_AttackRange()
 	local Range = round(GetEntityTypeMaxAttackRange(EntityID,PID))
 	local pos = GetPosition(EntityID)
 	local num,towerID = Logic.GetPlayerEntitiesInArea(PID, Entities.PB_Archers_Tower, pos.X, pos.Y, 600, 1)
-	local factor
+	local bonus
 
-	if gvArchers_Tower.SlotData[towerID] then
-		factor = gvArchers_Tower.MaxRangeFactor
+	if gvArchers_Tower.SlotData[towerID]
+	and (gvArchers_Tower.SlotData[towerID][1] == EntityID or gvArchers_Tower.SlotData[towerID][2] == EntityID) then
+		bonus = gvArchers_Tower.MaxRangeBonus
 	end
 
-	XGUIEng.SetText( CurrentWidgetID," @ra "..Range * (factor or 1))
+	XGUIEng.SetText( CurrentWidgetID," @ra "..Range + (bonus or 0))
 
 end
 
@@ -1172,7 +1173,7 @@ GUIUpdate_FindView = function()
 	else
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindHeavyCavalryLeader, 0)
 	end
-	-- cannons
+	-- cannon
 	local CannonAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon1)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon2)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon3)
@@ -1235,6 +1236,13 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget("FindBearman", 1)
 	else
 		XGUIEng.ShowWidget("FindBearman", 0)
+	end
+	-- Ulan
+	local PlayerUlanAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderUlan)
+	if PlayerUlanAmount > 0 then
+		XGUIEng.ShowWidget("FindUlan", 1)
+	else
+		XGUIEng.ShowWidget("FindUlan", 0)
 	end
 
 end

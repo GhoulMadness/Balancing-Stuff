@@ -5,7 +5,7 @@ WCutter.MaxRange = 2500
 -- min time woodcutter needs to chop tree (sec)
 WCutter.BaseTimeNeeded = 2
 -- bonus time needed for chopping tree per ressource of respective tree (sec)
-WCutter.TimeNeededPerRess = 0.2
+WCutter.TimeNeededPerRess = 0.3
 -- maximum duration woodcutter needs to chop tree (sec)
 WCutter.MaxTimeNeeded = 25
 -- chop anim duration in ticks (sec/10)
@@ -216,7 +216,7 @@ WCutter.FindNearestTree = function(_id)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(WCutter.TreeTypes)), CEntityIterator.InCircleFilter(x, y, WCutter.MaxRange)) do
 		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
 			local x_, y_ = Logic.GetEntityPosition(eID)
-			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 1000, 100)
+			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 300, 100)
 			if sector == sector2 then
 				if CUtil.GetTerrainNodeHeight(x_/100, y_/100) > CUtil.GetWaterHeight(x_/100, y_/100) then
 					table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
@@ -360,6 +360,13 @@ end
 WCutter.CutTree = function(_id, _treeid, _buildingID)
 
 	if not IsExisting(_id) then
+		return true
+	end
+	if not IsExisting(_treeid) then
+		WCutter.TargettedTrees[_treeid] = nil
+		Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
+		WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
+		WCutter.EndWorkCycle(_id)
 		return true
 	end
 

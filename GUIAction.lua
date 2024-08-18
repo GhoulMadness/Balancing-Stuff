@@ -869,7 +869,8 @@ EntityTypesInCatString = {["Mercenary"] = {	Entities.CU_BanditLeaderBow1,
 											Entities.PU_Hero14_BearmanElite,
 											Entities.PU_Hero14_Skirmisher1,
 											Entities.PU_Hero14_Skirmisher2,
-											Entities.PU_Hero14_SkirmisherElite}
+											Entities.PU_Hero14_SkirmisherElite},
+							   ["Ulan"] = { Entities.PU_LeaderUlan}
 							}
 function GUIAction_SelectEntityInCategory(_catstring)
 	-- Do not jump in cutscene!
