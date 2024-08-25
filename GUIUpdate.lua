@@ -1238,7 +1238,7 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget("FindBearman", 0)
 	end
 	-- Ulan
-	local PlayerUlanAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderUlan)
+	local PlayerUlanAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderUlan1)
 	if PlayerUlanAmount > 0 then
 		XGUIEng.ShowWidget("FindUlan", 1)
 	else

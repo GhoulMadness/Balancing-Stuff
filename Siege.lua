@@ -161,7 +161,7 @@ Siege_GateDestroyedControl = function()
 		end
 		Logic.CreateEntity(Entities.XD_Wall_Gate_Ruin, posX, posY, degree, 0)
 		Sound.PlayGUISound(Sounds.Stronghold_General_Gatehouse, 152)
-		return Logic.GetNumberOfEntitiesOfType(Entities.XD_OSO_Wall_Gate_Slim_Closed2) ~= 0
+		return Logic.GetNumberOfEntitiesOfType(Entities.XD_OSO_Wall_Gate_Slim_Closed2) == 0
 	end
 end
 Siege_EntityBurnedToDeathSounds = function()
@@ -271,7 +271,6 @@ Siege_PitchBurnerControl = function(_id)
 				local angle = GetAngleBetween(pos, clump)
 				Logic.RotateEntity(_id, angle)
 				Logic.SetTaskList(_id, TaskLists.TL_PITCHBURNER_DROPOIL)
-				--Logic.CreateEffect(GGL_Effects.FXDropOil, clump.X, clump.Y)
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "Siege_PitchBurnerApplyDamage", 1, {}, {_id, clump.X, clump.Y})
 				if not Siege_PitchBurnerDropOilSound then
 					Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.DropOilSounds[1+XGUIEng.GetRandom(table.getn(Siege.DropOilSounds)-1)]], 152)

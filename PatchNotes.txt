@@ -1,5 +1,11 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.765
+
+Ulan können nun auch auf Karten mit dem Armee-Erstellungs-Tool ausgewählt werden.
+
+Erebos, Orgelkanonen und Schwere Haubitzen können nun auch auf Karten mit dem Armee-Erstellungs-Tool ausgewählt werden (wenn Voraussetzungen erfüllt).
+
 --- Version 0.764
 
 Truppen der KI warten nun nach der Rekrutierung, bis alle Soldaten erschienen sind. 
