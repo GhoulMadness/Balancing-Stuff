@@ -1022,3 +1022,9 @@ Es wurde ein Fehler im Zusammenhang mit dem Rufen von Vargs Wölfen behoben.
 Für die neueren Siegesstatuen werden nun die im Tooltip angezeigten Technologien benötigt.
 
 Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Dieser konnte ich bestimmten Konstellationen auch Desyncs verursachen). 
+
+--- Version 0.760
+
+Förster und Holzfäller können nun auch aus alten Dorfhallen erscheinen.
+
+Gebäude können nun nicht mehr in direkter Nähe feindlicher Militäreinheiten gebaut werden.
