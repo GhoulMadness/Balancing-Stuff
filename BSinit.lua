@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.764
+BS.Version = 0.765
 
 BS.SpectatorPID = 17
 
@@ -74,7 +74,6 @@ BS.MapList = {
 				["(3) bs koop nachbarschaft"] = true,
 				["(3) bs koop die erstuermung der wartburg"] = true,
 				["(3) bs koop zu dunkler stunde"] = true,
-				["(3) bs koop gebirgskampf"] = true,
 				["(3) emsbs der lachende dritte"] = true,
 				["(3) emsbs eingekesselt"] = true,
 				["(3) emsbs hochland"] = true,
@@ -291,6 +290,10 @@ BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 											[2] = "challenge_map8_won",
 											[3] = "challenge_map9_won"
 											},
+						["BS_ArmyCreator_Cannon_T5"] = { 	[1] = "challenge_map7_won",
+														[2] = "challenge_map8_won",
+														[3] = "challenge_map9_won"
+														},
 						["Buy_Cannon6"] = {	[1] = "challenge_map1_won",
 											[2] = "challenge_map2_won",
 											[3] = "challenge_map3_won",
@@ -300,7 +303,17 @@ BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 											[7] = "challenge_map7_won",
 											[8] = "challenge_map8_won",
 											[9] = "challenge_map9_won"
-											}
+											},
+						["BS_ArmyCreator_Cannon_T6"] = {	[1] = "challenge_map1_won",
+														[2] = "challenge_map2_won",
+														[3] = "challenge_map3_won",
+														[4] = "challenge_map4_won",
+														[5] = "challenge_map5_won",
+														[6] = "challenge_map6_won",
+														[7] = "challenge_map7_won",
+														[8] = "challenge_map8_won",
+														[9] = "challenge_map9_won"
+													}
 					}
 
 BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",

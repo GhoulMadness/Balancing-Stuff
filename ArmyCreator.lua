@@ -4,6 +4,7 @@ function()
 	CWidget.Transaction_AddRawWidgetsFromFile("extra2/shr/maps/user/Balancing_Stuff_in_Dev/ArmyCreator.xml", "Normal")
 end)
 CWidget.LoadGUINoPreserve("maps\\user\\Balancing_Stuff_in_Dev\\BS_GUI.xml")
+BS.CheckForAchievements(GUI.GetPlayerID())
 --initializing table
 ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.PU_LeaderSword2] = 5,
@@ -23,6 +24,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.PU_LeaderCavalry2] = 12,
 												[Entities.PU_LeaderHeavyCavalry1] = 6,
 												[Entities.PU_LeaderHeavyCavalry2] = 10,
+												[Entities.PU_LeaderUlan1] = 9,
 												[Entities.PU_Thief] = 15,
 												[Entities.PU_Scout] = 6,
 												[Entities.PU_BattleSerf] = 2,
@@ -30,6 +32,8 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.PV_Cannon2] = 10,
 												[Entities.PV_Cannon3] = 15,
 												[Entities.PV_Cannon4] = 18,
+												[Entities.PV_Cannon5] = 23,
+												[Entities.PV_Cannon6_2] = 75,
 												[Entities.PV_Catapult] = 50,
 												[Entities.PV_Ram] = 20,
 												[Entities.CU_BanditLeaderSword1] = 6,
@@ -53,7 +57,7 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 												[Entities.PU_Hero10] = 28,
 												[Entities.PU_Hero11] = 23,
 												[Entities.PU_Hero13] = 26,
-												[Entities.PU_Hero14] = 22
+												[Entities.PU_Hero14] = 25
 												},
 				BasePoints = 100,
 				PlayerPoints = 0,
@@ -70,12 +74,16 @@ ArmyCreator = {TroopLimit = 10, PointCosts = {	[Entities.PU_LeaderSword1] = 4,
 									[Entities.PU_Hero10] = true,
 									[Entities.PU_Hero11] = true,
 									[Entities.PU_Hero13] = true,
-									[Entities.PU_Hero14] = true
+									[Entities.PU_Hero14] = true,
+									[Entities.PV_Cannon6_2] = true,
+									[Entities.PV_Catapult] = true
 									},
 				TroopOnlyLeader = {	[Entities.PV_Cannon1] = true,
 									[Entities.PV_Cannon2] = true,
 									[Entities.PV_Cannon3] = true,
 									[Entities.PV_Cannon4] = true,
+									[Entities.PV_Cannon5] = true,
+									[Entities.PV_Cannon6_2] = true,
 									[Entities.PV_Catapult] = true,
 									[Entities.PV_Ram] = true,
 									[Entities.PU_Thief] = true,
@@ -93,56 +101,10 @@ for i = 1,16 do
 		ArmyCreator.SpawnPos[i] = GetPosition("start_pos_p"..i)
 	end
 	ArmyCreator.Finished[i] = false
-	ArmyCreator.PlayerTroops[i] = {	[Entities.PU_LeaderSword1] = 0,
-									[Entities.PU_LeaderSword2] = 0,
-									[Entities.PU_LeaderSword3] = 0,
-									[Entities.PU_LeaderSword4] = 0,
-									[Entities.PU_LeaderPoleArm1] = 0,
-									[Entities.PU_LeaderPoleArm2] = 0,
-									[Entities.PU_LeaderPoleArm3] = 0,
-									[Entities.PU_LeaderPoleArm4] = 0,
-									[Entities.PU_LeaderBow1] = 0,
-									[Entities.PU_LeaderBow2] = 0,
-									[Entities.PU_LeaderBow3] = 0,
-									[Entities.PU_LeaderBow4] = 0,
-									[Entities.PU_LeaderRifle1] = 0,
-									[Entities.PU_LeaderRifle2] = 0,
-									[Entities.PU_LeaderCavalry1] = 0,
-									[Entities.PU_LeaderCavalry2] = 0,
-									[Entities.PU_LeaderHeavyCavalry1] = 0,
-									[Entities.PU_LeaderHeavyCavalry2] = 0,
-									[Entities.PU_Thief] = 0,
-									[Entities.PU_Scout] = 0,
-									[Entities.PU_BattleSerf] = 0,
-									[Entities.PV_Cannon1] = 0,
-									[Entities.PV_Cannon2] = 0,
-									[Entities.PV_Cannon3] = 0,
-									[Entities.PV_Cannon4] = 0,
-									[Entities.PV_Catapult] = 0,
-									[Entities.PV_Ram] = 0,
-									[Entities.CU_BanditLeaderSword1] = 0,
-									[Entities.CU_BanditLeaderBow1] = 0,
-									[Entities.CU_Barbarian_LeaderClub1] = 0,
-									[Entities.CU_VeteranLieutenant] = 0,
-									[Entities.CU_BlackKnight_LeaderMace1] = 0,
-									[Entities.CU_BlackKnight_LeaderSword3] = 0,
-									[Entities.CU_Evil_LeaderBearman1] = 0,
-									[Entities.CU_Evil_LeaderSkirmisher1] = 0,
-									[Entities.PU_Hero1c] = 0,
-									[Entities.PU_Hero2] = 0,
-									[Entities.PU_Hero3] = 0,
-									[Entities.PU_Hero4] = 0,
-									[Entities.PU_Hero5] = 0,
-									[Entities.PU_Hero6] = 0,
-									[Entities.CU_Mary_de_Mortfichet] = 0,
-									[Entities.CU_Barbarian_Hero] = 0,
-									[Entities.CU_BlackKnight] = 0,
-									[Entities.CU_Evil_Queen] = 0,
-									[Entities.PU_Hero10] = 0,
-									[Entities.PU_Hero11] = 0,
-									[Entities.PU_Hero13] = 0,
-									[Entities.PU_Hero14] = 0
-									}
+	ArmyCreator.PlayerTroops[i] = { }
+	for etype in ArmyCreator.PointCosts do
+		ArmyCreator.PlayerTroops[i][etype] = 0
+	end
 end
 
 if not CNetwork then

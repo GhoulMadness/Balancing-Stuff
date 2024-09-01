@@ -30,20 +30,6 @@ function GUITooltip_Outpost_Serf()
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
 end
 
-function GUITooltip_UpgradeMarket2()
-	local TooltipName = ""
-	local TooltipCosts = ""
-	if string.lower(XNetworkUbiCom.Tool_GetCurrentLanguageShortName()) == "de" then
-		TooltipName = "@color:180,180,180,255 Ausbau zum Handelsposten @cr @color:255,204,51,255 benötigt: @color:255,255,255,255 Münzprägung @cr 			@color:255,204,51,255 ermöglicht: @color:255,255,255,255 Schnelleren Handel"
-		TooltipCosts = "@color:255,255,255,255 Taler: 200 @cr Steine: 300 @cr Holz: 150 @cr Lehm: 100"
-	else
-		TooltipName = "@color:180,180,180,255 Expansion to a trading post @cr @color:255,204,51,255 requires: @color:255,255,255,255 Coinage @cr 			@color:255,204,51,255 allows: @color:255,255,255,255 Faster trading"
-		TooltipCosts = "@color:255,255,255,255 Thalers: 200 @cr Stone: 300 @cr Wood: 150 @cr Clay: 100"
-	end
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText,TooltipName)
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts,TooltipCosts)
-	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut," ")
-end
 function GUITooltip_ActivateAlarm()
 	XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomText, "@color:180,180,180 Alarm @cr @color:255,204,51,255 Alle Arbeiter fliehen in das Haupthaus, die Dorfzentren und die Werkstätten und beschießen die Feinde." )
     XGUIEng.SetText( gvGUI_WidgetID.TooltipBottomCosts, " " )

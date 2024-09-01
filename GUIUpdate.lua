@@ -1180,6 +1180,7 @@ GUIUpdate_FindView = function()
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon5)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon6)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon6_2)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Catapult)
 	if CannonAmount > 0 then
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindCannon, 1)
@@ -1238,7 +1239,7 @@ GUIUpdate_FindView = function()
 		XGUIEng.ShowWidget("FindBearman", 0)
 	end
 	-- Ulan
-	local PlayerUlanAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderUlan)
+	local PlayerUlanAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PU_LeaderUlan1)
 	if PlayerUlanAmount > 0 then
 		XGUIEng.ShowWidget("FindUlan", 1)
 	else

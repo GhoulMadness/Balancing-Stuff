@@ -1,5 +1,17 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.765
+
+Ulan können nun auch auf Karten mit dem Armee-Erstellungs-Tool ausgewählt werden.
+
+Erebos, Orgelkanonen und Schwere Haubitzen können nun auch auf Karten mit dem Armee-Erstellungs-Tool ausgewählt werden (wenn Voraussetzungen erfüllt).
+
+Es wurde ein Fehler behoben, durch den die Ausbaukosten zum Handelsposten nicht korrekt angezeigt wurden.
+
+Es wurde ein Fehler behoben, durch den die Technologie 'Schweres Unwetter' nicht die korrekten Technologien erforderte sowie falsche Forschungskosten besaß.
+
+Sämtliche Technologien in der Wettermaschine generieren nun Punkte für die Statistiken.
+
 --- Version 0.764
 
 Truppen der KI warten nun nach der Rekrutierung, bis alle Soldaten erschienen sind. 
@@ -135,9 +147,3 @@ Es wurde ein Fehler behoben, durch den der Spieler zu viele Kampfpunkte erhielt,
 
 Waren noch Leibeigene zur Rekrutierung in einer Burg/ einem Außenposten/Landsitz eingereiht, als dieser zerstört wurde, erschienen die Leibeigenen mit üblicher Verzögerung unsichtbar vor dem Gebäude.
 Es wurde ein weiterer Check eingebaut und sollte die Burg/ der Außenposten/Landsitz bereits zerstört sein, werden die Leibeigenen entfernt.
-
---- Version 0.760
-
-Förster und Holzfäller können nun auch aus alten Dorfhallen erscheinen.
-
-Gebäude können nun nicht mehr in direkter Nähe feindlicher Militäreinheiten gebaut werden.
