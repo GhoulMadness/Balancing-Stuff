@@ -1180,6 +1180,7 @@ GUIUpdate_FindView = function()
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon4)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon5)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon6)
+		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Cannon6_2)
 		+ Logic.GetNumberOfEntitiesOfTypeOfPlayer(PlayerID, Entities.PV_Catapult)
 	if CannonAmount > 0 then
 		XGUIEng.ShowWidget(gvGUI_WidgetID.FindCannon, 1)

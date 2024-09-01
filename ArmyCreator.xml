@@ -9120,7 +9120,7 @@
                     <DisabledFlag>False</DisabledFlag>
                     <HighLightedFlag>False</HighLightedFlag>
                     <ActionFunction>
-                      <LuaCommand>GUIAction_ArmyCreatorChangeAmount(Entities.PV_Cannon6,1)</LuaCommand>
+                      <LuaCommand>GUIAction_ArmyCreatorChangeAmount(Entities.PV_Cannon6_2,1)</LuaCommand>
                     </ActionFunction>
                     <ShortCutString>
                       <StringTableKey></StringTableKey>
@@ -9211,7 +9211,7 @@
                     <TargetWidget></TargetWidget>
                     <ControlTargetWidgetDisplayState>False</ControlTargetWidgetDisplayState>
                     <UpdateFunction>
-                      <LuaCommand>GUITooltip_ArmyCreator("PV_Cannon6",1)</LuaCommand>
+                      <LuaCommand>GUITooltip_ArmyCreator("PV_Cannon6_2",1)</LuaCommand>
                     </UpdateFunction>
                   </ToolTipHelper>
                   <UpdateFunction>
@@ -9252,7 +9252,7 @@
                     <DisabledFlag>False</DisabledFlag>
                     <HighLightedFlag>False</HighLightedFlag>
                     <ActionFunction>
-                      <LuaCommand>GUIAction_ArmyCreatorChangeAmount(Entities.PV_Cannon6,-1)</LuaCommand>
+                      <LuaCommand>GUIAction_ArmyCreatorChangeAmount(Entities.PV_Cannon6_2,-1)</LuaCommand>
                     </ActionFunction>
                     <ShortCutString>
                       <StringTableKey></StringTableKey>
@@ -9343,7 +9343,7 @@
                     <TargetWidget></TargetWidget>
                     <ControlTargetWidgetDisplayState>False</ControlTargetWidgetDisplayState>
                     <UpdateFunction>
-                      <LuaCommand>GUITooltip_ArmyCreator("PV_Cannon6",-1)</LuaCommand>
+                      <LuaCommand>GUITooltip_ArmyCreator("PV_Cannon6_2",-1)</LuaCommand>
                     </UpdateFunction>
                   </ToolTipHelper>
                   <UpdateFunction>
@@ -9412,7 +9412,7 @@
                     </Color>
                   </StringHelper>
                   <UpdateFunction>
-                    <LuaCommand>GUIUpdate_ArmyCreatorTroopAmount(GUI.GetPlayerID(),Entities.PV_Cannon6)</LuaCommand>
+                    <LuaCommand>GUIUpdate_ArmyCreatorTroopAmount(GUI.GetPlayerID(),Entities.PV_Cannon6_2)</LuaCommand>
                   </UpdateFunction>
                   <UpdateManualFlag>False</UpdateManualFlag>
                   <FirstLineToPrint>0</FirstLineToPrint>
