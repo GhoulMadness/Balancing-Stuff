@@ -495,15 +495,18 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 
 	local tabname, range, pos, newtarget, IsMelee, etype, dist
 	etype = Logic.GetEntityType(_id)
-	local f = function(_tab, _ntarget)
-		if not _tab.currenttarget and _ntarget then
-			_tab.currenttarget = _ntarget
-			_tab.lasttime = Logic.GetTime()
+	local f = function(_tab, _id, _ntarget)
+		if not _tab[_id].currenttarget and _ntarget then
+			_tab[_id].currenttarget = _ntarget
+			_tab[_id].lasttime = Logic.GetTime()
 		else
-			if _tab.currenttarget and _tab.currenttarget ~= _ntarget and _ntarget then
-				_tab.currenttarget = _ntarget
-				_tab.lasttime = Logic.GetTime()
+			if _tab[_id].currenttarget and _tab[_id].currenttarget ~= _ntarget and _ntarget then
+				_tab[_id].currenttarget = _ntarget
+				_tab[_id].lasttime = Logic.GetTime()
 			end
+		end
+		if _tab.baitDetection then
+
 		end
 	end
 
@@ -530,11 +533,11 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 			if Logic.GetSector(newtarget) == Logic.GetSector(_id) then
 				if dist > range then
 					if _target then
-						f(tabname[_id], _target)
+						f(tabname, _id, _target)
 						Logic.GroupAttack(_id, _target)
 					end
 				else
-					f(tabname[_id], newtarget)
+					f(tabname, _id, newtarget)
 					Logic.GroupAttack(_id, newtarget)
 				end
 			end
@@ -542,7 +545,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 		else
 			if dist > range then
 				if _target then
-					f(tabname[_id], _target)
+					f(tabname, _id, _target)
 					Logic.GroupAttack(_id, _target)
 				end
 			else
@@ -558,12 +561,12 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 				else]]
 					Logic.GroupAttack(_id, newtarget)
 				--end
-				f(tabname[_id], newtarget)
+				f(tabname, _id, newtarget)
 			end
 		end
 	else
 		if _target then
-			f(tabname[_id], _target)
+			f(tabname, _id, _target)
 			Logic.GroupAttack(_id, _target)
 		end
 	end
@@ -581,7 +584,7 @@ end
 ---@param _multiTrain boolean? allows or forbids the player to recruit leader in multiple military buildings of the same type simultanously (optional, default: true)
 ---@param _defenseRange number? defines maximum attack range during army peace time and used for defense armies (optional, default: max range * 2/3)
 ---@param _attackPosition table? army will start searching enemies near this position instead of army position (optional)
-MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime, _multiTrain, _defenseRange, _attackPosition)
+MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position, _aggressiveLevel, _peaceTime, _multiTrain, _defenseRange, _attackPosition, _baitDetection)
 
 	-- Valid
 	if 	_strength == 0 or _strength > 3 or
@@ -598,27 +601,6 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	-- check for buildings
 	if Logic.GetPlayerEntitiesInArea(_playerId, 0, position.X, position.Y, 0, 1, 8) == 0 then
 		return
-	end
-
-	local CannonEntityType1, CannonEntityType2
-	-- Tech level
-	if _techlevel <= 2 then
-		CannonEntityType1 = Entities.PV_Cannon1
-		CannonEntityType2 = Entities.PV_Cannon2
-	elseif _techlevel == 3 then
-		CannonEntityType1 = Entities.PV_Cannon3
-		CannonEntityType2 = Entities.PV_Cannon4
-	end
-	-- Upgrade entities
-	for i=1,_techlevel do
-		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderBow, _playerId)
-		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderSword, _playerId)
-		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderPoleArm, _playerId)
-	end
-	if _techlevel == 3 then
-		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderCavalry, _playerId)
-		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderHeavyCavalry, _playerId)
-		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderRifle, _playerId)
 	end
 
 	-- army
@@ -670,12 +652,13 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 			techLVL = _techlevel,
 			aggressiveLVL =	_aggressiveLevel,
 			ForbiddenTypes = {},
-			offensiveArmies = {strength	= _strength * 15,
+			offensiveArmies = {strength	= 5 + _strength * 10,
 								position = position,
 								enemySearchPosition = _attackPosition,
 								rodeLength = _range,
 								baseDefenseRange = _defenseRange or (_range*2)/3,
 								AttackAllowed =	false,
+								baitDetection = _baitDetection or false,
 								IDs	= {}
 								},
 			defensiveArmies = {strength	= _strength * 3,
@@ -684,6 +667,27 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 								IDs	= {}
 								}
 		}
+	end
+
+	-- ulan only on tech lvl 3
+	if _techlevel < 3 then
+		table.insert(MapEditor_Armies[_playerId].ForbiddenTypes, UpgradeCategories.LeaderUlan)
+	end
+	-- rifle only on tech lvl 1 and above
+	if _techlevel < 1 then
+		table.insert(MapEditor_Armies[_playerId].ForbiddenTypes, UpgradeCategories.LeaderRifle)
+	end
+
+	-- Upgrade entities
+	for i=1,_techlevel do
+		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderBow, _playerId)
+		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderSword, _playerId)
+		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderPoleArm, _playerId)
+	end
+	if _techlevel == 3 then
+		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderCavalry, _playerId)
+		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderHeavyCavalry, _playerId)
+		Logic.UpgradeSettlerCategory(UpgradeCategories.LeaderRifle, _playerId)
 	end
 
 	SetupPlayerAi(_playerId, MapEditor_Armies[_playerId].description)
@@ -700,6 +704,29 @@ MapEditor_SetupAI = function(_playerId, _strength, _range, _techlevel, _position
 	end
 	if not AIchunks[_playerId] then
 		AI_InitChunks(_playerId)
+	end
+	if _baitDetection then
+		if not TRACK_AI_MOVEMENTS then
+			TRACK_AI_MOVEMENTS = TRACK_AI_MOVEMENTS or {}
+			function GameCallback_EntityMoved(_id, _x, _y, _x2, _y2, _distance)
+				if IsMilitaryLeader(_id) then
+					for i = 1, table.getn(TRACK_AI_MOVEMENTS) do
+						local player = TRACK_AI_MOVEMENTS[i]
+						if Logic.EntityGetPlayer(_id) == player and table_findvalue(MapEditor_Armies[player].offensiveArmies.IDs, _id) ~= 0 then
+							local range = GetEntityTypeMaxAttackRange(_id, player)
+							local dist = GetNearestEnemyDistance(player, {X = _x2, Y = _y2}, range + 500)
+							if dist and dist >= range * 2/3 then
+								local t = MapEditor_Armies[player].offensiveArmies.IDs[_id]
+								t.DistanceMoved = (t.DistanceMoved or 0) + _distance
+							end
+						end
+					end
+				end
+			end
+		end
+		if not TRACK_AI_MOVEMENTS[_playerId] then
+			table.insert(TRACK_AI_MOVEMENTS, _playerId)
+		end
 	end
 end
 StartMapEditor_ArmyAttack = function(_playerId, _delay)
