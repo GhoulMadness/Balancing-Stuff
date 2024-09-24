@@ -1561,20 +1561,16 @@ end
 ---@return boolean
 IsVeryWeak = function(_army)
 
-	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
-		return (table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / 3)
-		or GetNumberOfSoldiersAttachedToArmy(_army.player, _army.id) < (GetMaxNumberOfSoldiersAttachedToArmy(_army.player, _army.id) / 5))
-	else
-		return AI.Army_GetNumberOfTroops(_army.player,_army.id) < (_army.strength / 3)
-	end
+	return IsBelowTreshold(_army, 3, 5)
 end
 
--- Comfort to evaluate if given army is below a third of full strength
+-- Comfort to evaluate if given army is below a certain treshold
 ---@param _army table armyTable
 ---@param _leaderratio number if army strength is below max army strength divided by this value, it is considered as weak
 ---@param _soldierratio number if army soldier amount is below max army soldier amount divided by this value, it is considered as weak
 ---@return boolean
 IsBelowTreshold = function(_army, _leaderratio, _soldierratio)
+
 	if ArmyTable and ArmyTable[_army.player] and ArmyTable[_army.player][_army.id + 1] then
 		return (table.getn(ArmyTable[_army.player][_army.id + 1].IDs) < (_army.strength / _leaderratio)
 		or GetNumberOfSoldiersAttachedToArmy(_army.player, _army.id) < (GetMaxNumberOfSoldiersAttachedToArmy(_army.player, _army.id) / _soldierratio))
