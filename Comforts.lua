@@ -1843,6 +1843,7 @@ function HideGUI()
 
 	Game.GUIActivate(0)
 	Display.SetRenderDecalsSelections(0)
+	Mouse.CursorHide()
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "ShowGUI()", 2 )
 
 end
@@ -1852,6 +1853,7 @@ function ShowGUI()
 
 	Game.GUIActivate(1)
 	Display.SetRenderDecalsSelections(1)
+	Mouse.CursorShow()
 	Input.KeyBindDown(Keys.ModifierAlt + Keys.G, "HideGUI()", 2 )
 
 end
@@ -3209,6 +3211,34 @@ function GetEntityBattleWaitUntilRemaining(_id)
 	local beh = CUtil.GetBehaviour(_id, tonumber("7761E0", 16))
 	local num = CUtilMemory.GetMemory(tonumber(beh,16))[21]:GetInt()
 	return num
+end
+
+-- gets entityID Stamina remaining
+---@param _id integer entityID (must be a worker)
+---@return integer Stamina remaining
+function GetStamina(_id)
+	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Worker) == 1, "entityID must be a worker")
+	return CEntity.GetCurrentStamina(_id)
+end
+
+-- sets entityID Stamina remaining
+---@param _id integer entityID (must be a worker)
+---@param _val integer Stamina remaining
+function SetStamina(_id, _val)
+	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Worker) == 1, "entityID must be a worker")
+	assert(type(_val) == "number" and _val > 0, "stamina value must be a non-negative number")
+	--GGL_CWorkerBehavior
+	local beh = CUtil.GetBehaviour(_id, tonumber("772B30", 16))
+	local stam = CUtilMemory.GetMemory(tonumber(beh,16))[4]:SetInt(_val)
+end
+
+-- adds value to entityIDs Stamina remaining
+---@param _id integer entityID (must be a worker)
+---@param _val integer Stamina to be added
+function AddStamina(_id, _val)
+	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Worker) == 1, "entityID must be a worker")
+	assert(type(_val) == "number", "stamina value must be a number")
+	SetStamina(_id, math.max(0, GetStamina(_id) + _val))
 end
 
 -- gets ability convert settler target (e.g. Helias)

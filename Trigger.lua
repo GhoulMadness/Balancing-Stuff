@@ -300,12 +300,13 @@ function Hero9_Died(_heroID)
 		if damage >= health then
 
 			local player = Logic.EntityGetPlayer(_heroID)
-
-			for i = 1, table.getn(gvHero9.WolfIDs[player]) do
-				SetHealth(gvHero9.WolfIDs[player][i], 0)
+			if gvHero9.WolfIDs and gvHero9.WolfIDs[player] then
+				for i = 1, table.getn(gvHero9.WolfIDs[player]) do
+					SetHealth(gvHero9.WolfIDs[player][i], 0)
+				end
+				gvHero9.WolfIDs[player] = nil
 			end
 
-			gvHero9.WolfIDs[player] = nil
 			return true
 
 		end
@@ -552,8 +553,15 @@ function SpezEntityPlaced()
 		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnCoalmine_Destroyed", 1,{},{entityID})
 	end
 
-end
+	if entityType == Entities.PB_Beautification_Anniversary20 then
+		gvAnnivStatue20[playerID].Amount = gvAnnivStatue20[playerID].Amount + 1
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "OnAnnivStatue_Destroyed", 1,{},{entityID})
+	end
 
+end
+----------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------ Dome Trigger --------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
 function DomeFallen()
 
     local entityID = Event.GetEntityID()

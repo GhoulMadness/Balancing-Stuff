@@ -328,8 +328,18 @@ if CNetwork then
 				end
 				-- has player really completed the challenge maps properly?
 				if trooptable[Entities.PU_Hero14] > 0 then
-					if not ArmyCreator.CheckForAchievement(_playerID) then
+					if not ArmyCreator.CheckForAchievement(_playerID, "BS_ArmyCreator_Hero14") then
 						trooptable[Entities.PU_Hero14] = 0
+					end
+				end
+				if trooptable[Entities.PV_Cannon5] > 0 then
+					if not ArmyCreator.CheckForAchievement(_playerID, "BS_ArmyCreator_Cannon_T5") then
+						trooptable[Entities.PV_Cannon5] = 0
+					end
+				end
+				if trooptable[Entities.PV_Cannon6] > 0 then
+					if not ArmyCreator.CheckForAchievement(_playerID, "BS_ArmyCreator_Cannon_T6") then
+						trooptable[Entities.PV_Cannon6] = 0
 					end
 				end
 				ArmyCreator.ReadyForTroopCreation(_playerID, trooptable)

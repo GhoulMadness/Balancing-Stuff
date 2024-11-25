@@ -307,6 +307,24 @@ Retreat = function(_army, _rodeLength)
 	end
 end
 
+RetreatLeaderToArmyAnchor = function(_id, _army)
+
+	local pos = _army.position
+	local groupAttackRange = 2000
+	local id = _id
+	local dist = GetDistance(GetPosition(id), pos)
+	if dist > 1500 then
+		local anchor = ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
+		if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE"
+		or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE"
+		and dist < _army.rodeLength - groupAttackRange then
+			Logic.GroupAttackMove(id, anchor.X, anchor.Y, math.random(360))
+		else
+			Logic.MoveSettler(id, anchor.X, anchor.Y)
+		end
+	end
+end
+
 -- spawn army's home spots are re-calculated to a given position
 ---@param _army table army table
 ---@param _position table position table
@@ -423,7 +441,7 @@ AITroopSpawnGenerator_Action = function(_player, _id)
 	-- Get missing army count
 	local missingTroops = army.strength
 	if army.IDs then
-		 missingTroops = army.strength - (table.getn(army.IDs) or 0)
+		missingTroops = army.strength - (table.getn(army.IDs) or 0)
 	end
 
 	-- Is max spawn amount set
@@ -506,7 +524,12 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 			end
 		end
 		if _tab.baitDetection then
-
+			if _target then
+				local dist = GetDistance(_target, _id)
+				if dist > _tab.rodeLength then
+					_tab[_id].TriggerIDs.baitDetectionTrigger = Trigger.RequestTrigger( Events.LOGIC_EVENT_EVERY_SECOND, nil, "ControlLeaderStillBaitedJob", 1, nil, {_id, _target, _armyId, _type})
+				end
+			end
 		end
 	end
 
@@ -569,6 +592,27 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 			f(tabname, _id, _target)
 			Logic.GroupAttack(_id, _target)
 		end
+	end
+end
+function ControlLeaderStillBaitedJob(_id, _target, _armyId, _type)
+	local tab, range
+	if not _armyId then
+		tab = MapEditor_Armies[_player][_type]
+		range = tabname.baseDefenseRange
+	else
+		tab = ArmyTable[_player][_armyId]
+		range = tabname.rodeLength
+	end
+	tab[_id].baitedTimer = tab[_id].baitedTimer or 0
+	if GetDistance(_id, _target) < math.min(range, GetEntityTypeMaxAttackRange(Logic.GetEntityType(_id))) then
+		tab[_id].baitedTimer = nil
+		return true
+	else
+		tab[_id].baitedTimer = tab[_id].baitedTimer + 1
+	end
+	if tab[_id].baitedTimer >= tab.baitDetectionMaxTreshold then
+		-- TODO: something better to do than retreating?
+		RetreatLeaderToArmyAnchor(_id, tab)
 	end
 end
 --------------------------------------------------------------------------------------
