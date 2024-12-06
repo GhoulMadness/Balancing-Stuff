@@ -224,6 +224,11 @@ function GameCallback_OnBuildingConstructionComplete(_BuildingID, _PlayerID)
 
 	elseif eType == Entities.PB_VictoryStatue9 then
 		gvVStatue9.Amount[_PlayerID] = gvVStatue9.Amount[_PlayerID] + 1
+
+	elseif eType == Entities.PB_Beautification_Anniversary20 then
+		local pos = {Logic.GetEntityPosition(_BuildingID)}
+		Logic.CreateEffect(GGL_Effects.FXAnni20Fireworks, pos[1], pos[2])
+		gvAnnivStatue20[_PlayerID].TriggerID = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "AnnivStatue_Actions", 1,{},{_BuildingID, _PlayerID, pos[1], pos[2]})
 	end
 end
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -404,6 +409,9 @@ function GameCallback_GUI_SelectionChanged()
 
 				XGUIEng.ShowWidget(gvGUI_WidgetID.ActivateOvertimes,0)
 				XGUIEng.ShowWidget(gvGUI_WidgetID.QuitOvertimes,0)
+			--Is EntityType the anniversary statue 20?
+			elseif 	UpgradeCategory == UpgradeCategories.Beautification_Anniversary20 then
+				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Beauti_Anniv20"),1)
 			end
 			--Update Upgrade Buttons
 			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory, ButtonStem)
@@ -778,6 +786,10 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	elseif _eType == Entities.PB_VictoryStatue9 then
 
 		return allowed and (gvVStatue9.AmountConstructed[player] < gvVStatue9.Limit) and IsExplored
+
+	elseif _eType == Entities.PB_Beautification_Anniversary20 then
+
+		return allowed and (gvAnnivStatue20[player].Amount < 1) and IsExplored
 
 	else
 

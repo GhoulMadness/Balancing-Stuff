@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.765
+BS.Version = 0.766
 
 BS.SpectatorPID = 17
 
@@ -292,7 +292,7 @@ BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 											[2] = "challenge_map8_won",
 											[3] = "challenge_map9_won"
 											},
-						["BS_ArmyCreator_Cannon_T5"] = { 	[1] = "challenge_map7_won",
+						["BS_ArmyCreator_Cannon_T5"] = {[1] = "challenge_map7_won",
 														[2] = "challenge_map8_won",
 														[3] = "challenge_map9_won"
 														},
@@ -306,7 +306,7 @@ BS.AchievementNames = {	["Build_VictoryStatue1"] = "challenge_map1_won",
 											[8] = "challenge_map8_won",
 											[9] = "challenge_map9_won"
 											},
-						["BS_ArmyCreator_Cannon_T6"] = {	[1] = "challenge_map1_won",
+						["BS_ArmyCreator_Cannon_T6"] = {[1] = "challenge_map1_won",
 														[2] = "challenge_map2_won",
 														[3] = "challenge_map3_won",
 														[4] = "challenge_map4_won",
@@ -461,6 +461,7 @@ do
 		"HeroTarget",
 		"AI_heroAbilities",
 		"VictoryStatues",
+		"AnnivStatue20",
 		"WCutter",
 		"Forester",
 		"Coal",

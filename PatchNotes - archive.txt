@@ -1028,3 +1028,46 @@ Es wurde ein Fehler im Zusammenhang mit dem Helden-Targetting der KI behoben (Di
 Förster und Holzfäller können nun auch aus alten Dorfhallen erscheinen.
 
 Gebäude können nun nicht mehr in direkter Nähe feindlicher Militäreinheiten gebaut werden.
+
+--- Version 0.761
+
+Mit dieser Version wurden eine Vielzahl visueller Verbesserungen vorgenommen sowie einige Fehler behoben:
+
+Erebos: Glanzeffekte verbessert und fehlende mipmaps hinzugefügt (dies verbessert das Verhalten beim Rauszoomen)
+
+Folgenden Gebäuden wurden fehlende binäre meshes hinzugefügt (dies verbessert die Performance beim ersten Laden des Modells)
+	Statue der Täuschung
+	Statue der Verbotenen
+	Statue des Kriegsherrn
+	Statue der Weisheit
+
+Die Texturen folgender Gebäude wurden überarbeitet:
+	Statue der Verbotenen
+	Siegerstatue Osterturnier 2024
+
+Vertexfarben werden nun auch im Winter angezeigt.
+
+Das 3D-Modell folgender Gebäude wurde überarbeitet:
+	Golderzgrube
+	Golderzstollen
+	Golderzbergwerk
+	Silbergrube
+	Silberstollen
+	Silberbergwerk
+
+Für die folgenden Gebäude wurden Animationen erstellt:
+	Kohlemine
+	Kohlebergwerk
+	Golderzgrube
+	Golderzstollen
+	Golderzbergwerk
+	Silbergrube
+	Silberstollen
+	Silberbergwerk
+
+Die Arbeitszyklen der Arbeiter dieser Gebäude wurden entsprechend aktualisiert.
+
+Es wurde ein Fehler behoben, durch den der Spieler zu viele Kampfpunkte erhielt, wenn Einheiten von Kalas oder Marys Schaden-über-Zeit-Effekt betroffen waren.
+
+Waren noch Leibeigene zur Rekrutierung in einer Burg/ einem Außenposten/Landsitz eingereiht, als dieser zerstört wurde, erschienen die Leibeigenen mit üblicher Verzögerung unsichtbar vor dem Gebäude.
+Es wurde ein weiterer Check eingebaut und sollte die Burg/ der Außenposten/Landsitz bereits zerstört sein, werden die Leibeigenen entfernt.

@@ -121,14 +121,25 @@ ArmyCreator.CheckForPointsLimitExceeded = function(_trooptable)
 		end
 	end
 end
-ArmyCreator.CheckForAchievement = function(_playerID)
+ArmyCreator.CheckForAchievement = function(_playerID, _entry)
 	local allowed
-	for k,v in pairs(BS.AchievementWhitelist[i]) do
-		if v == XNetwork.GameInformation_GetLogicPlayerUserName(_playerID) then
-			allowed = true
+	local mapindex = {}
+	local neededKey = BS.AchievementNames[_entry]
+	for i = 1, table.getn(neededKey) do
+		table.insert(mapindex, tonumber(string.sub(neededKey[i], 14, 14)))
+	end
+	for i = 1, table.getn(mapindex) do
+		allowed = false
+		for j = 1, table.getn(BS.AchievementWhitelist[mapindex[i]]) do
+			if BS.AchievementWhitelist[mapindex[i]][j] == XNetwork.GameInformation_GetLogicPlayerUserName(_playerID) then
+				allowed = true
+			end
+		end
+		if not allowed then
+			return false
 		end
 	end
-	return allowed
+	return true
 end
 ArmyCreator.ReadyForTroopCreation = function(_playerID, _trooptable)
 
