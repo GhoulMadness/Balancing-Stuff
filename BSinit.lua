@@ -253,6 +253,12 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 end
 
 function BS.CheckForDateRestrictions(_datestring)
+	local month = tonumber(string.sub(_datestring, 6, 7))
+	local day = tonumber(string.sub(_datestring, 9, 10))
+	if (month == 12 and day >= 20) or (month == 1 and day <= 31) then
+		local sizeX, sizeY = Logic.WorldGetSize()
+		Logic.CreateEffect(GGL_Effects.FXSnow, sizeX/2, sizeY/2)
+	end
 	if BS.DateRestrictions.MapName[Framework.GetCurrentMapName()] ~= nil then
 		for k,v in pairs(BS.DateRestrictions.MapName[Framework.GetCurrentMapName()]) do
 			if string.find(_datestring, v, 0, string.len(v)) ~= nil then
