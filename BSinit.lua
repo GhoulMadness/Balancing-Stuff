@@ -253,6 +253,23 @@ for _, map in pairs(BS.DateRestrictions.MapName) do
 end
 
 function BS.CheckForDateRestrictions(_datestring)
+	local month = tonumber(string.sub(_datestring, 6, 7))
+	local day = tonumber(string.sub(_datestring, 9, 10))
+	if (month == 12 and day >= 20) or (month == 1 and day <= 31) then
+		--local sizeX, sizeY = Logic.WorldGetSize()
+		-- if casted on valid position, not global but only a range of ~3000
+		-- requires vision on position to be globally seen
+		Logic.CreateEffect(GGL_Effects.FXSnow, 0, 0)
+		local maxplayers = 1
+		if CNetwork then
+			maxplayers = 17
+		end
+		for player = 1,maxplayers do
+			Logic.SetEntityExplorationRange(Logic.CreateEntity(Entities.XD_ScriptEntity, 0, 0+(player/100), 0, player), 1)
+		end
+		-- trigger for xmas tower upgrades
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "XMasTowerUpgraded", 1)
+	end
 	if BS.DateRestrictions.MapName[Framework.GetCurrentMapName()] ~= nil then
 		for k,v in pairs(BS.DateRestrictions.MapName[Framework.GetCurrentMapName()]) do
 			if string.find(_datestring, v, 0, string.len(v)) ~= nil then

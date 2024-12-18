@@ -1045,3 +1045,36 @@ function CheckForCommandAbortedJob(_id, _command, ...)
 		return true
 	end
 end
+
+-- XMas Tower Trigger
+function XMasTowerUpgraded()
+
+	local entityID = Event.GetEntityID()
+    local entityType = Logic.GetEntityType(entityID)
+
+	if entityType == Entities.PB_Tower2_Ballista then
+		local posX, posY = Logic.GetEntityPosition(entityID)
+		local tower = Logic.GetEntityAtPosition(posX, posY)
+		if Logic.GetFoundationTop(tower) ~= entityID then
+			local id = Logic.CreateEntity(Entities.PB_Tower2_Ballista, posX, posY, 0, Logic.EntityGetPlayer(entityID))
+			Logic.SuspendEntity(id)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "XMasTowerUpgradeComplete", 1, {}, {tower, id})
+		end
+	end
+end
+function XMasTowerUpgradeComplete(_tower, _ballista)
+
+	local entityID = Event.GetEntityID()
+    if entityID == _tower then
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "XMasTowerDelayedBallistaDestroy", 1, {}, {_ballista})
+		return true
+	end
+end
+function XMasTowerDelayedBallistaDestroy(_ballista)
+	if Logic.IsEntityDestroyed(_ballista) then
+		return true
+	end
+	Logic.ResumeEntity(_ballista)
+	Logic.DestroyEntity(_ballista)
+	return true
+end
