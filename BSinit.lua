@@ -267,6 +267,8 @@ function BS.CheckForDateRestrictions(_datestring)
 		for player = 1,maxplayers do
 			Logic.SetEntityExplorationRange(Logic.CreateEntity(Entities.XD_ScriptEntity, 0, 0+(player/100), 0, player), 1)
 		end
+		-- trigger for xmas tower upgrades
+		Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "XMasTowerUpgraded", 1)
 	end
 	if BS.DateRestrictions.MapName[Framework.GetCurrentMapName()] ~= nil then
 		for k,v in pairs(BS.DateRestrictions.MapName[Framework.GetCurrentMapName()]) do
