@@ -262,7 +262,7 @@ function BS.CheckForDateRestrictions(_datestring)
 		Logic.CreateEffect(GGL_Effects.FXSnow, 0, 0)
 		local maxplayers = 1
 		if CNetwork then
-			maxplayers = 17
+			maxplayers = 16
 		end
 		for player = 1,maxplayers do
 			Logic.SetEntityExplorationRange(Logic.CreateEntity(Entities.XD_ScriptEntity, 0, 0+(player/100), 0, player), 1)

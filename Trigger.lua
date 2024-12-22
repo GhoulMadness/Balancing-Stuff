@@ -1054,11 +1054,15 @@ function XMasTowerUpgraded()
 
 	if entityType == Entities.PB_Tower2_Ballista then
 		local posX, posY = Logic.GetEntityPosition(entityID)
-		local tower = Logic.GetEntityAtPosition(posX, posY)
-		if Logic.GetFoundationTop(tower) ~= entityID then
-			local id = Logic.CreateEntity(Entities.PB_Tower2_Ballista, posX, posY, 0, Logic.EntityGetPlayer(entityID))
-			Logic.SuspendEntity(id)
-			Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "XMasTowerUpgradeComplete", 1, {}, {tower, id})
+		local tower = ({Logic.GetEntitiesInArea(Entities.PB_Tower2, posX, posY, 1, 1)})[2]
+		if tower then
+			if Logic.GetFoundationTop(tower) ~= entityID then
+				if GetEntityHealth(tower) > 0 then
+					local id = Logic.CreateEntity(Entities.PB_Tower2_Ballista, posX, posY, 0, Logic.EntityGetPlayer(entityID))
+					Logic.SuspendEntity(id)
+					Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "XMasTowerUpgradeComplete", 1, {}, {tower, id})
+				end
+			end
 		end
 	end
 end
