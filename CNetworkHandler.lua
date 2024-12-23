@@ -337,9 +337,9 @@ if CNetwork then
 						trooptable[Entities.PV_Cannon5] = 0
 					end
 				end
-				if trooptable[Entities.PV_Cannon6] > 0 then
+				if trooptable[Entities.PV_Cannon6_2] > 0 then
 					if not ArmyCreator.CheckForAchievement(_playerID, "BS_ArmyCreator_Cannon_T6") then
-						trooptable[Entities.PV_Cannon6] = 0
+						trooptable[Entities.PV_Cannon6_2] = 0
 					end
 				end
 				ArmyCreator.ReadyForTroopCreation(_playerID, trooptable)
