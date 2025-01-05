@@ -554,6 +554,26 @@ function GUIUpdate_Hero6Ability(_Ability)
 	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
 
 end
+function GUIUpdate_Hero9Ability(_Ability)
+
+	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()
+	local ProgressBarWidget = gvHero9.GetRechargeButtonByAbilityName(_Ability)
+	local HeroID = GUI.GetSelectedEntity()
+	local TimePassed = math.floor(Logic.GetTime()- gvHero9.LastTimeUsed[_Ability])
+	local cooldown = gvHero9.Cooldown[_Ability]
+
+	if TimePassed < cooldown then
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.RechargeButton.r, BS.DefaultColorValues.RechargeButton.g, BS.DefaultColorValues.RechargeButton.b, BS.DefaultColorValues.RechargeButton.a)
+		XGUIEng.HighLightButton(CurrentWidgetID,0)
+		XGUIEng.DisableButton(CurrentWidgetID,1)
+	else
+		XGUIEng.SetMaterialColor(ProgressBarWidget, 1, BS.DefaultColorValues.Space.r, BS.DefaultColorValues.Space.g, BS.DefaultColorValues.Space.b, BS.DefaultColorValues.Space.a)
+		XGUIEng.DisableButton(CurrentWidgetID,0)
+	end
+
+	XGUIEng.SetProgressBarValues(ProgressBarWidget,TimePassed, cooldown)
+
+end
 function GUIUpdate_Hero13Ability(_Ability)
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()

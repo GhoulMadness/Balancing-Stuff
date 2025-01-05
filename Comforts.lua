@@ -993,7 +993,9 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 	for i = 1,i do
 		if Logic.GetDiplomacyState( _player, i) == _state then
 			bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
-			return bool
+			if bool then
+				return true
+			end
 
 		end
 	end
@@ -1112,8 +1114,10 @@ end
 function ArePlayerBuildingsInArea(_player, _x, _y, _range)
 	local count = 0
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(_x, _y, _range)) do
-		count = count + 1
-		break
+		if Logic.IsConstructionComplete(eID) == 1 then
+			count = count + 1
+			break
+		end
 	end
 	return count > 0
 end
@@ -1862,8 +1866,8 @@ end
 -- Comfort to start an delayed action
 ---@param _Limit integer TimeLimit for the countdown, when reaching zero, callback function is called
 ---@param _Callback function Callback function when counter reaches zero
----@param _Show? boolean Should the remaining time be displayed? Only 1 timer at the same time possible
----@param _Name? string optional parameter to display the function name at a message when countdown can't be shown
+---@param _Show boolean? Should the remaining time be displayed? Only 1 timer at the same time possible
+---@param _Name string? optional parameter to display the function name at a message when countdown can't be shown
 ---@param ... any? parameters for the Callback function
 ---@return integer Index of the Counter
 StartCountdown = function (_Limit, _Callback, _Show, _Name, ...)
@@ -2033,11 +2037,12 @@ function IsPositionExplored(_pID, _x, _y, _range)
 
 end
 
--- returns the start positions (HQ) of the current player as a table
+-- returns the start positions (HQ) of the given or current player as a table
+---@param _player integer? playerID (Optional)
 ---@return table positionTable of current player's first HQ found
-function GetPlayerStartPosition()
+function GetPlayerStartPosition(_player)
 
-	local playerID = GUI.GetPlayerID()
+	local playerID = _player or GUI.GetPlayerID()
 	if playerID == BS.SpectatorPID then
 		playerID = 1
 	end
@@ -3283,6 +3288,25 @@ function GetEntityTargetByAIData(_id)
 		end
 	end
 end
+
+function TeleportSettler(_id, _posX, _posY)
+	assert(IsValid(_id) and Logic.IsSettler(_id) == 1, "invalid entityID")
+	--[[ set current position
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[22]:SetFloat(_posX)
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[23]:SetFloat(_posY)
+	-- set target position
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[66]:SetFloat(_posX)
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[67]:SetFloat(_posY)]]
+	CUtil.EntitySetPosition(_id, _posX, _posY)
+	if not Logic.IsEntityAlive(_id) then
+		--GGL_CLeaderMovement; set "last turn pos" to port pos
+		local beh = tonumber(CUtil.GetBehaviour(_id, tonumber("775ED4", 16)), 16)
+		CUtilMemory.GetMemory(beh)[12]:SetFloat(_posX)
+		CUtilMemory.GetMemory(beh)[13]:SetFloat(_posY)
+		--Logic.SuspendEntity(_id)
+		--Logic.ResumeEntity(_id)
+	end
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- statistics -----------------------------------------------------------------------------
 -- gets player kill statistics (0: settlers killed, 1: settlers lost, 2: buildings destroyed, 3: buildings lost)
@@ -3866,7 +3890,11 @@ BS.GetTableStrByHeroType = function(_type)
 
 	local typename = Logic.GetEntityTypeName(_type)
 	local s, e = string.find(typename, "Hero")
-	return string.sub(typename, s)
+	if s then
+		return string.sub(typename, s)
+	else
+		return "Hero9"
+	end
 end
 gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Headquarters2] = true,

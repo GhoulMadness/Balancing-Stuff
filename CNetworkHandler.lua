@@ -202,6 +202,33 @@ if CNetwork then
 
 	)
 
+	CNetwork.SetNetworkHandler("Ghoul_Hero9Plunder",
+		function(name,_playerID,_heroID)
+			if Logic.GetEntityType(_heroID) ~= Entities.CU_Barbarian_Hero then
+				return
+			end
+			if CNetwork.IsAllowedToManipulatePlayer(name,_playerID) then
+
+				CLogger.Log("Ghoul_Hero9Plunder", name, _playerID, _heroID)
+				-- Cooldown handling
+				gvHero9.Plunder.NextCooldown = gvHero9.Plunder.NextCooldown or {}
+				local starttime = Logic.GetTime()
+
+				if gvHero9.Plunder.NextCooldown[_playerID] then
+					if gvHero9.Plunder.NextCooldown[_playerID] > starttime then
+						return
+					end
+				end
+				-- update cooldown.
+				gvHero9.Plunder.NextCooldown[_playerID] = Logic.GetTime() + (gvHero9.AbilityProperties.Cooldown.Plunder)
+				-- execute stuff
+				GUIAction_Hero9PlunderAction(_heroID, _playerID, starttime)
+			end
+
+		end
+
+	)
+
 	CNetwork.SetNetworkHandler("Ghoul_Hero13StoneArmor",
 		function(name,_playerID,_heroID)
 			if Logic.GetEntityType(_heroID) ~= Entities.PU_Hero13 then
@@ -337,9 +364,9 @@ if CNetwork then
 						trooptable[Entities.PV_Cannon5] = 0
 					end
 				end
-				if trooptable[Entities.PV_Cannon6] > 0 then
+				if trooptable[Entities.PV_Cannon6_2] > 0 then
 					if not ArmyCreator.CheckForAchievement(_playerID, "BS_ArmyCreator_Cannon_T6") then
-						trooptable[Entities.PV_Cannon6] = 0
+						trooptable[Entities.PV_Cannon6_2] = 0
 					end
 				end
 				ArmyCreator.ReadyForTroopCreation(_playerID, trooptable)

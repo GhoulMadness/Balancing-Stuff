@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.766
+BS.Version = 0.767
 
 BS.SpectatorPID = 17
 
@@ -262,7 +262,7 @@ function BS.CheckForDateRestrictions(_datestring)
 		Logic.CreateEffect(GGL_Effects.FXSnow, 0, 0)
 		local maxplayers = 1
 		if CNetwork then
-			maxplayers = 17
+			maxplayers = 16
 		end
 		for player = 1,maxplayers do
 			Logic.SetEntityExplorationRange(Logic.CreateEntity(Entities.XD_ScriptEntity, 0, 0+(player/100), 0, player), 1)
@@ -379,8 +379,12 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 									"a8wh4t",
 									"ThePhoenix_2000",
 									"Novator12", "Novator12Slave",
-									"Vqrys"},
-							[8] = {},
+									"Vqrys",
+									"CAS-G_Mathias", "Mathias", "G4F_Mathias",
+									"Roma_Invicta", "CAS_G Roma"},
+							[8] = {"ThePhoenix_2000",
+									"Vqrys",
+									"Novator12", "Novator12Slave"},
 							[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 									"Novator12", "Novator12Slave",
 									"ThePhoenix_2000",
@@ -556,6 +560,8 @@ Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnHeliasCreated",
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAriTroopCreated", 1)
 --Trigger for erebos movement effects
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnErebos_Created", 1)
+--Trigger for dovbar divine judjement
+Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnDovbar_Created", 1)
 --Trigger for catapult stones effects
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "CatapultStoneHitEffects", 1)
 --Trigger for hero death

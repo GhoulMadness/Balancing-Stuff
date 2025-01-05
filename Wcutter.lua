@@ -121,6 +121,49 @@ WCutter.TriggerIDs = {	WorkControl = {	Start = {},
 					}
 WCutter.WoodEarned = {}
 WCutter.TargettedTrees = {}
+-- table filled with terrain types wcutter should not find trees on (e.g. mountains)
+WCutter.TerrainTypeBlacklist = {[12] = true,
+								[15] = true,
+								[27] = true,
+								[28] = true,
+								[29] = true,
+								[30] = true,
+								[31] = true,
+								[107] = true,
+								[108] = true,
+								[120] = true,
+								[133] = true,
+								[134] = true,
+								[148] = true,
+								[149] = true,
+								[150] = true,
+								[151] = true,
+								[157] = true,
+								[158] = true,
+								[163] = true,
+								[165] = true,
+								[166] = true,
+								[167] = true,
+								[168] = true,
+								[169] = true,
+								[212] = true,
+								[213] = true,
+								[215] = true,
+								[216] = true,
+								[217] = true,
+								[218] = true,
+								[219] = true,
+								[220] = true,
+								[221] = true,
+								[222] = true,
+								[74] = true,
+								[80] = true,
+								[265] = true,
+								[266] = true,
+								[267] = true,
+								[268] = true,
+								[269] = true,
+								[270] = true}
 WCutter.GetWorkerIDByBuildingID = function(_id)
 	return WCutter.BuildingBelongingWorker[_id]
 end
@@ -216,10 +259,13 @@ WCutter.FindNearestTree = function(_id)
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyTypeFilter(unpack(WCutter.TreeTypes)), CEntityIterator.InCircleFilter(x, y, WCutter.MaxRange)) do
 		if not Logic.GetEntityName(eID) and not WCutter.TargettedTrees[eID] then
 			local x_, y_ = Logic.GetEntityPosition(eID)
-			local sector2 = EvaluateNearestUnblockedSector(x_, y_, 300, 100)
-			if sector == sector2 then
-				if CUtil.GetTerrainNodeHeight(x_/100, y_/100) > CUtil.GetWaterHeight(x_/100, y_/100) then
-					table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
+			local terrtype = CUtil.GetTerrainNodeType(x_/100, y_/100)
+			if not WCutter.TerrainTypeBlacklist[terrtype] then
+				local sector2 = EvaluateNearestUnblockedSector(x_, y_, 300, 100)
+				if sector == sector2 then
+					if CUtil.GetTerrainNodeHeight(x_/100, y_/100) > CUtil.GetWaterHeight(x_/100, y_/100) then
+						table.insert(distancetable, {id = eID, dist = GetDistance({X = x, Y = y}, GetPosition(eID))})
+					end
 				end
 			end
 		end
@@ -344,7 +390,7 @@ WCutter_ArrivedAtTreeCheck = function(_id, _treeid, _buildingID)
 		return true
 	end
 	local range = GetEntityTypeNumBlockedPoints(Logic.GetEntityType(_treeid)) * 100
-	if IsNear(_id, _treeid, math.max(range + WCutter.ApproachRangeBonus, 350)) then
+	if IsNear(_id, _treeid, math.max(range + WCutter.ApproachRangeBonus, 400)) then
 		Logic.SetTaskList(_id, TaskLists.TL_NPC_IDLE)
 		Logic.EntityLookAt(_id, _treeid)
 		WCutter.TriggerIDs.WorkControl.Cut[_id] = nil
