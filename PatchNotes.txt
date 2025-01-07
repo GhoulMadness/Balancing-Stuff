@@ -14,6 +14,8 @@ Das Wintermodell der Schatztruhen ist nun größer.
 
 Es wurde eine Winter-Version des Modells von geöffneten Schatztruhen hinzugefügt.
 
+Ulan und ein Großteil der Winterversionen von Einheiten sind nun leichter selektier- und anvisierbar.
+
 Schadenswert Arbalestenschütze: 17 -> 16
 
 Schadenswert Mary de Mortfichet: 28 -> 29
