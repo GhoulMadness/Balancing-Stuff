@@ -20,6 +20,10 @@ Schadenswert Arbalestenschütze: 17 -> 16
 
 Schadenswert Mary de Mortfichet: 28 -> 29
 
+Schadenswert Drake: 27 -> 29
+Drake zufälliger Schadensbonus: +7 -> +9
+Drake Verzögerung Meisterschuss: 3,4 Sekunden -> 2,6 Sekunden
+
 Dovbar verfügt nun über eine weitere Fähigkeit, die passive Boni bietet.
 Vorsehung: Wurde Götterdämmerung längere Zeit nicht verwendet, steigen Schaden und Reichweite der nächsten Götterdämmerung kontinuierlich an. Wird hierbei eine Steigerung von über 100% erreicht, erhält die nächste Götterdämmerung folgende Boni: Dovbar gelangt vor Eure Burg, sofern mehr Feinde als eigene und verbündete Einheiten in der Nähe waren. Sterben Verbündete durch die Anwendung, erzeugen diese ebenfalls Blitze, die Schaden verursachen. Der Schaden dieser zusätzlichen Blitze ist abhängig vom Angriffswert des jeweiligen Gefallenen. Diese Blitze schädigen NUR Feinde.
 
