@@ -6,6 +6,10 @@ Es wurden Animationen der Winterevent-Version der Diebe überarbeitet, da diese 
 
 Holzfäller ignorieren nun Bäume, die auf nicht zugänglichen Terrain-Typen (z.B. Berge) wachsen.
 
+Holzfäller und Förster bleiben nun nicht mehr stehen, wenn ein Briefing/Cutscene gestartet wird.
+
+Holzfäller und Förster erscheinen nun erst, sobald ihr Platz im Dorf frei habt.
+
 Es wurde ein Fehler behoben, durch den das Build-Block von Gebäuden durch nahe Gegner nicht immer zuverlässig funktionierte.
 
 Es wurde ein Fehler behoben, durch den die Winterversion der Geschosse von Türmen in die falsche Richtung zeigte.

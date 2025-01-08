@@ -116,7 +116,8 @@ WCutter.TriggerIDs = {	WorkControl = {	Start = {},
 						CutTree = {},
 						RemoveTree = {},
 						Behavior = {FinishAnim = {},
-									WCutterDied = {}},
+									WCutterDied = {},
+									WaitForVPFree = {}},
 						TreeDestroyed = {}
 					}
 WCutter.WoodEarned = {}
@@ -181,10 +182,11 @@ end
 OnWCutter_Created = function(_id)
 
 	if IsExisting(_id) then
-		if Logic.GetPlayerAttractionLimit(Logic.EntityGetPlayer(_id)) > 0 then
+		local playerID = Logic.EntityGetPlayer(_id)
+		local lim = Logic.GetPlayerAttractionLimit(playerID)
+		if lim > 0 and Logic.GetPlayerAttractionUsage(playerID) < lim then
 
 			local buildingposX, buildingposY = Logic.GetEntityPosition(_id)
-			local playerID = Logic.EntityGetPlayer(_id)
 			local distancetable = {}
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
@@ -221,7 +223,22 @@ OnWCutter_Created = function(_id)
 
 			WCutter.TriggerIDs.WorkControl.Start[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WorkControl_Start",1,{},{workerID, _id})
 			WCutter.TriggerIDs.Behavior.WCutterDied[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","OnWCutter_Died",1,{},{workerID, _id})
+		else
+			WCutter.TriggerIDs.Behavior.WaitForVPFree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_WaitForVPFree",1,{},{playerID, _id})
 		end
+	end
+end
+function WCutter_WaitForVPFree(_playerID, _buildingID)
+	if IsExisting(_buildingID) then
+		local lim = Logic.GetPlayerAttractionLimit(_playerID)
+		if lim > 0 and Logic.GetPlayerAttractionUsage(_playerID) < lim then
+			WCutter.TriggerIDs.Behavior.WaitForVPFree[_buildingID] = nil
+			OnWCutter_Created(_buildingID)
+			return true
+		end
+	else
+		WCutter.TriggerIDs.Behavior.WaitForVPFree[_buildingID] = nil
+		return true
 	end
 end
 function OnWCutter_Died(_id, _buildingID)

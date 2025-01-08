@@ -136,6 +136,7 @@ function VC_Deathmatch()
 
 end
 
+gvBriefingStopLeaderMovementsIgnoreETypesList = {[Entities.PU_Forester] = true, [Entities.PU_WoodCutter] = true}
 -- briefing function override, so player military units can't move during briefings to get tactical advantages
 ---@param _briefing table briefingData
 PrepareBriefing = function(_briefing)
@@ -144,7 +145,10 @@ PrepareBriefing = function(_briefing)
 	local player = GetAllHumenPlayer()
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
 		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) and not string.find(Logic.GetCurrentTaskList(eID), "TRAIN") and not string.find(Logic.GetCurrentTaskList(eID), "LEAVE") then
-			Logic.GroupDefend(eID)
+			-- ignore this for forester and woodcutter (no workers due to technical issues)
+			if not gvBriefingStopLeaderMovementsIgnoreETypesList[Logic.GetEntityType(eID)] then
+				Logic.GroupDefend(eID)
+			end
 		end
 	end
 	local num, id = Logic.GetEntities(Entities.PB_Dome, 1)
