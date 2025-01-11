@@ -45,7 +45,9 @@ gvHero9 = {AbilityProperties = {Summon = {BaseNumBonusTroops = 2, BonusFactorPer
 		[UpgradeCategories.Silversmith]        = ResourceType.Silver,
 		[UpgradeCategories.Mint]               = ResourceType.Gold,
 		[UpgradeCategories.Woodcutter]         = ResourceType.WoodRaw,
-		[UpgradeCategories.Coalmaker]          = ResourceType.Knowledge
+		[UpgradeCategories.Coalmaker]          = ResourceType.Knowledge,
+		[UpgradeCategories.Monastery]		   = ResourceType.Faith,
+		[UpgradeCategories.Dome]               = ResourceType.Faith
 	},
 	GetPlunderedResourceTypeByTarget = function(_ID)
 		local etype = Logic.GetEntityType(_ID)
@@ -71,7 +73,9 @@ gvHero9 = {AbilityProperties = {Summon = {BaseNumBonusTroops = 2, BonusFactorPer
 		[ResourceType.IronRaw] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameIron") .. " RAW",
 		[ResourceType.Sulfur] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameSulfur"),
 		[ResourceType.SulfurRaw] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameSulfur") .. " RAW",
-		[ResourceType.Knowledge] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameCoal") .. " RAW"
+		[ResourceType.Knowledge] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameCoal"),
+		[ResourceType.Faith] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameFaith"),
+		[ResourceType.WeatherEnergy] = XGUIEng.GetStringTableText("InGameMessages/GUI_NameWeatherenergy")
 	},
 	CreatePlunderedResDataString = function(_data)
 		local str = ""
