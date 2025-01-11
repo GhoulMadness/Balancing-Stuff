@@ -4362,7 +4362,8 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 	end
 	local IsFoundry = (Logic.GetEntityType(_id) == Entities.PB_Foundry1 or Logic.GetEntityType(_id) == Entities.PB_Foundry2)
 	if IsFoundry then
-		return Logic.GetCannonProgress(_id) == 100
+		--auf Kanonenfortschritt prüfen und, ob Arbeiter nicht vorhanden oder nicht vor Ort (Progress startet erst, wenn dieser vor Ort ist)
+		return Logic.GetCannonProgress(_id) == 100 and CEntity.GetAttachedEntities(_id) and CEntity.GetAttachedEntities(_id)[23] and Logic.GetCurrentTaskList(CEntity.GetAttachedEntities(_id)[23][1]) == "TL_SMELTER_WORK1_WAIT"
 	else
 		local count = 0
 		local attach = CEntity.GetAttachedEntities(_id)[42]

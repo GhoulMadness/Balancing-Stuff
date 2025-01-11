@@ -1085,7 +1085,6 @@ AITroopGenerator_EvaluateMilitaryBuildingsPriority = function(_player, _forbidde
 	if MapEditor_Armies[_player].multiTraining then
 		if num.Foundry > 0 then
 			for id in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(Entities.PB_Foundry1, Entities.PB_Foundry2)) do
-				-- TODO: can get stuck when there's a foundry without worker, progress cant start until worker is there...
 				if MilitaryBuildingIsTrainingSlotFree(id) then
 					local types = {Entities.PV_Cannon1, Entities.PV_Cannon2}
 					for i = table.getn(types), 1, -1 do
