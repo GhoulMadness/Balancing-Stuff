@@ -220,7 +220,7 @@ if CNetwork then
 					end
 				end
 				-- update cooldown.
-				gvHero9.Plunder.NextCooldown[_playerID] = Logic.GetTime() + (gvHero9.AbilityProperties.Cooldown.Plunder)
+				gvHero9.Plunder.NextCooldown[_playerID] = Logic.GetTime() + (gvHero9.Cooldown.Plunder)
 				-- execute stuff
 				GUIAction_Hero9PlunderAction(_heroID, _playerID, starttime)
 			end
