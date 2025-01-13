@@ -1038,9 +1038,11 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 				if GetNumberOfAlliesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, range) < GetNumberOfEnemiesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, range) then
 					local pos = GetPlayerStartPosition(player)
 					local hq = Logic.GetEntityAtPosition(pos.X, pos.Y)
-					local offX, offY = GetBuildingTypeLeavePos(Entities.PB_Headquarters1)
-					local X, Y = RotateOffset(offX, offY, Logic.GetEntityOrientation(hq))
-					TeleportSettler(_heroID, pos.X + X, pos.Y + Y)
+					if hq > 0 then
+						local offX, offY = GetBuildingTypeLeavePos(Entities.PB_Headquarters1)
+						local X, Y = RotateOffset(offX, offY, Logic.GetEntityOrientation(hq))
+						TeleportSettler(_heroID, pos.X + X, pos.Y + Y)
+					end
 				end
 			end
 		end
@@ -1067,10 +1069,10 @@ Hero13_DivineJudgment_CalculateBonusEffects = function(_heroID, _player)
 			local time = Logic.GetTimeMs()
 			local diff = time - NextTimeReady - tab.ThresholdMs
 			if diff > 0 then
-				local DamageFactorBonus = math.min(tab.MaxDamageFactorBonus, tab.EverySeconds * 1000 * tab.DamageFactorBonusPerMs)
-				local RangeFactorBonus = math.min(tab.MaxRangeFactorBonus, tab.EverySeconds * 1000 * tab.RangeFactorBonusPerMs)
-				gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[_player] = gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[_player] + DamageFactorBonus
-				gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeFactorBonus[_player] = gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeFactorBonus[_player] + RangeFactorBonus
+				local DamageFactorBonus = tab.EverySeconds * 1000 * tab.DamageFactorBonusPerMs
+				local RangeFactorBonus = tab.EverySeconds * 1000 * tab.RangeFactorBonusPerMs
+				gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[_player] = math.min(tab.MaxDamageFactorBonus, gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[_player] + DamageFactorBonus)
+				gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeFactorBonus[_player] = math.min(tab.MaxRangeFactorBonus, gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeFactorBonus[_player] + RangeFactorBonus)
 			else
 				gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[_player] = 0
 				gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeFactorBonus[_player] = 0
