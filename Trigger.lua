@@ -369,8 +369,8 @@ Hero9_ResurrectionCheck = function(_EntityID)
 		if CNetwork then
 
 			if gvHero9.Plunder.NextCooldown then
-				if gvHero6.Plunder.NextCooldown[playerID] then
-					gvHero6.Plunder.NextCooldown[playerID] = Logic.GetTime() + (gvHero9.Cooldown.Plunder)
+				if gvHero9.Plunder.NextCooldown[playerID] then
+					gvHero9.Plunder.NextCooldown[playerID] = Logic.GetTime() + (gvHero9.Cooldown.Plunder)
 				end
 			end
 
@@ -1037,8 +1037,10 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 			if DamageFactorBonus >= 1 then
 				if GetNumberOfAlliesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, range) < GetNumberOfEnemiesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, range) then
 					local pos = GetPlayerStartPosition(player)
-					local posX_, posY_ = EvaluateNearestUnblockedPosition(pos.X, pos.Y, 1000, 10)
-					TeleportSettler(_heroID, posX_, posY_)
+					local hq = Logic.GetEntityAtPosition(pos.X, pos.Y)
+					local offX, offY = GetBuildingTypeLeavePos(Entities.PB_Headquarters1)
+					local X, Y = RotateOffset(offX, offY, Logic.GetEntityOrientation(hq))
+					TeleportSettler(_heroID, pos.X + X, pos.Y + Y)
 				end
 			end
 		end

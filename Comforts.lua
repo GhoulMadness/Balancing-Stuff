@@ -2879,6 +2879,62 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 	end
 end
 
+-- gets building type door pos properties, returns DoorPosX, DoorPosY
+---@param _entityType integer entityType
+---@return table door pos node {X, Y}
+function GetBuildingTypeDoorPos(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeDoorPos then
+		BS.MemValues.BuildingTypeDoorPos = {}
+	end
+	if BS.MemValues.BuildingTypeDoorPos[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeDoorPos[_entityType])
+	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 45
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 45
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 37
+		end
+		BS.MemValues.BuildingTypeDoorPos[_entityType] = {}
+		for i = 1,2 do
+			table.insert(BS.MemValues.BuildingTypeDoorPos[_entityType], pointer[behpos + i]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeDoorPos[_entityType])
+	end
+end
+
+-- gets building type leave pos properties, returns LeavePosX, LeavePosY
+---@param _entityType integer entityType
+---@return table leave pos node {X, Y}
+function GetBuildingTypeLeavePos(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeLeavePos then
+		BS.MemValues.BuildingTypeLeavePos = {}
+	end
+	if BS.MemValues.BuildingTypeLeavePos[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeLeavePos[_entityType])
+	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 47
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 47
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 39
+		end
+		BS.MemValues.BuildingTypeLeavePos[_entityType] = {}
+		for i = 1,2 do
+			table.insert(BS.MemValues.BuildingTypeLeavePos[_entityType], pointer[behpos + i]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeLeavePos[_entityType])
+	end
+end
+
 -- gets entity type num blocked points value (block field in s-m x and y)
 ---@param _entityType integer entityType
 ---@return integer number blocked points (s-m/grids)
