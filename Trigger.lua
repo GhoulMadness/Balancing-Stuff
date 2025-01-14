@@ -323,11 +323,15 @@ function OnHeroDied()
 		local health = Logic.GetEntityHealth(target)
 		local damage = CEntity.TriggerGetDamage()
 		if damage >= health then
-			local playerID = GetPlayer(target)
-			local str = BS.GetTableStrByHeroType(targettype)
-			_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{target})
+			OnHeroDied_Action(target)
 		end
 	end
+end
+function OnHeroDied_Action(_id)
+	local etype = Logic.GetEntityType(_id)
+	local playerID = GetPlayer(_id)
+	local str = BS.GetTableStrByHeroType(etype)
+	_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{_id})
 end
 
 Hero6_ResurrectionCheck = function(_EntityID)
@@ -825,7 +829,7 @@ Hero9_Plunder_Job = function(_heroID, _starttime)
 						local rtype = gvHero9.GetPlunderedResourceTypeByTarget(target)
 						tab.Plundered[_heroID][rtype] = tab.Plundered[_heroID][rtype] or 0
 						tab.Plundered[_heroID][rtype] = tab.Plundered[_heroID][rtype] + tab.ResPerHit
-						Logic.CreateEffect(GGL_Effects.FXExtractStone, posA.X, posA.Y)
+						Logic.CreateEffect(GGL_Effects.FXDestroyTree, posA.X, posA.Y)
 					end
 				end
 			end
@@ -999,15 +1003,30 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 
 					-- wenn Held, dann...
 					elseif Logic.IsHero(eID) == 1 then
-
 						damage = damage * tab.DamageFactors.Hero
-						if damage >= Logic.GetEntityHealth(eID) then
-							BS.ManualUpdate_KillScore(player, player2, "Settler")
+						-- Sonderbehandlung für Dovbar...
+						if Logic.GetEntityType(eID) == Entities.PU_Hero13 then
+							-- Stone Armor aktiv?
+							if gvHero13.TriggerIDs.StoneArmor.DamageStoring[player2] then
+								-- no damage
+								Logic.CreateEffect(GGL_Effects.FXSalimHeal, Logic.GetEntityPosition(eID))
+								gvHero13.AbilityProperties.StoneArmor.DamageStored[player2] = (gvHero13.AbilityProperties.StoneArmor.DamageStored[player2] or 0) + damage
+								damage = 0
+							end
 						end
-						if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
-							BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
+
+						if damage > 0 then
+							if damage >= Logic.GetEntityHealth(eID) then
+								if Logic.GetEntityType(eID) == Entities.PU_Hero13 then
+									OnHeroDied_Action(eID)
+								end
+								BS.ManualUpdate_KillScore(player, player2, "Settler")
+							end
+							if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
+								BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToUnits")
+							end
+							Logic.HurtEntity(eID, damage)
 						end
-						Logic.HurtEntity(eID, damage)
 
 					-- wenn Gebäude, dann...
 					elseif Logic.IsBuilding(eID) == 1 then
