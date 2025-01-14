@@ -31,6 +31,10 @@ Drake Verzögerung Meisterschuss: 3,4 Sekunden -> 2,6 Sekunden
 Dovbar verfügt nun über eine weitere Fähigkeit, die passive Boni bietet.
 Vorsehung: Wurde Götterdämmerung längere Zeit nicht verwendet, steigen Schaden und Reichweite der nächsten Götterdämmerung kontinuierlich an. Wird hierbei eine Steigerung von über 100% erreicht, erhält die nächste Götterdämmerung folgende Boni: Dovbar gelangt vor Eure Burg, sofern mehr Feinde als eigene und verbündete Einheiten in der Nähe waren. Sterben Verbündete durch die Anwendung, erzeugen diese ebenfalls Blitze, die Schaden verursachen. Der Schaden dieser zusätzlichen Blitze ist abhängig vom Angriffswert des jeweiligen Gefallenen. Diese Blitze schädigen NUR Feinde.
 
+Dovbar ist nun immun gegen den Schaden von Götterdämmerung durch andere Dovbars, Erebos Schadensaura in der Nacht sowie Blitzeinschlägen, wenn <Göttlicher Segen> aktiv ist. Nachdem der Effekt endet, erleidet er wie gewohnt einen Teil des negierten Schadens.
+
+Stirbt Dovbar durch den Einsatz einer anderen Götterdämmerung, Erebos Schadensaura in der Nacht oder eines Blitzeinschlags, werden die visuellen Abklingzeiten seiner Fähigkeiten nun korrekt zurückgesetzt.
+
 Varg verfügt nun über eine weitere Fähigkeit.
 Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist, werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben. Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen an die jeweiligen Spieler zurückgegeben.
 
