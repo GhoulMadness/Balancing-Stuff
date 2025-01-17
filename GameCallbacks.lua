@@ -1078,8 +1078,10 @@ GameCallback_UnknownTask = function(_id)
 		end
 		for i = 1, table.getn(tab.Cycle) do
 			if GetEntityCurrentTaskIndex(_id) == tab.Cycle[i].TaskIndex then
-				Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, tab.Cycle[i].ResourceAmount)
-				tab.CoalEarned[work] = tab.CoalEarned[work] + tab.Cycle[i].ResourceAmount
+				if Logic.GetPlayersGlobalResource(player, ResourceType.WoodRaw) > 0 then
+					Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, tab.Cycle[i].ResourceAmount)
+					tab.CoalEarned[work] = tab.CoalEarned[work] + tab.Cycle[i].ResourceAmount
+				end
 				return 0
 			end
 		end

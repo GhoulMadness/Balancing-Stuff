@@ -10,6 +10,8 @@ Holzfäller und Förster bleiben nun nicht mehr stehen, wenn ein Briefing/Cutsce
 
 Holzfäller und Förster erscheinen nun erst, sobald ihr Platz im Dorf frei habt.
 
+Der Köhler kann nun nur noch Kohle produzieren, wenn während des Arbeitszyklus Rohholz vorhanden ist.
+
 Es wurde ein Fehler behoben, durch den das Build-Block von Gebäuden durch nahe Gegner nicht immer zuverlässig funktionierte.
 
 Es wurde ein Fehler behoben, durch den die Winterversion der Geschosse von Türmen in die falsche Richtung zeigte.
