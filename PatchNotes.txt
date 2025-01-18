@@ -38,7 +38,7 @@ Dovbar ist nun immun gegen den Schaden von Götterdämmerung durch andere Dovbar
 Stirbt Dovbar durch den Einsatz einer anderen Götterdämmerung, Erebos Schadensaura in der Nacht oder eines Blitzeinschlags, werden die visuellen Abklingzeiten seiner Fähigkeiten nun korrekt zurückgesetzt.
 
 Varg verfügt nun über eine weitere Fähigkeit.
-Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist, werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben. Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen an die jeweiligen Spieler zurückgegeben.
+Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist, werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben. Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen genullt.
 
 --- Version 0.766
 
