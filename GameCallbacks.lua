@@ -650,7 +650,7 @@ function GameCallback_PlaceBuildingAdditionalCheck(_eType, _x, _y, _rotation, _i
 	local player = GUI.GetPlayerID()
 	local IsExplored = (Logic.IsMapPositionExplored(player, _x, _y) == 1)
 
-	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _x, Y = _y}, BS.EnemyBuildBlockRange, 3)
+	if AreEntitiesOfCategoriesAndDiplomacyStateInArea(player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Cannon, EntityCategories.Hero}, {X = _x, Y = _y}, BS.EnemyBuildBlockRange, 3)
 	and not HostileTroopBuildBlockWhitelist[_eType] then
 		allowed = false
 	end
@@ -1078,8 +1078,10 @@ GameCallback_UnknownTask = function(_id)
 		end
 		for i = 1, table.getn(tab.Cycle) do
 			if GetEntityCurrentTaskIndex(_id) == tab.Cycle[i].TaskIndex then
-				Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, tab.Cycle[i].ResourceAmount)
-				tab.CoalEarned[work] = tab.CoalEarned[work] + tab.Cycle[i].ResourceAmount
+				if Logic.GetPlayersGlobalResource(player, ResourceType.WoodRaw) > 0 then
+					Logic.AddToPlayersGlobalResource(player, ResourceType.Knowledge, tab.Cycle[i].ResourceAmount)
+					tab.CoalEarned[work] = tab.CoalEarned[work] + tab.Cycle[i].ResourceAmount
+				end
 				return 0
 			end
 		end

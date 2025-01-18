@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.766
+BS.Version = 0.767
 
 BS.SpectatorPID = 17
 
@@ -383,7 +383,8 @@ BS.AchievementWhitelist = {	[1] = {"Roma_Invicta", "CAS_G Roma",
 									"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 									"Roma_Invicta", "CAS_G Roma"},
 							[8] = {"ThePhoenix_2000",
-									"Vqrys"},
+									"Vqrys",
+									"Novator12", "Novator12Slave"},
 							[9] = {"CAS-G_Mathias", "Mathias", "G4F_Mathias",
 									"Novator12", "Novator12Slave",
 									"ThePhoenix_2000",
@@ -559,6 +560,8 @@ Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnHeliasCreated",
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnAriTroopCreated", 1)
 --Trigger for erebos movement effects
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnErebos_Created", 1)
+--Trigger for dovbar divine judjement
+Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED, "", "OnDovbar_Created", 1)
 --Trigger for catapult stones effects
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "CatapultStoneHitEffects", 1)
 --Trigger for hero death

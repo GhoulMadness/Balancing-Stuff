@@ -386,6 +386,32 @@ function GUIAction_Hero9CallWolfs()
 		gvHero9.SpawnAdditionalWolfs(player, heroID)
 	end
 end
+function GUIAction_Hero9Plunder()
+	local heroID = GUI.GetSelectedEntity() or ({Logic.GetPlayerEntities(GUI.GetPlayerID(), Entities.CU_Barbarian_Hero,1)})[2]
+	if not Logic.IsEntityAlive(heroID) then
+		return
+	end
+	local player = Logic.EntityGetPlayer(heroID)
+	local starttime = Logic.GetTime()
+	gvHero9.LastTimeUsed.Plunder = starttime
+	if CNetwork then
+		CNetwork.SendCommand("Ghoul_Hero9Plunder", player, heroID)
+	else
+		GUIAction_Hero9PlunderAction(heroID, player, starttime)
+	end
+end
+function GUIAction_Hero9PlunderAction(_heroID, _playerID, _starttime)
+	gvHero9.AbilityProperties.Plunder.Plundered[_heroID] = gvHero9.AbilityProperties.Plunder.Plundered[_heroID] or {}
+	if not gvHero9.TriggerIDs.Plunder[_playerID] then
+		gvHero9.TriggerIDs.Plunder[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero9_Plunder_Job", 1, nil, {_heroID, _starttime})
+	end
+	if not gvHero9.TriggerIDs.DiedCheck[_playerID] then
+		gvHero9.TriggerIDs.DiedCheck[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, nil, "Hero9_DiedCheck_Job", 1, nil, {_heroID})
+	end
+	if not gvHero9.TriggerIDs.NearOwnBuildingCheck[_playerID] then
+		gvHero9.TriggerIDs.NearOwnBuildingCheck[_playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, nil, "Hero9_NearOwnBuildingCheck_Job", 1, nil, {_heroID})
+	end
+end
 -----------------------------------------------------------------------------------------------------------------------------
 function GUIAction_Hero13StoneArmor()
 

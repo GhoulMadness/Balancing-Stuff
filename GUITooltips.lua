@@ -676,3 +676,30 @@ function GUITooltip_UpgradeLeader(_LeaderID, _ShortCut)
 	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, ShortCutToolTip)
 
 end
+
+function GUITooltip_Hero13_JudgmentBonus()
+	local player = GUI.GetPlayerID()
+	local tooltip = XGUIEng.GetStringTableText("MenuHero13/command_divinejudgmentbonus")
+	local bonusttip = ""
+	local bonusdmg = round(gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[player] * 100)
+	local bonusrange = round(gvHero13.AbilityProperties.DivineJudgment.Judgment.RangeFactorBonus[player] * 100)
+	if bonusdmg > 0 then
+		bonusttip = "Schadensbonus: " .. bonusdmg .. "% @cr Reichweitenbonus: " .. bonusrange .. "%"
+	end
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, tooltip)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, bonusttip)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, "")
+end
+
+function GUITooltip_Hero9_Plunder()
+	local hero = GUI.GetSelectedEntity()
+	local tooltip = XGUIEng.GetStringTableText("MenuHero9/command_plunder")
+	local CostString = ""
+	local tab = gvHero9.AbilityProperties.Plunder
+	if tab.Plundered[hero] then
+		CostString = gvHero9.CreatePlunderedResDataString(tab.Plundered[hero])
+	end
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomText, tooltip)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomCosts, CostString)
+	XGUIEng.SetText(gvGUI_WidgetID.TooltipBottomShortCut, "")
+end

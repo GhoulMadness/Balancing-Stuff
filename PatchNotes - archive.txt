@@ -1071,3 +1071,7 @@ Es wurde ein Fehler behoben, durch den der Spieler zu viele Kampfpunkte erhielt,
 
 Waren noch Leibeigene zur Rekrutierung in einer Burg/ einem Außenposten/Landsitz eingereiht, als dieser zerstört wurde, erschienen die Leibeigenen mit üblicher Verzögerung unsichtbar vor dem Gebäude.
 Es wurde ein weiterer Check eingebaut und sollte die Burg/ der Außenposten/Landsitz bereits zerstört sein, werden die Leibeigenen entfernt.
+
+--- Version 0.762
+
+Es wurde ein Fehler behoben, durch den Schützentürme und die auf diese platzierten Truppen von der KI weniger als geplant getargetted wurden.

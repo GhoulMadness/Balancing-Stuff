@@ -136,6 +136,7 @@ function VC_Deathmatch()
 
 end
 
+gvBriefingStopLeaderMovementsIgnoreETypesList = {[Entities.PU_Forester] = true, [Entities.PU_WoodCutter] = true}
 -- briefing function override, so player military units can't move during briefings to get tactical advantages
 ---@param _briefing table briefingData
 PrepareBriefing = function(_briefing)
@@ -144,7 +145,10 @@ PrepareBriefing = function(_briefing)
 	local player = GetAllHumenPlayer()
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfAnyPlayerFilter(unpack(player)), CEntityIterator.IsSettlerFilter(), CEntityIterator.OfAnyCategoryFilter(EntityCategories.Leader, EntityCategories.Hero)) do
 		if Logic.IsEntityAlive(eID) and Logic.IsEntityMoving(eID) and not string.find(Logic.GetCurrentTaskList(eID), "TRAIN") and not string.find(Logic.GetCurrentTaskList(eID), "LEAVE") then
-			Logic.GroupDefend(eID)
+			-- ignore this for forester and woodcutter (no workers due to technical issues)
+			if not gvBriefingStopLeaderMovementsIgnoreETypesList[Logic.GetEntityType(eID)] then
+				Logic.GroupDefend(eID)
+			end
 		end
 	end
 	local num, id = Logic.GetEntities(Entities.PB_Dome, 1)
@@ -993,7 +997,9 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 	for i = 1,i do
 		if Logic.GetDiplomacyState( _player, i) == _state then
 			bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
-			return bool
+			if bool then
+				return true
+			end
 
 		end
 	end
@@ -1112,8 +1118,10 @@ end
 function ArePlayerBuildingsInArea(_player, _x, _y, _range)
 	local count = 0
 	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.IsBuildingFilter(), CEntityIterator.InCircleFilter(_x, _y, _range)) do
-		count = count + 1
-		break
+		if Logic.IsConstructionComplete(eID) == 1 then
+			count = count + 1
+			break
+		end
 	end
 	return count > 0
 end
@@ -1862,8 +1870,8 @@ end
 -- Comfort to start an delayed action
 ---@param _Limit integer TimeLimit for the countdown, when reaching zero, callback function is called
 ---@param _Callback function Callback function when counter reaches zero
----@param _Show? boolean Should the remaining time be displayed? Only 1 timer at the same time possible
----@param _Name? string optional parameter to display the function name at a message when countdown can't be shown
+---@param _Show boolean? Should the remaining time be displayed? Only 1 timer at the same time possible
+---@param _Name string? optional parameter to display the function name at a message when countdown can't be shown
 ---@param ... any? parameters for the Callback function
 ---@return integer Index of the Counter
 StartCountdown = function (_Limit, _Callback, _Show, _Name, ...)
@@ -2033,11 +2041,12 @@ function IsPositionExplored(_pID, _x, _y, _range)
 
 end
 
--- returns the start positions (HQ) of the current player as a table
+-- returns the start positions (HQ) of the given or current player as a table
+---@param _player integer? playerID (Optional)
 ---@return table positionTable of current player's first HQ found
-function GetPlayerStartPosition()
+function GetPlayerStartPosition(_player)
 
-	local playerID = GUI.GetPlayerID()
+	local playerID = _player or GUI.GetPlayerID()
 	if playerID == BS.SpectatorPID then
 		playerID = 1
 	end
@@ -2870,6 +2879,62 @@ function GetBuildingTypeTerrainPosArea(_entityType)
 	end
 end
 
+-- gets building type door pos properties, returns DoorPosX, DoorPosY
+---@param _entityType integer entityType
+---@return table door pos node {X, Y}
+function GetBuildingTypeDoorPos(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeDoorPos then
+		BS.MemValues.BuildingTypeDoorPos = {}
+	end
+	if BS.MemValues.BuildingTypeDoorPos[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeDoorPos[_entityType])
+	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 45
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 45
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 37
+		end
+		BS.MemValues.BuildingTypeDoorPos[_entityType] = {}
+		for i = 1,2 do
+			table.insert(BS.MemValues.BuildingTypeDoorPos[_entityType], pointer[behpos + i]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeDoorPos[_entityType])
+	end
+end
+
+-- gets building type leave pos properties, returns LeavePosX, LeavePosY
+---@param _entityType integer entityType
+---@return table leave pos node {X, Y}
+function GetBuildingTypeLeavePos(_entityType)
+	assert(_entityType ~= 0, "invalid entity type")
+	if not BS.MemValues.BuildingTypeLeavePos then
+		BS.MemValues.BuildingTypeLeavePos = {}
+	end
+	if BS.MemValues.BuildingTypeLeavePos[_entityType] then
+		return unpack(BS.MemValues.BuildingTypeLeavePos[_entityType])
+	else
+		local pointer = GetEntityTypePointer(_entityType)
+		local behpos
+		if pointer[0]:GetInt() == tonumber("76EC78", 16) then
+			behpos = 47
+		elseif pointer[0]:GetInt() == tonumber("76E498", 16) then
+			behpos = 47
+		elseif pointer[0]:GetInt() == tonumber("778148", 16) then
+			behpos = 39
+		end
+		BS.MemValues.BuildingTypeLeavePos[_entityType] = {}
+		for i = 1,2 do
+			table.insert(BS.MemValues.BuildingTypeLeavePos[_entityType], pointer[behpos + i]:GetFloat())
+		end
+		return unpack(BS.MemValues.BuildingTypeLeavePos[_entityType])
+	end
+end
+
 -- gets entity type num blocked points value (block field in s-m x and y)
 ---@param _entityType integer entityType
 ---@return integer number blocked points (s-m/grids)
@@ -3281,6 +3346,25 @@ function GetEntityTargetByAIData(_id)
 		if table_findvalue(t, _id) ~= 0 then
 			return target
 		end
+	end
+end
+
+function TeleportSettler(_id, _posX, _posY)
+	assert(IsValid(_id) and Logic.IsSettler(_id) == 1, "invalid entityID")
+	--[[ set current position
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[22]:SetFloat(_posX)
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[23]:SetFloat(_posY)
+	-- set target position
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[66]:SetFloat(_posX)
+	CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))[67]:SetFloat(_posY)]]
+	CUtil.EntitySetPosition(_id, _posX, _posY)
+	if not Logic.IsEntityAlive(_id) then
+		--GGL_CLeaderMovement; set "last turn pos" to port pos
+		local beh = tonumber(CUtil.GetBehaviour(_id, tonumber("775ED4", 16)), 16)
+		CUtilMemory.GetMemory(beh)[12]:SetFloat(_posX)
+		CUtilMemory.GetMemory(beh)[13]:SetFloat(_posY)
+		--Logic.SuspendEntity(_id)
+		--Logic.ResumeEntity(_id)
 	end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3866,7 +3950,11 @@ BS.GetTableStrByHeroType = function(_type)
 
 	local typename = Logic.GetEntityTypeName(_type)
 	local s, e = string.find(typename, "Hero")
-	return string.sub(typename, s)
+	if s and e ~= string.len(_type) then
+		return string.sub(typename, s)
+	else
+		return "Hero9"
+	end
 end
 gvHQTypeTable = {	[Entities.PB_Headquarters1] = true,
 					[Entities.PB_Headquarters2] = true,
@@ -4330,7 +4418,8 @@ MilitaryBuildingIsTrainingSlotFree = function(_id)
 	end
 	local IsFoundry = (Logic.GetEntityType(_id) == Entities.PB_Foundry1 or Logic.GetEntityType(_id) == Entities.PB_Foundry2)
 	if IsFoundry then
-		return Logic.GetCannonProgress(_id) == 100
+		--auf Kanonenfortschritt prüfen und, ob Arbeiter nicht vorhanden oder nicht vor Ort (Progress startet erst, wenn dieser vor Ort ist)
+		return Logic.GetCannonProgress(_id) == 100 and CEntity.GetAttachedEntities(_id) and CEntity.GetAttachedEntities(_id)[23] and Logic.GetCurrentTaskList(CEntity.GetAttachedEntities(_id)[23][1]) == "TL_SMELTER_WORK1_WAIT"
 	else
 		local count = 0
 		local attach = CEntity.GetAttachedEntities(_id)[42]

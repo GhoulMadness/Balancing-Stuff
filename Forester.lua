@@ -211,7 +211,8 @@ Forester.TriggerIDs = {	PrepareForPause = {},
 						Tree = {	Growth = {},
 									Cutted = {}},
 						Behavior = {FinishAnim = {},
-									ForesterDied = {}}
+									ForesterDied = {},
+									WaitForVPFree = {}}
 						}
 Forester.GetDistanceToNextPlantedTree = function(_posX, _posY)
 	local distance
@@ -347,10 +348,11 @@ end
 OnForester_Created = function(_id)
 
 	if IsExisting(_id) then
-		if Logic.GetPlayerAttractionLimit(Logic.EntityGetPlayer(_id)) > 0 then
+		local playerID = Logic.EntityGetPlayer(_id)
+		local lim = Logic.GetPlayerAttractionLimit(playerID)
+		if lim > 0 and Logic.GetPlayerAttractionUsage(playerID) < lim then
 
 			local buildingposX, buildingposY = Logic.GetEntityPosition(_id)
-			local playerID = Logic.EntityGetPlayer(_id)
 			local distancetable = {}
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
@@ -386,7 +388,22 @@ OnForester_Created = function(_id)
 
 			Forester.TriggerIDs.WorkControl.Start[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WorkControl_Start",1,{},{workerID, _id})
 			Forester.TriggerIDs.Behavior.ForesterDied[workerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED,"","OnForester_Died",1,{},{workerID, _id})
+		else
+			Forester.TriggerIDs.Behavior.WaitForVPFree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_WaitForVPFree",1,{},{playerID, _id})
 		end
+	end
+end
+function Forester_WaitForVPFree(_playerID, _buildingID)
+	if IsExisting(_buildingID) then
+		local lim = Logic.GetPlayerAttractionLimit(_playerID)
+		if lim > 0 and Logic.GetPlayerAttractionUsage(_playerID) < lim then
+			Forester.TriggerIDs.Behavior.WaitForVPFree[_buildingID] = nil
+			OnForester_Created(_buildingID)
+			return true
+		end
+	else
+		Forester.TriggerIDs.Behavior.WaitForVPFree[_buildingID] = nil
+		return true
 	end
 end
 function OnForester_Died(_id, _buildingID)
