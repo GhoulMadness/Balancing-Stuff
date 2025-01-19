@@ -3950,7 +3950,7 @@ BS.GetTableStrByHeroType = function(_type)
 
 	local typename = Logic.GetEntityTypeName(_type)
 	local s, e = string.find(typename, "Hero")
-	if s and e ~= string.len(_type) then
+	if s and e ~= string.len(typename) then
 		return string.sub(typename, s)
 	else
 		return "Hero9"
