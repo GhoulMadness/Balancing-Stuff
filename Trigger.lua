@@ -942,8 +942,10 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX - (range/tab.NumberOfLightningStrikes * i), _posY)
 				Logic.CreateEffect(GGL_Effects.FXLightning_PerformanceMode, _posX, _posY - (range/tab.NumberOfLightningStrikes * i))
 			end
+			local alliescount = GetNumberOfAlliesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, range)
+			local enemiescount = GetNumberOfEnemiesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, range)
 
-			for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
+			for eID in CEntityIterator.Iterator(CEntityIterator.NotOfPlayerFilter(0), CEntityIterator.IsSettlerOrBuildingFilter(), CEntityIterator.InCircleFilter(_posX, _posY, range)) do
 
 				local player2 = Logic.EntityGetPlayer(eID)
 				if player == player2 or Logic.GetDiplomacyState(player, player2) ~= Diplomacy.Neutral then
@@ -1030,15 +1032,16 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 
 					-- wenn Gebäude, dann...
 					elseif Logic.IsBuilding(eID) == 1 then
-
-						damage = damage * tab.DamageFactors.Building
-						if damage >= Logic.GetEntityHealth(eID) then
-							BS.ManualUpdate_KillScore(player, player2, "Building")
+						if not gvLightning.IsLightningProofBuilding(eID) then
+							damage = damage * tab.DamageFactors.Building
+							if damage >= Logic.GetEntityHealth(eID) then
+								BS.ManualUpdate_KillScore(player, player2, "Building")
+							end
+							if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
+								BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToBuildings")
+							end
+							Logic.HurtEntity(eID, damage)
 						end
-						if ExtendedStatistics and (Logic.GetDiplomacyState(player, player2) == Diplomacy.Hostile) then
-							BS.ManualUpdate_DamageDealt(_heroID, damage, Logic.GetEntityHealth(eID), "DamageToBuildings")
-						end
-						Logic.HurtEntity(eID, damage)
 
 					-- wenn Leibi, dann...
 					elseif Logic.IsSerf(eID) == 1 then
@@ -1054,7 +1057,7 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 				end
 			end
 			if DamageFactorBonus >= 1 then
-				if GetNumberOfAlliesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, range) < GetNumberOfEnemiesInRange(player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, range) then
+				if alliescount < enemiescount then
 					local pos = GetPlayerStartPosition(player)
 					local hq = Logic.GetEntityAtPosition(pos.X, pos.Y)
 					if hq > 0 then

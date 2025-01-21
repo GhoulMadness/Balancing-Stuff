@@ -679,6 +679,9 @@ end
 
 function GUITooltip_Hero13_JudgmentBonus()
 	local player = GUI.GetPlayerID()
+	if player == BS.SpectatorPID then
+		player = Logic.EntityGetPlayer(GUI.GetSelectedEntity())
+	end
 	local tooltip = XGUIEng.GetStringTableText("MenuHero13/command_divinejudgmentbonus")
 	local bonusttip = ""
 	local bonusdmg = round(gvHero13.AbilityProperties.DivineJudgment.Judgment.DamageFactorBonus[player] * 100)
