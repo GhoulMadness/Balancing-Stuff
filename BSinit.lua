@@ -117,7 +117,8 @@ BS.MapList = {
 				["(4) emsbs sparrowdale"] = true,
 				["(4) emsbs osterfieber"] = true,
 				["(4) emsbs rmg gezeiten"] = true,
-				["(4) emsbs easterville"] = true
+				["(4) emsbs easterville"] = true,
+				["(4) emsbs im zeichen ostaras"] = true
 				},
 			[5] = 	{
 				["(5) bs koop der grosse aufstand"] = true,
