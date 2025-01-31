@@ -119,14 +119,22 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 															CLogger.Log("AIHeroLifestealAura", _heroID)
 														end,
 									["RisingEvil"] = function(_heroID, _player)
-														Logic.GroupStand(_heroID)
-														gvHero14.RisingEvil.SpawnEvilTower(_heroID)
-														gvHeroAbilities.InternalAbilities.Hero14.RisingEvil.LastTimeUsed[_player] = Logic.GetTime()
-														CLogger.Log("AIHeroRisingEvil", _heroID)
+														local posX, posY = Logic.GetEntityPosition(_heroID)
+														for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(Entities.PB_Tower2, Entities.PB_DarkTower2), CEntityIterator.InCircleFilter(posX, posY, gvHero14.RisingEvil.Range*3)) do
+															if GetDistance(eID, _heroID) <= gvHero14.RisingEvil.Range then
+																Logic.GroupStand(_heroID)
+																gvHero14.RisingEvil.SpawnEvilTower(_heroID)
+																gvHeroAbilities.InternalAbilities.Hero14.RisingEvil.LastTimeUsed[_player] = Logic.GetTime()
+																CLogger.Log("AIHeroRisingEvil", _heroID)
+															else
+																Logic.MoveSettler(_heroID, Logic.GetEntityPosition(eID))
+															end
+															break
+														end
 													end
 								},
 					CheckByAbility = {	[Abilities.AbilityInflictFear] = function(_heroID, _posX, _posY, _player)
-																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
+																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
 																			if num >= gvHeroAbilities.UnitsTreshold then
 																				return true
 																			end
@@ -136,7 +144,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																			if gvHeroAbilities.CurrentlyMovingToReachCastDestination[_heroID] then
 																				return false
 																			end
-																			local t = GetEnemiesPositionTableInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
+																			local t = GetEnemiesPositionTableInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
 																			if table.getn(t) >= gvHeroAbilities.UnitsTreshold then
 																				local pos = GetPositionClump(t, 500, 100)
 																				return true, pos.X, pos.Y
@@ -147,7 +155,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																			if gvHeroAbilities.CurrentlyMovingToReachCastDestination[_heroID] then
 																				return false
 																			end
-																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
+																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
 																			if num >= gvHeroAbilities.UnitsTreshold then
 																				local posX, posY = EvaluateNearestUnblockedPosition(_posX, _posY, 1000, 100, false)
 																				return true, (posX or _posX), (posY or _posY)
@@ -163,22 +171,22 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																					end
 																					return false
 																				end
-																				local numE = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
-																				local numA = GetNumberOfAlliesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
+																				local numE = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
+																				local numA = GetNumberOfAlliesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
 																				if numE >= gvHeroAbilities.UnitsTreshold and numA >= gvHeroAbilities.UnitsTreshold then
 																					return true
 																				end
 																				return false
 																			end,
 										[Abilities.AbilityCircularAttack] = function(_heroID, _posX, _posY, _player)
-																				local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
+																				local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
 																				if num >= gvHeroAbilities.UnitsTreshold then
 																					return true
 																				end
 																				return false
 																			end,
 										[Abilities.AbilitySummon] = function(_heroID, _posX, _posY, _player)
-																		local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
+																		local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
 																		if num >= gvHeroAbilities.UnitsTreshold then
 																			return true
 																		end
@@ -192,7 +200,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																				return false
 																			end,
 										[Abilities.AbilityShuriken] = 	function(_heroID, _posX, _posY, _player)
-																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, 2000)
+																			local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, 2000)
 																			if num >= gvHeroAbilities.UnitsTreshold then
 																				local id = GetNearestEnemyInRange(_player, {X = _posX, Y = _posY}, 2000, true)
 																				return true, id
@@ -211,7 +219,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																	end,
 										["StoneArmor"] = function(_heroID, _posX, _posY, _player)
 															if GetEntityHealth(_heroID) <= gvHeroAbilities.WoundedTreshold then
-																local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
+																local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
 																if num >= gvHeroAbilities.UnitsTreshold then
 																	return true
 																end
@@ -223,7 +231,7 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																or (gvHero13.AbilityProperties.StoneArmor.DamageStored[_player]
 																and (gvHero13.AbilityProperties.StoneArmor.DamageStored[_player] * gvHero13.AbilityProperties.StoneArmor.DamageFactor >= Logic.GetEntityHealth(_heroID)))
 																then
-																	local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
+																	local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
 																	if num >= gvHeroAbilities.UnitsTreshold then
 																		return true
 																	end
@@ -231,22 +239,25 @@ gvHeroAbilities = {	UnitsTreshold = 10,
 																return false
 															end,
 										["CallOfDarkness"] = function(_heroID, _posX, _posY, _player)
-																local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
+																local num = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
 																if num >= gvHeroAbilities.UnitsTreshold then
 																	return true
 																end
 																return false
 															end,
 										["LifestealAura"] = function(_heroID, _posX, _posY, _player)
-																local numE = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
-																local numA = GetNumberOfAlliesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
+																local numE = GetNumberOfEnemiesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange*2)
+																local numA = GetNumberOfAlliesInRange(_player, {EntityCategories.Leader, EntityCategories.Soldier, EntityCategories.Hero}, {X = _posX, Y = _posY}, gvHeroAbilities.DefaultRange)
 																if numE >= gvHeroAbilities.UnitsTreshold and numA >= gvHeroAbilities.UnitsTreshold then
 																	return true
 																end
 																return false
 															end,
 										["RisingEvil"] = function(_heroID, _posX, _posY, _player)
-															return ({Logic.GetPlayerEntitiesInArea(_player, Entities.PB_Tower2, _posX, _posY, gvHero14.RisingEvil.Range)})[1] >= 1
+															for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_player), CEntityIterator.OfAnyTypeFilter(Entities.PB_Tower2, Entities.PB_DarkTower2), CEntityIterator.InCircleFilter(_posX, _posY, gvHero14.RisingEvil.Range*3)) do
+																return true
+															end
+															return false
 														end
 									},
 					HeroAbilityControl = function(_heroID)

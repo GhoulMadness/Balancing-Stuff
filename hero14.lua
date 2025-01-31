@@ -45,6 +45,9 @@ gvHero14 = {CallOfDarkness = {LastTimeUsed = - 6000, Cooldown = 120,
 				local playerID = Logic.EntityGetPlayer(_heroID)
 				local pos = GetPosition(_heroID)
 				local towerID = ({Logic.GetPlayerEntitiesInArea(playerID, Entities.PB_Tower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[2]
+				if not towerID then
+					towerID = ({Logic.GetPlayerEntitiesInArea(playerID, Entities.PB_DarkTower2, pos.X, pos.Y, gvHero14.RisingEvil.Range, 1)})[2]
+				end
 				local towerpos = GetPosition(towerID)
 				local health = GetEntityHealth(towerID)
 				Logic.CreateEffect(GGL_Effects.FXHero14_Poison, towerpos.X, towerpos.Y)

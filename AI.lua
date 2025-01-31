@@ -144,6 +144,9 @@ RemoveArmyByID = function(_player, _id)
 	ArmyHomespots[_player][_id + 1] = nil
 end
 
+AIResizedTypes = {[Entities.CU_AggressiveScorpion1] = 3,
+				[Entities.CU_AggressiveScorpion2] = 3,
+				[Entities.CU_AggressiveScorpion3] = 3}
 -- creates troop for spawn army
 ---@param _army table army table
 ---@param _troop table troop description (.leaderType: leader entity type, [.maxNumberOfSoldiers: leader number of soldiers, .experiencePoints: leader experience (points not level))
@@ -156,6 +159,9 @@ EnlargeArmy = function(_army, _troop, _pos)
 	local anchor = _pos or ArmyHomespots[_army.player][_army.id + 1][math.random(1, table.getn(ArmyHomespots[_army.player][_army.id + 1]))]
 	--local id = AI.Entity_CreateFormation(_army.player, _troop.leaderType, 0, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, 0, _troop.experiencePoints or 0, _troop.minNumberOfSoldiers or 0)
 	local id = CreateGroup(_army.player, _troop.leaderType, _troop.maxNumberOfSoldiers or LeaderTypeGetMaximumNumberOfSoldiers(_troop.leaderType), anchor.X, anchor.Y, 0, _troop.experiencePoints or 0)
+	if AIResizedTypes[_troop.leaderType] then
+		SetEntitySize(id, AIResizedTypes[_troop.leaderType])
+	end
 	ConnectLeaderWithArmy(id, _army)
 end
 
@@ -199,7 +205,11 @@ Defend = function(_army)
 			local id = ArmyTable[_army.player][_army.id + 1].IDs[i]
 			if GetDistance(GetPosition(id), pos) > 1500
 			and dist <= math.min(3000, range) and not gvEMSFlag and eID then
-				Logic.GroupAttack(id, eID)
+				if Logic.IsEntityInCategory(id, EntityCategories.Hero) == 1 then
+					ManualControl_AttackTarget(_army.player, _army.id + 1, id, nil, eID)
+				else
+					Logic.GroupAttack(id, eID)
+				end
 			else
 				if Logic.GetCurrentTaskList(id) == "TL_MILITARY_IDLE" or Logic.GetCurrentTaskList(id) == "TL_VEHICLE_IDLE" then
 					ManualControl_AttackTarget(_army.player, _army.id + 1, id, nil, eID)
