@@ -2806,6 +2806,34 @@ function GetEntityTypeArmorClass(_entityType)
 	end
 end
 
+-- gets soldier type of leader Type
+---@param _entityType integer entityType of leader
+---@return integer entityType of soldier
+function GetEntityTypeSoldierType(_entityType)
+	assert(_entityType ~= nil and _entityType > 0 , "invalid entityType")
+	if not BS.MemValues.EntityTypeSoldierType then
+		BS.MemValues.EntityTypeSoldierType = {}
+	end
+	if BS.MemValues.EntityTypeSoldierType[_entityType] then
+		return BS.MemValues.EntityTypeSoldierType[_entityType]
+	else
+		local behavior_pos
+		if not BehaviorExceptionEntityTypeTable[_entityType] then
+			if string.find(Logic.GetEntityTypeName(_entityType), "Soldier") ~= nil then
+				behavior_pos = 4
+			elseif string.find(string.lower(Logic.GetEntityTypeName(_entityType)), "tower") ~= nil then
+				behavior_pos = 0
+			else
+				behavior_pos = 6
+			end
+		else
+			behavior_pos = 8
+		end
+		BS.MemValues.EntityTypeSoldierType[_entityType] = CUtilMemory.GetMemory(9002416)[0][16][_entityType*8+5][behavior_pos][25]:GetInt()
+		return BS.MemValues.EntityTypeSoldierType[_entityType]
+	end
+end
+
 -- gets damage factor related to the damageclass/armorclass
 ---@param _damageclass integer damage class
 ---@param _armorclass integer armor class
@@ -3266,6 +3294,58 @@ function SetMercenaryOfferLeft(_id, _slot, _left)
         end
     end
     assert(false, "behavior not found")
+end
+
+-- set mercenary camp offer trooptype
+---@param _id integer mercenary camp entityID
+---@param _slot integer offer slot (0-3)
+---@param _etype integer offer entity type
+function SetMercenaryOfferTroopType(_id, _slot, _etype)
+	assert(_etype > 0, "invalid entityType")
+    assert(IsValid(_id), "invalid entityID")
+    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))
+    local vtable = tonumber("7782C0", 16)
+    local number = (sv[32]:GetInt() - sv[31]:GetInt()) / 4
+    for i=0,number-1 do
+        if sv[31][i]:GetInt()>0 and sv[31][i][0]:GetInt()==vtable then
+            local sv2 = sv[31][i]
+            local number2 = (sv2[8]:GetInt() - sv2[7]:GetInt()) / 4
+            assert(number2 >= _slot, "slot invalid")
+            sv2[7][_slot][20]:SetInt(_etype)
+            return
+        end
+    end
+    assert(false, "behavior not found")
+end
+
+-- set mercenary camp offer costs
+---@param _id integer mercenary camp entityID
+---@param _slot integer offer slot (0-3)
+---@param _cost table offer costs ({[ResourceType.XXX] = 0, [ResourceType.YYY] = 0, ...})
+function SetMercenaryOfferCosts(_id, _slot, _cost)
+    assert(IsValid(_id), "invalid entityID")
+	assert(type(_cost) == "table", "_cost param must be a table")
+    local sv = CUtilMemory.GetMemory(CUtilMemory.GetEntityAddress(_id))
+    local vtable = tonumber("7782C0", 16)
+    local number = (sv[32]:GetInt() - sv[31]:GetInt()) / 4
+    for i=0,number-1 do
+        if sv[31][i]:GetInt()>0 and sv[31][i][0]:GetInt()==vtable then
+            local sv2 = sv[31][i]
+            local number2 = (sv2[8]:GetInt() - sv2[7]:GetInt()) / 4
+            assert(number2 >= _slot, "slot invalid")
+			for k, v in pairs(_cost) do
+				sv2[7][_slot][k+1]:SetFloat(v)
+				return
+			end
+        end
+    end
+    assert(false, "behavior not found")
+end
+
+function OverrideMercenarySlotData(_id, _slot, _etype, _amount, _costs)
+	SetMercenaryOfferTroopType(_id, _slot, _etype)
+	SetMercenaryOfferCosts(_id, _slot, _costs)
+	SetMercenaryOfferLeft(_id, _slot, _amount)
 end
 
 -- gets entityID BattleWaitUntil remaining
