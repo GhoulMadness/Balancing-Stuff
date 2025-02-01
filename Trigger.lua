@@ -328,10 +328,17 @@ function OnHeroDied()
 	end
 end
 function OnHeroDied_Action(_id)
-	local etype = Logic.GetEntityType(_id)
-	local playerID = GetPlayer(_id)
-	local str = BS.GetTableStrByHeroType(etype)
-	_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{_id})
+	Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", "DelayedCheck_IsHeroDead",1,{},{_id})
+end
+
+function DelayedCheck_IsHeroDead(_id)
+	if not Logic.IsEntityAlive(_id) then
+		local etype = Logic.GetEntityType(_id)
+		local playerID = GetPlayer(_id)
+		local str = BS.GetTableStrByHeroType(etype)
+		_G["gv"..str].TriggerIDs.Resurrection[playerID] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"", str.."_ResurrectionCheck",1,{},{_id})
+	end
+	return true
 end
 
 Hero6_ResurrectionCheck = function(_EntityID)
