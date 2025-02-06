@@ -885,15 +885,17 @@ function GUIUpdate_TroopOffer(_SlotIndex)
 	elseif LeaderType == Entities.PV_Catapult then
 		SourceButton = "Buy_Catapult"
 	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Bow) == 1 then
-		SourceButton = "Buy_LeaderBow"
+		SourceButton = "Buy_LeaderBow1"
 	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Spear)== 1 then
-		SourceButton = "Buy_LeaderSpear"
+		SourceButton = "Buy_LeaderSpear1"
+	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Sword)== 1 then
+		SourceButton = "Buy_LeaderSword1"
 	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.CavalryHeavy)== 1 then
-		SourceButton = "Buy_LeaderCavalryHeavy"
+		SourceButton = "Buy_LeaderCavalryHeavy1"
 	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.CavalryLight) == 1 then
-		SourceButton = "Buy_LeaderCavalryLight"
+		SourceButton = "Buy_LeaderCavalryLight1"
 	elseif Logic.IsEntityTypeInCategory(LeaderType,EntityCategories.Rifle) == 1 then
-		SourceButton = "Buy_LeaderRifle"
+		SourceButton = "Buy_LeaderRifle1"
 	elseif LeaderType == Entities.PV_Cannon1 then
 		SourceButton = "Buy_Cannon1"
 	elseif LeaderType == Entities.PV_Cannon2 then
@@ -902,6 +904,10 @@ function GUIUpdate_TroopOffer(_SlotIndex)
 		SourceButton = "Buy_Cannon3"
 	elseif LeaderType == Entities.PV_Cannon4 then
 		SourceButton = "Buy_Cannon4"
+	elseif LeaderType == Entities.PV_Cannon5 then
+		SourceButton = "Buy_Cannon5"
+	elseif LeaderType == Entities.PV_Cannon6 or LeaderType == Entities.PV_Cannon6_2	then
+		SourceButton = "Buy_Cannon6"
 	elseif LeaderType == Entities.PU_Serf then
 		SourceButton = "Buy_Serf"
 	elseif LeaderType == Entities.PU_Thief then
@@ -909,7 +915,7 @@ function GUIUpdate_TroopOffer(_SlotIndex)
 	elseif LeaderType == Entities.PU_Scout then
 		SourceButton = "Buy_Scout"
 	else
-		SourceButton = "Buy_LeaderSword"
+		SourceButton = "OnlineHelpButton"
 	end
 
 	XGUIEng.TransferMaterials(SourceButton, CurrentWidgetID)
