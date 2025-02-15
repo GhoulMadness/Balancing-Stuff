@@ -8,6 +8,8 @@ Vorbereitungen für das kommende Osterturnier.
 Eine erste Version der neuen Turniermap "Im Zeichen Ostaras" ist ab sofort verfügbar. Bitte bedenkt, dass die Map sich noch in Veränderung befindet und in aktueller Version noch keine etwaigen versteckten EasterEggs hinzugefügt sind.
 Euer Feedback zur Map ist erwünscht und wird zur Optimierung benötigt.
 
+Es wurden GUI-Fehler im Zusammenhang mit den Angeboten in Söldnerlagern behoben. 
+
 --- Version 0.767
 
 Es wurden Animationen der Winterevent-Version der Diebe überarbeitet, da diese fehlerhaft waren.

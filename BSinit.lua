@@ -487,7 +487,8 @@ do
 		"WCutter",
 		"Forester",
 		"Coal",
-		"Cannon5"
+		"Cannon5",
+		"Siege"
 	};
 	table.foreachi(files,function(_,_value)Script.Load("maps\\user\\Balancing_Stuff_in_Dev\\".._value..".lua")end)
 end

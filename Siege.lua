@@ -77,6 +77,28 @@ Siege = {AttackerIDs = {}, DefenderIDs = {}, TrapPositions = {}, TrapActivationR
 			if gvChallengeFlag then
 				Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_CREATED,"", "Siege_EntityCreated", 1)
 			end
+			function Victory()
+				if Logic.PlayerGetGameState(gvMission.PlayerID) == 1 then
+					Logic.PlayerSetGameStateToWon(gvMission.PlayerID)
+				end
+				Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.VictorySounds[1+XGUIEng.GetRandom(table.getn(Siege.VictorySounds)-1)]], 152)
+			end
+			function Defeat()
+				if Logic.PlayerGetGameState(gvMission.PlayerID) == 1 then
+					Logic.PlayerSetGameStateToLost(gvMission.PlayerID)
+				end
+				Trigger.DisableTriggerSystem(1)
+				Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.DefeatSounds[1+XGUIEng.GetRandom(table.getn(Siege.DefeatSounds)-1)]], 152)
+			end
+			GUIAction_ToggleMenuOrig = GUIAction_ToggleMenu
+			function GUIAction_ToggleMenu(_Menu, _Status)
+
+				if _Menu == "MainMenuBoxQuitWindow" or _Menu == "MainMenuBoxQuitAppWindow" then
+					Sound.PlayGUISound(Sounds.Stronghold_General_QuitGame, 152)
+				end
+				GUIAction_ToggleMenuOrig(_Menu, _Status)
+
+			end
 		end,
 		RamSounds = {Move = "Engineer_MRam", Select = "Engineer_SRam", Attack = {"Engineer_Ram1", "Engineer_AtkS1", "Engineer_AtkS2", "Engineer_AtkS3", "Engineer_AtkS4", "Engineer_AtkW1"}},
 		DropOilSounds = {"Engineer_PourOil1", "Engineer_PourOil2", "Engineer_PourOil3", "Engineer_PourOil4", "Engineer_PourOil5", "Engineer_PourOil6", "Engineer_PourOil7", "Engineer_PourOil8", "Engineer_PourOil9"},
@@ -310,26 +332,4 @@ Siege_PitchBurnerApplyDamage = function(_id, _x, _y)
 		Siege.FireEffectCasted[_id] = false
 		return true
 	end
-end
-function Victory()
-	if Logic.PlayerGetGameState(gvMission.PlayerID) == 1 then
-		Logic.PlayerSetGameStateToWon(gvMission.PlayerID)
-    end
-	Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.VictorySounds[1+XGUIEng.GetRandom(table.getn(Siege.VictorySounds)-1)]], 152)
-end
-function Defeat()
-	if Logic.PlayerGetGameState(gvMission.PlayerID) == 1 then
-		Logic.PlayerSetGameStateToLost(gvMission.PlayerID)
-	end
-	Trigger.DisableTriggerSystem(1)
-	Sound.PlayGUISound(Sounds["Stronghold_" .. Siege.DefeatSounds[1+XGUIEng.GetRandom(table.getn(Siege.DefeatSounds)-1)]], 152)
-end
-GUIAction_ToggleMenuOrig = GUIAction_ToggleMenu
-function GUIAction_ToggleMenu(_Menu, _Status)
-
-	if _Menu == "MainMenuBoxQuitWindow" or _Menu == "MainMenuBoxQuitAppWindow" then
-		Sound.PlayGUISound(Sounds.Stronghold_General_QuitGame, 152)
-	end
-	GUIAction_ToggleMenuOrig(_Menu, _Status)
-
 end
