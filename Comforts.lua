@@ -501,33 +501,33 @@ end
 
 -- remove table entry by value (in case you don't know the position in table)
 ---@param _tid table table of any iteration
----@param _key string|number|table
+---@param _value string|number|table
 ---@return string|number|table
-function removetablekeyvalue(_tid, _key)
+function removetablekeyvalue(_tid, _value)
 
 	local tpos
 
-	if type(_key) == "string" then
+	if type(_value) == "string" then
 		for i,_ in pairs(_tid) do
-			if string.find(_tid[i],_key) ~= nil then
+			if string.find(_tid[i],_value) ~= nil then
 				tpos = i
 				break
 			end
 		end
 
-	elseif type(_key) == "number" then
+	elseif type(_value) == "number" then
 		for i,_ in pairs(_tid) do
-			if _tid[i] == _key then
+			if _tid[i] == _value then
 				tpos = i
 				break
 			end
 		end
 
-	elseif type(_key) == "table" then
+	elseif type(_value) == "table" then
 		if type(_tid[1]) == "table" then
 			if _tid[1].X and _tid[1].Y then
 				for i,_ in pairs(_tid) do
-					if _tid[i].X == _key.X and _tid[i].Y == _key.Y then
+					if _tid[i].X == _value.X and _tid[i].Y == _value.Y then
 						tpos = i
 						break
 					end
@@ -537,7 +537,7 @@ function removetablekeyvalue(_tid, _key)
 
 				for i,_ in pairs(_tid) do
 					for k,_ in pairs(_tid[i]) do
-						if _tid[i][k] == _key then
+						if _tid[i][k] == _value then
 							tpos = i
 							break
 						end
@@ -548,7 +548,7 @@ function removetablekeyvalue(_tid, _key)
 		else
 
 			for i,_ in pairs(_tid) do
-				if _tid[i] == _key then
+				if _tid[i] == _value then
 					tpos = i
 					break
 				end
@@ -561,7 +561,7 @@ function removetablekeyvalue(_tid, _key)
 	end
 
 	table.remove(_tid,tpos)
-    return _key
+    return _value
 
 end
 -------------------------------------------------------------------------------------------------------------------------------------
@@ -4413,6 +4413,27 @@ function GetNodesInCircleAndRange(_pos, _range)
 	return t
 end
 
+UpgradeCategoriesByType = {["Bow"] = {UpgradeCategories.LeaderBow, UpgradeCategories.SoldierBow},
+							["Rifle"] = {UpgradeCategories.LeaderRifle, UpgradeCategories.SoldierRifle},
+							["Sword"] = {UpgradeCategories.LeaderSword, UpgradeCategories.SoldierSword},
+							["PoleArm"] = {UpgradeCategories.LeaderPoleArm, UpgradeCategories.SoldierPoleArm},
+							["Cavalry"] = {UpgradeCategories.LeaderCavalry, UpgradeCategories.SoldierCavalry},
+							["CavalryHeavy"] = {UpgradeCategories.LeaderHeavyCavalry, UpgradeCategories.SoldierHeavyCavalry}}
+function UpgradeMilitaryUnits(_player, ...)
+	if arg.n == 0 then
+		for k, v in pairs(UpgradeCategoriesByType) do
+			for i = 1, table.getn(v) do
+				Logic.UpgradeSettlerCategory(v[i], _player)
+			end
+		end
+	else
+		for i = 1, arg.n do
+			for j = 1, table.getn(UpgradeCategoriesByType[arg[i]]) do
+				Logic.UpgradeSettlerCategory(UpgradeCategoriesByType[arg[i]][j], _player)
+			end
+		end
+	end
+end
 function GetPercentageOfLeadersPerArmorClass(_table)
 	assert(type(_table) == "table", "input type must be a table")
 	assert(_table.total ~= nil, "invalid input")
