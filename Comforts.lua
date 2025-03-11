@@ -995,7 +995,7 @@ function AreEntitiesOfCategoriesAndDiplomacyStateInArea(_player, _entityCategori
 	end
 	local bool
 	for i = 1,i do
-		if Logic.GetDiplomacyState( _player, i) == _state then
+		if Logic.GetDiplomacyState(_player, i) == _state then
 			bool = AreEntitiesOfTypeAndCategoryInArea(i, 0, _entityCategories, _position, _range, 1)
 			if bool then
 				return true

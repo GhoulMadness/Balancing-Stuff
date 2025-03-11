@@ -791,9 +791,9 @@ technische Infos:
 
 			HPReg[1/s]:			5/3									8/2
 
-			DMG:				27									28
+			DMG:				29									28
 
-			RandomDMGBonus		7									2
+			RandomDMGBonus		9									2
 
 			Reichweite:			2800								2800
 
@@ -900,7 +900,7 @@ technische Infos:
 
 			HPReg[1/s]:			10/2								8/2
 
-			DMG:				28									16
+			DMG:				29									16
 
 			RandomDMGBonus		8									4
 
@@ -997,6 +997,10 @@ technische Infos:
 			Neu: Varg beschwört nun zusätzliche Wölfe während seine Berserkerwut aktiv ist.
 			Die Anzahl zusätzlicher Wölfe wird weiter erhöht, wenn Varg über wenig Lebenspunkte verfügt.
 
+			Neu: Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist,
+			werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben.
+			Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen genullt.
+
 		Armbrustschütze*:
 
 			Kosten:	Taler:		250									250
@@ -1023,7 +1027,7 @@ technische Infos:
 
 			Rüstung:			5									3
 
-			Schaden:			17									14
+			Schaden:			16									14
 
 			Reichweite:			3000								2900
 
@@ -1157,7 +1161,7 @@ technische Infos:
 
 			Lauftempo:			300									320
 
-			Schaden:			15									16
+			Schaden:			21									16
 
 			Reichweite:			2300								2800
 
@@ -1930,6 +1934,13 @@ Neuerungen im Balancing Stuff:
 			Götterdämmerung DMG:		1200% Dovbar DMG (Soldaten + Hauptmänner)
 										1800% Dovbar DMG (Helden)
 										2400% Dovbar DMG (Gebäude+Kanonen+Diebe+Scouts)
+
+			Vorsehung: Wurde Götterdämmerung längere Zeit nicht verwendet, steigen Schaden und Reichweite der nächsten Götterdämmerung kontinuierlich an.
+					Wird hierbei eine Steigerung von über 100% erreicht, erhält die nächste Götterdämmerung folgende Boni:
+					Dovbar gelangt vor Eure Burg, sofern mehr Feinde als eigene und verbündete Einheiten in der Nähe waren.
+					Sterben Verbündete durch die Anwendung, erzeugen diese ebenfalls Blitze, die Schaden verursachen.
+					Der Schaden dieser zusätzlichen Blitze ist abhängig vom Angriffswert des jeweiligen Gefallenen. Diese Blitze schädigen NUR Feinde.
+
 
 		Erebos:
 
@@ -2895,6 +2906,44 @@ Neuerungen im Balancing Stuff:
 			Es wurde ein Tag-Nacht-Zyklus eingebaut, um das Siedler-Ambiente noch realistischer zu gestalten. Dieser ist rein optischer Natur und hat keine weiteren Einflüsse auf das Spielgeschehen.
 			Die Dauer eines Tages ist von Map zu Map unterschiedlich und kann auch je nach Map von Regen und Winter begleitet werden. Die aktuelle Tageszeit könnt Ihr an einer Mechanischen Uhr
 			einsehen.
+
+		Erfahrungspunkte:
+
+			Die Boni für Truppen mit Erfahrungspunkten wurden überarbeitet und gestalten sich wie folgt
+			(die Werte sind als additiv zu betrachten):
+
+						LVL1:				LVL2:				LVL3:				LVL4:				LVL5:
+
+			Schütze:	+4 Random-DMG		+200 Reichweite		+2 Random-DMG		+100 Reichweite		+100 Reichweite
+																+4 HP-Reg			+1 DMG				+1 DMG
+																										+2 HP-Reg
+																										-2 Miss-Chance
+
+			Kanone:		+5 Random-DMG		+5 Random-DMG		+4 DMG				+5 Random-DMG		+300 Reichweite
+																					+4 DMG
+
+			SKav:		+8 Random-DMG		+2 Random-DMG		+2 Random-DMG		+2 Random-DMG		+2 Random-DMG
+											+300 (Auto)Range	+10 HP-Reg			+2 HP-Reg			+3 HP-Reg
+																					+3 DMG				+3 DMG
+
+			LKav:		+3 Random-DMG		+1 Random-DMG		+1 Random-DMG		+1 Random-DMG		+1 Random-DMG
+											+200 Reichweite		+5 HP-Reg			+1 HP-Reg			+2 HP-Reg
+																					+100 Reichweite		+2 DMG
+																					+2 DMG				-2 Miss-Chance
+
+			Scharfi:	+4 Random-DMG		+100 Reichweite		+3 HP-Reg			+2 Random-DMG		+2 Random-DMG
+																					+100 Reichweite		+1 HP-Reg
+																					+1 HP-Reg			+2 DMG
+																					+1 DMG				-2 Miss-Chance
+
+			Speer:		+6 Random-DMG		+1 Random-DMG		+1 Random-DMG		+1 Random-DMG		+1 Random-DMG
+											+300 (Auto)Range	+10 HP-Reg			+2 HP-Reg			+2 HP-Reg
+																					+2 DMG				+3 DMG
+
+			Schwert:	+4 Random-DMG		+1 Random-DMG		+1 Random-DMG		+1 Random-DMG		+1 Random-DMG
+											+300 (Auto)Range	+10 HP-Reg			+4 HP-Reg			+4 HP-Reg
+																					+2 DMG				+1 DMG
+
 
 		Prüfungs-Maps:
 

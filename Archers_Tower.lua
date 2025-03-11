@@ -24,7 +24,7 @@ gvArchers_Tower.RangedEnemySearchRange = 3500
 -- Kategorien von feindlichen Nahkampf-Truppen, die nicht nahe des Turms stehen dürfen, wenn er befüllt werden soll
 gvArchers_Tower.MeleeEnemySearchCategories = {EntityCategories.Melee}
 -- Kritische Reichweite, in der sich keine Nahkampf-Feinde in der Nähe des Turmes befinden dürfen
-gvArchers_Tower.MeleeEnemySearchRange = 600
+gvArchers_Tower.MeleeEnemySearchRange = 1000
 
 gvArchers_Tower.AmountOfTowers = {}
 
