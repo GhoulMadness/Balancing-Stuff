@@ -834,8 +834,7 @@ Hero9_Plunder_Job = function(_heroID, _starttime)
 					local posA = GetPosition(attacker)
 					if GetDistance(posH, posA) <= tab.Range then
 						local rtype = gvHero9.GetPlunderedResourceTypeByTarget(target)
-						tab.Plundered[_heroID][rtype] = tab.Plundered[_heroID][rtype] or 0
-						tab.Plundered[_heroID][rtype] = tab.Plundered[_heroID][rtype] + tab.ResPerHit
+						tab.Plundered[_heroID][rtype] = (tab.Plundered[_heroID][rtype] or 0) + (tab.ResPerHit[rtype] or tab.ResPerHit.default)
 						Logic.CreateEffect(GGL_Effects.FXDestroyTree, posA.X, posA.Y)
 					end
 				end

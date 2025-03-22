@@ -1101,3 +1101,66 @@ Build-Block-Reichweite von Gebäuden durch nahe Gegner auf Koop-Karten:
 	1500 -> 2500 (unverändert auf PvP Maps)
 
 Es wurde ein Fehler behoben, durch den auf Karten mit Armee-Erstellungs-Tool dieses erneut auftauchte, wenn ein Spieler das Spiel verlassen hatte und erneut reingeladen hatte.
+
+--- Version 0.764
+
+Truppen der KI warten nun nach der Rekrutierung, bis alle Soldaten erschienen sind. 
+Dies soll verhindern, dass im späteren Spielverlauf nur noch Hauptmänner erscheinen, wenn die KI viel am kämpfen ist.
+
+Holzfäller und Förster werden nun von der KI nicht mehr gezielt angegriffen.
+
+Die KI greift nun auf Schützentürmen stationierte Truppen gezielter an.
+
+Es wurde ein Fehler behoben, durch den Anti-Gebäude-Kanonen der KI manchmal ihre Ziele nicht angreifen konnten.
+
+Der Chat-Output ist nun auch während des Pause-Screens zu sehen.
+
+Das vorherige Update katapultierte Holzfäller in unerwartete Höhen.
+Daher wurde die benötigte Dauer zum Fällen von Bäumen wieder leicht erhöht:
+	Dauer/Ressource:	0,2 Sekunden -> 0,3 Sekunden
+
+Es wurde ein Fehler behoben, durch den das Spiel auf bestimmten Karten einfrieren konnte.
+
+Der Schützenturm wurde verstärkt, um dessen Nutzung für den Spieler attraktiver zu machen:
+	benötigte Zeit zum Hinaufgelangen von Truppen:	10 Sekunden -> 6 Sekunden
+	Schadens-Bonus für Truppen auf dem Turm:	30% -> 40%
+	Rüstungs-Bonus für Truppen auf dem Turm:	30% -> 40%
+	Reichweite-Bonus für Truppen auf dem Turm:	20% -> 600
+
+Dovbar-Balancing:
+Götterdämmerung:
+	minimale Reichweite:	400 scm -> 600 scm
+	Der Schaden nimmt nun bei steigender Verzögerung langsamer ab.
+	Anzahl Blitze bei erfolgreicher Anwendung: 10 -> 1 - 10 (abhängig vom verursachten Schaden)
+
+Kavallerie-Balancing:
+berittener Kurzbogenschütze:
+	Kosten Hauptmann: Taler: 200, Holz: 70 -> Taler: 280, Holz: 80
+	Kosten Soldat:	  Taler: 80,  Holz: 40 -> Taler: 100, Holz: 40
+	Rüstungswert:			     2 -> 3
+	Angriffsreichweite: 		  2500 -> 2700
+
+berittener Kurzschwertkämpfer:
+	benötigter DZ-Platz:		     2 -> 1
+	
+berittener Streitaxtkämpfer:
+	Kosten Hauptmann: Taler: 450, Eisen: 160 -> Taler: 380, Eisen: 140
+	Kosten Soldat:    Taler: 210, Eisen: 90  -> Taler: 150, Eisen: 70
+	benötigter DZ-Platz:		       2 -> 1
+	Lebenspunkte:			     400 -> 350
+	Rüstungswert:			       9 -> 7
+	max. Soldaten:			       3 -> 4
+
+Ihr könnt nun eine weitere berittene Militäreinheit im Stall rekrutieren, den Ulan.
+
+Gebäudekosten:
+	Schmiede:			400 Lehm, 300 Holz   -> 200 Lehm, 300 Holz
+	Ausbau zur Grobschmiede:	100 Lehm, 200 Steine -> 300 Lehm, 400 Steine
+	Ausbau zur Feinschmiede:	500 Lehm, 800 Steine -> 400 Lehm, 500 Steine
+	Ausbau zum Sägewerk:		550 Lehm, 600 Steine -> 450 Lehm, 500 Steine
+	Ausbau zum Marktplatz:		1000 Taler, 400 Lehm, 600 Holz, 750 Steine -> 550 Taler, 200 Lehm, 350 Holz, 500 Steine
+	Ausbau zum Handelsposten:	200 Taler, 100 Lehm, 150 Holz, 300 Steine  -> 650 Taler, 300 Lehm, 400 Holz, 550 Steine
+	Ausbau zum Münztresor:		600 Taler, 800 Steine -> 400 Taler, 600 Steine
+	Münzstätte:			200 Lehm, 400 Holz, 750 Steine -> 150 Lehm, 300 Holz, 500 Steine
+
+Es wurden kleinere GUI-Verbesserungen vorgenommen.

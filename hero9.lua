@@ -1,5 +1,5 @@
 gvHero9 = {AbilityProperties = {Summon = {BaseNumBonusTroops = 2, BonusFactorPerMissingHealth = 0.02, Cooldown = 300}, Rage = {Duration = 40},
-		Plunder = {Range = 1200, Duration = 60, ResPerHit = 5,
+		Plunder = {Range = 1200, Duration = 60, ResPerHit = {[ResourceType.Silver] = 2, [ResourceType.SilverRaw] = 2, ["default"] = 5},
 			AllowedTypes = {Entities.CU_AggressiveWolf, Entities.CU_Barbarian_Hero_wolf, Entities.CU_Barbarian_LeaderClub1, Entities.CU_Barbarian_SoldierClub1,
 				Entities.CU_Barbarian_LeaderClub2, Entities.CU_Barbarian_SoldierClub2, Entities.CU_VeteranLieutenant, Entities.CU_VeteranLieutenantSoldier
 			},

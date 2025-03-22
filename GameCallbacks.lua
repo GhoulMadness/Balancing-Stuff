@@ -141,6 +141,13 @@ function Mission_OnSaveGameLoaded()
 		SetPlayerColorMappingOrig(_player, _colorID)
 		Logic.PlayerSetPlayerColor(_player, GUI.GetPlayerColor(_player))
 	end
+
+	-- TODO: test this workaround for mp "real" savegames
+	if CNetwork then
+		XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
+			return tonumber(string.sub(Framework.GetCurrentMapName(), 2, 2))
+		end
+	end
 end
 -- 3 thiefs max. on xmas-tree related maps
 if gvXmasEventFlag == 1 then

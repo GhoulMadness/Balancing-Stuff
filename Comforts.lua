@@ -3335,8 +3335,8 @@ function SetMercenaryOfferCosts(_id, _slot, _cost)
             assert(number2 >= _slot, "slot invalid")
 			for k, v in pairs(_cost) do
 				sv2[7][_slot][k+1]:SetFloat(v)
-				return
 			end
+			return
         end
     end
     assert(false, "behavior not found")
@@ -3344,6 +3344,16 @@ end
 
 function OverrideMercenarySlotData(_id, _slot, _etype, _amount, _costs)
 	SetMercenaryOfferTroopType(_id, _slot, _etype)
+	local costs = {}
+	--ubi slots reach from 1-4
+	Logic.GetMercenaryOffer(_id, _slot+1, costs)
+	--reset costs of old types to 0, if not in override data
+	for k, v in pairs(costs) do
+		if v > 0 and not _costs[k] then
+			_costs[k] = 0
+		end
+	end
+
 	SetMercenaryOfferCosts(_id, _slot, _costs)
 	SetMercenaryOfferLeft(_id, _slot, _amount)
 end
