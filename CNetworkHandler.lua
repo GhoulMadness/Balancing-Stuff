@@ -613,4 +613,88 @@ if CNetwork then
 		end
 		return true
 	end
+
+	function Network_Handler_Diplomacy_Self_Destruct_Helper(pid, type)
+
+		local time = XGUIEng.GetSystemTime()
+		while true do
+			local TempTable = {Logic.GetPlayerEntities( pid, type, 48 ) }
+			for j = 1,TempTable[1] + 1, 1 do
+				Logic.DestroyEntity(TempTable[j]);
+			end;
+
+			if TempTable[1] == 0 then
+				break;
+			end;
+			if XGUIEng.GetSystemTime() > time + 5 then
+				LuaDebugger.Log("SELF DESTRUCT PLAYER " .. pid .. ": cant delete entity type " .. Logic.GetEntityTypeName(type) )
+				CLogger.Log("SELF DESTRUCT PLAYER " .. pid .. ": cant delete entity type " .. Logic.GetEntityTypeName(type) )
+				break
+			end
+		end;
+	end;
+	function Network.Handlers.Diplomacy_SelfDestruct(name, pid)
+		if CNetwork.IsAllowedToManipulatePlayer(name, pid) then
+			Message("Player " .. name .. " has given up all hope.");
+			-- As long as there are entities
+
+			CLogger.Log("Diplomacy_SelfDestruct", pid);
+
+
+			local destroy_later = {
+				[Entities.PB_Headquarters1] = true;
+				[Entities.PB_Headquarters2] = true;
+				[Entities.PB_Headquarters3] = true;
+				[Entities.PB_Market1] = true;
+				[Entities.PB_Market2] = true;
+
+				[Entities.PB_ClayMine1] = true;
+				[Entities.PB_ClayMine2] = true;
+				[Entities.PB_ClayMine3] = true;
+
+				[Entities.PB_IronMine1] = true;
+				[Entities.PB_IronMine2] = true;
+				[Entities.PB_IronMine3] = true;
+
+				[Entities.PB_StoneMine1] = true;
+				[Entities.PB_StoneMine2] = true;
+				[Entities.PB_StoneMine3] = true;
+
+				[Entities.PB_SulfurMine1] = true;
+				[Entities.PB_SulfurMine2] = true;
+				[Entities.PB_SulfurMine3] = true;
+
+				[Entities.PB_Outpost1] = true;
+				[Entities.PB_Outpost2] = true;
+				[Entities.PB_Outpost3] = true;
+
+				[Entities.PB_Market3] = true;
+
+				[Entities.PB_Castle1] = true;
+				[Entities.PB_Castle2] = true;
+				[Entities.PB_Castle3] = true;
+				[Entities.PB_Castle4] = true;
+				[Entities.PB_Castle5] = true;
+
+				[Entities.PB_SilverMine1] = true;
+				[Entities.PB_SilverMine2] = true;
+				[Entities.PB_SilverMine3] = true;
+
+				[Entities.PB_GoldMine1] = true;
+				[Entities.PB_GoldMine2] = true;
+				[Entities.PB_GoldMine3] = true;
+			};
+
+			for k,v in pairs(Entities) do
+				if not destroy_later[v] then
+					Network_Handler_Diplomacy_Self_Destruct_Helper(pid, v);
+				end;
+			end;
+
+			for k,v in pairs(destroy_later) do
+				Network_Handler_Diplomacy_Self_Destruct_Helper(pid, k);
+			end;
+
+		end;
+	end;
 end
