@@ -142,10 +142,40 @@ function Mission_OnSaveGameLoaded()
 		Logic.PlayerSetPlayerColor(_player, GUI.GetPlayerColor(_player))
 	end
 
-	-- TODO: test this workaround for mp "real" savegames
+	-- workarounds for mp "real" savegames dysfunctions
 	if CNetwork then
 		XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
 			return tonumber(string.sub(Framework.GetCurrentMapName(), 2, 2))
+		end
+		function GUIAction_BuySoldier()
+
+			local LeaderID = GUI.GetSelectedEntity()
+			local PlayerID = GUI.GetPlayerID()
+
+
+			-- Maximum number of settlers attracted?
+			if Logic.GetPlayerAttractionUsage( PlayerID ) >= Logic.GetPlayerAttractionLimit( PlayerID ) then
+				GUI.SendPopulationLimitReachedFeedbackEvent( PlayerID )
+				return
+			end
+
+			local VCThreshold = Logic.GetLogicPropertiesMotivationThresholdVCLock()
+			local AverageMotivation = Logic.GetAverageMotivation(PlayerID)
+
+			if AverageMotivation < VCThreshold then
+				GUI.AddNote(XGUIEng.GetStringTableText("InGameMessages/Note_VillageCentersAreClosed"))
+				return
+			end
+
+			local UpgradeCategory = Logic.LeaderGetSoldierUpgradeCategory( LeaderID )
+			Logic.FillSoldierCostsTable( PlayerID, UpgradeCategory, InterfaceGlobals.CostTable )
+
+			if InterfaceTool_HasPlayerEnoughResources_Feedback( InterfaceGlobals.CostTable ) == 1 then
+				-- Yes
+				GUI.BuySoldier(LeaderID)
+				--Sound.PlayGUISound( Sounds.klick_rnd_1, 0 )
+			end
+
 		end
 	end
 end

@@ -776,11 +776,15 @@ Hero9_DiedCheck_Job = function(_heroID)
 		local health = Logic.GetEntityHealth(target)
 		local damage = CEntity.TriggerGetDamage()
 		if damage >= health then
-
-			if gvHero9.AbilityProperties.Plunder.Plundered[target] then
-				gvHero9.AbilityProperties.Plunder.Plundered[target] = 0
+			local tab = gvHero9.AbilityProperties.Plunder
+			if tab.Plundered[target] and next(tab.Plundered[target]) then
+				for k, v in pairs(tab.Plundered[target]) do
+					if v > 0 then
+						tab.Plundered[target][k] = nil
+					end
+				end
 			end
-			local player = Logic.EntityGetPlayer(_heroID)
+			local player = Logic.EntityGetPlayer(target)
 			gvHero9.TriggerIDs.DiedCheck[player] = nil
 			return true
 
