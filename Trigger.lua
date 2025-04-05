@@ -1257,6 +1257,30 @@ function CheckForCommandAbortedJob(_id, _command, ...)
 	end
 end
 
+gvEvil = {Troll = {AoERange = 500, AoEEffect = GGL_Effects.FXCrushBuilding, LastTimeUsed = {}}}
+function EvilTroll_AoEDMG()
+
+	local attacker = Event.GetEntityID1()
+	local attype = Logic.GetEntityType(attacker)
+
+	if attype == Entities.CU_Evil_Troll1 then
+		local last = gvEvil.Troll.LastTimeUsed[attacker]
+		if not last or (Logic.GetTime() - last >= 1) then
+			gvEvil.Troll.LastTimeUsed[attacker] = Logic.GetTime()
+			local target = Event.GetEntityID2()
+			local targetpos = GetPosition(target)
+			local task = Logic.GetCurrentTaskList(attacker)
+			local dmg = Logic.GetEntityDamage(attacker)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_TURN, "", "EvilTroll_DelayedAoEDMG", 1, {}, {attacker, targetpos.X, targetpos.Y, gvEvil.Troll.AoERange, dmg})
+		end
+	end
+end
+function EvilTroll_DelayedAoEDMG(_id, _x, _y, _range, _dmg)
+	CEntity.DealDamageInArea(_id, _x, _y, _range, _dmg)
+	Logic.CreateEffect(gvEvil.Troll.AoEEffect, _x, _y)
+	return true
+end
+
 -- XMas Tower Trigger
 function XMasTowerUpgraded()
 

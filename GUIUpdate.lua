@@ -1093,6 +1093,19 @@ UpgradeTechByEtype = {	[Entities.PU_LeaderBow1] = Technologies.T_UpgradeBow1,
 						[Entities.PU_LeaderCavalry1] = Technologies.T_UpgradeLightCavalry1,
 						[Entities.PU_LeaderHeavyCavalry1] = Technologies.T_UpgradeHeavyCavalry1
 					}
+UpgradeBuildingLVLByEtype = {[Entities.PU_LeaderBow1] = 1,
+							[Entities.PU_LeaderBow2] = 2,
+							[Entities.PU_LeaderBow3] = 2,
+							[Entities.PU_LeaderRifle1] = 2,
+							[Entities.PU_LeaderSword1] = 1,
+							[Entities.PU_LeaderSword2] = 2,
+							[Entities.PU_LeaderSword3] = 2,
+							[Entities.PU_LeaderPoleArm1] = 1,
+							[Entities.PU_LeaderPoleArm2] = 2,
+							[Entities.PU_LeaderPoleArm3] = 2,
+							[Entities.PU_LeaderCavalry1] = 2,
+							[Entities.PU_LeaderHeavyCavalry1] = 2
+}
 
 function GUIUpdate_UpgradeLeader(_LeaderID)
 	local button = XGUIEng.GetCurrentWidgetID()
@@ -1111,7 +1124,12 @@ function GUIUpdate_UpgradeLeader(_LeaderID)
 			XGUIEng.ShowWidget(button, 1)
 			local barracks = Logic.LeaderGetNearbyBarracks(_LeaderID)
 			if barracks ~= 0 and Logic.IsConstructionComplete(barracks) == 1 then
-				XGUIEng.DisableButton(button, 0)
+				local typename = Logic.GetEntityTypeName(Logic.GetEntityType(barracks))
+				if tonumber(string.sub(typename, string.len(typename))) >= UpgradeBuildingLVLByEtype[etype] then
+					XGUIEng.DisableButton(button, 0)
+				else
+					XGUIEng.DisableButton(button, 1)
+				end
 			else
 				XGUIEng.DisableButton(button, 1)
 			end
@@ -1129,9 +1147,12 @@ function GUIUpdate_UpgradeLeader(_LeaderID)
 				if techstate == 4 then
 					local barracks = Logic.LeaderGetNearbyBarracks(id)
 					if barracks ~= 0 and Logic.IsConstructionComplete(barracks) == 1 then
-						XGUIEng.ShowWidget(button, 1)
-						XGUIEng.DisableButton(button, 0)
-						return
+						local typename = Logic.GetEntityTypeName(Logic.GetEntityType(barracks))
+						if tonumber(string.sub(typename, string.len(typename))) >= UpgradeBuildingLVLByEtype[etype] then
+							XGUIEng.ShowWidget(button, 1)
+							XGUIEng.DisableButton(button, 0)
+							return
+						end
 					end
 				end
 			end

@@ -1,5 +1,11 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.770
+
+Ihr könnt Militäreinheiten nun nur noch upgraden, wenn das entsprechende nahe Militärgebäude über die benötigte Ausbaustufe verfügt.
+
+Es wurde ein Fehler im Zusammenhang mit zerstörten Militärgebäuden der KI und rekrutierten Truppen, die auf Rekrutierung weiterer Soldaten warteten, behoben.
+
 --- Version 0.769
 
 Varg Plünderung: geplünderte Ressourcen/Treffer:
