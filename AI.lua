@@ -552,7 +552,7 @@ ManualControl_AttackTarget = function(_player, _armyId, _id, _type, _target)
 	end
 	pos = GetPosition(_id)
 	newtarget = CheckForBetterTarget(_id, tabname[_id] and tabname[_id].currenttarget, nil)
-				or GetNearestEnemyInRange(_player, pos, range - GetDistance(pos, tabname.enemySearchPosition or tabname.position))
+				or GetNearestEnemyInRange(_player, tabname.enemySearchPosition or pos, range - GetDistance(pos, tabname.enemySearchPosition or tabname.position))
 				or GetNearestTarget(_player, _id)
 
 	tabname[_id] = tabname[_id] or {}

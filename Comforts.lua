@@ -1722,6 +1722,7 @@ MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 							[Entities.CU_BlackKnight_LeaderSword3] = 6,
 							[Entities.CU_Evil_LeaderBearman1] = 16,
 							[Entities.CU_Evil_LeaderSkirmisher1] = 16,
+							[Entities.CU_Evil_LeaderSpearman1] = 16,
 							[Entities.CU_VeteranCaptain] = 0,
 							[Entities.CU_VeteranLieutenant] = 2,
 							[Entities.CU_VeteranMajor] = 2}
