@@ -836,11 +836,14 @@ function GUIAction_UpgradeLeader(_LeaderID)
 						if BarracksID ~= 0
 						and Logic.GetRemainingUpgradeTimeForBuilding(BarracksID) == Logic.GetTotalUpgradeTimeForBuilding(BarracksID)
 						and Logic.GetTechnologyResearchedAtBuilding(BarracksID) == 0 then
-							upetype = etype + 1
-							numsoldiers = Logic.LeaderGetNumberOfSoldiers(id)
-							soletype = Logic.LeaderGetSoldiersType(id)
-							upsoletype = soletype + 1
-							temp_t[i] = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+							local typename = Logic.GetEntityTypeName(Logic.GetEntityType(BarracksID))
+							if tonumber(string.sub(typename, string.len(typename))) >= UpgradeBuildingLVLByEtype[etype] then
+								upetype = etype + 1
+								numsoldiers = Logic.LeaderGetNumberOfSoldiers(id)
+								soletype = Logic.LeaderGetSoldiersType(id)
+								upsoletype = soletype + 1
+								temp_t[i] = CreateCostDifferenceTable(PlayerID, etype, upetype, soletype, upsoletype, numsoldiers)
+							end
 						end
 					end
 				end
