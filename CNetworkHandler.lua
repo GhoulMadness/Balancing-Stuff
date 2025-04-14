@@ -683,6 +683,9 @@ if CNetwork then
 				[Entities.PB_GoldMine1] = true;
 				[Entities.PB_GoldMine2] = true;
 				[Entities.PB_GoldMine3] = true;
+				
+				[Entities.PU_WoodCutter] = true;
+				[Entities.PU_Forester] = true
 			};
 
 			for k,v in pairs(Entities) do
