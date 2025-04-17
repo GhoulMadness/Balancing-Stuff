@@ -927,6 +927,25 @@ function GUIUpdate_TroopOffer(_SlotIndex)
 	XGUIEng.SetText(gvGUI_WidgetID.TroopMerchantOfferAmount[_SlotIndex], "@ra " .. Amount)
 
 end
+function GUIUpdate_MerchantOffers(_WidgetTable)
+
+	local PlayerID = GUI.GetPlayerID()
+
+	if PlayerID ~= BS.SpectatorPID and Logic.IsMerchantOpened(SelectedTroopMerchantID, PlayerID) == false then
+		GUI.ClearSelection()
+	else
+		local AmountOfOffers = Logic.GetNumerOfMerchantOffers(SelectedTroopMerchantID)
+
+		XGUIEng.ShowAllSubWidgets(_WidgetTable[0],0)
+
+		for i=1,AmountOfOffers,1
+		do
+			XGUIEng.ShowWidget(_WidgetTable[i],1)
+		end
+
+	end
+
+end
 function GUIUpdate_Forester_WorkChange(_flag)
 
 	local CurrentWidgetID = XGUIEng.GetCurrentWidgetID()

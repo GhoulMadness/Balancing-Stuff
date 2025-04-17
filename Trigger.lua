@@ -757,7 +757,7 @@ function Hero9_Died(_heroID)
 				for i = 1, table.getn(gvHero9.WolfIDs[player]) do
 					SetHealth(gvHero9.WolfIDs[player][i], 0)
 				end
-				gvHero9.WolfIDs[player] = nil
+				gvHero9.WolfIDs[player] = {}
 			end
 
 			return true

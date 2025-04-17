@@ -1,6 +1,6 @@
 BS = BS or {}
 
-BS.Version = 0.770
+BS.Version = 0.771
 
 BS.SpectatorPID = 17
 
@@ -596,6 +596,8 @@ Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "EvilTroll_AoE
 --Trigger for AI tower target redirection
 AIchunks = {}
 Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_HURT_ENTITY, "", "AITower_RedirectTarget", 1)
+--spectator QoL
+Trigger.RequestTrigger(Events.LOGIC_EVENT_ENTITY_DESTROYED, "", "LocalMusic_Spectator_TriggerSettlerKilled", 1)
 ----------------------------------- loading GUI and special scripts (various for EMS and cooperation Maps) ----------------------------------
 if not gvEMSFlag then
 	Script.Load("maps\\user\\EMS\\tools\\Sync.lua")

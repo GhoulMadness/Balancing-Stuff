@@ -1,5 +1,15 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.771
+
+Es wurde ein Fehler behoben, der in bestimmten Konstellationen mit dem Beschwören von Vargs Wölfen auftreten konnte.
+
+QoL für Zuschauer: Ihr könnt nun im selektierten Söldnerquartier die Truppenangebote einsehen.
+
+Der Zuschauer erhält nun in regelmäßigen Abständen Angriffssymbole auf der MiniMap, wenn eine Spielereinheit stirbt.
+
+Die Musik für den Zuschauer wechselt nun in zufällige Kampfmusik, wenn in der Nähe der Kamera-Position des Zuschauers Spielereinheiten sterben.
+
 --- Version 0.770
 
 Ihr könnt Militäreinheiten nun nur noch upgraden, wenn das entsprechende nahe Militärgebäude über die benötigte Ausbaustufe verfügt.
@@ -63,29 +73,3 @@ Stirbt Dovbar durch den Einsatz einer anderen Götterdämmerung, Erebos Schadens
 
 Varg verfügt nun über eine weitere Fähigkeit.
 Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist, werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben. Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen genullt.
-
---- Version 0.766
-
-Ein neues Gebäude ist ab sofort verfügbar: Die Statue des 20jährigen Jubiläums.
-Diese ist dem 20-jährigen Jubiläum von Die Siedler - Das Erbe der Könige gewidmet.
-Sie erhöht die Motivation all Eurer Arbeiter um 20% und regeneriert in regelmäßigen Abständen 20 Ausdauer für jeden Arbeiter in ihrer Nähe.
-Sie benötigt die 20. Technologie in der Uni, Schatzmeistergilden. 
-Die Baukosten betragen 25 Taler, 11 Holz und 2004 Steine (angelehnt an das Erscheinungsdatum von S5).
-20 verschiedene, aus der Welt von S5 bekannte Figurinen zieren diese Statue.
-Wird sie errichtet, erscheint ein prunkvolles, güldenes Feuerwerk mit rotierenden Zwanzigern.
-
-Es wurde ein Fehler im Zusammenhang von Maps mit dem Armee-Erstellungs-Tool und Erebos behoben.
-
-Es wurde ein Fehler behoben, der auftreten konnte, wenn Varg kampfunfähig wurde während seine Berserkerwut aktiv war und keinerlei Wölfe gerufen wurden.
-
---- Version 0.765
-
-Ulan können nun auch auf Karten mit dem Armee-Erstellungs-Tool ausgewählt werden.
-
-Erebos, Orgelkanonen und Schwere Haubitzen können nun auch auf Karten mit dem Armee-Erstellungs-Tool ausgewählt werden (wenn Voraussetzungen erfüllt).
-
-Es wurde ein Fehler behoben, durch den die Ausbaukosten zum Handelsposten nicht korrekt angezeigt wurden.
-
-Es wurde ein Fehler behoben, durch den die Technologie 'Schweres Unwetter' nicht die korrekten Technologien erforderte sowie falsche Forschungskosten besaß.
-
-Sämtliche Technologien in der Wettermaschine generieren nun Punkte für die Statistiken.

@@ -449,6 +449,23 @@ function GameCallback_GUI_SelectionChanged()
 			--Is EntityType the anniversary statue 20?
 			elseif 	UpgradeCategory == UpgradeCategories.Beautification_Anniversary20 then
 				XGUIEng.ShowWidget(XGUIEng.GetWidgetID("Beauti_Anniv20"),1)
+			--Is EntityType the Mercenary? Show offers to spectators
+			elseif UpgradeCategory == UpgradeCategories.Merchant then
+				XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionView,0)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionGeneric,1)
+
+				--Hide all building widgets
+				XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.SelectionBuilding,0)
+
+				XGUIEng.ShowWidget(gvGUI_WidgetID.TroopMerchant,1)
+				XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.TroopMerchant,1)
+				
+				--Display building container
+				XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionBuilding,1)
+				XGUIEng.ShowWidget(gvGUI_WidgetID.BackgroundFull,1)
+
+				SelectedTroopMerchantID = EntityId
 			end
 			--Update Upgrade Buttons
 			InterfaceTool_UpdateUpgradeButtons(EntityType, UpgradeCategory, ButtonStem)
