@@ -10,6 +10,8 @@ Der Zuschauer erhält nun in regelmäßigen Abständen Angriffssymbole auf der M
 
 Die Musik für den Zuschauer wechselt nun in zufällige Kampfmusik, wenn in der Nähe der Kamera-Position des Zuschauers Spielereinheiten sterben.
 
+Fehlende EMS-Technology-Buttons beim Forschen für die Zuschauer wurden hinzugefügt.
+
 --- Version 0.770
 
 Ihr könnt Militäreinheiten nun nur noch upgraden, wenn das entsprechende nahe Militärgebäude über die benötigte Ausbaustufe verfügt.
