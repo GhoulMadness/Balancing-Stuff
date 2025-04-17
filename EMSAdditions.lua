@@ -8,6 +8,8 @@ if EMS then
 		if BS_AdditionalPrecommits then
 			BS_AdditionalPrecommits()
 		end
+		-- Spectator Buttons and Widgets (Correct Icon shown)
+		StartSimpleJob("DelayedSpectatorButtonSources")
 	end)
 	-- localizations and rule stuff
 	EMS.GC.HeroKeys[Entities.PU_Hero13] = "Dovbar"
@@ -299,38 +301,53 @@ if EMS then
 		end
 	end
 end
-		-- Spectator Buttons and Widgets (Correct Icon shown)
-if gvGUI_TechnologyButtonIDArray then
-	gvGUI_TechnologyButtonIDArray[Technologies.T_ThunderStorm] = XGUIEng.GetWidgetID("Research_ThunderStorm");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_HeavyThunder] = XGUIEng.GetWidgetID("Research_HeavyThunder");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_TotalDestruction] = XGUIEng.GetWidgetID("Research_TotalDestruction");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_LightningInsurance] = XGUIEng.GetWidgetID("Research_LightningInsurance");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Foresight] = XGUIEng.GetWidgetID("Research_Foresight");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Alacricity] = XGUIEng.GetWidgetID("Research_Alacricity");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BarbarianCulture] = XGUIEng.GetWidgetID("Research_BarbarianCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BanditCulture] = XGUIEng.GetWidgetID("Research_BanditCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BearmanCulture] = XGUIEng.GetWidgetID("Research_BearmanCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_KnightsCulture] = XGUIEng.GetWidgetID("Research_KnightsCulture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverPlateArmor] = XGUIEng.GetWidgetID("Research_SilverPlateArmor");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverArcherArmor] = XGUIEng.GetWidgetID("Research_SilverArcherArmor");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverArrows] = XGUIEng.GetWidgetID("Research_SilverArrows");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverSwords] = XGUIEng.GetWidgetID("Research_SilverSwords");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverLance] = XGUIEng.GetWidgetID("Research_SilverLance");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverBullets] = XGUIEng.GetWidgetID("Research_SilverBullets");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_SilverMissiles] = XGUIEng.GetWidgetID("Research_SilverMissiles");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BloodRush] = XGUIEng.GetWidgetID("Research_BloodRush");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Agility] = XGUIEng.GetWidgetID("Research_Agility");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_LeatherCoat] = XGUIEng.GetWidgetID("Research_LeatherCoat");
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Taxation] = XGUIEng.GetWidgetID("Research_Taxation");
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Laws] = XGUIEng.GetWidgetID("Research_Laws");
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Banking] = XGUIEng.GetWidgetID("Research_Banking");
-	gvGUI_TechnologyButtonIDArray[Technologies.GT_Gilds] = XGUIEng.GetWidgetID("Research_Gilds");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_LightBricks] = XGUIEng.GetWidgetID("Research_LightBricks");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Debenture] = XGUIEng.GetWidgetID("Research_Debenture");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_BookKeeping] = XGUIEng.GetWidgetID("Research_BookKeeping");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Scale] = XGUIEng.GetWidgetID("Research_Scale");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_Coinage] = XGUIEng.GetWidgetID("Research_Coinage");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_CropCycle] = XGUIEng.GetWidgetID("Research_CropCycle");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
-	gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");
+function DelayedSpectatorButtonSources()
+	-- wait for mad's stuff to override the table faulty...
+	if GUI.GetPlayerID() == BS.SpectatorPID then
+		if gvGUI_TechnologyButtonIDArray and gvGUI_TechnologyButtonIDArray[Technologies.T_UpgradeLightCavalry1] == 0 then
+			gvGUI_TechnologyButtonIDArray[Technologies.T_ThunderStorm] = XGUIEng.GetWidgetID("Research_ThunderStorm");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_HeavyThunder] = XGUIEng.GetWidgetID("Research_HeavyThunder");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_TotalDestruction] = XGUIEng.GetWidgetID("Research_TotalDestruction");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_LightningInsurance] = XGUIEng.GetWidgetID("Research_LightningInsurance");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Foresight] = XGUIEng.GetWidgetID("Research_Foresight");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Alacricity] = XGUIEng.GetWidgetID("Research_Alacricity");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_BarbarianCulture] = XGUIEng.GetWidgetID("Research_BarbarianCulture");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_BanditCulture] = XGUIEng.GetWidgetID("Research_BanditCulture");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_BearmanCulture] = XGUIEng.GetWidgetID("Research_BearmanCulture");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_KnightsCulture] = XGUIEng.GetWidgetID("Research_KnightsCulture");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverPlateArmor] = XGUIEng.GetWidgetID("Research_SilverPlateArmor");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverArcherArmor] = XGUIEng.GetWidgetID("Research_SilverArcherArmor");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverArrows] = XGUIEng.GetWidgetID("Research_SilverArrows");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverSwords] = XGUIEng.GetWidgetID("Research_SilverSwords");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverLance] = XGUIEng.GetWidgetID("Research_SilverLance");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverBullets] = XGUIEng.GetWidgetID("Research_SilverBullets");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_SilverMissiles] = XGUIEng.GetWidgetID("Research_SilverMissiles");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_BloodRush] = XGUIEng.GetWidgetID("Research_BloodRush");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Agility] = XGUIEng.GetWidgetID("Research_Agility");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_LeatherCoat] = XGUIEng.GetWidgetID("Research_LeatherCoat");
+			gvGUI_TechnologyButtonIDArray[Technologies.GT_Taxation] = XGUIEng.GetWidgetID("Research_Taxation");
+			gvGUI_TechnologyButtonIDArray[Technologies.GT_Laws] = XGUIEng.GetWidgetID("Research_Laws");
+			gvGUI_TechnologyButtonIDArray[Technologies.GT_Banking] = XGUIEng.GetWidgetID("Research_Banking");
+			gvGUI_TechnologyButtonIDArray[Technologies.GT_Gilds] = XGUIEng.GetWidgetID("Research_Gilds");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_LightBricks] = XGUIEng.GetWidgetID("Research_LightBricks");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Debenture] = XGUIEng.GetWidgetID("Research_Debenture");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_BookKeeping] = XGUIEng.GetWidgetID("Research_BookKeeping");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Scale] = XGUIEng.GetWidgetID("Research_Scale");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Coinage] = XGUIEng.GetWidgetID("Research_Coinage");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_CropCycle] = XGUIEng.GetWidgetID("Research_CropCycle");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_CityGuard] = XGUIEng.GetWidgetID("Research_CityGuard");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_PickAxe] = XGUIEng.GetWidgetID("Research_PickAxe");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Shoeing] = XGUIEng.GetWidgetID("Research_Shoeing");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_UpgradeLightCavalry1] = XGUIEng.GetWidgetID("Research_UpgradeCavalryLight1");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_UpgradeHeavyCavalry1] = XGUIEng.GetWidgetID("Research_UpgradeCavalryHeavy1");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_Joust] = XGUIEng.GetWidgetID("Research_Joust");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_HeroicArmor] = XGUIEng.GetWidgetID("Research_HeroicArmor");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_HeroicWeapon] = XGUIEng.GetWidgetID("Research_HeroicWeapon");
+			gvGUI_TechnologyButtonIDArray[Technologies.T_HeroicShoes] = XGUIEng.GetWidgetID("Research_HeroicShoes");
+			return true
+		end
+		return gvGUI_TechnologyButtonIDArray[Technologies.T_UpgradeLightCavalry1] == XGUIEng.GetWidgetID("Research_UpgradeCavalryLight1")
+	else
+		return true
+	end
 end
