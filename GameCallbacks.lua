@@ -27,6 +27,9 @@ function Mission_OnSaveGameLoaded()
 			local PlayerColor = GDB.GetValue("Config\\SettlerServer\\ColorPlayer")
 			Display.SetPlayerColorMapping(1, PlayerColor)
 		end
+		XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer = function()
+			return 1
+		end
 	end
 	for i = 1,16 do
 		CUtil.Payday_SetActive(i, true)
@@ -460,7 +463,7 @@ function GameCallback_GUI_SelectionChanged()
 
 				XGUIEng.ShowWidget(gvGUI_WidgetID.TroopMerchant,1)
 				XGUIEng.ShowAllSubWidgets(gvGUI_WidgetID.TroopMerchant,1)
-				
+
 				--Display building container
 				XGUIEng.ShowWidget(gvGUI_WidgetID.SelectionBuilding,1)
 				XGUIEng.ShowWidget(gvGUI_WidgetID.BackgroundFull,1)

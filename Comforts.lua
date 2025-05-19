@@ -1765,7 +1765,15 @@ gvTechTable = {University = {	Technologies.GT_Literacy,Technologies.GT_Trading,T
 			SilverTechs = 	{	Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
 								Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
 				}
-
+gvTroopUpgradesPerLVL = {
+	[1] = {Technologies.T_SoftArcherArmor, Technologies.T_LeatherMailArmor, Technologies.T_WoodAging, Technologies.T_Fletching},
+	[2] = {Technologies.T_Turnery, Technologies.T_MasterOfSmithery, Technologies.T_BodkinArrow, Technologies.T_EnhancedGunPowder,
+		Technologies.T_LeatherArcherArmor, Technologies.T_ChainMailArmor, Technologies.T_FleeceArmor, Technologies.T_LeadShot},
+	[3] = {Technologies.T_BetterTrainingBarracks, Technologies.T_BetterTrainingArchery, Technologies.T_Shoeing, Technologies.T_BetterChassis, Technologies.T_BlisteringCannonballs,
+		Technologies.T_PaddedArcherArmor, Technologies.T_PlateMailArmor, Technologies.T_IronCasting, Technologies.T_FleeceLinedLeatherArmor, Technologies.T_Sights},
+	[4] = {Technologies.T_SilverPlateArmor, Technologies.T_SilverArcherArmor, Technologies.T_SilverArrows, Technologies.T_SilverSwords,
+		Technologies.T_SilverLance, Technologies.T_SilverBullets, Technologies.T_SilverMissiles, Technologies.T_BloodRush}
+}
 -- Gets amount of university technologies already researched by playerID
 ---@param _PlayerID integer playerID
 ---@return integer
@@ -1842,6 +1850,40 @@ function ResearchAllTechnologies(_PlayerID, _UniTechsFlag, _MercTechsFlag, _Spec
 		if v then
 			for i,j in pairs(gvTechTable[k]) do
 				Logic.SetTechnologyState(_PlayerID, j, 3)
+			end
+		end
+	end
+end
+function ResearchTroopUpgrades(_PlayerID, _TechsLVL1, _TechsLVL2, _TechsLVL3, _SilverTechs)
+	if type(_TechsLVL1) == "number" then
+		for j = 1, table.getn(_TechsLVL1) do
+			for i = 1, table.getn(gvTroopUpgradesPerLVL[j]) do
+				Logic.SetTechnologyState(_PlayerID, gvTroopUpgradesPerLVL[j][i], 3)
+			end
+		end
+	else
+		_TechsLVL1 = _TechsLVL1 or false
+		_TechsLVL2 = _TechsLVL2 or false
+		_TechsLVL3 = _TechsLVL3 or false
+		_SilverTechs = _SilverTechs or false
+		if _TechsLVL1 then
+			for i = 1, table.getn(gvTroopUpgradesPerLVL[1]) do
+				Logic.SetTechnologyState(_PlayerID, gvTroopUpgradesPerLVL[1][i], 3)
+			end
+		end
+		if _TechsLVL2 then
+			for i = 1, table.getn(gvTroopUpgradesPerLVL[2]) do
+				Logic.SetTechnologyState(_PlayerID, gvTroopUpgradesPerLVL[2][i], 3)
+			end
+		end
+		if _TechsLVL3 then
+			for i = 1, table.getn(gvTroopUpgradesPerLVL[3]) do
+				Logic.SetTechnologyState(_PlayerID, gvTroopUpgradesPerLVL[3][i], 3)
+			end
+		end
+		if _SilverTechs then
+			for i = 1, table.getn(gvTroopUpgradesPerLVL[4]) do
+				Logic.SetTechnologyState(_PlayerID, gvTroopUpgradesPerLVL[4][i], 3)
 			end
 		end
 	end
@@ -5299,5 +5341,54 @@ ChestRandomPositions_ChestControl = function(...)
 			end
 		end
 		return ChestRandomPositions.OpenedCount == arg.n
+	end
+end
+
+function InitRuinRepairing(_name, _center, _slot1, _slot2, _slot3, _slot4, _newentity, _progress)
+	RuinRepairingData = RuinRepairingData or {}
+	RuinRepairingData[_name] = RuinRepairingData[_name] or {}
+	RuinRepairingData[_name].repairprogress = RuinRepairingData[_name].repairprogress or 0
+	if not RuinRepairingData[_name].slots then
+		RuinRepairingData[_name].slots = {_slot1, _slot2, _slot3, _slot4}
+	end
+	local centerpos = GetPosition(_center)
+	if not RuinRepairingData[_name].serfs then
+		local serfs = {Logic.GetPlayerEntitiesInArea(1,Entities.PU_Serf,centerpos.X,centerpos.Y,1000,4)}
+		if serfs[1] == 4 then
+			RuinRepairingData[_name].serfs = {serfs[2], serfs[3], serfs[4], serfs[5]}
+			if not RuinRepairingData[_name].site then
+				RuinRepairingData[_name].site = Logic.CreateConstructionSite(centerpos.X, centerpos.Y, 0, _newentity, 6)
+			end
+		end
+	else
+		for i = 1,4 do
+			local slot = RuinRepairingData[_name].slots[i]
+			local pos = GetPosition(slot)
+			if IsNear(RuinRepairingData[_name].serfs[i], slot, 100) then
+				if Logic.GetCurrentTaskList(RuinRepairingData[_name].serfs[i]) == "TL_SERF_IDLE" then
+					Logic.SetTaskList(RuinRepairingData[_name].serfs[i], TaskLists.TL_SERF_BUILD)
+					Logic.SetEntitySelectableFlag(RuinRepairingData[_name].serfs[i], 0)
+				elseif Logic.GetCurrentTaskList(RuinRepairingData[_name].serfs[i]) == "TL_SERF_BUILD" then
+					if GetWood(1) >= 30 and GetClay(1) >= 20 and GetStone(1) >= 30 then
+						AddWood(1,-30)
+						AddClay(1,-20)
+						AddStone(1,-30)
+						RuinRepairingData[_name].repairprogress = RuinRepairingData[_name].repairprogress + 1
+						Logic.CreateEffect(GGL_Effects.FXBuildingSmokeMedium, pos.X, pos.Y)
+					end
+				end
+			else
+				Move(RuinRepairingData[_name].serfs[i], pos)
+			end
+		end
+		if RuinRepairingData[_name].repairprogress >= _progress then
+			DestroyEntity(RuinRepairingData[_name].site)
+			ReplaceEntity(_center, _newentity)
+			for i = 1,4 do
+				Logic.SetTaskList(RuinRepairingData[_name].serfs[i], TaskLists.TL_SERF_BUILD)
+				Logic.SetEntitySelectableFlag(RuinRepairingData[_name].serfs[i], 1)
+			end
+			return true
+		end
 	end
 end

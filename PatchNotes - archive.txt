@@ -1190,3 +1190,43 @@ Wird sie errichtet, erscheint ein prunkvolles, güldenes Feuerwerk mit rotierend
 Es wurde ein Fehler im Zusammenhang von Maps mit dem Armee-Erstellungs-Tool und Erebos behoben.
 
 Es wurde ein Fehler behoben, der auftreten konnte, wenn Varg kampfunfähig wurde während seine Berserkerwut aktiv war und keinerlei Wölfe gerufen wurden.
+
+--- Version 0.767
+
+Es wurden Animationen der Winterevent-Version der Diebe überarbeitet, da diese fehlerhaft waren.
+
+Holzfäller ignorieren nun Bäume, die auf nicht zugänglichen Terrain-Typen (z.B. Berge) wachsen.
+
+Holzfäller und Förster bleiben nun nicht mehr stehen, wenn ein Briefing/Cutscene gestartet wird.
+
+Holzfäller und Förster erscheinen nun erst, sobald ihr Platz im Dorf frei habt.
+
+Der Köhler kann nun nur noch Kohle produzieren, wenn während des Arbeitszyklus Rohholz vorhanden ist.
+
+Es wurde ein Fehler behoben, durch den das Build-Block von Gebäuden durch nahe Gegner nicht immer zuverlässig funktionierte.
+
+Es wurde ein Fehler behoben, durch den die Winterversion der Geschosse von Türmen in die falsche Richtung zeigte.
+
+Das Wintermodell der Schatztruhen ist nun größer.
+
+Es wurde eine Winter-Version des Modells von geöffneten Schatztruhen hinzugefügt.
+
+Ulan und ein Großteil der Winterversionen von Einheiten sind nun leichter selektier- und anvisierbar.
+
+Schadenswert Arbalestenschütze: 17 -> 16
+
+Schadenswert Mary de Mortfichet: 28 -> 29
+
+Schadenswert Drake: 27 -> 29
+Drake zufälliger Schadensbonus: +7 -> +9
+Drake Verzögerung Meisterschuss: 3,4 Sekunden -> 2,6 Sekunden
+
+Dovbar verfügt nun über eine weitere Fähigkeit, die passive Boni bietet.
+Vorsehung: Wurde Götterdämmerung längere Zeit nicht verwendet, steigen Schaden und Reichweite der nächsten Götterdämmerung kontinuierlich an. Wird hierbei eine Steigerung von über 100% erreicht, erhält die nächste Götterdämmerung folgende Boni: Dovbar gelangt vor Eure Burg, sofern mehr Feinde als eigene und verbündete Einheiten in der Nähe waren. Sterben Verbündete durch die Anwendung, erzeugen diese ebenfalls Blitze, die Schaden verursachen. Der Schaden dieser zusätzlichen Blitze ist abhängig vom Angriffswert des jeweiligen Gefallenen. Diese Blitze schädigen NUR Feinde.
+
+Dovbar ist nun immun gegen den Schaden von Götterdämmerung durch andere Dovbars, Erebos Schadensaura in der Nacht sowie Blitzeinschlägen, wenn <Göttlicher Segen> aktiv ist. Nachdem der Effekt endet, erleidet er wie gewohnt einen Teil des negierten Schadens.
+
+Stirbt Dovbar durch den Einsatz einer anderen Götterdämmerung, Erebos Schadensaura in der Nacht oder eines Blitzeinschlags, werden die visuellen Abklingzeiten seiner Fähigkeiten nun korrekt zurückgesetzt.
+
+Varg verfügt nun über eine weitere Fähigkeit.
+Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist, werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben. Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen genullt.
