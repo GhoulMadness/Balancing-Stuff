@@ -1,4 +1,3 @@
-
 WCutter = WCutter or {}
 -- max range woodcutter can find trees (s-cm)
 WCutter.MaxRange = 2500
@@ -20,151 +19,168 @@ WCutter.DefaultResourceAmount = 75
 -- default tree model (in case it's already XD_ResourceTree)
 WCutter.DefaultTreeModel = Models.XD_DarkTree1
 -- DoorOffset defining where wcutter will go to to start work cycle
-WCutter.HomeSpotOffset = {	X = -200,
-							Y = -500}
+WCutter.HomeSpotOffset = {X = -200, Y = -500}
 WCutter.BuildingBelongingWorker = {}
 WCutter.WorkActiveState = {}
-WCutter.TooltipText = {["de"] = "Holz erhalten: ", ["en"] = "Wood earned: ", ["pl"] = "Wood earned", ["ru"] = "Wood earned", ["us"] = "Wood earned", ["gb"] = "Wood earned"}
+WCutter.TooltipText = {
+	["de"] = "Holz erhalten: ",
+	["en"] = "Wood earned: ",
+	["pl"] = "Wood earned",
+	["ru"] = "Wood earned",
+	["us"] = "Wood earned",
+	["gb"] = "Wood earned"
+}
 -- fake entity to replace tree (needs same blocking params)
-WCutter.FakeTreeType = {[1] = Entities.XD_Flower1,
-						[2] = Entities.XD_BuildBlockScriptEntity,
-						[3] = Entities.XD_Signpost1}
+WCutter.FakeTreeType = {
+	[1] = Entities.XD_Flower1,
+	[2] = Entities.XD_BuildBlockScriptEntity,
+	[3] = Entities.XD_Signpost1
+}
 -- tree types woodcutter can cut
-WCutter.TreeTypes = {Entities.XD_AppleTree1,
-					Entities.XD_AppleTree2,
-					Entities.XD_CherryTree,
-					Entities.XD_Cypress1,
-					Entities.XD_Cypress2,
-					Entities.XD_DarkTree1,
-					Entities.XD_DarkTree2,
-					Entities.XD_DarkTree3,
-					Entities.XD_DarkTree4,
-					Entities.XD_DarkTree5,
-					Entities.XD_DarkTree6,
-					Entities.XD_DarkTree7,
-					Entities.XD_DarkTree8,
-					Entities.XD_DeadTree01,
-					Entities.XD_DeadTree02,
-					Entities.XD_DeadTree04,
-					Entities.XD_DeadTree06,
-					Entities.XD_DeadTreeEvelance1,
-					Entities.XD_DeadTreeEvelance2,
-					Entities.XD_DeadTreeEvelance3,
-					Entities.XD_DeadTreeMoor1,
-					Entities.XD_DeadTreeMoor2,
-					Entities.XD_DeadTreeMoor3,
-					Entities.XD_DeadTreeNorth1,
-					Entities.XD_DeadTreeNorth2,
-					Entities.XD_DeadTreeNorth3,
-					Entities.XD_Fir1,
-					Entities.XD_Fir2,
-					Entities.XD_Fir1_small,
-					Entities.XD_Fir2_small,
-					Entities.XD_OliveTree1,
-					Entities.XD_OliveTree2,
-					Entities.XD_OrangeTree1,
-					Entities.XD_OrangeTree2,
-					Entities.XD_Palm1,
-					Entities.XD_Palm2,
-					Entities.XD_Palm3,
-					Entities.XD_Palm4,
-					Entities.XD_Pine1,
-					Entities.XD_Pine2,
-					Entities.XD_Pine3,
-					Entities.XD_Pine4,
-					Entities.XD_Pine5,
-					Entities.XD_Pine6,
-					Entities.XD_PineNorth1,
-					Entities.XD_PineNorth2,
-					Entities.XD_PineNorth3,
-					Entities.XD_Tree1,
-					Entities.XD_Tree2,
-					Entities.XD_Tree3,
-					Entities.XD_Tree4,
-					Entities.XD_Tree5,
-					Entities.XD_Tree6,
-					Entities.XD_Tree7,
-					Entities.XD_Tree8,
-					Entities.XD_Tree1_small,
-					Entities.XD_Tree2_small,
-					Entities.XD_Tree3_small,
-					Entities.XD_TreeEvelance1,
-					Entities.XD_TreeMoor1,
-					Entities.XD_TreeMoor2,
-					Entities.XD_TreeMoor3,
-					Entities.XD_TreeMoor4,
-					Entities.XD_TreeMoor5,
-					Entities.XD_TreeMoor6,
-					Entities.XD_TreeMoor7,
-					Entities.XD_TreeMoor8,
-					Entities.XD_TreeMoor9,
-					Entities.XD_TreeNorth1,
-					Entities.XD_TreeNorth2,
-					Entities.XD_TreeNorth3,
-					Entities.XD_Umbrella1,
-					Entities.XD_Umbrella2,
-					Entities.XD_Umbrella3,
-					Entities.XD_Willow1,
-					Entities.XD_ResourceTree}
+WCutter.TreeTypes = {
+	Entities.XD_AppleTree1,
+	Entities.XD_AppleTree2,
+	Entities.XD_CherryTree,
+	Entities.XD_Cypress1,
+	Entities.XD_Cypress2,
+	Entities.XD_DarkTree1,
+	Entities.XD_DarkTree2,
+	Entities.XD_DarkTree3,
+	Entities.XD_DarkTree4,
+	Entities.XD_DarkTree5,
+	Entities.XD_DarkTree6,
+	Entities.XD_DarkTree7,
+	Entities.XD_DarkTree8,
+	Entities.XD_DeadTree01,
+	Entities.XD_DeadTree02,
+	Entities.XD_DeadTree04,
+	Entities.XD_DeadTree06,
+	Entities.XD_DeadTreeEvelance1,
+	Entities.XD_DeadTreeEvelance2,
+	Entities.XD_DeadTreeEvelance3,
+	Entities.XD_DeadTreeMoor1,
+	Entities.XD_DeadTreeMoor2,
+	Entities.XD_DeadTreeMoor3,
+	Entities.XD_DeadTreeNorth1,
+	Entities.XD_DeadTreeNorth2,
+	Entities.XD_DeadTreeNorth3,
+	Entities.XD_Fir1,
+	Entities.XD_Fir2,
+	Entities.XD_Fir1_small,
+	Entities.XD_Fir2_small,
+	Entities.XD_OliveTree1,
+	Entities.XD_OliveTree2,
+	Entities.XD_OrangeTree1,
+	Entities.XD_OrangeTree2,
+	Entities.XD_Palm1,
+	Entities.XD_Palm2,
+	Entities.XD_Palm3,
+	Entities.XD_Palm4,
+	Entities.XD_Pine1,
+	Entities.XD_Pine2,
+	Entities.XD_Pine3,
+	Entities.XD_Pine4,
+	Entities.XD_Pine5,
+	Entities.XD_Pine6,
+	Entities.XD_PineNorth1,
+	Entities.XD_PineNorth2,
+	Entities.XD_PineNorth3,
+	Entities.XD_Tree1,
+	Entities.XD_Tree2,
+	Entities.XD_Tree3,
+	Entities.XD_Tree4,
+	Entities.XD_Tree5,
+	Entities.XD_Tree6,
+	Entities.XD_Tree7,
+	Entities.XD_Tree8,
+	Entities.XD_Tree1_small,
+	Entities.XD_Tree2_small,
+	Entities.XD_Tree3_small,
+	Entities.XD_TreeEvelance1,
+	Entities.XD_TreeMoor1,
+	Entities.XD_TreeMoor2,
+	Entities.XD_TreeMoor3,
+	Entities.XD_TreeMoor4,
+	Entities.XD_TreeMoor5,
+	Entities.XD_TreeMoor6,
+	Entities.XD_TreeMoor7,
+	Entities.XD_TreeMoor8,
+	Entities.XD_TreeMoor9,
+	Entities.XD_TreeNorth1,
+	Entities.XD_TreeNorth2,
+	Entities.XD_TreeNorth3,
+	Entities.XD_Umbrella1,
+	Entities.XD_Umbrella2,
+	Entities.XD_Umbrella3,
+	Entities.XD_Willow1,
+	Entities.XD_ResourceTree
+}
 -- table filled with respective trigger type IDs
-WCutter.TriggerIDs = {	WorkControl = {	Start = {},
-										Inside = {},
-										Outside = {},
-										Cut = {},
-										ArrivedAtDestination = {},
-										CarrierModel = {}},
-						CutTree = {},
-						RemoveTree = {},
-						Behavior = {FinishAnim = {},
-									WCutterDied = {},
-									WaitForVPFree = {}},
-						TreeDestroyed = {}
-					}
+WCutter.TriggerIDs = {
+	WorkControl = {
+		Start = {},
+		Inside = {},
+		Outside = {},
+		Cut = {},
+		ArrivedAtDestination = {},
+		CarrierModel = {}
+	},
+	CutTree = {},
+	RemoveTree = {},
+	Behavior = {
+		FinishAnim = {},
+		WCutterDied = {},
+		WaitForVPFree = {}
+	},
+	TreeDestroyed = {}
+}
 WCutter.WoodEarned = {}
 WCutter.TargettedTrees = {}
 -- table filled with terrain types wcutter should not find trees on (e.g. mountains)
-WCutter.TerrainTypeBlacklist = {[12] = true,
-								[15] = true,
-								[27] = true,
-								[28] = true,
-								[29] = true,
-								[30] = true,
-								[31] = true,
-								[107] = true,
-								[108] = true,
-								[120] = true,
-								[133] = true,
-								[134] = true,
-								[148] = true,
-								[149] = true,
-								[150] = true,
-								[151] = true,
-								[157] = true,
-								[158] = true,
-								[163] = true,
-								[165] = true,
-								[166] = true,
-								[167] = true,
-								[168] = true,
-								[169] = true,
-								[212] = true,
-								[213] = true,
-								[215] = true,
-								[216] = true,
-								[217] = true,
-								[218] = true,
-								[219] = true,
-								[220] = true,
-								[221] = true,
-								[222] = true,
-								[74] = true,
-								[80] = true,
-								[265] = true,
-								[266] = true,
-								[267] = true,
-								[268] = true,
-								[269] = true,
-								[270] = true}
+WCutter.TerrainTypeBlacklist = {
+	[12] = true,
+	[15] = true,
+	[27] = true,
+	[28] = true,
+	[29] = true,
+	[30] = true,
+	[31] = true,
+	[74] = true,
+	[80] = true,
+	[107] = true,
+	[108] = true,
+	[120] = true,
+	[133] = true,
+	[134] = true,
+	[148] = true,
+	[149] = true,
+	[150] = true,
+	[151] = true,
+	[157] = true,
+	[158] = true,
+	[163] = true,
+	[165] = true,
+	[166] = true,
+	[167] = true,
+	[168] = true,
+	[169] = true,
+	[185] = true,
+	[186] = true,
+	[187] = true,
+	[188] = true,
+	[189] = true,
+	[190] = true,
+	[212] = true,
+	[213] = true,
+	[215] = true,
+	[216] = true,
+	[217] = true,
+	[218] = true,
+	[219] = true,
+	[220] = true,
+	[221] = true,
+	[222] = true
+}
 WCutter.GetWorkerIDByBuildingID = function(_id)
 	return WCutter.BuildingBelongingWorker[_id]
 end
@@ -191,7 +207,7 @@ OnWCutter_Created = function(_id)
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
 			Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5,
-			Entities.PB_VillageHall1)) do
+			Entities.PB_VillageHall1, Entities.PB_Outpost1, Entities.PB_Outpost2, Entities.PB_Outpost3)) do
 
 				local posX, posY = Logic.GetEntityPosition(eID)
 				local distance = GetDistance({X = buildingposX, Y = buildingposY}, {X = posX, Y = posY})
@@ -233,7 +249,7 @@ function WCutter_WaitForVPFree(_playerID, _buildingID)
 		local lim = Logic.GetPlayerAttractionLimit(_playerID)
 		if lim > 0 and Logic.GetPlayerAttractionUsage(_playerID) < lim then
 			WCutter.TriggerIDs.Behavior.WaitForVPFree[_buildingID] = nil
-			OnWCutter_Created(_buildingID)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_DelayedRespawn",1,{},{_buildingID})
 			return true
 		end
 	else
@@ -248,7 +264,7 @@ function OnWCutter_Died(_id, _buildingID)
 		WCutter.BuildingBelongingWorker[_buildingID] = nil
 		WCutter.WoodEarned[_id] = nil
 		if IsExisting(_buildingID) then
-			OnWCutter_Created(_buildingID)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","WCutter_DelayedRespawn",1,{},{_buildingID})
 		else
 			WCutter.WorkActiveState[_buildingID] = nil
 		end
@@ -264,6 +280,10 @@ function OnWCutter_Died(_id, _buildingID)
 			return true
 		end
 	end
+end
+function WCutter_DelayedRespawn(_buildingID)
+	OnWCutter_Created(_buildingID)
+	return true
 end
 WCutter.FindNearestTree = function(_id)
 
@@ -445,18 +465,22 @@ WCutter.CutTree = function(_id, _treeid, _buildingID)
 	Trigger.UnrequestTrigger(WCutter.TriggerIDs.TreeDestroyed[_treeid])
 	WCutter.TriggerIDs.TreeDestroyed[_treeid] = nil
 	local newID, etype = WCutter.BlockTree(_treeid, 2)
-	_treeid = newID
-	WCutter.TriggerIDs.CutTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_CutTreeDelay", 1, {}, {_id, _treeid, etype, res_amount})
+	WCutter.TriggerIDs.CutTree[_id] = Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND, "", "WCutter_CutTreeDelay", 1, {}, {_id, newID, etype, res_amount})
 	Logic.SetTaskList(_id, TaskLists.TL_CUT_TREE)
 end
 WCutter.BlockTree = function(_treeid, _flag)
-	--[[ _flag param: 0: unblock
-					1: soft block - tree cannot be cut but approached
-					2: hard block - tree can neither be approached nor cut
-					]]
+	--[[ _flag param:
+	0: unblock
+	1: soft block - tree cannot be cut but approached
+	2: hard block - tree can neither be approached nor cut
+	]]
+	if not IsValid(_treeid) then
+		LuaDebugger.Break()
+		return
+	end
 	local etype = Logic.GetEntityType(_treeid)
 	local model = Models[Logic.GetEntityTypeName(etype)] or WCutter.DefaultTreeModel
-	local newID = ReplaceEntity(_treeid, WCutter.FakeTreeType[_flag + 1])
+	local newID = ReplaceEntityWithOffset(_treeid, WCutter.FakeTreeType[_flag + 1], math.random(-2^16,2^16)/10^5, math.random(-2^16,2^16)/10^5)
 
 	SetEntityModel(newID, model)
 	return newID, etype
@@ -470,8 +494,13 @@ WCutter_CutTreeDelay = function(_id, _treeid, _tree_type, _res_amount)
 	if Counter.Tick2("WCutter_CutTreeDelay_".._id.."_".._treeid, math.min(WCutter.BaseTimeNeeded + WCutter.TimeNeededPerRess * _res_amount, WCutter.MaxTimeNeeded)) then
 		local tempID, newID
 		if IsValid(_treeid) then
-			tempID = ReplaceEntity(_treeid, _tree_type)
-			newID = WCutter.BlockTree(tempID, 1)
+			tempID = ReplaceEntityWithOffset(_treeid, _tree_type, math.random(-2^16,2^16)/10^5, math.random(-2^16,2^16)/10^5)
+			if tempID > 0 then
+				newID = WCutter.BlockTree(tempID, 1)
+			else
+				-- something went terribly wrong...
+				LuaDebugger.Break()
+			end
 		end
 		if newID then
 			Logic.SetModelAndAnimSet(newID, Models.XD_Trunk1)

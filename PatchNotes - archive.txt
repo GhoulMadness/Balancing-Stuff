@@ -1230,3 +1230,13 @@ Stirbt Dovbar durch den Einsatz einer anderen Götterdämmerung, Erebos Schadens
 
 Varg verfügt nun über eine weitere Fähigkeit.
 Plünderung: Greifen Varg, nahe Wölfe oder nahe Barbarenkrieger ein feindliches Gebäude an solange die Fähigkeit aktiv ist, werden einige Ressourcen geplündert. Varg kann diese an einem beliebigen Gebäude abgeben. Stirbt Varg, werden sämtliche noch nicht abgegebene geplünderte Ressourcen genullt.
+
+--- Version 0.768
+
+Es wurde ein Fehler behoben, durch den in bestimmten Konstellationen Dovbars Fähigkeiten nicht mehr verfügbar waren.
+
+Vorbereitungen für das kommende Osterturnier.
+Eine erste Version der neuen Turniermap "Im Zeichen Ostaras" ist ab sofort verfügbar. Bitte bedenkt, dass die Map sich noch in Veränderung befindet und in aktueller Version noch keine etwaigen versteckten EasterEggs hinzugefügt sind.
+Euer Feedback zur Map ist erwünscht und wird zur Optimierung benötigt.
+
+Es wurden GUI-Fehler im Zusammenhang mit den Angeboten in Söldnerlagern behoben.

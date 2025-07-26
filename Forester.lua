@@ -1,219 +1,288 @@
 Forester = Forester or {}
 
 -- table with landscape sets and respective tree types
-Forester.LandscapeTreeSets = {["European"] = {	"XD_Tree1",
-												"XD_Tree1_small",
-												"XD_Tree2",
-												"XD_Tree2_small",
-												"XD_Tree3",
-												"XD_Tree3_small",
-												"XD_Tree4",
-												"XD_Tree5",
-												"XD_Tree6",
-												"XD_Tree7",
-												"XD_Tree8",
-												"XD_Fir1",
-												"XD_Fir1_small",
-												"XD_Fir2",
-												"XD_Fir2_small",
-												"XD_DarkTree1",
-												"XD_DarkTree2",
-												"XD_DarkTree3",
-												"XD_DarkTree4",
-												"XD_DarkTree5",
-												"XD_DarkTree6",
-												"XD_DarkTree7",
-												"XD_DarkTree8"
-											},
-							["Highlands"] = {	"XD_DeadTreeNorth1",
-												"XD_DeadTreeNorth2",
-												"XD_DeadTreeNorth3",
-												"XD_Fir1",
-												"XD_Fir1_small",
-												"XD_Fir2",
-												"XD_Fir2_small",
-												"XD_PineNorth1",
-												"XD_PineNorth2",
-												"XD_PineNorth3",
-												"XD_TreeNorth1",
-												"XD_TreeNorth2",
-												"XD_TreeNorth3"
-											},
-							["Mediterranean"] = {"XD_AppleTree1",
-												"XD_AppleTree2",
-												"XD_Cypress1",
-												"XD_Cypress2",
-												"XD_OliveTree1",
-												"XD_OliveTree2",
-												"XD_OrangeTree1",
-												"XD_OrangeTree2",
-												"XD_Palm1",
-												"XD_Palm2",
-												"XD_Palm3",
-												"XD_Palm4",
-												"XD_Pine1",
-												"XD_Pine2",
-												"XD_Pine3",
-												"XD_Pine4",
-												"XD_Pine5",
-												"XD_Pine6"
-											},
-							["Steppe"] 	=	{	"XD_OliveTree1",
-												"XD_OliveTree2",
-												"XD_DeadTree01",
-												"XD_DeadTree02",
-												"XD_DeadTree04",
-												"XD_DeadTree06",
-												"XD_Palm1",
-												"XD_Palm2",
-												"XD_Palm3",
-												"XD_Palm4",
-												"XD_Umbrella1",
-												"XD_Umbrella2",
-												"XD_Umbrella3"
-											},
-							["Evelance"] =	{	"XD_Fir1",
-												"XD_Fir1_small",
-												"XD_Fir2",
-												"XD_Fir2_small",
-												"XD_DeadTree01",
-												"XD_DeadTree02",
-												"XD_DeadTree04",
-												"XD_DeadTree06",
-												"XD_DeadTreeEvelance1",
-												"XD_DeadTreeEvelance2",
-												"XD_DeadTreeEvelance3",
-												"XD_TreeEvelance1"
-											},
-							["Moor"]	=	{	"XD_DeadTreeMoor1",
-												"XD_DeadTreeMoor2",
-												"XD_DeadTreeMoor3",
-												"XD_TreeMoor1",
-												"XD_TreeMoor2",
-												"XD_TreeMoor3",
-												"XD_TreeMoor4",
-												"XD_TreeMoor5",
-												"XD_TreeMoor6",
-												"XD_TreeMoor7",
-												"XD_TreeMoor8",
-												"XD_TreeMoor9"
-											}
-							}
+Forester.LandscapeTreeSets = {
+	["European"] = {
+		"XD_Tree1",
+		"XD_Tree1_small",
+		"XD_Tree2",
+		"XD_Tree2_small",
+		"XD_Tree3",
+		"XD_Tree3_small",
+		"XD_Tree4",
+		"XD_Tree5",
+		"XD_Tree6",
+		"XD_Tree7",
+		"XD_Tree8",
+		"XD_Fir1",
+		"XD_Fir1_small",
+		"XD_Fir2",
+		"XD_Fir2_small",
+		"XD_DarkTree1",
+		"XD_DarkTree2",
+		"XD_DarkTree3",
+		"XD_DarkTree4",
+		"XD_DarkTree5",
+		"XD_DarkTree6",
+		"XD_DarkTree7",
+		"XD_DarkTree8"
+	},
+	["Highlands"] = {
+		"XD_DeadTreeNorth1",
+		"XD_DeadTreeNorth2",
+		"XD_DeadTreeNorth3",
+		"XD_Fir1",
+		"XD_Fir1_small",
+		"XD_Fir2",
+		"XD_Fir2_small",
+		"XD_PineNorth1",
+		"XD_PineNorth2",
+		"XD_PineNorth3",
+		"XD_TreeNorth1",
+		"XD_TreeNorth2",
+		"XD_TreeNorth3"
+	},
+	["Mediterranean"] = {
+		"XD_AppleTree1",
+		"XD_AppleTree2",
+		"XD_Cypress1",
+		"XD_Cypress2",
+		"XD_OliveTree1",
+		"XD_OliveTree2",
+		"XD_OrangeTree1",
+		"XD_OrangeTree2",
+		"XD_Palm1",
+		"XD_Palm2",
+		"XD_Palm3",
+		"XD_Palm4",
+		"XD_Pine1",
+		"XD_Pine2",
+		"XD_Pine3",
+		"XD_Pine4",
+		"XD_Pine5",
+		"XD_Pine6"
+	},
+	["Steppe"] = {
+		"XD_OliveTree1",
+		"XD_OliveTree2",
+		"XD_Palm1",
+		"XD_Palm2",
+		"XD_Palm3",
+		"XD_Palm4",
+		"XD_Umbrella1",
+		"XD_Umbrella2",
+		"XD_Umbrella3"
+	},
+	["Desert"] = {
+		"XD_DeadTree01",
+		"XD_DeadTree02",
+		"XD_DeadTree04",
+		"XD_DeadTree06",
+		"XD_DeadTreeEvelance1",
+		"XD_DeadTreeEvelance2",
+		"XD_DeadTreeEvelance3"
+	},
+	["Oasis"] = {
+		"XD_Palm1",
+		"XD_Palm2",
+		"XD_Palm3",
+		"XD_Palm4",
+		"XD_Umbrella1",
+		"XD_Umbrella2",
+		"XD_Umbrella3"
+	},
+	["Evelance"] = {
+		"XD_Fir1",
+		"XD_Fir1_small",
+		"XD_Fir2",
+		"XD_Fir2_small",
+		"XD_DeadTree01",
+		"XD_DeadTree02",
+		"XD_DeadTree04",
+		"XD_DeadTree06",
+		"XD_DeadTreeEvelance1",
+		"XD_DeadTreeEvelance2",
+		"XD_DeadTreeEvelance3",
+		"XD_TreeEvelance1"
+	},
+	["Moor"] = {
+		"XD_DeadTreeMoor1",
+		"XD_DeadTreeMoor2",
+		"XD_DeadTreeMoor3",
+		"XD_TreeMoor1",
+		"XD_TreeMoor2",
+		"XD_TreeMoor3",
+		"XD_TreeMoor4",
+		"XD_TreeMoor5",
+		"XD_TreeMoor6",
+		"XD_TreeMoor7",
+		"XD_TreeMoor8",
+		"XD_TreeMoor9"
+	}
+}
 -- table with blocking values
 Forester.NumBlockedPointsBySuffix = {}
 -- table that concenates terrain types with landscape types
 Forester.LandscapeTypeBySoilTexture = {
-									[1] = "European",
-									[2] = "European",
-									[4] = "European",
-									[5] = "European",
-									[6] = "European",
-									[7] = "European",
-									[8] = "European",
-									[13] = "European",
-									[22] = "European",
-									[23] = "European",
-									[24] = "European",
-									[25] = "European",
-									[26] = "European",
-									[32] = "European",
-									[33] = "European",
-									[34] = "European",
-									[35] = "European",
-									[36] = "European",
-									[37] = "European",
-									[38] = "European",
-									[39] = "European",
-									[40] = "European",
-									[41] = "European",
-									[42] = "European",
-									[52] = "European",
-									[75] = "Highlands",
-									[76] = "Highlands",
-									[78] = "Highlands",
-									[79] = "Highlands",
-									[100] = "Highlands",
-									[101] = "Highlands",
-									[102] = "Highlands",
-									[103] = "Highlands",
-									[104] = "Highlands",
-									[105] = "Highlands",
-									[106] = "Highlands",
-									[109] = "Highlands",
-									[116] = "Highlands",
-									[117] = "Highlands",
-									[124] = "Mediterranean",
-									[125] = "Mediterranean",
-									[126] = "Mediterranean",
-									[127] = "Mediterranean",
-									[128] = "Mediterranean",
-									[129] = "Mediterranean",
-									[130] = "Mediterranean",
-									[131] = "Mediterranean",
-									[132] = "European",
-									[136] = "Evelance",
-									[160] = "Steppe",
-									[161] = "Steppe",
-									[162] = "Steppe",
-									[174] = "Steppe",
-									[175] = "Steppe",
-									[205] = "Moor",
-									[206] = "Moor",
-									[210] = "Moor",
-									[211] = "Moor",
-									[228] = "Moor",
-									[229] = "Moor",
-									}
+	[1] = "European",
+	[2] = "European",
+	[4] = "European",
+	[5] = "European",
+	[6] = "European",
+	[7] = "European",
+	[8] = "European",
+	[13] = "European",
+	[22] = "European",
+	[23] = "European",
+	[24] = "European",
+	[25] = "European",
+	[26] = "European",
+	[32] = "European",
+	[33] = "European",
+	[34] = "European",
+	[35] = "European",
+	[36] = "European",
+	[37] = "European",
+	[38] = "European",
+	[39] = "European",
+	[40] = "European",
+	[41] = "European",
+	[42] = "European",
+	[52] = "European",
+	[75] = "Highlands",
+	[76] = "Highlands",
+	[78] = "Highlands",
+	[79] = "Highlands",
+	[100] = "Highlands",
+	[101] = "Highlands",
+	[102] = "Highlands",
+	[103] = "Highlands",
+	[104] = "Highlands",
+	[105] = "Highlands",
+	[106] = "Highlands",
+	[109] = "Highlands",
+	[116] = "Highlands",
+	[117] = "Highlands",
+	[124] = "Mediterranean",
+	[125] = "Mediterranean",
+	[126] = "Mediterranean",
+	[127] = "Mediterranean",
+	[128] = "Mediterranean",
+	[129] = "Mediterranean",
+	[130] = "Mediterranean",
+	[131] = "Mediterranean",
+	[132] = "European",
+	[136] = "Evelance",
+	[160] = "Steppe",
+	[161] = "Steppe",
+	[162] = "Desert",
+	[174] = "Steppe",
+	[175] = "Steppe",
+	[176] = "Desert",
+	[177] = "Desert",
+	[178] = "Desert",
+	[179] = "Oasis",
+	[180] = "Oasis",
+	[205] = "Moor",
+	[206] = "Moor",
+	[210] = "Moor",
+	[211] = "Moor",
+	[228] = "Moor",
+	[229] = "Moor",
+	[255] = "Desert"
+}
 -- max range in wich forester can plant trees
 Forester.MaxRange = 3000
 -- respective distance between searching points
 Forester.SearchForFreeSpotRange = 500
 -- minimum distance allowed between already existing/planted tree and new tree/ below no tree will be planted
-Forester.AllowedInferenceRange = 300
+Forester.AllowedInterferenceRange = 300
 -- delay forester needs to wait between work cycles
 Forester.WorkCycleDelayBase = 10
 Forester.WorkCycleDelay = {}
-Forester.HomeSpotOffset = {	X = 0,
-							Y = -500}
+Forester.HomeSpotOffset = {
+	X = 0,
+	Y = -500
+}
 Forester.InitialTreeSizeFactor = 0.2
 Forester.TreeGrowthAmount = 0.02
 Forester.TreeGrowthTimeNeeded = 2
 Forester.TreeGrowingBlockedPos = {}
 Forester.BuildingBelongingWorker = {}
 Forester.WorkActiveState = {}
-Forester.DoorOffsetByEntityType = {	[Entities.PB_VillageCenter1] = 	{X = -500,
-																	Y = -600},
-									[Entities.PB_VillageCenter2] = 	{X = -500,
-																	Y = -600},
-									[Entities.PB_VillageCenter3] = 	{X = -500,
-																	Y = -600},
-									[Entities.PB_VillageHall1] = 	{X = -500,
-																	Y = -600},
-									[Entities.CB_Grange] = 			{X = -400,
-																	Y = 200},
-									[Entities.PB_Castle1] = 		{X = -1000,
-																	Y = -300},
-									[Entities.PB_Castle2] = 		{X = -1000,
-																	Y = -300},
-									[Entities.PB_Castle3] = 		{X = -1000,
-																	Y = -300},
-									[Entities.PB_Castle4] = 		{X = -1000,
-																	Y = -300},
-									[Entities.PB_Castle5] = 		{X = -1000,
-																	Y = -300}
-									}
-Forester.TriggerIDs = {	PrepareForPause = {},
-						WorkControl = {	Start = {},
-										Inside = {},
-										Outside = {},
-										ArrivedAtDestination = {},
-										PrepareForPause = {}},
-						Tree = {	Growth = {},
-									Cutted = {}},
-						Behavior = {FinishAnim = {},
-									ForesterDied = {},
-									WaitForVPFree = {}}
-						}
+Forester.DoorOffsetByEntityType = {
+	[Entities.PB_VillageCenter1] = {
+		X = -500,
+		Y = -600
+	},
+	[Entities.PB_VillageCenter2] = {
+		X = -500,
+		Y = -600
+	},
+	[Entities.PB_VillageCenter3] = {
+		X = -500,
+		Y = -600
+	},
+	[Entities.PB_VillageHall1] = {
+		X = -500,
+		Y = -600
+	},
+	[Entities.CB_Grange] = {
+		X = -400,
+		Y = 200
+	},
+	[Entities.PB_Castle1] = {
+		X = -1000,
+		Y = -300
+	},
+	[Entities.PB_Castle2] = {
+		X = -1000,
+		Y = -300
+	},
+	[Entities.PB_Castle3] = {
+		X = -1000,
+		Y = -300
+	},
+	[Entities.PB_Castle4] = {
+		X = -1000,
+		Y = -300
+	},
+	[Entities.PB_Castle5] = {
+		X = -1000,
+		Y = -300
+	},
+	[Entities.PB_Outpost1] = {
+		X = -700,
+		Y = 0
+	},
+	[Entities.PB_Outpost2] = {
+		X = -700,
+		Y = 0
+	},
+	[Entities.PB_Outpost3] = {
+		X = -700,
+		Y = 0
+	}
+}
+Forester.TriggerIDs = {
+	PrepareForPause = {},
+	WorkControl = {
+		Start = {},
+		Inside = {},
+		Outside = {},
+		ArrivedAtDestination = {},
+		PrepareForPause = {}
+	},
+	Tree = {
+		Growth = {},
+		Cutted = {}
+	},
+	Behavior = {
+		FinishAnim = {},
+		ForesterDied = {},
+		WaitForVPFree = {}
+	}
+}
 Forester.GetDistanceToNextPlantedTree = function(_posX, _posY)
 	local distance
 	for k,v in pairs(Forester.TreeGrowingBlockedPos) do
@@ -269,12 +338,15 @@ Forester_FinishAnimCheck = function(_id, _buildingID, _posX, _posY, _terrType)
 	end
 
 	if Logic.GetCurrentTaskList(_id) == "TL_NPC_IDLE" then
-		Forester.PlaceTree(_id, _buildingID, _posX, _posY, _terrType)
+		if table_findvalue(Forester.TreeGrowingBlockedPos, {X = _posX, Y = _posY}) == 0 then
+			Forester.PlaceTree(_id, _buildingID, _posX, _posY, _terrType)
+		end
 		return true
 	end
 end
 Forester.PlaceTree = function(_id, _buildingID, _posX, _posY, _terrType)
 	local id = Logic.CreateEntity(Entities.XD_Rock1, _posX, _posY, 0, 0)
+	assert(id ~= 0, "placing tree failed!")
 	local suffixName = Forester.LandscapeTreeSets[Forester.LandscapeTypeBySoilTexture[_terrType]][math.random(table.getn(Forester.LandscapeTreeSets[Forester.LandscapeTypeBySoilTexture[_terrType]]))]
 	Logic.SetModelAndAnimSet(id, Models[suffixName])
 	SetEntitySize(id, Forester.InitialTreeSizeFactor)
@@ -324,7 +396,7 @@ Forester.FindNextTreePos = function(_id)
 				if sector ~= 0 and blockingtype == 0 and Forester.LandscapeTypeBySoilTexture[tempterrType] ~= nil and (height > CUtil.GetWaterHeight(x_/100, y_/100)) then
 
 					if Forester.TreeGrowingBlockedPos[1] == nil or table_findvalue(Forester.TreeGrowingBlockedPos, {X = x_, Y = y_}) == 0 then
-						if Forester.GetDistanceToNextPlantedTree(x_, y_) >= Forester.AllowedInferenceRange then
+						if Forester.GetDistanceToNextPlantedTree(x_, y_) >= Forester.AllowedInterferenceRange then
 							if not dmin or dmin > d then
 
 								dmin = d
@@ -357,7 +429,7 @@ OnForester_Created = function(_id)
 
 			for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(playerID), CEntityIterator.OfAnyTypeFilter(Entities.PB_VillageCenter1, Entities.PB_VillageCenter2,
 			Entities.PB_VillageCenter3, Entities.CB_Grange, Entities.PB_Castle1, Entities.PB_Castle2, Entities.PB_Castle3, Entities.PB_Castle4, Entities.PB_Castle5,
-			Entities.PB_VillageHall1)) do
+			Entities.PB_VillageHall1, Entities.PB_Outpost1, Entities.PB_Outpost2, Entities.PB_Outpost3)) do
 
 				local posX, posY = Logic.GetEntityPosition(eID)
 				local distance = GetDistance({X = buildingposX, Y = buildingposY}, {X = posX, Y = posY})
@@ -398,7 +470,7 @@ function Forester_WaitForVPFree(_playerID, _buildingID)
 		local lim = Logic.GetPlayerAttractionLimit(_playerID)
 		if lim > 0 and Logic.GetPlayerAttractionUsage(_playerID) < lim then
 			Forester.TriggerIDs.Behavior.WaitForVPFree[_buildingID] = nil
-			OnForester_Created(_buildingID)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_DelayedRespawn",1,{},{_buildingID})
 			return true
 		end
 	else
@@ -412,12 +484,16 @@ function OnForester_Died(_id, _buildingID)
     if entityID == _id then
 		Forester.BuildingBelongingWorker[_buildingID] = nil
 		if IsExisting(_buildingID) then
-			OnForester_Created(_buildingID)
+			Trigger.RequestTrigger(Events.LOGIC_EVENT_EVERY_SECOND,"","Forester_DelayedRespawn",1,{},{_buildingID})
 		else
 			Forester.WorkActiveState[_buildingID] = nil
 		end
 		Trigger.UnrequestTrigger(Forester.TriggerIDs.Behavior.ForesterDied[_id])
 	end
+end
+function Forester_DelayedRespawn(_buildingID)
+	OnForester_Created(_buildingID)
+	return true
 end
 function Forester_Tree_OnTreeCutted(_id)
 
@@ -525,8 +601,13 @@ Forester_ArrivedAtDestinationCheck = function(_id, _buildingID, _posX, _posY, _t
 		return true
 	end
 	if GetDistance(GetPosition(_id), {X = _posX, Y = _posY}) <= 100 then
-		Forester.PlaceTree_StartAnim(_id, _buildingID, _posX, _posY, _terrType)
-		return true
+		if table_findvalue(Forester.TreeGrowingBlockedPos, {X = _posX, Y = _posY}) == 0 then
+			Forester.PlaceTree_StartAnim(_id, _buildingID, _posX, _posY, _terrType)
+			return true
+		else
+			Forester.FinishWorkCycle(_id, _buildingID)
+			return true
+		end
 	else
 		if Counter.Tick2("Forester_ArrivedAtDestinationCheck_".. _id, Forester.WorkCycleDelay[_id]) then
 			if Logic.GetSector(_id) == CUtil.GetSector(_posX/100, _posY/100) then

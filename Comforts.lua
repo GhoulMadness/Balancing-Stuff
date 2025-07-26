@@ -189,7 +189,7 @@ PrepareBriefing = function(_briefing)
 	GUI.SetFeedbackSoundOutputState(0)
 	--start briefing music
 	LocalMusic.SongLength = 0
-	XGUIEng.ShowWidget("CinematicMiniMapContainer",1)
+	XGUIEng.ShowWidget("CinematicMiniMapContainer",0)
 
 end
 -------------------------------------------------------------------------------------------------------
@@ -270,9 +270,16 @@ function ActivateBriefingsExpansion()
 			end
 		end
 
-    Briefing_ExtraOrig(_v1, _v2)
+		Briefing_ExtraOrig(_v1, _v2)
 	end
 
+end
+
+function GetNPCDefaultNameByID(_id)
+	local etype = Logic.GetEntityType(_id)
+	local etypename = Logic.GetEntityTypeName(etype)
+	local name = XGUIEng.GetStringTableText("names/" .. etypename)
+	return name
 end
 
 -- override cutscene comfort
@@ -331,6 +338,16 @@ CutsceneDone = function()
 		CutsceneCallback()
 	end
 
+end
+
+function SetAdvancedCutsceneClipping()
+	local Dist = 0
+	if GDB.IsKeyValid( "Config\\Display\\ClippingDistance" ) then
+		Dist = GDB.GetValue( "Config\\Display\\ClippingDistance" )
+	end
+	if Dist > 0 then
+		SetInternalClippingLimitCutscene(60000)
+	end
 end
 
 -- get difficulty string to translate diff lvl (sp campaign) to shown string
@@ -757,21 +774,70 @@ end
 ---@return integer entityID
 function ReplacingEntity(_Entity, _EntityType)
 
-	local entityId      = Logic.GetEntityIDByName(_Entity)
+	local entityId      = GetID(_Entity)
 	local pos 			= {}
 	pos.X,pos.Y  		= Logic.GetEntityPosition(entityId)
 	local name 			= Logic.GetEntityName(entityId)
 	local player 		= Logic.EntityGetPlayer(entityId)
 	local orientation 	= Logic.GetEntityOrientation(entityId)
-	local wasSelected	= IsEntitySelected(_Entity)
+	local scale 		= GetEntitySize(entityId)
+	local wasSelected	= IsEntitySelected(entityId)
 
 	if wasSelected then
 		GUI.DeselectEntity(entityId)
     end
 
-	DestroyEntity(_Entity)
+	DestroyEntity(entityId)
 	local newEntityId = Logic.CreateEntity(_EntityType,pos.X,pos.Y,orientation,player)
 	Logic.SetEntityName(newEntityId, name)
+	if scale ~= 1 then
+		SetEntitySize(newEntityId, scale)
+	end
+
+	if wasSelected then
+		GUI.SelectEntity(newEntityId)
+    end
+
+	GroupSelection_EntityIDChanged(entityId, newEntityId)
+	return newEntityId
+
+end
+
+-- ReplaceEntityWithOffset comfort, to replace entity with given offset ---------------------------------------
+---@param _Entity string|integer entityName or entityID
+---@param _EntityType integer entityType
+---@param _offX number offsetX (in scm)
+---@param _offY number offsetY (in scm)
+---@return integer entityID
+function ReplaceEntityWithOffset(_Entity, _EntityType, _offX, _offY)
+
+	local entityId      = GetID(_Entity)
+	local pos 			= {}
+	pos.X,pos.Y  		= Logic.GetEntityPosition(entityId)
+	pos.X 				= pos.X + _offX
+	pos.Y 				= pos.Y + _offY
+	local name 			= Logic.GetEntityName(entityId)
+	local player 		= Logic.EntityGetPlayer(entityId)
+	local orientation 	= Logic.GetEntityOrientation(entityId)
+	local scale 		= GetEntitySize(entityId)
+	local wasSelected	= IsEntitySelected(entityId)
+
+	if wasSelected then
+		GUI.DeselectEntity(entityId)
+    end
+
+	DestroyEntity(entityId)
+	
+	while Logic.GetEntityAtPosition(pos.X, pos.Y) ~= 0 do
+		pos.X = pos.X + math.random(-2^16, 2^16) / 10^5
+		pos.Y = pos.Y + math.random(-2^16, 2^16) / 10^5
+	end
+	local newEntityId = Logic.CreateEntity(_EntityType,pos.X,pos.Y,orientation,player)
+	assert(newEntityId > 0, "creating new entity failed!")
+	Logic.SetEntityName(newEntityId, name)
+	if scale ~= 1 then
+		SetEntitySize(newEntityId, scale)
+	end
 
 	if wasSelected then
 		GUI.SelectEntity(newEntityId)
@@ -851,6 +917,30 @@ function GetNearestEntityOfType(_x, _y, _entityType)
 	local range = Logic.WorldGetSize()
 	local num, id = Logic.GetEntitiesInArea(_entityType, _x, _y, range, 1)
 	return id
+end
+-- function to get nearest entityID of player and entity category in given area
+---@param _playerID integer playerID
+---@param _x number	positionX
+---@param _y number positionY
+---@param _range number max search range
+---@param _ecat integer EntityCategory
+---@return integer
+function GetNearestEntityOfPlayerAndCategoryInArea(_playerID, _x, _y, _range, _ecat)
+	assert(type(_playerID) == "number" and _playerID > 0 and _playerID < 17, "invalid playerID")
+	assert(type(_x) == "number" and type(_y) == "number", "invalid position")
+	assert(type(_ecat) == "number", "invalid entity category")
+	_range = _range or Logic.WorldGetSize()
+	local nearestID
+	for eID in CEntityIterator.Iterator(CEntityIterator.OfPlayerFilter(_playerID), CEntityIterator.OfCategoryFilter(_ecat), CEntityIterator.InCircleFilter(_x, _y, _range)) do
+		if not nearestID then
+			nearestID = eID
+		else
+			if GetDistance(eID, {X = _x, Y = _y}) < GetDistance(nearestID, {X = _x, Y = _y}) then
+				nearestID = eID
+			end
+		end
+	end
+	return nearestID
 end
 
 -- function to get the nearest entity of bridge category
@@ -1383,6 +1473,97 @@ CEntity.GetAttachedEntities = function(_id)
 	return GetAttachedEntitiesOrig(_id)
 end
 
+-- added some assertion so we don't get a crash
+CreateEntityOrig = Logic.CreateEntity
+Logic.CreateEntity = function(_entityType, _posX, _posY, _angle, _playerId)
+	assert(_entityType ~= nil and _entityType > 0, "invalid entityType")
+	local sizeX = Logic.WorldGetSize()
+	assert(_posX ~= nil and (_posX >= 0 and _posX < sizeX or _posX == -1) and _posY ~= nil and (_posY >= 0 and _posY < sizeX or _posY == -1), "invalid position")
+	assert(_angle ~= nil)
+	assert(_playerId ~= nil and _playerId >= 0 and _playerId <= (CNetwork and CNetwork.IsSCEPlayersActive() and 16 or 8), "invalid playerID")
+	return CreateEntityOrig(_entityType, _posX, _posY, _angle, _playerId)
+end
+
+-- added some assertion so we don't get a crash
+GetSectorOrig = CUtil.GetSector
+CUtil.GetSector = function(_posX, _posY)
+	local sizeX = Logic.WorldGetSize()
+	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	return GetSectorOrig(_posX, _posY)
+end
+
+-- added some assertion so we don't get a crash
+GetTerrainNodeTypeOrig = CUtil.GetTerrainNodeType
+CUtil.GetTerrainNodeType = function(_posX, _posY)
+	local sizeX = Logic.WorldGetSize()
+	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	return GetTerrainNodeTypeOrig(_posX, _posY)
+end
+
+-- added some assertion so we don't get a crash
+GetTerrainNodeHeightOrig = CUtil.GetTerrainNodeHeight
+CUtil.GetTerrainNodeHeight = function(_posX, _posY)
+	local sizeX = Logic.WorldGetSize()
+	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	return GetTerrainNodeHeightOrig(_posX, _posY)
+end
+
+-- added some assertion so we don't get a crash
+GetWaterHeightOrig = CUtil.GetWaterHeight
+CUtil.GetWaterHeight = function(_posX, _posY)
+	local sizeX = Logic.WorldGetSize()
+	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	return GetWaterHeightOrig(_posX, _posY)
+end
+
+-- added some assertion so we don't get a crash
+SetEntityScriptingValueOrig = Logic.SetEntityScriptingValue
+Logic.SetEntityScriptingValue = function(_id, _offset, _value)
+	assert(IsValid(_id), "invalid entityID")
+	assert(_offset ~= nil and type(_offset) == "number", "invalid offset")
+	assert(_value ~= nil, "invalid value")
+	return SetEntityScriptingValueOrig(_id, _offset, _value)
+end
+
+-- added some assertion so we don't get a crash
+SetEntitySelectableFlagOrig = Logic.SetEntitySelectableFlag
+Logic.SetEntitySelectableFlag = function(_id, _flag)
+	assert(IsValid(_id), "invalid entityID")
+	assert(_flag ~= nil and (_flag == 0 or _flag == 1), "invalid flag")
+	return SetEntitySelectableFlagOrig(_id, _flag)
+end
+
+-- added some assertion so we don't get a crash
+GetCurrentTaskListOrig = Logic.GetCurrentTaskList
+Logic.GetCurrentTaskList = function(_id)
+	assert(IsValid(_id), "invalid entityID")
+	return GetCurrentTaskListOrig(_id)
+end
+
+-- added some assertion so we don't get a crash
+SetTaskListOrig = Logic.SetTaskList
+Logic.SetTaskList = function(_id, _taskList)
+	assert(IsValid(_id), "invalid entityID")
+	assert(_taskList ~= nil and type(_taskList == "number"), "invalid TaskList")
+	return SetTaskListOrig(_id, _taskList)
+end
+
+-- added some assertion so we don't get a crash
+SetModelAndAnimSetOrig = Logic.SetModelAndAnimSet
+Logic.SetModelAndAnimSet = function(_id, _model, _animSet)
+	assert(IsValid(_id), "invalid entityID")
+	assert(_model ~= nil and type(_model) == "number", "invalid model")
+	return SetModelAndAnimSetOrig(_id, _model, _animSet)
+end
+
+CreateEffectOrig = Logic.CreateEffect
+Logic.CreateEffect = function(_effect, _posX, _posY, _player)
+	local sizeX = Logic.WorldGetSize()
+	assert(_effect ~= nil and type(_effect) == "number" and _effect > 0, "invalid effect")
+	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX and _posY ~= nil and _posY >= 0 and _posY < sizeX, "invalid position")
+	return CreateEffectOrig(_effect, _posX, _posY, _player)
+end
+
 -- added some assertion so we don't get a crash; function allows only armyIDs between -1 and 8
 Entity_ConnectLeaderOrig = AI.Entity_ConnectLeader
 AI.Entity_ConnectLeader = function(_id, _armyID)
@@ -1723,6 +1904,7 @@ MaxSoldiersByLeaderType = {	[Entities.PU_LeaderSword1] = 4,
 							[Entities.CU_Evil_LeaderBearman1] = 16,
 							[Entities.CU_Evil_LeaderSkirmisher1] = 16,
 							[Entities.CU_Evil_LeaderSpearman1] = 16,
+							[Entities.CU_Evil_LeaderCavalry1] = 6,
 							[Entities.CU_VeteranCaptain] = 0,
 							[Entities.CU_VeteranLieutenant] = 2,
 							[Entities.CU_VeteranMajor] = 2}
@@ -2175,14 +2357,53 @@ function SetPlayerDiplomacy(_PlayerID, _Diplomacy)
 	assert(type(_Diplomacy) == "number","second argument must be a number (either Diplomacy.XXX or ID of the given diplomacy state)")
 	local tablelength = table.getn(_PlayerID)
 
-	for i = 1,tablelength,1 do
-		for k = tablelength,1,-1 do
+	for i = 1, tablelength, 1 do
+		for k = tablelength, 1, -1 do
 			if _PlayerID[i] ~= _PlayerID[k] then
-				Logic.SetDiplomacyState(_PlayerID[i],_PlayerID[k],_Diplomacy)
+				Logic.SetDiplomacyState(_PlayerID[i], _PlayerID[k], _Diplomacy)
 			end
 		end
 	end
 
+end
+
+-- comfort to set the diplomacy state between a given group of player IDs and another
+---@param _Group1 table with player IDs
+---@param _Group2 table with player IDs
+---@param _Diplomacy integer diplomacy state
+function SetPlayerGroupToPlayerGroupDiplomacy(_Group1, _Group2, _Diplomacy)
+
+	assert(type(_Group1) == "table","first argument must be a table filled with valid player IDs")
+	assert(type(_Group2) == "table","first argument must be a table filled with valid player IDs")
+	assert(type(_Diplomacy) == "number","second argument must be a number (either Diplomacy.XXX or ID of the given diplomacy state)")
+	local tablelength1 = table.getn(_Group1)
+	local tablelength2 = table.getn(_Group2)
+
+	for i = 1, tablelength1, 1 do
+		for k = tablelength2, 1, -1 do
+			if _Group1[i] ~= _Group2[k] then
+				Logic.SetDiplomacyState(_Group1[i], _Group2[k], _Diplomacy)
+			end
+		end
+	end
+end
+
+-- comfort to let a group of given player IDs share or not share the exploration
+---@param _PlayerID table with player IDs
+---@param _Share boolean should share exploration
+function SetShareView(_PlayerID, _Share)
+
+	assert(type(_PlayerID) == "table","first argument must be a table filled with valid player IDs")
+	assert(type(_Share) == "boolean","second argument must be a boolean (true if exploration should be shared, false if not)")
+	local tablelength = table.getn(_PlayerID)
+
+	for i = 1, tablelength, 1 do
+		for k = tablelength, 1, -1 do
+			if _PlayerID[i] ~= _PlayerID[k] then
+				ActivateShareExploration(_PlayerID[i], _PlayerID[k], _Share)
+			end
+		end
+	end
 end
 
 -- comfort to set the diplomacy state between a player ID or a group of given player IDs and all AI player IDs on the map
@@ -2564,22 +2785,28 @@ function IsNighttime()
 	return found ~= 0
 end
 
--- overrides internal clipping limit maximum (Display.SetFarClipPlaneMinAndMax(_min, _max) is internally capped at some values)
+-- overrides internal clipping limit maximum for cutscenes (Display.SetFarClipPlaneMinAndMax(_min, _max) is internally capped at 20k per default)
 ---@param _val integer new clipping limit maximum
-function SetInternalClippingLimitMax(_val)
-
+function SetInternalClippingLimitCutscene(_val)
 	assert(type(_val) == "number", "Clipping Limit needs to be a number")
-	CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[0]:SetFloat(_val)
-
+	CUtil.SetMaxClipping(_val)
+	--CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[0]:SetFloat(_val)
 end
 
--- overrides internal clipping limit minimum (Display.SetFarClipPlaneMinAndMax(_min, _max) is internally capped at some values)
----@param _val integer new clipping limit minimum
-function SetInternalClippingLimitMin(_val)
-
+-- overrides internal clipping limit maximum for global map (internally capped at 100k per default)
+---@param _val integer new clipping limit maximum
+function SetInternalClippingLimitGlobal(_val)
 	assert(type(_val) == "number", "Clipping Limit needs to be a number")
-	CUtilMemory.GetMemory(tonumber("0x77A7F0", 16))[0]:SetFloat(_val)
+	CUtil.SetMaxClippingLimit(_val)
+	--CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[1]:SetFloat(_val)
+end
 
+-- overrides internal clipping used when not specified or resetted back to default (12.5k per default)
+---@param _val integer new clipping fallback value
+function SetInternalClippingResetValue(_val)
+	assert(type(_val) == "number", "Clipping fallback value needs to be a number")
+	CUtil.SetMaxClippingDefault(_val)
+	--CUtilMemory.GetMemory(tonumber("0x77A7E8", 16))[2]:SetFloat(_val)
 end
 
 -- returns the weather movement speed modifier
@@ -3111,15 +3338,22 @@ function GetAbilityRange(_entityType, _ability)
 		end
 	end
 end
-BS.MemValues.IndexByAbility = {	[Abilities.AbilityRangedEffect] = {AffectsDiplomacy = 5, AffectsCat = 6, Range = 7, Duration = 8, DamageFactor = 9, ArmorFactor = 10, HealthRecoveryFactor = 11, Effect = 12, HealEffect = 13},
-								[Abilities.AbilityCircularAttack] = {TaskList = 5, Animation = 6, DamageClass = 7, Damage = 8, Range = 9, Effect = 10},
-								[Abilities.AbilityInflictFear] = {TaskList = 5, Animation = 6, FlightDuration = 7, Range = 8, FlightRange = 9}}
-BS.MemValues.VTableByAbility = {[Abilities.AbilityRangedEffect] = tonumber("774E9C", 16),
-								[Abilities.AbilityCircularAttack] = tonumber("7774A0", 16),
-								[Abilities.AbilityInflictFear] = tonumber("776674", 16),
-								[Abilities.AbilityPlaceBomb] = tonumber("7783D8", 16),
-								[Abilities.AbilityBuildCannon] = tonumber("777510", 16)
-								}
+BS.MemValues.IndexByAbility = {
+	[Abilities.AbilityRangedEffect] = {AffectsDiplomacy = 5, AffectsCat = 6, Range = 7, Duration = 8, DamageFactor = 9, ArmorFactor = 10, HealthRecoveryFactor = 11, Effect = 12, HealEffect = 13},
+	[Abilities.AbilityCircularAttack] = {TaskList = 5, Animation = 6, DamageClass = 7, Damage = 8, Range = 9, Effect = 10},
+	[Abilities.AbilityInflictFear] = {TaskList = 5, Animation = 6, FlightDuration = 7, Range = 8, FlightRange = 9}
+}
+BS.MemValues.VTableByAbility = {
+	[Abilities.AbilityRangedEffect] = tonumber("774E9C", 16),
+	[Abilities.AbilityCircularAttack] = tonumber("7774A0", 16),
+	[Abilities.AbilityInflictFear] = tonumber("776674", 16),
+	[Abilities.AbilityPlaceBomb] = tonumber("7783D8", 16),
+	[Abilities.AbilityBuildCannon] = tonumber("777510", 16)
+}
+
+function GetWorkerTypeResourceTakenAmount(_etype)
+
+end
 ------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------- entity id related --------------------------------------------------------------------------
 -- returns settler base movement speed (not affected by weather or technologies, just the raw value defined in the respective xml)
@@ -3424,7 +3658,7 @@ end
 ---@param _val integer Stamina remaining
 function SetStamina(_id, _val)
 	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Worker) == 1, "entityID must be a worker")
-	assert(type(_val) == "number" and _val > 0, "stamina value must be a non-negative number")
+	assert(type(_val) == "number" and _val >= 0, "stamina value must be a non-negative number")
 	--GGL_CWorkerBehavior
 	local beh = CUtil.GetBehaviour(_id, tonumber("772B30", 16))
 	local stam = CUtilMemory.GetMemory(tonumber(beh,16))[4]:SetInt(_val)
@@ -3437,6 +3671,15 @@ function AddStamina(_id, _val)
 	assert(IsValid(_id) and Logic.IsEntityInCategory(_id, EntityCategories.Worker) == 1, "entityID must be a worker")
 	assert(type(_val) == "number", "stamina value must be a number")
 	SetStamina(_id, math.max(0, GetStamina(_id) + _val))
+end
+
+-- gets entityID resource amount currently transporting
+---@param _workerID integer entityID (must be a worker)
+---@return float resource amount currently transporting
+function GetWorkerCurrentTransportedResourceAmount(_workerID)
+	assert(IsValid(_workerID) and Logic.IsEntityInCategory(_workerID, EntityCategories.Worker) == 1, "entityID must be a worker")
+	local beh = CUtil.GetBehaviour(_workerID, tonumber("772B30", 16))
+	return CUtilMemory.GetMemory(tonumber(beh,16))[17]:GetFloat()
 end
 
 -- gets ability convert settler target (e.g. Helias)
@@ -4161,6 +4404,7 @@ EvaluateArmyHomespots = function(_player, _pos, _army)
 		end
 		stepcount = stepcount + 1
 	end
+	assert(table.getn(ArmyHomespots[_player][name]) > 0, "failed to find valid army spawn points; check spawn position")
 end
 
 -- checks whether all army homespots of a given player are unblocked or not
@@ -5240,7 +5484,12 @@ ChestRandomPositions.GetRandomPositions = function(_amount)
     ChunkWrapper.UpdatePositions(chunks)
     local sizeX, sizeY = Logic.WorldGetSize()
     local postable = {}
+	--
+	local starttime = XGUIEng.GetSystemTime()
     while table.getn(postable) < _amount do
+		if XGUIEng.GetSystemTime() >= starttime + 5 then
+			break
+		end
         local X, Y = math.random(sizeX), math.random(sizeY)
         local entities = ChunkWrapper.GetEntitiesInAreaInCMSorted(chunks, X, Y, ChestRandomPositions.SearchRange)
         -- shuffle
@@ -5320,6 +5569,7 @@ ChestRandomPositions_ChestControl = function(...)
 								res = "Gold"
 							else
 								res = "Silver"
+								TimesSilverChestPlundered = (TimesSilverChestPlundered or 0) + 1
 							end
 							randomEventAmount = round((ChestRandomPositions.Resources[res].BaseAmount + math.random(ChestRandomPositions.Resources[res].RandomBonus) + Logic.GetTime()/ChestRandomPositions.Resources[res].TimeQuotient) * (gvDiffLVL or 1))
 							Logic.AddToPlayersGlobalResource(j,ResourceType[res],randomEventAmount)
@@ -5344,7 +5594,7 @@ ChestRandomPositions_ChestControl = function(...)
 	end
 end
 
-function InitRuinRepairing(_name, _center, _slot1, _slot2, _slot3, _slot4, _newentity, _progress)
+function InitRuinRepairing(_name, _center, _slot1, _slot2, _slot3, _slot4, _newentity, _progress, _searchRange, _sitePlayer)
 	RuinRepairingData = RuinRepairingData or {}
 	RuinRepairingData[_name] = RuinRepairingData[_name] or {}
 	RuinRepairingData[_name].repairprogress = RuinRepairingData[_name].repairprogress or 0
@@ -5353,11 +5603,11 @@ function InitRuinRepairing(_name, _center, _slot1, _slot2, _slot3, _slot4, _newe
 	end
 	local centerpos = GetPosition(_center)
 	if not RuinRepairingData[_name].serfs then
-		local serfs = {Logic.GetPlayerEntitiesInArea(1,Entities.PU_Serf,centerpos.X,centerpos.Y,1000,4)}
+		local serfs = {Logic.GetPlayerEntitiesInArea(1, Entities.PU_Serf, centerpos.X, centerpos.Y, _searchRange or 1000, 4)}
 		if serfs[1] == 4 then
 			RuinRepairingData[_name].serfs = {serfs[2], serfs[3], serfs[4], serfs[5]}
 			if not RuinRepairingData[_name].site then
-				RuinRepairingData[_name].site = Logic.CreateConstructionSite(centerpos.X, centerpos.Y, 0, _newentity, 6)
+				RuinRepairingData[_name].site = Logic.CreateConstructionSite(centerpos.X, centerpos.Y, 0, _newentity, _sitePlayer or 6)
 			end
 		end
 	else
@@ -5391,4 +5641,57 @@ function InitRuinRepairing(_name, _center, _slot1, _slot2, _slot3, _slot4, _newe
 			return true
 		end
 	end
+end
+function UpgradeBuilding(_EntityName)
+	local EntityID = GetEntityId(_EntityName)
+	if IsValid(EntityID) then
+		local EntityType = Logic.GetEntityType(EntityID)
+		local PlayerID = GetPlayer(EntityID)
+		local Costs = {}
+		Logic.FillBuildingUpgradeCostsTable(EntityType, Costs)
+		for Resource, Amount in Costs do
+			Logic.AddToPlayersGlobalResource(PlayerID, Resource, Amount)
+		end
+		GUI.UpgradeSingleBuilding(EntityID)
+	end
+end
+function CreateMiniMapScreenshot()
+	XGUIEng.ShowWidget("EMSMenu", 0)
+	XGUIEng.ShowWidget("EMSMenuAdditions", 0)
+	XGUIEng.ShowWidget("EMSRuleOverview", 0)
+	XGUIEng.ShowWidget("Normal", 1)
+	Logic.AddWeatherElement(1,10,0,1,0,0)
+	gvCamera.DefaultFlag = 0
+	Camera.ZoomSetDistance(0)
+	if EMS and EMS.T then
+		EMS.T.RecreateVillageCenters()
+	end
+	StartCountdown(1, function()
+		local screenX, screenY = GUI.GetScreenSize()
+		local origX, origY = 186, 192
+		local factor = math.floor(screenY / origY)
+		XGUIEng.SetWidgetPositionAndSize("Normal", 0, 0, screenX, screenY)
+		--XGUIEng.SetWidgetPosition("Minimap", round(screenX / 2), round(screenY / 2))
+		XGUIEng.SetWidgetPositionAndSize("Minimap", round(screenX / 4), round(screenY / 4), 71, 85)
+		XGUIEng.ShowWidget("BackGroundBottomContainer", 0)
+		XGUIEng.ShowWidget("BackGround_Top", 0)
+		XGUIEng.ShowWidget("MiniMapOverlay", 0)
+		XGUIEng.ShowWidget("ResourceView", 0)
+		XGUIEng.ShowWidget("Top", 0)
+		XGUIEng.ShowWidget("MiniMapButtons", 0)
+		XGUIEng.ShowWidget("NotesWindow", 0)
+		XGUIEng.ShowWidget("ShortMessagesListWindow", 0)
+		local X, Y = Logic.WorldGetSize()
+		Camera.ScrollSetLookAt(X, Y)
+		for i = 1, 12 do
+			Display.SetPlayerColorMapping(i, i)
+		end
+		GUI.MiniMap_SetRenderFogOfWar(0)
+		StartCountdown(1, function()
+			Game.SaveScreenShot()
+			Framework.CloseGame()
+		end,
+		false)
+	end,
+	false)
 end

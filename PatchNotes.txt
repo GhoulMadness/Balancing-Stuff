@@ -1,5 +1,11 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.773
+
+Der Siegerstatue des Osterturniers 2025 wurden fehlende binary meshes sowie Wintertexturen hinzugefügt.
+
+Es wurde ein Fehler behoben, der in bestimmten Konstellationen von Holzfällern und Förstern auftreten konnte.
+
 --- Version 0.772
 
 Die Siegerstatue des Osterturniers 2025 ist nun verfügbar. Herzlichen Glückwunsch an die Sieger Zork/Manu und Lash!
@@ -29,13 +35,3 @@ Varg Plünderung: geplünderte Ressourcen/Treffer:
 
 Workarond für eine nach Laden eines "echten" MP-saves nicht mehr wie erwartet reagierende Funktion
 (dies sollte einige nach Laden von "echten" MP-saves auftretenden Problemen beheben)
-
---- Version 0.768
-
-Es wurde ein Fehler behoben, durch den in bestimmten Konstellationen Dovbars Fähigkeiten nicht mehr verfügbar waren.
-
-Vorbereitungen für das kommende Osterturnier.
-Eine erste Version der neuen Turniermap "Im Zeichen Ostaras" ist ab sofort verfügbar. Bitte bedenkt, dass die Map sich noch in Veränderung befindet und in aktueller Version noch keine etwaigen versteckten EasterEggs hinzugefügt sind.
-Euer Feedback zur Map ist erwünscht und wird zur Optimierung benötigt.
-
-Es wurden GUI-Fehler im Zusammenhang mit den Angeboten in Söldnerlagern behoben.
