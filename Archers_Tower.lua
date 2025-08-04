@@ -53,18 +53,16 @@ gvArchers_Tower.OccupiedTroop = {DamageTreshold = 50,
 								AverageDamageFactor = 0.35,
 								-- value that defines the range in which the nearest archers tower is searched
 								TowerSearchRange = 500}
-if CNetwork then
 
-	for i = 1,XNetwork.GameInformation_GetMapMaximumNumberOfHumanPlayer() do
-		gvArchers_Tower.AmountOfTowers[i] = Logic.GetNumberOfEntitiesOfTypeOfPlayer(i, Entities.PB_Archers_Tower)
+for player = 1, (CNetwork and CNetwork.IsSCEPlayersActive() and 16 or 8) do
+	local data = {Logic.GetPlayerEntities(player, Entities.PB_Archers_Tower, 16)}
+	if data[1] > 0 then
+		for j = 1, data[1] do
+			gvArchers_Tower.CurrentlyUsedSlots[data[j+1]] = 0
+			gvArchers_Tower.SlotData[data[j+1]] = {}
+		end
 	end
-
-else
-
-	for i = 1,8 do
-		gvArchers_Tower.AmountOfTowers[i] = Logic.GetNumberOfEntitiesOfTypeOfPlayer(i, Entities.PB_Archers_Tower)
-	end
-
+	gvArchers_Tower.AmountOfTowers[player] = data[1]
 end
 
 gvArchers_Tower.Offset_ByOrientation = {[0] = {	X = 0,
