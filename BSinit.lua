@@ -78,6 +78,7 @@ BS.MapList = {
 				["(3) bs koop die erstuermung der wartburg"] = true,
 				["(3) bs koop zu dunkler stunde"] = true,
 				["(3) bs koop die schwarze festung"] = true,
+				["(3) bs koop gebirgskampf"] = true,
 				["(3) emsbs der lachende dritte"] = true,
 				["(3) emsbs eingekesselt"] = true,
 				["(3) emsbs hochland"] = true,
