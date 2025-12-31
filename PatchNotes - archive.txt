@@ -1240,3 +1240,11 @@ Eine erste Version der neuen Turniermap "Im Zeichen Ostaras" ist ab sofort verf�
 Euer Feedback zur Map ist erwünscht und wird zur Optimierung benötigt.
 
 Es wurden GUI-Fehler im Zusammenhang mit den Angeboten in Söldnerlagern behoben.
+
+--- Version 0.769
+
+Varg Plünderung: geplünderte Ressourcen/Treffer:
+5 für alle Ressourcentypen -> 2 für Silber und Rohsilber, 5 für andere Ressourcentypen
+
+Workarond für eine nach Laden eines "echten" MP-saves nicht mehr wie erwartet reagierende Funktion
+(dies sollte einige nach Laden von "echten" MP-saves auftretenden Problemen beheben)

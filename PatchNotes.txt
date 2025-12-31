@@ -1,5 +1,9 @@
 PatchNotizen Balancing Stuff
 
+--- Version 0.774
+
+Es wurden weitere winterliche 3D-Modelle, Effekte und Texturen hinzugefügt.
+
 --- Version 0.773
 
 Der Siegerstatue des Osterturniers 2025 wurden fehlende binary meshes sowie Wintertexturen hinzugefügt.
@@ -27,11 +31,3 @@ Fehlende EMS-Technology-Buttons beim Forschen für die Zuschauer wurden hinzugef
 Ihr könnt Militäreinheiten nun nur noch upgraden, wenn das entsprechende nahe Militärgebäude über die benötigte Ausbaustufe verfügt.
 
 Es wurde ein Fehler im Zusammenhang mit zerstörten Militärgebäuden der KI und rekrutierten Truppen, die auf Rekrutierung weiterer Soldaten warteten, behoben.
-
---- Version 0.769
-
-Varg Plünderung: geplünderte Ressourcen/Treffer:
-5 für alle Ressourcentypen -> 2 für Silber und Rohsilber, 5 für andere Ressourcentypen
-
-Workarond für eine nach Laden eines "echten" MP-saves nicht mehr wie erwartet reagierende Funktion
-(dies sollte einige nach Laden von "echten" MP-saves auftretenden Problemen beheben)
