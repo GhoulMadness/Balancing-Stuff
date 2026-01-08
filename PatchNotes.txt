@@ -4,6 +4,8 @@ PatchNotizen Balancing Stuff
 
 Es wurden weitere winterliche 3D-Modelle, Effekte und Texturen hinzugefügt.
 
+Es wurde ein Fehler behoben, der auftreten konnte, wenn Dovbar durch seine Vorsehung vor die Spielerburg teleportiert wurde und der Spieler über eine gedrehte Burg verfügte.
+
 --- Version 0.773
 
 Der Siegerstatue des Osterturniers 2025 wurden fehlende binary meshes sowie Wintertexturen hinzugefügt.

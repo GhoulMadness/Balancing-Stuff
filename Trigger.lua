@@ -1072,8 +1072,12 @@ Hero13_DivineJudgment_Trigger = function(_heroID, _origdmg, _posX, _posY, _start
 					local hq = Logic.GetEntityAtPosition(pos.X, pos.Y)
 					if hq > 0 then
 						local offX, offY = GetBuildingTypeLeavePos(Entities.PB_Headquarters1)
-						local X, Y = RotateOffset(offX, offY, Logic.GetEntityOrientation(hq))
-						TeleportSettler(_heroID, pos.X + X, pos.Y + Y)
+						offX, offY = RotateOffset(offX, offY, Logic.GetEntityOrientation(hq))
+						local X, Y = pos.X + offX, pos.Y + offY
+						if CUtil.GetSector(X/100, Y/100) == 0 then
+							X, Y = EvaluateNearestUnblockedPosition(X, Y, 2000, 100)
+						end
+						TeleportSettler(_heroID, X, Y)
 					end
 				end
 			end
