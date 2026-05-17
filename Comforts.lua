@@ -1478,7 +1478,7 @@ CreateEntityOrig = Logic.CreateEntity
 Logic.CreateEntity = function(_entityType, _posX, _posY, _angle, _playerId)
 	assert(_entityType ~= nil and _entityType > 0, "invalid entityType")
 	local sizeX = Logic.WorldGetSize()
-	assert(_posX ~= nil and (_posX >= 0 and _posX < sizeX or _posX == -1) and _posY ~= nil and (_posY >= 0 and _posY < sizeX or _posY == -1), "invalid position")
+	assert(_posX ~= nil and (_posX >= 0 and _posX <= sizeX or _posX == -1) and _posY ~= nil and (_posY >= 0 and _posY <= sizeX or _posY == -1), "invalid position")
 	assert(_angle ~= nil)
 	assert(_playerId ~= nil and _playerId >= 0 and _playerId <= (CNetwork and CNetwork.IsSCEPlayersActive() and 16 or 8), "invalid playerID")
 	return CreateEntityOrig(_entityType, _posX, _posY, _angle, _playerId)
@@ -1488,7 +1488,7 @@ end
 GetSectorOrig = CUtil.GetSector
 CUtil.GetSector = function(_posX, _posY)
 	local sizeX = Logic.WorldGetSize()
-	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	assert(_posX ~= nil and _posX >= 0 and _posX <= sizeX/100 and _posY ~= nil and _posY >= 0 and _posY <= sizeX/100, "invalid position")
 	return GetSectorOrig(_posX, _posY)
 end
 
@@ -1496,7 +1496,7 @@ end
 GetTerrainNodeTypeOrig = CUtil.GetTerrainNodeType
 CUtil.GetTerrainNodeType = function(_posX, _posY)
 	local sizeX = Logic.WorldGetSize()
-	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	assert(_posX ~= nil and _posX >= 0 and _posX <= sizeX/100 and _posY ~= nil and _posY >= 0 and _posY <= sizeX/100, "invalid position")
 	return GetTerrainNodeTypeOrig(_posX, _posY)
 end
 
@@ -1504,7 +1504,7 @@ end
 GetTerrainNodeHeightOrig = CUtil.GetTerrainNodeHeight
 CUtil.GetTerrainNodeHeight = function(_posX, _posY)
 	local sizeX = Logic.WorldGetSize()
-	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	assert(_posX ~= nil and _posX >= 0 and _posX <= sizeX/100 and _posY ~= nil and _posY >= 0 and _posY <= sizeX/100, "invalid position")
 	return GetTerrainNodeHeightOrig(_posX, _posY)
 end
 
@@ -1512,7 +1512,7 @@ end
 GetWaterHeightOrig = CUtil.GetWaterHeight
 CUtil.GetWaterHeight = function(_posX, _posY)
 	local sizeX = Logic.WorldGetSize()
-	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX/100 and _posY ~= nil and _posY >= 0 and _posY < sizeX/100, "invalid position")
+	assert(_posX ~= nil and _posX >= 0 and _posX <= sizeX/100 and _posY ~= nil and _posY >= 0 and _posY <= sizeX/100, "invalid position")
 	return GetWaterHeightOrig(_posX, _posY)
 end
 
@@ -1560,7 +1560,7 @@ CreateEffectOrig = Logic.CreateEffect
 Logic.CreateEffect = function(_effect, _posX, _posY, _player)
 	local sizeX = Logic.WorldGetSize()
 	assert(_effect ~= nil and type(_effect) == "number" and _effect > 0, "invalid effect")
-	assert(_posX ~= nil and _posX >= 0 and _posX < sizeX and _posY ~= nil and _posY >= 0 and _posY < sizeX, "invalid position")
+	assert(_posX ~= nil and _posX >= 0 and _posX <= sizeX and _posY ~= nil and _posY >= 0 and _posY <= sizeX, "invalid position")
 	return CreateEffectOrig(_effect, _posX, _posY, _player)
 end
 
